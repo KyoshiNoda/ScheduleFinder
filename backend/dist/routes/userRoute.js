@@ -11,4 +11,5 @@ router.get('/:id', UserController_1.default.getUserById);
 router.post('/createUser', UserController_1.default.createUser);
 router.delete('/:id', UserController_1.default.deleteUser);
 router.patch('/updateFirstName/:id', UserController_1.default.updateFirstName);
+router.patch('/updateLastName/:id', UserController_1.default.updateLastName);
 exports.default = router;

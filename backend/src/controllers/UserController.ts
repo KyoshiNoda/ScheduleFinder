@@ -67,6 +67,21 @@ class UserController {
       }
     ).clone().catch(err => console.log(err));
   }
+  public static async updateLastName(req : Request, res : Response){
+    const id = req.params.id;
+    const newLastName = req.body.lastName;
+    User.updateOne({_id : id},{
+        $set : {lastName : newLastName}
+      },(err : any, updatedItem : any) =>{
+        if(!err){
+          res.send(`updated item ${id}`);
+        }
+        else{
+          throw err;
+        } 
+      }
+    ).clone().catch(err => console.log(err));
+  }
 
 
 
