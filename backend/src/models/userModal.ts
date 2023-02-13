@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema({
   school: String
 });
 
-// create a model with studentSchema
 const User = mongoose.model('users', userSchema);
 
 export default User;

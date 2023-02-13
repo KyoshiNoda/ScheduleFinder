@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const userModal_1 = __importDefault(require("../models/userModal"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 class UserController {
     static getAllUsers(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -24,6 +25,26 @@ class UserController {
                     throw err;
                 }
             }).clone().catch(err => console.log(err));
+        });
+    }
+    static createUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const salt = yield bcrypt_1.default.genSalt();
+            const hashedPassword = yield bcrypt_1.default.hash(req.body.password, salt);
+            const user = new userModal_1.default({
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: req.body.email,
+                password: hashedPassword,
+                gender: req.body.gender,
+                school: req.body.school
+            });
+            user.save().then(() => {
+                console.log("one entry added");
+            })
+                .catch((err) => {
+                console.log(err);
+            });
         });
     }
 }
