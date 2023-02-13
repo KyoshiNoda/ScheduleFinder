@@ -139,5 +139,21 @@ class UserController {
             }).clone().catch(err => console.log(err));
         });
     }
+    static updateGender(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const newGender = req.body.gender;
+            userModal_1.default.updateOne({ _id: id }, {
+                $set: { gender: newGender }
+            }, (err, updatedItem) => {
+                if (!err) {
+                    res.send(`changed gender at ${id}`);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
+        });
+    }
 }
 exports.default = UserController;

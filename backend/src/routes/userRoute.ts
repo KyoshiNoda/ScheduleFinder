@@ -10,5 +10,6 @@ router.patch('/updateFirstName/:id',UserController.updateFirstName);
 router.patch('/updateLastName/:id',UserController.updateLastName);
 router.patch('/updateEmail/:id',UserController.updateEmail);
 router.patch('/updatePassword/:id',UserController.updatePassword);
+router.patch('/updateGender/:id',UserController.updateGender);
 export default router;
 

@@ -114,6 +114,21 @@ class UserController {
       }
     ).clone().catch(err => console.log(err));
   }
+  public static async updateGender(req : Request, res : Response){
+    const id = req.params.id;
+    const newGender = req.body.gender;
+    User.updateOne({_id : id},{
+        $set : {gender : newGender}
+      },(err : any, updatedItem : any) =>{
+        if(!err){
+          res.send(`changed gender at ${id}`);
+        }
+        else{
+          throw err;
+        } 
+      }
+    ).clone().catch(err => console.log(err));
+  }
 
 
 
