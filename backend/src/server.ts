@@ -1,19 +1,22 @@
-import express, { Application } from "express";
+import express, { Express, Request, Response } from 'express';
+import bodyParser from 'body-parser';
 import userRoute from './routes/userRoute';
-class App {
-  public app: Application;
+import cors from 'cors';
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-  constructor() {
-    this.app = express();
-    this.mountRoutes();
-  }
+app.use('/api/users', userRoute);
 
-  private mountRoutes(): void {
-    const router = express.Router();
+app.get('/', (req, res) => {
+  res.send(`running on port ${3001}`)
+})
 
-    this.app.listen(3001, () => console.log('listening on port 3001'));
-    this.app.use("/", userRoute);
-  }
-}
+app.get('/ts', (req, res) => {
+  res.send("this is typescript change! part 10");
+})
 
-export default new App().app;
+app.listen(3001, () => {
+  console.log('listening on port 3001');
+});
