@@ -155,5 +155,21 @@ class UserController {
             }).clone().catch(err => console.log(err));
         });
     }
+    static updateSchool(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const newSchool = req.body.school;
+            userModal_1.default.updateOne({ _id: id }, {
+                $set: { school: newSchool }
+            }, (err, updatedItem) => {
+                if (!err) {
+                    res.send(`changed school at ${id}`);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
+        });
+    }
 }
 exports.default = UserController;

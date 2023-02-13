@@ -129,6 +129,21 @@ class UserController {
       }
     ).clone().catch(err => console.log(err));
   }
+  public static async updateSchool(req : Request, res : Response){
+    const id = req.params.id;
+    const newSchool = req.body.school;
+    User.updateOne({_id : id},{
+        $set : {school : newSchool}
+      },(err : any, updatedItem : any) =>{
+        if(!err){
+          res.send(`changed school at ${id}`);
+        }
+        else{
+          throw err;
+        } 
+      }
+    ).clone().catch(err => console.log(err));
+  }
 
 
 
