@@ -73,5 +73,21 @@ class UserController {
             }).clone().catch(err => console.log(err));
         });
     }
+    static updateFirstName(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const newFirstName = req.body.firstName;
+            userModal_1.default.updateOne({ _id: id }, {
+                $set: { firstName: newFirstName }
+            }, (err, updatedItem) => {
+                if (!err) {
+                    res.send(`updated item ${id}`);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
+        });
+    }
 }
 exports.default = UserController;

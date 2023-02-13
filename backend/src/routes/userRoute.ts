@@ -5,5 +5,9 @@ router.get('/getUsers', UserController.getAllUsers);
 router.get('/:id',UserController.getUserById);
 router.post('/createUser',UserController.createUser);
 router.delete('/:id',UserController.deleteUser);
+
+router.patch('/updateFirstName/:id',UserController.updateFirstName);
+
+
 export default router;
 
