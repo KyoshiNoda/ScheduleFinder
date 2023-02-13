@@ -27,6 +27,19 @@ class UserController {
             }).clone().catch(err => console.log(err));
         });
     }
+    static getUserById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield userModal_1.default.find({ _id: id }, (err, found) => {
+                if (!err) {
+                    res.send(found);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
+        });
+    }
     static createUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const salt = yield bcrypt_1.default.genSalt();
@@ -45,6 +58,11 @@ class UserController {
                 .catch((err) => {
                 console.log(err);
             });
+        });
+    }
+    static deleteUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.body.id;
         });
     }
 }
