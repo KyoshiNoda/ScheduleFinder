@@ -82,6 +82,21 @@ class UserController {
       }
     ).clone().catch(err => console.log(err));
   }
+  public static async updateEmail(req : Request, res : Response){
+    const id = req.params.id;
+    const newEmail = req.body.email;
+    User.updateOne({_id : id},{
+        $set : {email : newEmail}
+      },(err : any, updatedItem : any) =>{
+        if(!err){
+          res.send(`updated item ${id}`);
+        }
+        else{
+          throw err;
+        } 
+      }
+    ).clone().catch(err => console.log(err));
+  }
 
 
 

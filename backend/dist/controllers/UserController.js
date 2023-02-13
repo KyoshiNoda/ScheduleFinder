@@ -105,5 +105,21 @@ class UserController {
             }).clone().catch(err => console.log(err));
         });
     }
+    static updateEmail(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const newEmail = req.body.email;
+            userModal_1.default.updateOne({ _id: id }, {
+                $set: { email: newEmail }
+            }, (err, updatedItem) => {
+                if (!err) {
+                    res.send(`updated item ${id}`);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
+        });
+    }
 }
 exports.default = UserController;

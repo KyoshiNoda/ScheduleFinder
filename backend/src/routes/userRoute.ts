@@ -8,6 +8,6 @@ router.delete('/:id',UserController.deleteUser);
 
 router.patch('/updateFirstName/:id',UserController.updateFirstName);
 router.patch('/updateLastName/:id',UserController.updateLastName);
-
+router.patch('/updateEmail/:id',UserController.updateEmail);
 export default router;
 
