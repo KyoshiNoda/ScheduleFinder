@@ -1,10 +1,14 @@
 import { Request, Response } from "express";
-
+import User from "../models/userModal";
 class UserController {
-  public static getUsers(req: Request, res: Response): void {
-    const users = [{ id: 1, name: "Kyoshi" }, { id: 2, name: "Carlos" }];
-
-    res.status(200).send(users);
+  public static async getAllUsers(req: Request, res: Response): Promise<any> {
+    await User.find({}, (err: any, found: any) => {
+      if (!err) {
+        res.send(found);
+      } else {
+        throw err;
+      }
+    }).clone().catch(err => console.log(err));
   }
 }
 
