@@ -12,6 +12,5 @@ const userSchema = new mongoose_1.default.Schema({
     gender: String,
     school: String
 });
-// create a model with studentSchema
 const User = mongoose_1.default.model('users', userSchema);
 exports.default = User;

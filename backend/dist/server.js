@@ -37,7 +37,7 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
-app.use('/api/users', userRoute_1.default);
+app.use('/api/user', userRoute_1.default);
 mongoose_1.default.set('strictQuery', true);
 mongoose_1.default.connect(`${process.env.DB_URI}`, {}).then(() => console.log('connected to DB!'))
     .catch((err) => console.log(err));
