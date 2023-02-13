@@ -113,7 +113,25 @@ class UserController {
                 $set: { email: newEmail }
             }, (err, updatedItem) => {
                 if (!err) {
-                    res.send(`updated item ${id}`);
+                    res.send(`change email at ${id}`);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
+        });
+    }
+    static updatePassword(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const newPassword = req.body.password;
+            const salt = yield bcrypt_1.default.genSalt();
+            const hashedPassword = yield bcrypt_1.default.hash(newPassword, salt);
+            const id = req.params.id;
+            userModal_1.default.updateOne({ _id: id }, {
+                $set: { password: hashedPassword }
+            }, (err, updatedItem) => {
+                if (!err) {
+                    res.send(`updated password on item ${id}`);
                 }
                 else {
                     throw err;

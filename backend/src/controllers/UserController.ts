@@ -89,7 +89,24 @@ class UserController {
         $set : {email : newEmail}
       },(err : any, updatedItem : any) =>{
         if(!err){
-          res.send(`updated item ${id}`);
+          res.send(`change email at ${id}`);
+        }
+        else{
+          throw err;
+        } 
+      }
+    ).clone().catch(err => console.log(err));
+  }
+  public static async updatePassword(req : Request, res : Response){
+    const newPassword = req.body.password;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(newPassword,salt);
+    const id = req.params.id;
+    User.updateOne({_id : id},{
+        $set : {password : hashedPassword}
+      },(err : any, updatedItem : any) =>{
+        if(!err){
+          res.send(`updated password on item ${id}`);
         }
         else{
           throw err;

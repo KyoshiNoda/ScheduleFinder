@@ -13,4 +13,5 @@ router.delete('/:id', UserController_1.default.deleteUser);
 router.patch('/updateFirstName/:id', UserController_1.default.updateFirstName);
 router.patch('/updateLastName/:id', UserController_1.default.updateLastName);
 router.patch('/updateEmail/:id', UserController_1.default.updateEmail);
+router.patch('/updatePassword/:id', UserController_1.default.updatePassword);
 exports.default = router;
