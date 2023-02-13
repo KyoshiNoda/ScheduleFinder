@@ -12,12 +12,6 @@ app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use('/api/users', userRoute_1.default);
-app.get('/', (req, res) => {
-    res.send(`running on port ${3001}`);
-});
-app.get('/ts', (req, res) => {
-    res.send("this is typescript change! part 10");
-});
 app.listen(3001, () => {
     console.log('listening on port 3001');
 });
