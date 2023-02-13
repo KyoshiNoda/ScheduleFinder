@@ -40,8 +40,16 @@ class UserController {
       console.log(err);
     });
   }
-  public static async deleteUser(req: Request, res : Response) : Promise<any>{
-    const id = req.body.id;
+  public static async deleteUser(req: Request, res : Response){
+    const id = req.params.id;
+    await User.deleteOne({_id : id},(err : any, deleted : any) =>{
+      if(!err){
+        res.send(`user ${id} was deleted!`);
+      }
+      else{
+        throw err;
+      }
+    }).clone().catch(err => console.log(err));
   }
 }
 

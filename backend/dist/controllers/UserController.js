@@ -62,7 +62,15 @@ class UserController {
     }
     static deleteUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const id = req.body.id;
+            const id = req.params.id;
+            yield userModal_1.default.deleteOne({ _id: id }, (err, deleted) => {
+                if (!err) {
+                    res.send(`user ${id} was deleted!`);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
         });
     }
 }
