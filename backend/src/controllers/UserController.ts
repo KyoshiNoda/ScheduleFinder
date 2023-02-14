@@ -29,6 +29,7 @@ class UserController {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       age: req.body.age,
+      photoURL: req.body.photoURL,
       email: req.body.email,
       password: hashedPassword,
       gender: req.body.gender,
@@ -150,10 +151,26 @@ class UserController {
     const id = req.params.id;
     const newAge = req.body.age;
     User.updateOne({ _id: id }, {
-      $set: { school: newAge }
+      $set: { age: newAge }
     }, (err: any, updatedItem: any) => {
       if (!err) {
-        res.send(`changed age at ${id}`);
+        res.send(`changed Age at ${id}`);
+      }
+      else {
+        throw err;
+      }
+    }
+    ).clone().catch(err => console.log(err));
+  }
+
+  public static async updatePhoto(req: Request, res: Response) {
+    const id = req.params.id;
+    const newPhotoURL = req.body.photoURL;
+    User.updateOne({ _id: id }, {
+      $set: { photoURL: newPhotoURL }
+    }, (err: any, updatedItem: any) => {
+      if (!err) {
+        res.send(`changed photoURL at ${id}`);
       }
       else {
         throw err;

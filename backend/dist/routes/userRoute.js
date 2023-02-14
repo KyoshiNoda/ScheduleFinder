@@ -17,4 +17,5 @@ router.patch('/updatePassword/:id', UserController_1.default.updatePassword);
 router.patch('/updateGender/:id', UserController_1.default.updateGender);
 router.patch('/updateSchool/:id', UserController_1.default.updateSchool);
 router.patch('/updateAge/:id', UserController_1.default.updateAge);
+router.patch('/updatePhoto/:id', UserController_1.default.updatePhoto);
 exports.default = router;

@@ -48,6 +48,7 @@ class UserController {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 age: req.body.age,
+                photoURL: req.body.photoURL,
                 email: req.body.email,
                 password: hashedPassword,
                 gender: req.body.gender,
@@ -177,10 +178,26 @@ class UserController {
             const id = req.params.id;
             const newAge = req.body.age;
             userModal_1.default.updateOne({ _id: id }, {
-                $set: { school: newAge }
+                $set: { age: newAge }
             }, (err, updatedItem) => {
                 if (!err) {
-                    res.send(`changed age at ${id}`);
+                    res.send(`changed Age at ${id}`);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
+        });
+    }
+    static updatePhoto(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const newPhotoURL = req.body.photoURL;
+            userModal_1.default.updateOne({ _id: id }, {
+                $set: { photoURL: newPhotoURL }
+            }, (err, updatedItem) => {
+                if (!err) {
+                    res.send(`changed photoURL at ${id}`);
                 }
                 else {
                     throw err;
