@@ -51,6 +51,104 @@ class UserController {
       }
     }).clone().catch(err => console.log(err));
   }
+
+  public static async updateFirstName(req : Request, res : Response){
+    const id = req.params.id;
+    const newFirstName = req.body.firstName;
+    User.updateOne({_id : id},{
+        $set : {firstName : newFirstName}
+      },(err : any, updatedItem : any) =>{
+        if(!err){
+          res.send(`updated item ${id}`);
+        }
+        else{
+          throw err;
+        } 
+      }
+    ).clone().catch(err => console.log(err));
+  }
+  public static async updateLastName(req : Request, res : Response){
+    const id = req.params.id;
+    const newLastName = req.body.lastName;
+    User.updateOne({_id : id},{
+        $set : {lastName : newLastName}
+      },(err : any, updatedItem : any) =>{
+        if(!err){
+          res.send(`updated item ${id}`);
+        }
+        else{
+          throw err;
+        } 
+      }
+    ).clone().catch(err => console.log(err));
+  }
+  public static async updateEmail(req : Request, res : Response){
+    const id = req.params.id;
+    const newEmail = req.body.email;
+    User.updateOne({_id : id},{
+        $set : {email : newEmail}
+      },(err : any, updatedItem : any) =>{
+        if(!err){
+          res.send(`change email at ${id}`);
+        }
+        else{
+          throw err;
+        } 
+      }
+    ).clone().catch(err => console.log(err));
+  }
+  public static async updatePassword(req : Request, res : Response){
+    const newPassword = req.body.password;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(newPassword,salt);
+    const id = req.params.id;
+    User.updateOne({_id : id},{
+        $set : {password : hashedPassword}
+      },(err : any, updatedItem : any) =>{
+        if(!err){
+          res.send(`updated password on item ${id}`);
+        }
+        else{
+          throw err;
+        } 
+      }
+    ).clone().catch(err => console.log(err));
+  }
+  public static async updateGender(req : Request, res : Response){
+    const id = req.params.id;
+    const newGender = req.body.gender;
+    User.updateOne({_id : id},{
+        $set : {gender : newGender}
+      },(err : any, updatedItem : any) =>{
+        if(!err){
+          res.send(`changed gender at ${id}`);
+        }
+        else{
+          throw err;
+        } 
+      }
+    ).clone().catch(err => console.log(err));
+  }
+  public static async updateSchool(req : Request, res : Response){
+    const id = req.params.id;
+    const newSchool = req.body.school;
+    User.updateOne({_id : id},{
+        $set : {school : newSchool}
+      },(err : any, updatedItem : any) =>{
+        if(!err){
+          res.send(`changed school at ${id}`);
+        }
+        else{
+          throw err;
+        } 
+      }
+    ).clone().catch(err => console.log(err));
+  }
+
+
+
+
+
 }
 
 export default UserController;

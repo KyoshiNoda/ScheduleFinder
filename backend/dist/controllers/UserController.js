@@ -73,5 +73,103 @@ class UserController {
             }).clone().catch(err => console.log(err));
         });
     }
+    static updateFirstName(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const newFirstName = req.body.firstName;
+            userModal_1.default.updateOne({ _id: id }, {
+                $set: { firstName: newFirstName }
+            }, (err, updatedItem) => {
+                if (!err) {
+                    res.send(`updated item ${id}`);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
+        });
+    }
+    static updateLastName(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const newLastName = req.body.lastName;
+            userModal_1.default.updateOne({ _id: id }, {
+                $set: { lastName: newLastName }
+            }, (err, updatedItem) => {
+                if (!err) {
+                    res.send(`updated item ${id}`);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
+        });
+    }
+    static updateEmail(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const newEmail = req.body.email;
+            userModal_1.default.updateOne({ _id: id }, {
+                $set: { email: newEmail }
+            }, (err, updatedItem) => {
+                if (!err) {
+                    res.send(`change email at ${id}`);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
+        });
+    }
+    static updatePassword(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const newPassword = req.body.password;
+            const salt = yield bcrypt_1.default.genSalt();
+            const hashedPassword = yield bcrypt_1.default.hash(newPassword, salt);
+            const id = req.params.id;
+            userModal_1.default.updateOne({ _id: id }, {
+                $set: { password: hashedPassword }
+            }, (err, updatedItem) => {
+                if (!err) {
+                    res.send(`updated password on item ${id}`);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
+        });
+    }
+    static updateGender(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const newGender = req.body.gender;
+            userModal_1.default.updateOne({ _id: id }, {
+                $set: { gender: newGender }
+            }, (err, updatedItem) => {
+                if (!err) {
+                    res.send(`changed gender at ${id}`);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
+        });
+    }
+    static updateSchool(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const newSchool = req.body.school;
+            userModal_1.default.updateOne({ _id: id }, {
+                $set: { school: newSchool }
+            }, (err, updatedItem) => {
+                if (!err) {
+                    res.send(`changed school at ${id}`);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
+        });
+    }
 }
 exports.default = UserController;

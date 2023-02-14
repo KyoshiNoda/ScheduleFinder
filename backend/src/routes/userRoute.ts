@@ -5,5 +5,12 @@ router.get('/getUsers', UserController.getAllUsers);
 router.get('/:id',UserController.getUserById);
 router.post('/createUser',UserController.createUser);
 router.delete('/:id',UserController.deleteUser);
+
+router.patch('/updateFirstName/:id',UserController.updateFirstName);
+router.patch('/updateLastName/:id',UserController.updateLastName);
+router.patch('/updateEmail/:id',UserController.updateEmail);
+router.patch('/updatePassword/:id',UserController.updatePassword);
+router.patch('/updateGender/:id',UserController.updateGender);
+router.patch('/updateSchool/:id',UserController.updateSchool);
 export default router;
 
