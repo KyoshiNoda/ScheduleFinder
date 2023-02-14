@@ -11,6 +11,17 @@ class UserController {
       }
     }).clone().catch(err => console.log(err));
   }
+  public static async getUserById(req: Request, res: Response): Promise<any> {
+    const id = req.params.id;
+    await User.find({_id : id}, (err: any, found: any) => {
+      if (!err) {
+        res.send(found);
+      } else {
+        throw err;
+      }
+    }).clone().catch(err => console.log(err));
+  }
+
   public static async createUser(req : Request, res : Response) : Promise<any>{
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(req.body.password,salt);
@@ -28,6 +39,17 @@ class UserController {
     .catch((err) =>{
       console.log(err);
     });
+  }
+  public static async deleteUser(req: Request, res : Response){
+    const id = req.params.id;
+    await User.deleteOne({_id : id},(err : any, deleted : any) =>{
+      if(!err){
+        res.send(`user ${id} was deleted!`);
+      }
+      else{
+        throw err;
+      }
+    }).clone().catch(err => console.log(err));
   }
 }
 
