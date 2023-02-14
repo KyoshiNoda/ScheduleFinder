@@ -47,6 +47,7 @@ class UserController {
             const user = new userModal_1.default({
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
+                age: req.body.age,
                 email: req.body.email,
                 password: hashedPassword,
                 gender: req.body.gender,
@@ -164,6 +165,22 @@ class UserController {
             }, (err, updatedItem) => {
                 if (!err) {
                     res.send(`changed school at ${id}`);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
+        });
+    }
+    static updateAge(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const newAge = req.body.age;
+            userModal_1.default.updateOne({ _id: id }, {
+                $set: { school: newAge }
+            }, (err, updatedItem) => {
+                if (!err) {
+                    res.send(`changed age at ${id}`);
                 }
                 else {
                     throw err;
