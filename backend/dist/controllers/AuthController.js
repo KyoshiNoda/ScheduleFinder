@@ -36,5 +36,21 @@ class AuthController {
             }));
         });
     }
+    static authToken(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const authHeader = req.headers['authorization'];
+            const token = authHeader && authHeader.split(" ")[1];
+            if (token === null) {
+                return res.sendStatus(401);
+            }
+            jsonwebtoken_1.default.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`, (err, user) => {
+                if (err) {
+                    return res.sendStatus(403);
+                }
+                req.user = user;
+                next();
+            });
+        });
+    }
 }
 exports.default = AuthController;

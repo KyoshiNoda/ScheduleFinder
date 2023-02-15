@@ -1,11 +1,15 @@
 import { NextFunction, Request, Response } from "express";
+import {Error} from 'mongoose';
 import { IUser } from "../models/userModal";
 import User from "../models/userModal";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+interface ReqExtended extends Request{
+  user : any
+}
 class AuthController {
   public static async loginUser(req : Request, res : Response){
-    await User.findOne({email : req.body.email}, async (err : any, found : IUser | undefined) =>{
+    await User.findOne({email : req.body.email}, async (err : Error, found : IUser | undefined) =>{
       if(!(found === undefined)){
         if(await bcrypt.compare(req.body.password,found?.password)){
           return found;
@@ -21,6 +25,21 @@ class AuthController {
       const accessToken = jwt.sign({data : docs},`${process.env.ACCESS_TOKEN_SECRET}`);
       res.send({token : accessToken});
     }));
+  }
+
+  public static async authToken(req : any, res : Response, next : NextFunction){
+    const authHeader = req.headers['authorization']!
+    const token = authHeader && authHeader.split(" ")[1]
+    if (token === null){
+      return res.sendStatus(401)
+    }
+    jwt.verify(token,`${process.env.ACCESS_TOKEN_SECRET}`,(err : any ,user : any) =>{
+      if(err){
+        return res.sendStatus(403);
+      }
+      req.user = user;
+      next()
+    });
   }
 }
 
