@@ -20,7 +20,7 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             yield userModal_1.default.findOne({ email: req.body.email }, (err, found) => __awaiter(this, void 0, void 0, function* () {
                 if (!(found === undefined)) {
-                    if (yield bcrypt_1.default.compare(req.body.password, found.password)) {
+                    if (yield bcrypt_1.default.compare(req.body.password, found === null || found === void 0 ? void 0 : found.password)) {
                         return found;
                     }
                     else {
@@ -34,22 +34,6 @@ class AuthController {
                 const accessToken = jsonwebtoken_1.default.sign({ data: docs }, `${process.env.ACCESS_TOKEN_SECRET}`);
                 res.send({ token: accessToken });
             }));
-        });
-    }
-    static authUser(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const authHeader = req.headers['authorization'];
-            const token = authHeader && authHeader.split(" ")[1];
-            if (token === null) {
-                return res.sendStatus(401);
-            }
-            jsonwebtoken_1.default.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`, (err, user) => {
-                if (err) {
-                    return res.sendStatus(403);
-                }
-                req.user = user;
-                next();
-            });
         });
     }
 }

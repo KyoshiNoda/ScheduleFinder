@@ -1,7 +1,7 @@
 import express from 'express';
 import UserController from '../controllers/UserController';
-import User from '../models/userModal';
 const router = express.Router();
+
 router.get('/getUsers', UserController.getAllUsers);
 router.get('/:id', UserController.getUserById);
 router.post('/createUser', UserController.createUser);
