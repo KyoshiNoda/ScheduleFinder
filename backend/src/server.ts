@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 
 import userRoute from './routes/userRoute';
 import authRoute from './routes/authRoute';
+import scheduleRoute from './routes/scheduleRoute';
 
 const app = express();
 app.use(cors());
@@ -14,7 +15,8 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api/user', userRoute);
-app.use('/api/auth',authRoute)
+app.use('/api/auth', authRoute)
+app.use('/api/schedule', scheduleRoute);
 mongoose.set('strictQuery', true);
 
 mongoose.connect(`${process.env.DB_URI}`, {
