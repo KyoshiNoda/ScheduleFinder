@@ -12,7 +12,7 @@ const timeSlotSchema = new mongoose_1.default.Schema({
     endTime: { type: String, required: true },
     color: { type: String, required: true },
     location: String,
-    professor: String
+    professor: String,
 });
 const daySchema = new mongoose_1.default.Schema({
     day: { type: String, required: true },

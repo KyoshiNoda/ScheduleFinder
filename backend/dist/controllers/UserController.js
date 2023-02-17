@@ -25,7 +25,9 @@ class UserController {
                 else {
                     throw err;
                 }
-            }).clone().catch(err => console.log(err));
+            })
+                .clone()
+                .catch((err) => console.log(err));
         });
     }
     // GET single user by id
@@ -39,7 +41,9 @@ class UserController {
                 else {
                     throw err;
                 }
-            }).clone().catch(err => console.log(err));
+            })
+                .clone()
+                .catch((err) => console.log(err));
         });
     }
     // POST new user
@@ -55,10 +59,12 @@ class UserController {
                 email: req.body.email,
                 password: hashedPassword,
                 gender: req.body.gender,
-                school: req.body.school
+                school: req.body.school,
             });
-            user.save().then(() => {
-                console.log("one entry added");
+            user
+                .save()
+                .then(() => {
+                console.log('one entry added');
             })
                 .catch((err) => {
                 console.log(err);
@@ -76,7 +82,9 @@ class UserController {
                 else {
                     throw err;
                 }
-            }).clone().catch(err => console.log(err));
+            })
+                .clone()
+                .catch((err) => console.log(err));
         });
     }
     // PATCH user by id

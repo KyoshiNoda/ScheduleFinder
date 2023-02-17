@@ -1,9 +1,8 @@
-import { Request, Response } from "express";
-import User from "../models/userModal";
+import { Request, Response } from 'express';
+import User from '../models/userModal';
 import bcrypt from 'bcrypt';
 
 class UserController {
-
   // GET all user
   public static async getAllUsers(req: Request, res: Response): Promise<any> {
     await User.find({}, (err: any, found: any) => {
@@ -12,7 +11,9 @@ class UserController {
       } else {
         throw err;
       }
-    }).clone().catch(err => console.log(err));
+    })
+      .clone()
+      .catch((err) => console.log(err));
   }
 
   // GET single user by id
@@ -24,7 +25,9 @@ class UserController {
       } else {
         throw err;
       }
-    }).clone().catch(err => console.log(err));
+    })
+      .clone()
+      .catch((err) => console.log(err));
   }
 
   // POST new user
@@ -39,11 +42,13 @@ class UserController {
       email: req.body.email,
       password: hashedPassword,
       gender: req.body.gender,
-      school: req.body.school
+      school: req.body.school,
     });
-    user.save().then(() => {
-      console.log("one entry added");
-    })
+    user
+      .save()
+      .then(() => {
+        console.log('one entry added');
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -55,11 +60,12 @@ class UserController {
     await User.deleteOne({ _id: id }, (err: any, deleted: any) => {
       if (!err) {
         res.send(`user ${id} was deleted!`);
-      }
-      else {
+      } else {
         throw err;
       }
-    }).clone().catch(err => console.log(err));
+    })
+      .clone()
+      .catch((err) => console.log(err));
   }
 
   // PATCH user by id

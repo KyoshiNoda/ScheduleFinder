@@ -23,7 +23,9 @@ class ScheduleController {
                 else {
                     throw err;
                 }
-            }).clone().catch(err => console.log(err));
+            })
+                .clone()
+                .catch((err) => console.log(err));
         });
     }
 }

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document } from 'mongoose';
 export interface TimeSlot {
   id: number;
   category: number;
@@ -29,8 +29,9 @@ const timeSlotSchema: Schema = new mongoose.Schema({
   endTime: { type: String, required: true },
   color: { type: String, required: true },
   location: String,
-  professor: String
+  professor: String,
 });
+
 const daySchema: Schema = new mongoose.Schema({
   day: { type: String, required: true },
   timeSlot: [timeSlotSchema],

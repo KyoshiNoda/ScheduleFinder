@@ -15,12 +15,13 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api/user', userRoute);
-app.use('/api/auth', authRoute)
+app.use('/api/auth', authRoute);
 app.use('/api/schedule', scheduleRoute);
 mongoose.set('strictQuery', true);
 
-mongoose.connect(`${process.env.DB_URI}`, {
-}).then(() => console.log('connected to DB!'))
+mongoose
+  .connect(`${process.env.DB_URI}`, {})
+  .then(() => console.log('connected to DB!'))
   .catch((err) => console.log(err));
 
 app.listen(3001, () => {

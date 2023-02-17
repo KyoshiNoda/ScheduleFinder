@@ -12,7 +12,7 @@ const userSchema = new mongoose_1.default.Schema({
     age: Number,
     photoURL: String,
     gender: String,
-    school: String
+    school: String,
 });
 const User = mongoose_1.default.model('User', userSchema);
 exports.default = User;
