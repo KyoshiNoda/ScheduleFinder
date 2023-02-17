@@ -43,7 +43,9 @@ app.use('/api/user', userRoute_1.default);
 app.use('/api/auth', authRoute_1.default);
 app.use('/api/schedule', scheduleRoute_1.default);
 mongoose_1.default.set('strictQuery', true);
-mongoose_1.default.connect(`${process.env.DB_URI}`, {}).then(() => console.log('connected to DB!'))
+mongoose_1.default
+    .connect(`${process.env.DB_URI}`, {})
+    .then(() => console.log('connected to DB!'))
     .catch((err) => console.log(err));
 app.listen(3001, () => {
     console.log('listening on port 3001');

@@ -24,22 +24,25 @@ class AuthController {
                         return found;
                     }
                     else {
-                        res.send("not allowed");
+                        res.send('not allowed');
                     }
                 }
                 else {
-                    res.status(400).send("No user Found");
+                    res.status(400).send('No user Found');
                 }
-            })).clone().exec().then((docs => {
+            }))
+                .clone()
+                .exec()
+                .then((docs) => {
                 const accessToken = jsonwebtoken_1.default.sign({ data: docs }, `${process.env.ACCESS_TOKEN_SECRET}`);
                 res.send({ token: accessToken });
-            }));
+            });
         });
     }
     static authToken(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const authHeader = req.headers['authorization'];
-            const token = authHeader && authHeader.split(" ")[1];
+            const token = authHeader && authHeader.split(' ')[1];
             if (token === null) {
                 return res.sendStatus(401);
             }
