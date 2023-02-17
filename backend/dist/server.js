@@ -41,7 +41,7 @@ app.use(express_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use('/api/users', userRoute_1.default);
 app.use('/api/auth', authRoute_1.default);
-app.use('/api/schedule', scheduleRoute_1.default);
+app.use('/api/schedules', scheduleRoute_1.default);
 mongoose_1.default.set('strictQuery', true);
 mongoose_1.default
     .connect(`${process.env.DB_URI}`, {})

@@ -38,7 +38,7 @@ const daySchema: Schema = new mongoose.Schema({
 });
 
 const scheduleSchema: Schema = new mongoose.Schema({
-  user: { type: String, required: true },
+  user_id: { type: String, required: true },
   visibility: { type: String, required: true },
   week: [daySchema],
 });
