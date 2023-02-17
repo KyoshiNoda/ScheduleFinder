@@ -5,10 +5,6 @@ import User from '../models/userModal';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-interface ReqExtended extends Request {
-  user: any;
-}
-
 class AuthController {
   public static async loginUser(req: Request, res: Response) {
     await User.findOne(
@@ -54,6 +50,7 @@ class AuthController {
       }
     );
   }
+  
 }
 
 export default AuthController;

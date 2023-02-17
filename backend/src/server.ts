@@ -14,9 +14,9 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/api/user', userRoute);
+app.use('/api/users', userRoute);
 app.use('/api/auth', authRoute);
-app.use('/api/schedule', scheduleRoute);
+app.use('/api/schedules', scheduleRoute);
 mongoose.set('strictQuery', true);
 
 mongoose

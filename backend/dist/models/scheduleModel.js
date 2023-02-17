@@ -19,7 +19,7 @@ const daySchema = new mongoose_1.default.Schema({
     timeSlot: [timeSlotSchema],
 });
 const scheduleSchema = new mongoose_1.default.Schema({
-    user: { type: String, required: true },
+    user_id: { type: String, required: true },
     visibility: { type: String, required: true },
     week: [daySchema],
 });
