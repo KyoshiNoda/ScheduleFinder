@@ -7,13 +7,6 @@ router.get('/:id', UserController.getUserById);
 router.post('/createUser', UserController.createUser);
 router.delete('/:id', UserController.deleteUser);
 
-router.patch('/updateFirstName/:id', UserController.updateFirstName);
-router.patch('/updateLastName/:id', UserController.updateLastName);
-router.patch('/updateEmail/:id', UserController.updateEmail);
-router.patch('/updatePassword/:id', UserController.updatePassword);
-router.patch('/updateGender/:id', UserController.updateGender);
-router.patch('/updateSchool/:id', UserController.updateSchool);
-router.patch('/updateAge/:id', UserController.updateAge);
-router.patch('/updatePhoto/:id', UserController.updatePhoto);
-export default router;
+router.patch('/user/:id', UserController.updateUser);
 
+export default router;
