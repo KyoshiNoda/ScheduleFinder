@@ -44,6 +44,7 @@ class UserController {
       gender: req.body.gender,
       school: req.body.school,
     });
+
     user
       .save()
       .then(() => {
@@ -71,11 +72,22 @@ class UserController {
   // PATCH user by id
   public static async updateUser(req: Request, res: Response) {
     const id = req.params.id;
-    try {
-      const user = await User.findOneAndUpdate({ _id: id }, { ...req.body });
+    if (req.body.password) {
+      const newPassword = req.body.password;
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+      const user = await User.findOneAndUpdate(
+        { _id: id },
+        { ...req.body, password: hashedPassword }
+      );
       res.json(user);
-    } catch (error) {
-      res.json(`The update attempt to user ${id} has failed`);
+    } else {
+      try {
+        const user = await User.findOneAndUpdate({ _id: id }, { ...req.body });
+        res.json(user);
+      } catch (error) {
+        res.json(`The update attempt to user ${id} has failed`);
+      }
     }
   }
 }

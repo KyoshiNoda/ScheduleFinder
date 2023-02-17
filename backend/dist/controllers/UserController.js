@@ -91,12 +91,21 @@ class UserController {
     static updateUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            try {
-                const user = yield userModal_1.default.findOneAndUpdate({ _id: id }, Object.assign({}, req.body));
+            if (req.body.password) {
+                const newPassword = req.body.password;
+                const salt = yield bcrypt_1.default.genSalt();
+                const hashedPassword = yield bcrypt_1.default.hash(newPassword, salt);
+                const user = yield userModal_1.default.findOneAndUpdate({ _id: id }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }));
                 res.json(user);
             }
-            catch (error) {
-                res.json(`The update attempt to user ${id} has failed`);
+            else {
+                try {
+                    const user = yield userModal_1.default.findOneAndUpdate({ _id: id }, Object.assign({}, req.body));
+                    res.json(user);
+                }
+                catch (error) {
+                    res.json(`The update attempt to user ${id} has failed`);
+                }
             }
         });
     }
