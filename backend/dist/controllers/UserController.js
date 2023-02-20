@@ -12,13 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const userModal_1 = __importDefault(require("../models/userModal"));
+const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 class UserController {
     // GET all user
     static getAllUsers(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield userModal_1.default.find({}, (err, found) => {
+            yield userModel_1.default.find({}, (err, found) => {
                 if (!err) {
                     res.send(found);
                 }
@@ -34,7 +34,7 @@ class UserController {
     static getUserById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            yield userModal_1.default.find({ _id: id }, (err, found) => {
+            yield userModel_1.default.find({ _id: id }, (err, found) => {
                 if (!err) {
                     res.send(found);
                 }
@@ -51,7 +51,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             const salt = yield bcrypt_1.default.genSalt();
             const hashedPassword = yield bcrypt_1.default.hash(req.body.password, salt);
-            const user = new userModal_1.default({
+            const user = new userModel_1.default({
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 age: req.body.age,
@@ -75,7 +75,7 @@ class UserController {
     static deleteUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            yield userModal_1.default.deleteOne({ _id: id }, (err, deleted) => {
+            yield userModel_1.default.deleteOne({ _id: id }, (err, deleted) => {
                 if (!err) {
                     res.send(`user ${id} was deleted!`);
                 }
@@ -95,12 +95,12 @@ class UserController {
                 const newPassword = req.body.password;
                 const salt = yield bcrypt_1.default.genSalt();
                 const hashedPassword = yield bcrypt_1.default.hash(newPassword, salt);
-                const user = yield userModal_1.default.findOneAndUpdate({ _id: id }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }));
+                const user = yield userModel_1.default.findOneAndUpdate({ _id: id }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }));
                 res.json(user);
             }
             else {
                 try {
-                    const user = yield userModal_1.default.findOneAndUpdate({ _id: id }, Object.assign({}, req.body));
+                    const user = yield userModel_1.default.findOneAndUpdate({ _id: id }, Object.assign({}, req.body));
                     res.json(user);
                 }
                 catch (error) {

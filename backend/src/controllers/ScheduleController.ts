@@ -16,9 +16,16 @@ class ScheduleController {
       .clone()
       .catch((err) => console.log(err));
   }
+  public static async getScheduleById(req : Request, res : Response) : Promise<any>{
+    const id = req.params.id;
+    const user = await Schedule.findById(id)
+    res.json(user);
+  }
+
+
+
   public static async getScheduleByToken(req: any, res: any): Promise<any> {
     const user_ID : string = req.user.data._id;
-    console.log(user_ID);
     const user = await Schedule.find({user_id: user_ID}, (err: any, found: any) => {
       if (!err) {
         return found;
@@ -30,11 +37,6 @@ class ScheduleController {
       .catch((err) => console.log(err));
       res.json(user)
   }
-
-
-
-
-
 }
 
 export default ScheduleController;

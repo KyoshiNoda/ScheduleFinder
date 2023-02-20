@@ -28,10 +28,16 @@ class ScheduleController {
                 .catch((err) => console.log(err));
         });
     }
+    static getScheduleById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const user = yield scheduleModel_1.default.findById(id);
+            res.json(user);
+        });
+    }
     static getScheduleByToken(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const user_ID = req.user.data._id;
-            console.log(user_ID);
             const user = yield scheduleModel_1.default.find({ user_id: user_ID }, (err, found) => {
                 if (!err) {
                     return found;

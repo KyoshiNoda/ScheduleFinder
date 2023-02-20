@@ -12,13 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const userModal_1 = __importDefault(require("../models/userModal"));
+const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class AuthController {
     static loginUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield userModal_1.default.findOne({ email: req.body.email }, (err, found) => __awaiter(this, void 0, void 0, function* () {
+            yield userModel_1.default.findOne({ email: req.body.email }, (err, found) => __awaiter(this, void 0, void 0, function* () {
                 if (!(found === undefined)) {
                     if (yield bcrypt_1.default.compare(req.body.password, found === null || found === void 0 ? void 0 : found.password)) {
                         return found;
