@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Error } from 'mongoose';
-import { IUser } from '../models/userModal';
-import User from '../models/userModal';
+import { IUser } from '../models/userModel';
+import User from '../models/userModel';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 

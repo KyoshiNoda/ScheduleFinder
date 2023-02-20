@@ -1,7 +1,8 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 export interface TimeSlot {
-  id: number;
-  category: number;
+  _id: ObjectId;
+  day: string;
+  category: string;
   title: string;
   startTime: string;
   endTime: string;
@@ -10,19 +11,15 @@ export interface TimeSlot {
   professor?: string;
 }
 
-export interface Day {
-  day: string;
-  timeSlot: TimeSlot[];
-}
-
 export interface ISchedule extends Document {
   user_id: string;
   visibility: string;
-  week: Day[];
+  week: TimeSlot[];
 }
 
 const timeSlotSchema: Schema = new mongoose.Schema({
-  id: { type: Number, required: true },
+  _id: { type: Number, required: true },
+  day: { type: String, required: true },
   category: { type: String, required: true },
   title: { type: String, required: true },
   startTime: { type: String, required: true },
@@ -40,7 +37,7 @@ const daySchema: Schema = new mongoose.Schema({
 const scheduleSchema: Schema = new mongoose.Schema({
   user_id: { type: String, required: true },
   visibility: { type: String, required: true },
-  week: [daySchema],
+  week: [daySchema]
 });
 
 const Schedule = mongoose.model<ISchedule>('Schedule', scheduleSchema);
