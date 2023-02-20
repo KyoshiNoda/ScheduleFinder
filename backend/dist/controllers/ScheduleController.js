@@ -35,6 +35,16 @@ class ScheduleController {
             res.json(user);
         });
     }
+    static createSchedule(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const schedule = new scheduleModel_1.default({
+                user_id: req.body.user_id,
+                visibility: req.body.visibility,
+                timeSlot: []
+            });
+            schedule.save().then(() => console.log("schedule entry added"));
+        });
+    }
     static getScheduleByToken(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const user_ID = req.user.data._id;

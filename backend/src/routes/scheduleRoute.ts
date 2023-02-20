@@ -5,4 +5,7 @@ const router = express.Router();
 router.get('/', ScheduleController.getAllSchedules);
 router.get('/userSchedule', AuthController.authToken,ScheduleController.getScheduleByToken)
 router.get('/:id',ScheduleController.getScheduleById);
+
+router.post('/',ScheduleController.createSchedule);
+
 export default router;

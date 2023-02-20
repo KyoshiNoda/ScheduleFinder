@@ -14,7 +14,7 @@ export interface TimeSlot {
 export interface ISchedule extends Document {
   user_id: string;
   visibility: string;
-  week: TimeSlot[];
+  timeSlot: TimeSlot[];
 }
 
 const timeSlotSchema: Schema = new mongoose.Schema({
@@ -37,7 +37,7 @@ const daySchema: Schema = new mongoose.Schema({
 const scheduleSchema: Schema = new mongoose.Schema({
   user_id: { type: String, required: true },
   visibility: { type: String, required: true },
-  week: [daySchema]
+  timeSlot: [daySchema]
 });
 
 const Schedule = mongoose.model<ISchedule>('Schedule', scheduleSchema);

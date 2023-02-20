@@ -16,26 +16,38 @@ class ScheduleController {
       .clone()
       .catch((err) => console.log(err));
   }
-  public static async getScheduleById(req : Request, res : Response) : Promise<any>{
+  public static async getScheduleById( req: Request, res: Response): Promise<any> {
     const id = req.params.id;
-    const user = await Schedule.findById(id)
+    const user = await Schedule.findById(id);
     res.json(user);
+  }
+  public static async createSchedule(req: Request, res : Response) : Promise<any>{
+    const schedule = new Schedule({
+      user_id : req.body.user_id,
+      visibility : req.body.visibility,
+      timeSlot : []
+    });
+    schedule.save().then(() => console.log("schedule entry added"));
+
   }
 
 
 
   public static async getScheduleByToken(req: any, res: any): Promise<any> {
-    const user_ID : string = req.user.data._id;
-    const user = await Schedule.find({user_id: user_ID}, (err: any, found: any) => {
-      if (!err) {
-        return found;
-      } else {
-        throw err;
+    const user_ID: string = req.user.data._id;
+    const user = await Schedule.find(
+      { user_id: user_ID },
+      (err: any, found: any) => {
+        if (!err) {
+          return found;
+        } else {
+          throw err;
+        }
       }
-    })
+    )
       .clone()
       .catch((err) => console.log(err));
-      res.json(user)
+    res.json(user);
   }
 }
 

@@ -10,4 +10,5 @@ const router = express_1.default.Router();
 router.get('/', ScheduleController_1.default.getAllSchedules);
 router.get('/userSchedule', AuthController_1.default.authToken, ScheduleController_1.default.getScheduleByToken);
 router.get('/:id', ScheduleController_1.default.getScheduleById);
+router.post('/', ScheduleController_1.default.createSchedule);
 exports.default = router;
