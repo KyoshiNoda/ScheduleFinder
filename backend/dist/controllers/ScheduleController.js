@@ -64,9 +64,9 @@ class ScheduleController {
             const schedule = new scheduleModel_1.default({
                 user_id: req.body.user_id,
                 visibility: req.body.visibility,
-                timeSlot: []
+                timeSlot: [],
             });
-            schedule.save().then(() => console.log("schedule entry added"));
+            schedule.save().then(() => console.log('schedule entry added'));
         });
     }
     static insertTimeSlot(req, res) {
@@ -80,9 +80,9 @@ class ScheduleController {
                 endTime: req.body.endTime,
                 color: req.body.color,
                 location: req.body.location,
-                professor: req.body.professor
+                professor: req.body.professor,
             };
-            scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id }, { $push: { timeSlot: newTimeSlot } }).then(() => console.log("inserted"));
+            scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id }, { $push: { timeSlot: newTimeSlot } }).then(() => console.log('inserted'));
         });
     }
     static getScheduleByToken(req, res) {

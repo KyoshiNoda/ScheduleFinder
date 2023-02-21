@@ -18,7 +18,7 @@ const timeSlotSchema = new mongoose_1.default.Schema({
 const scheduleSchema = new mongoose_1.default.Schema({
     user_id: { type: String, required: true },
     visibility: { type: String, required: true },
-    timeSlot: { type: Array, "default": [] }
+    timeSlot: { type: Array, default: [] },
 });
 const Schedule = mongoose_1.default.model('Schedule', scheduleSchema);
 exports.default = Schedule;

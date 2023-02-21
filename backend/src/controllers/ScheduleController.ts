@@ -17,36 +17,45 @@ class ScheduleController {
       .clone()
       .catch((err) => console.log(err));
   }
-  public static async getScheduleById( req: Request, res: Response): Promise<any> {
+  public static async getScheduleById(
+    req: Request,
+    res: Response
+  ): Promise<any> {
     const id = req.params.id;
     const user = await Schedule.findById(id);
     res.json(user);
   }
-  public static async createSchedule(req: Request, res : Response) : Promise<any>{
+  public static async createSchedule(
+    req: Request,
+    res: Response
+  ): Promise<any> {
     const schedule = new Schedule({
-      user_id : req.body.user_id,
-      visibility : req.body.visibility,
-      timeSlot : []
+      user_id: req.body.user_id,
+      visibility: req.body.visibility,
+      timeSlot: [],
     });
-    schedule.save().then(() => console.log("schedule entry added"));
-
+    schedule.save().then(() => console.log('schedule entry added'));
   }
-  public static async insertTimeSlot(req : Request, res : Response) : Promise<any>{
-    const newTimeSlot : TimeSlot = {
-      _id : new mongoose.Types.ObjectId(),
-      day : req.body.day,
-      category : req.body.category,
-      title : req.body.title,
-      startTime : req.body.startTime,
-      endTime : req.body.endTime,
-      color : req.body.color,
-      location : req.body.location,
-      professor : req.body.professor
-    }
-   Schedule.findOneAndUpdate({_id : req.params.id},{$push : {timeSlot : newTimeSlot}}).then(() => console.log("inserted"));
+  public static async insertTimeSlot(
+    req: Request,
+    res: Response
+  ): Promise<any> {
+    const newTimeSlot: TimeSlot = {
+      _id: new mongoose.Types.ObjectId(),
+      day: req.body.day,
+      category: req.body.category,
+      title: req.body.title,
+      startTime: req.body.startTime,
+      endTime: req.body.endTime,
+      color: req.body.color,
+      location: req.body.location,
+      professor: req.body.professor,
+    };
+    Schedule.findOneAndUpdate(
+      { _id: req.params.id },
+      { $push: { timeSlot: newTimeSlot } }
+    ).then(() => console.log('inserted'));
   }
-
-
 
   public static async getScheduleByToken(req: any, res: any): Promise<any> {
     const user_ID: string = req.user.data._id;

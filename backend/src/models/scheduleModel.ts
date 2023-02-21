@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 export interface TimeSlot {
-  _id: mongoose.Types.ObjectId
+  _id: mongoose.Types.ObjectId;
   day: string;
   category: string;
   title: string;
@@ -29,11 +29,10 @@ const timeSlotSchema: Schema = new mongoose.Schema({
   professor: String,
 });
 
-
 const scheduleSchema: Schema = new mongoose.Schema({
   user_id: { type: String, required: true },
   visibility: { type: String, required: true },
-  timeSlot : {type : Array, "default" : []}
+  timeSlot: { type: Array, default: [] },
 });
 
 const Schedule = mongoose.model<ISchedule>('Schedule', scheduleSchema);
