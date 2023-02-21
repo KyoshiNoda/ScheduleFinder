@@ -15,14 +15,10 @@ const timeSlotSchema = new mongoose_1.default.Schema({
     location: String,
     professor: String,
 });
-const daySchema = new mongoose_1.default.Schema({
-    day: { type: String, required: true },
-    timeSlot: [timeSlotSchema],
-});
 const scheduleSchema = new mongoose_1.default.Schema({
     user_id: { type: String, required: true },
     visibility: { type: String, required: true },
-    timeSlot: [daySchema]
+    timeSlot: { type: Array, "default": [] }
 });
 const Schedule = mongoose_1.default.model('Schedule', scheduleSchema);
 exports.default = Schedule;

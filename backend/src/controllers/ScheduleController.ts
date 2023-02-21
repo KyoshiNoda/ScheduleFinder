@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import { Error } from 'mongoose';
-import Schedule from '../models/scheduleModel';
+import { Error, Types } from 'mongoose';
+import * as mongoose from 'mongoose';
+import Schedule, { TimeSlot } from '../models/scheduleModel';
 class ScheduleController {
   public static async getAllSchedules(
     req: Request,
@@ -29,6 +30,20 @@ class ScheduleController {
     });
     schedule.save().then(() => console.log("schedule entry added"));
 
+  }
+  public static async insertTimeSlot(req : Request, res : Response) : Promise<any>{
+    const newTimeSlot : TimeSlot = {
+      _id : new mongoose.Types.ObjectId(),
+      day : req.body.day,
+      category : req.body.category,
+      title : req.body.title,
+      startTime : req.body.startTime,
+      endTime : req.body.endTime,
+      color : req.body.color,
+      location : req.body.location,
+      professor : req.body.professor
+    }
+   Schedule.findOneAndUpdate({_id : req.params.id},{$push : {timeSlot : newTimeSlot}}).then(() => console.log("inserted"));
   }
 
 

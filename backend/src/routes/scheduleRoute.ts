@@ -7,5 +7,6 @@ router.get('/userSchedule', AuthController.authToken,ScheduleController.getSched
 router.get('/:id',ScheduleController.getScheduleById);
 
 router.post('/',ScheduleController.createSchedule);
+router.post('/:id',ScheduleController.insertTimeSlot);
 
 export default router;
