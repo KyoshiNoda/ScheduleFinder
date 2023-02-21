@@ -101,5 +101,18 @@ class ScheduleController {
             res.json(user);
         });
     }
+    static deleteScheduleByID(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield scheduleModel_1.default.deleteOne({ _id: id }, (err, deleted) => {
+                if (!err) {
+                    res.json(`schedule ${id} was deleted!`);
+                }
+                else {
+                    throw err;
+                }
+            }).clone().catch(err => console.log(err));
+        });
+    }
 }
 exports.default = ScheduleController;

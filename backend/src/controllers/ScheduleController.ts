@@ -3,10 +3,7 @@ import { Error, Types } from 'mongoose';
 import * as mongoose from 'mongoose';
 import Schedule, { TimeSlot } from '../models/scheduleModel';
 class ScheduleController {
-  public static async getAllSchedules(
-    req: Request,
-    res: Response
-  ): Promise<any> {
+  public static async getAllSchedules(req: Request, res: Response) {
     await Schedule.find({}, (err: Error, result: any) => {
       if (!err) {
         res.send(result);
@@ -17,18 +14,14 @@ class ScheduleController {
       .clone()
       .catch((err) => console.log(err));
   }
-  public static async getScheduleById(
-    req: Request,
-    res: Response
-  ): Promise<any> {
+
+  public static async getScheduleById(req: Request, res: Response) {
     const id = req.params.id;
     const user = await Schedule.findById(id);
     res.json(user);
   }
-  public static async createSchedule(
-    req: Request,
-    res: Response
-  ): Promise<any> {
+
+  public static async createSchedule(req: Request, res: Response) {
     const schedule = new Schedule({
       user_id: req.body.user_id,
       visibility: req.body.visibility,
@@ -36,10 +29,8 @@ class ScheduleController {
     });
     schedule.save().then(() => console.log('schedule entry added'));
   }
-  public static async insertTimeSlot(
-    req: Request,
-    res: Response
-  ): Promise<any> {
+
+  public static async insertTimeSlot(req: Request, res: Response) {
     const newTimeSlot: TimeSlot = {
       _id: new mongoose.Types.ObjectId(),
       day: req.body.day,
@@ -57,7 +48,7 @@ class ScheduleController {
     ).then(() => console.log('inserted'));
   }
 
-  public static async getScheduleByToken(req: any, res: any): Promise<any> {
+  public static async getScheduleByToken(req: any, res: any) {
     const user_ID: string = req.user.data._id;
     const user = await Schedule.find(
       { user_id: user_ID },
@@ -72,6 +63,18 @@ class ScheduleController {
       .clone()
       .catch((err) => console.log(err));
     res.json(user);
+  }
+  
+  public static async deleteScheduleByID(req : Request, res : Response){
+    const id = req.params.id;
+    await Schedule.deleteOne({_id : id}, (err: Error, deleted : any) =>{
+      if(!err){
+        res.json(`schedule ${id} was deleted!`);
+      }
+      else{
+        throw err;
+      }
+    }).clone().catch(err => console.log(err));
   }
 }
 
