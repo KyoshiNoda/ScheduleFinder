@@ -12,4 +12,5 @@ router.get('/userSchedule', AuthController_1.default.authToken, ScheduleControll
 router.get('/:id', ScheduleController_1.default.getScheduleById);
 router.post('/', ScheduleController_1.default.createSchedule);
 router.post('/:id', ScheduleController_1.default.insertTimeSlot);
+router.delete('/:id', ScheduleController_1.default.deleteScheduleByID);
 exports.default = router;

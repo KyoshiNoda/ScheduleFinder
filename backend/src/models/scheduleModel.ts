@@ -32,7 +32,7 @@ const timeSlotSchema: Schema = new mongoose.Schema({
 const scheduleSchema: Schema = new mongoose.Schema({
   user_id: { type: String, required: true },
   visibility: { type: String, required: true },
-  timeSlot: { type: Array, default: [] },
+  timeSlot: { type: Array, default: [timeSlotSchema] },
 });
 
 const Schedule = mongoose.model<ISchedule>('Schedule', scheduleSchema);
