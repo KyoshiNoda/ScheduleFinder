@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -12,6 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose = __importStar(require("mongoose"));
 const scheduleModel_1 = __importDefault(require("../models/scheduleModel"));
 class ScheduleController {
     static getAllSchedules(req, res) {
@@ -28,10 +52,42 @@ class ScheduleController {
                 .catch((err) => console.log(err));
         });
     }
+    static getScheduleById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const user = yield scheduleModel_1.default.findById(id);
+            res.json(user);
+        });
+    }
+    static createSchedule(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const schedule = new scheduleModel_1.default({
+                user_id: req.body.user_id,
+                visibility: req.body.visibility,
+                timeSlot: [],
+            });
+            schedule.save().then(() => console.log('schedule entry added'));
+        });
+    }
+    static insertTimeSlot(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const newTimeSlot = {
+                _id: new mongoose.Types.ObjectId(),
+                day: req.body.day,
+                category: req.body.category,
+                title: req.body.title,
+                startTime: req.body.startTime,
+                endTime: req.body.endTime,
+                color: req.body.color,
+                location: req.body.location,
+                professor: req.body.professor,
+            };
+            scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id }, { $push: { timeSlot: newTimeSlot } }).then(() => console.log('inserted'));
+        });
+    }
     static getScheduleByToken(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const user_ID = req.user.data._id;
-            console.log(user_ID);
             const user = yield scheduleModel_1.default.find({ user_id: user_ID }, (err, found) => {
                 if (!err) {
                     return found;
