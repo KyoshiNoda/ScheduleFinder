@@ -8,7 +8,7 @@ class ScheduleController {
       if (!err) {
         res.send(result);
       } else {
-        throw err;
+        res.status(404).json(err);
       }
     })
       .clone()
@@ -42,7 +42,7 @@ class ScheduleController {
       location: req.body.location,
       professor: req.body.professor,
     };
-    Schedule.findOneAndUpdate(
+    await Schedule.findOneAndUpdate(
       { _id: req.params.id },
       { $push: { timeSlot: newTimeSlot } }
     ).then(() => console.log('inserted'));
@@ -52,8 +52,8 @@ class ScheduleController {
     try {
       const schedule = await Schedule.findOneAndUpdate({ _id: req.params.id }, { ...req.body });
       res.json(schedule)
-    } catch (error) {
-      res.json(`The update attempt to user ${req.params._id} has failed`);
+    } catch () {
+      res.status(400).json(`The update attempt to user ${req.params._id} has failed`);
     }
   }
 
@@ -71,16 +71,20 @@ class ScheduleController {
     await schedule?.save();
     res.send("it worked!")
   }
+
   public static async deleteTimeSlot(req : Request, res : Response){
     const schedule  = await Schedule.findOne({_id : req.params.id},(err : Error,found : any) =>{
       if(!err){
        return found
       }
+      else{
+        res.status(404).json({error : "Schedule not Found"});
+      }
     }).clone()
     if (schedule && schedule.timeSlot) {
       schedule.timeSlot = schedule.timeSlot.filter((deletedItem) => deletedItem._id != req.body._id);
     }
-   schedule?.save();
+   await schedule?.save();
    res.send("deleted timeSlot");
   }
 
@@ -88,11 +92,11 @@ class ScheduleController {
     const user_ID: string = req.user.data._id;
     const user = await Schedule.find(
       { user_id: user_ID },
-      (err: any, found: any) => {
+      (err: Error, found: any) => {
         if (!err) {
           return found;
         } else {
-          throw err;
+          res.status(400).json(err);
         }
       }
     )
@@ -108,7 +112,7 @@ class ScheduleController {
         res.json(`schedule ${id} was deleted!`);
       }
       else{
-        throw err;
+        res.status(400).json(err);
       }
     }).clone().catch(err => console.log(err));
   }
