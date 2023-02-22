@@ -85,6 +85,20 @@ class ScheduleController {
             scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id }, { $push: { timeSlot: newTimeSlot } }).then(() => console.log('inserted'));
         });
     }
+    static updateTimeSlot(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const schedule = yield scheduleModel_1.default.findOne({ _id: req.params.id }, (err, found) => {
+                if (!err) {
+                    return found;
+                }
+            }).clone();
+            // const timeSlot = schedule?.timeSlot.find((timeSlot) => timeSlot._id == req.body._id); 
+            const timeSlotIndex = schedule === null || schedule === void 0 ? void 0 : schedule.timeSlot.findIndex((timeSlot) => timeSlot._id == req.body._id);
+            schedule.timeSlot[timeSlotIndex] = Object.assign(Object.assign({}, schedule === null || schedule === void 0 ? void 0 : schedule.timeSlot[timeSlotIndex]), req.body);
+            yield (schedule === null || schedule === void 0 ? void 0 : schedule.save());
+            res.send("it worked!");
+        });
+    }
     static getScheduleByToken(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const user_ID = req.user.data._id;
