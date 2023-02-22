@@ -47,13 +47,13 @@ class ScheduleController {
       { $push: { timeSlot: newTimeSlot } }
     ).then(() => console.log('inserted'));
   }
+
   public static async updateTimeSlot(req: Request, res : Response){
     const schedule  = await Schedule.findOne({_id : req.params.id},(err : Error,found : any) =>{
       if(!err){
        return found
       }
     }).clone()
-    // const timeSlot = schedule?.timeSlot.find((timeSlot) => timeSlot._id == req.body._id); 
     const timeSlotIndex = schedule?.timeSlot.findIndex((timeSlot) => timeSlot._id == req.body._id)!;
     schedule!.timeSlot[timeSlotIndex] = {
       ...schedule?.timeSlot[timeSlotIndex],
@@ -61,6 +61,19 @@ class ScheduleController {
     }
     await schedule?.save();
     res.send("it worked!")
+  }
+  public static async deleteTimeSlot(req : Request, res : Response){
+    const schedule  = await Schedule.findOne({_id : req.params.id},(err : Error,found : any) =>{
+      if(!err){
+       return found
+      }
+    }).clone()
+    let testData : any = []
+    if (schedule && schedule.timeSlot) {
+      schedule.timeSlot = schedule.timeSlot.filter((deletedItem) => deletedItem._id != req.body._id);
+    }
+   schedule?.save();
+   res.send("deleted timeSlot");
   }
 
   public static async getScheduleByToken(req: any, res: any) {

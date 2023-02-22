@@ -14,4 +14,5 @@ router.post('/', ScheduleController_1.default.createSchedule);
 router.post('/:id', ScheduleController_1.default.insertTimeSlot);
 router.patch('/:id', ScheduleController_1.default.updateTimeSlot);
 router.delete('/:id', ScheduleController_1.default.deleteScheduleByID);
+router.delete('/:id/timeSlot', ScheduleController_1.default.deleteTimeSlot);
 exports.default = router;
