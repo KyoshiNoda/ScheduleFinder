@@ -8,7 +8,10 @@ router.get('/:id',ScheduleController.getScheduleById);
 
 router.post('/',ScheduleController.createSchedule);
 router.post('/:id',ScheduleController.insertTimeSlot);
-router.patch('/:id',ScheduleController.updateTimeSlot);
+
+router.patch('/:id',ScheduleController.updateSchedule);
+router.patch('/:id/timeSlot',ScheduleController.updateTimeSlot);
+
 router.delete('/:id',ScheduleController.deleteScheduleByID);
 router.delete('/:id/timeSlot',ScheduleController.deleteTimeSlot);
 export default router;

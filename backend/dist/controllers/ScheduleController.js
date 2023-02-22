@@ -85,6 +85,17 @@ class ScheduleController {
             scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id }, { $push: { timeSlot: newTimeSlot } }).then(() => console.log('inserted'));
         });
     }
+    static updateSchedule(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const schedule = yield scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id }, Object.assign({}, req.body));
+                res.json(schedule);
+            }
+            catch (error) {
+                res.json(`The update attempt to user ${req.params._id} has failed`);
+            }
+        });
+    }
     static updateTimeSlot(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const schedule = yield scheduleModel_1.default.findOne({ _id: req.params.id }, (err, found) => {
@@ -105,7 +116,6 @@ class ScheduleController {
                     return found;
                 }
             }).clone();
-            let testData = [];
             if (schedule && schedule.timeSlot) {
                 schedule.timeSlot = schedule.timeSlot.filter((deletedItem) => deletedItem._id != req.body._id);
             }

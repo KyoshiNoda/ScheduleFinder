@@ -48,6 +48,15 @@ class ScheduleController {
     ).then(() => console.log('inserted'));
   }
 
+  public static async updateSchedule(req: Request, res : Response){
+    try {
+      const schedule = await Schedule.findOneAndUpdate({ _id: req.params.id }, { ...req.body });
+      res.json(schedule)
+    } catch (error) {
+      res.json(`The update attempt to user ${req.params._id} has failed`);
+    }
+  }
+
   public static async updateTimeSlot(req: Request, res : Response){
     const schedule  = await Schedule.findOne({_id : req.params.id},(err : Error,found : any) =>{
       if(!err){
@@ -68,7 +77,6 @@ class ScheduleController {
        return found
       }
     }).clone()
-    let testData : any = []
     if (schedule && schedule.timeSlot) {
       schedule.timeSlot = schedule.timeSlot.filter((deletedItem) => deletedItem._id != req.body._id);
     }
