@@ -52,7 +52,7 @@ class ScheduleController {
     try {
       const schedule = await Schedule.findOneAndUpdate({ _id: req.params.id }, { ...req.body });
       res.json(schedule)
-    } catch () {
+    } catch (error) {
       res.status(400).json(`The update attempt to user ${req.params._id} has failed`);
     }
   }
