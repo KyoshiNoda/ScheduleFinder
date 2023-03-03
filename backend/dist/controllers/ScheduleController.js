@@ -91,7 +91,7 @@ class ScheduleController {
                 const schedule = yield scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id }, Object.assign({}, req.body));
                 res.json(schedule);
             }
-            catch () {
+            catch (error) {
                 res.status(400).json(`The update attempt to user ${req.params._id} has failed`);
             }
         });
