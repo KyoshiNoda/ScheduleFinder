@@ -7,6 +7,7 @@ module.exports = {
   ],
   theme: {
     extend: {},
+		darkMode : 'class',
     colors: {
 			transparent: 'transparent',
 			current: 'currentColor',
