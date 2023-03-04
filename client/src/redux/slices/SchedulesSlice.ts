@@ -13,9 +13,15 @@ type TimeSlot = {
 };
 
 type Schedule = {
+<<<<<<< HEAD
   _id: string;
   userId: string;
   visibility: string;
+=======
+  _id: string
+  userId: string
+  visibility: string
+>>>>>>> d89fb339c9befacdaba6fa24e8352dde57d91bce
   timeSlots: TimeSlot[];
 };
 
