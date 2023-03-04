@@ -6,7 +6,7 @@ type Props = {};
 function Login({ }: Props) {
   return (
 
-    <div className="flex flex-col h-screen w-screen gap-40 p-3 bg-slate-500">
+    <div className="flex flex-col h-screen w-screen gap-40 p-3 bg-slate-300 dark:bg-slate-900">
       <div className='flex justify-end'>
         <Toggle />
       </div>
