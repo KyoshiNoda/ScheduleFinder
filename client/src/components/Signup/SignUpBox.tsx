@@ -5,7 +5,7 @@ type Props = {};
 
 function SignUpBox({}: Props) {
   return (
-    <div className='flex flex-col bg-gray-100 dark:bg-slate-800  rounded-lg p-10 dark:text-gray-100'>
+    <div className='flex w-1/3 flex-col bg-gray-100 dark:bg-slate-800  rounded-lg p-10 dark:text-gray-100'>
       <div className='flex justify-center text-5xl mb-5 dark:text-white'>
         Sign up
       </div>
