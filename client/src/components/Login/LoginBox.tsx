@@ -1,6 +1,6 @@
 import React from 'react';
 import LoginForm from './LoginForm';
-import LoginGoogle from './LoginGoogle';
+import GoogleAuth from '../Auth/GoogleAuth';
 type Props = {};
 
 function LoginBox({ }: Props) {
@@ -15,7 +15,7 @@ function LoginBox({ }: Props) {
         </p>
         <div className="flex-1 h-px sm:w-16 bg-gray-900 dark:bg-gray-700"></div>
       </div>
-      <LoginGoogle/>
+      <GoogleAuth/>
       <p className="text-xs text-center sm:px-6 dark:text-gray-400">
         Don't have an account? { }
         <a

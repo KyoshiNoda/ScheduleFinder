@@ -2,7 +2,7 @@ import React from 'react';
 
 type Props = {};
 
-function LoginGoogle({}: Props) {
+function GoogleAuth({}: Props) {
   return (
     <div className="flex justify-center space-x-4">
       <button aria-label="Log in with Google" className="p-3 rounded-sm">
@@ -18,4 +18,4 @@ function LoginGoogle({}: Props) {
   );
 }
 
-export default LoginGoogle;
+export default GoogleAuth;

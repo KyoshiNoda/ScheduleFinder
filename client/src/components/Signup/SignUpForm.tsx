@@ -131,7 +131,7 @@ function SignUpForm({}: Props) {
       </div>
       <button
         type="button"
-        className="text-lg w-full px-8 py-3 font-semibold rounded-full bg-gray-100 text-gray-800"
+        className="text-lg w-full px-8 py-3 font-semibold rounded-full bg-blue-400 text-white dark:bg-slate-300 dark:text-black"
       >
         Submit
       </button>
