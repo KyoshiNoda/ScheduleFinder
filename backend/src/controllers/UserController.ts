@@ -58,15 +58,14 @@ class UserController {
   // DELETE user by id
   public static async deleteUser(req: Request, res: Response) {
     const id = req.params.id;
-    await User.deleteOne({ _id: id }, (err: any, deleted: any) => {
-      if (!err) {
-        res.send(`user ${id} was deleted!`);
-      } else {
-        throw err;
-      }
-    })
-      .clone()
-      .catch((err) => console.log(err));
+    
+    const deletedUser = await User.findOneAndDelete({_id: id})
+
+    if (!deletedUser) {
+      return res.json({error: `User with id ${id} was not found`})
+    }
+
+    res.status(200).json(deletedUser);
   }
 
   // PATCH user by id
