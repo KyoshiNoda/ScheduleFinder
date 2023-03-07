@@ -58,11 +58,11 @@ class UserController {
   // DELETE user by id
   public static async deleteUser(req: Request, res: Response) {
     const id = req.params.id;
-    
-    const deletedUser = await User.findOneAndDelete({_id: id})
+
+    const deletedUser = await User.findOneAndDelete({ _id: id });
 
     if (!deletedUser) {
-      return res.json({error: `User with id ${id} was not found`})
+      return res.json({ error: `User with id ${id} was not found` });
     }
 
     res.status(200).json(deletedUser);
@@ -75,15 +75,20 @@ class UserController {
       const newPassword = req.body.password;
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(newPassword, salt);
-      const user = await User.findOneAndUpdate(
+      const updatedUser = await User.findOneAndUpdate(
         { _id: id },
-        { ...req.body, password: hashedPassword }
+        { ...req.body, password: hashedPassword },
+        { returnOriginal: false }
       );
-      res.json(user);
+      res.status(200).json(updatedUser);
     } else {
       try {
-        const user = await User.findOneAndUpdate({ _id: id }, { ...req.body });
-        res.json(user);
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: id },
+          { ...req.body },
+          { returnOriginal: false }
+        );
+        res.status(200).json(updatedUser);
       } catch (error) {
         res.json(`The update attempt to user ${id} has failed`);
       }

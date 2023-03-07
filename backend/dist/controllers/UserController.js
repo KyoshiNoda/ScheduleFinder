@@ -90,13 +90,13 @@ class UserController {
                 const newPassword = req.body.password;
                 const salt = yield bcrypt_1.default.genSalt();
                 const hashedPassword = yield bcrypt_1.default.hash(newPassword, salt);
-                const user = yield userModel_1.default.findOneAndUpdate({ _id: id }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }));
-                res.json(user);
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: id }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }), { returnOriginal: false });
+                res.status(200).json(updatedUser);
             }
             else {
                 try {
-                    const user = yield userModel_1.default.findOneAndUpdate({ _id: id }, Object.assign({}, req.body));
-                    res.json(user);
+                    const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: id }, Object.assign({}, req.body), { returnOriginal: false });
+                    res.status(200).json(updatedUser);
                 }
                 catch (error) {
                     res.json(`The update attempt to user ${id} has failed`);
