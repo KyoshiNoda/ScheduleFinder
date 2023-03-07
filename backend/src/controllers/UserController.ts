@@ -47,11 +47,11 @@ class UserController {
 
     user
       .save()
-      .then(() => {
-        console.log('one entry added');
+      .then((savedUser) => {
+        res.status(200).send(savedUser);
       })
       .catch((err) => {
-        console.log(err);
+        res.send(err);
       });
   }
 
