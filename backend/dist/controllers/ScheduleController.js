@@ -38,6 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = __importStar(require("mongoose"));
 const scheduleModel_1 = __importDefault(require("../models/scheduleModel"));
 class ScheduleController {
+    // GET all schedules
     static getAllSchedules(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             yield scheduleModel_1.default.find({}, (err, result) => {
@@ -52,6 +53,7 @@ class ScheduleController {
                 .catch((err) => console.log(err));
         });
     }
+    // GET single schedule by id
     static getScheduleById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
@@ -59,6 +61,7 @@ class ScheduleController {
             res.json(user);
         });
     }
+    // POST new schedule
     static createSchedule(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const schedule = new scheduleModel_1.default({
@@ -66,9 +69,13 @@ class ScheduleController {
                 visibility: req.body.visibility,
                 timeSlot: [],
             });
-            schedule.save().then(() => console.log('schedule entry added'));
+            schedule
+                .save()
+                .then((savedSchedule) => res.status(200).send(savedSchedule))
+                .catch(err => res.send(err));
         });
     }
+    // POST new time slot into existing schedule
     static insertTimeSlot(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const newTimeSlot = {
@@ -85,6 +92,7 @@ class ScheduleController {
             yield scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id }, { $push: { timeSlot: newTimeSlot } }).then(() => console.log('inserted'));
         });
     }
+    // PATCH an existing schedule
     static updateSchedule(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -92,10 +100,13 @@ class ScheduleController {
                 res.json(schedule);
             }
             catch (error) {
-                res.status(400).json(`The update attempt to user ${req.params._id} has failed`);
+                res
+                    .status(400)
+                    .json(`The update attempt to user ${req.params._id} has failed`);
             }
         });
     }
+    // PATCH an existing time slot
     static updateTimeSlot(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const schedule = yield scheduleModel_1.default.findOne({ _id: req.params.id }, (err, found) => {
@@ -106,9 +117,10 @@ class ScheduleController {
             const timeSlotIndex = schedule === null || schedule === void 0 ? void 0 : schedule.timeSlot.findIndex((timeSlot) => timeSlot._id == req.body._id);
             schedule.timeSlot[timeSlotIndex] = Object.assign(Object.assign({}, schedule === null || schedule === void 0 ? void 0 : schedule.timeSlot[timeSlotIndex]), req.body);
             yield (schedule === null || schedule === void 0 ? void 0 : schedule.save());
-            res.send("it worked!");
+            res.send('it worked!');
         });
     }
+    // DELETE  a time slot
     static deleteTimeSlot(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const schedule = yield scheduleModel_1.default.findOne({ _id: req.params.id }, (err, found) => {
@@ -116,14 +128,14 @@ class ScheduleController {
                     return found;
                 }
                 else {
-                    res.status(404).json({ error: "Schedule not Found" });
+                    res.status(404).json({ error: 'Schedule not Found' });
                 }
             }).clone();
             if (schedule && schedule.timeSlot) {
                 schedule.timeSlot = schedule.timeSlot.filter((deletedItem) => deletedItem._id != req.body._id);
             }
             yield (schedule === null || schedule === void 0 ? void 0 : schedule.save());
-            res.send("deleted timeSlot");
+            res.send('deleted timeSlot');
         });
     }
     static getScheduleByToken(req, res) {
@@ -142,6 +154,7 @@ class ScheduleController {
             res.json(user);
         });
     }
+    // DELETE an existing schedule
     static deleteScheduleByID(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
@@ -152,7 +165,9 @@ class ScheduleController {
                 else {
                     res.status(400).json(err);
                 }
-            }).clone().catch(err => console.log(err));
+            })
+                .clone()
+                .catch((err) => console.log(err));
         });
     }
 }
