@@ -96,8 +96,8 @@ class ScheduleController {
     static updateSchedule(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const schedule = yield scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id }, Object.assign({}, req.body));
-                res.json(schedule);
+                const schedule = yield scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id }, Object.assign({}, req.body), { new: true });
+                res.status(200).send(schedule);
             }
             catch (error) {
                 res

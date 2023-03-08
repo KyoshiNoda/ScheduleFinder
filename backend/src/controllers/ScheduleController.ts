@@ -61,9 +61,10 @@ class ScheduleController {
     try {
       const schedule = await Schedule.findOneAndUpdate(
         { _id: req.params.id },
-        { ...req.body }
+        { ...req.body },
+        { new: true }
       );
-      res.json(schedule);
+      res.status(200).send(schedule);
     } catch (error) {
       res
         .status(400)
