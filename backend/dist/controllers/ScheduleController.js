@@ -72,7 +72,7 @@ class ScheduleController {
             schedule
                 .save()
                 .then((savedSchedule) => res.status(200).send(savedSchedule))
-                .catch(err => res.send(err));
+                .catch((err) => res.send(err));
         });
     }
     // POST new time slot into existing schedule
@@ -89,7 +89,7 @@ class ScheduleController {
                 location: req.body.location,
                 professor: req.body.professor,
             };
-            yield scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id }, { $push: { timeSlot: newTimeSlot } }).then(() => console.log('inserted'));
+            yield scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id }, { $push: { timeSlot: newTimeSlot } }, { new: true }).then(() => res.status(200).send(newTimeSlot));
         });
     }
     // PATCH an existing schedule
