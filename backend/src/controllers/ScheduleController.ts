@@ -90,7 +90,7 @@ class ScheduleController {
       ...req.body,
     };
     await schedule?.save();
-    res.send('it worked!');
+    res.status(200).send(schedule!.timeSlot[timeSlotIndex]);
   }
 
   // DELETE  a time slot

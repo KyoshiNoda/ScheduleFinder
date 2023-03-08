@@ -117,7 +117,7 @@ class ScheduleController {
             const timeSlotIndex = schedule === null || schedule === void 0 ? void 0 : schedule.timeSlot.findIndex((timeSlot) => timeSlot._id == req.body._id);
             schedule.timeSlot[timeSlotIndex] = Object.assign(Object.assign({}, schedule === null || schedule === void 0 ? void 0 : schedule.timeSlot[timeSlotIndex]), req.body);
             yield (schedule === null || schedule === void 0 ? void 0 : schedule.save());
-            res.send('it worked!');
+            res.status(200).send(schedule.timeSlot[timeSlotIndex]);
         });
     }
     // DELETE  a time slot
