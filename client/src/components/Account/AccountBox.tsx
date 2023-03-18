@@ -7,7 +7,7 @@ import PasswordTab from './Password/PasswordTab';
 type Props = {};
 
 function AccountBox({}: Props) {
-  const [currentTab,setCurrentTab] = useState<string | null>();
+  const [currentTab,setCurrentTab] = useState<string | null>("Profile");
   const tabHandler = (tab: string | null) => {
    setCurrentTab(tab);
   };
