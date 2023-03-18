@@ -5,11 +5,6 @@ type Props = {
 };
 
 function Tab(props: Props): JSX.Element {
-  const [tab,setTab] = useState<string | null>("")
-  const tabHandler = (event : React.MouseEvent<HTMLDivElement>) =>{
-    setTab(event.currentTarget.textContent);
-    props.getTab(tab);
-  }
 
   return (
     <div className="flex justify-center text-lg font-medium text-center text-gray-500 border-gray-200 dark:text-gray-400 dark:border-gray-700">
@@ -18,7 +13,7 @@ function Tab(props: Props): JSX.Element {
           <div
             className="inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg dark:text-blue-500 dark:border-blue-500"
             aria-current="page"
-            onClick={tabHandler}
+            onClick={() => props.getTab("Profile")}
           >
             Profile
           </div>
@@ -26,7 +21,7 @@ function Tab(props: Props): JSX.Element {
         <li className="mr-10">
           <div
             className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            onClick={tabHandler}
+            onClick={() => props.getTab("Password")}
           >
             Password
           </div>
@@ -34,7 +29,7 @@ function Tab(props: Props): JSX.Element {
         <li className="mr-10">
           <div
             className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            onClick={tabHandler}
+            onClick={() => props.getTab("Personal")}
           >
             Personal
           </div>
