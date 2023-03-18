@@ -131,11 +131,14 @@ class ScheduleController {
                     res.status(404).json({ error: 'Schedule not Found' });
                 }
             }).clone();
+            let deletedTimeSlot = null;
             if (schedule && schedule.timeSlot) {
+                deletedTimeSlot = schedule.timeSlot.find(timeSlot => timeSlot._id == req.body._id);
+                console.log(deletedTimeSlot);
                 schedule.timeSlot = schedule.timeSlot.filter((deletedItem) => deletedItem._id != req.body._id);
             }
             yield (schedule === null || schedule === void 0 ? void 0 : schedule.save());
-            res.send('deleted timeSlot');
+            res.send(deletedTimeSlot);
         });
     }
     static getScheduleByToken(req, res) {
