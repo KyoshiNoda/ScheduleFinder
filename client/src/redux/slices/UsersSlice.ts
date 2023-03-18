@@ -32,8 +32,4 @@ export const usersSlice = createSlice({
 
 export const { loadUsers } = usersSlice.actions;
 
-<<<<<<< HEAD
 export default usersSlice.reducer;
-=======
-export default usersSlice.reducer;
->>>>>>> d89fb339c9befacdaba6fa24e8352dde57d91bce
