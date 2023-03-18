@@ -133,7 +133,7 @@ class ScheduleController {
             }).clone();
             let deletedTimeSlot = null;
             if (schedule && schedule.timeSlot) {
-                deletedTimeSlot = schedule.timeSlot.find(timeSlot => timeSlot._id == req.body._id);
+                deletedTimeSlot = schedule.timeSlot.find((timeSlot) => timeSlot._id == req.body._id);
                 console.log(deletedTimeSlot);
                 schedule.timeSlot = schedule.timeSlot.filter((deletedItem) => deletedItem._id != req.body._id);
             }
@@ -161,16 +161,12 @@ class ScheduleController {
     static deleteScheduleByID(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            yield scheduleModel_1.default.deleteOne({ _id: id }, (err, deleted) => {
-                if (!err) {
-                    res.json(`schedule ${id} was deleted!`);
+            scheduleModel_1.default.findOneAndDelete({ _id: id }, (err, docs) => {
+                if (err) {
+                    res.send(err);
                 }
-                else {
-                    res.status(400).json(err);
-                }
-            })
-                .clone()
-                .catch((err) => console.log(err));
+                res.status(200).send(docs);
+            });
         });
     }
 }

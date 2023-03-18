@@ -110,8 +110,10 @@ class ScheduleController {
     let deletedTimeSlot = null;
 
     if (schedule && schedule.timeSlot) {
-      deletedTimeSlot = schedule.timeSlot.find(timeSlot => timeSlot._id == req.body._id);
-      console.log(deletedTimeSlot)
+      deletedTimeSlot = schedule.timeSlot.find(
+        (timeSlot) => timeSlot._id == req.body._id
+      );
+      console.log(deletedTimeSlot);
 
       schedule.timeSlot = schedule.timeSlot.filter(
         (deletedItem) => deletedItem._id != req.body._id
@@ -141,15 +143,13 @@ class ScheduleController {
   // DELETE an existing schedule
   public static async deleteScheduleByID(req: Request, res: Response) {
     const id = req.params.id;
-    await Schedule.deleteOne({ _id: id }, (err: Error, deleted: any) => {
-      if (!err) {
-        res.json(`schedule ${id} was deleted!`);
-      } else {
-        res.status(400).json(err);
+    Schedule.findOneAndDelete({ _id: id }, (err: any, docs: any) => {
+      if (err) {
+        res.send(err);
       }
-    })
-      .clone()
-      .catch((err) => console.log(err));
+
+      res.status(200).send(docs);
+    });
   }
 }
 
