@@ -47,26 +47,25 @@ class UserController {
 
     user
       .save()
-      .then(() => {
-        console.log('one entry added');
+      .then((savedUser) => {
+        res.status(200).send(savedUser);
       })
       .catch((err) => {
-        console.log(err);
+        res.send(err);
       });
   }
 
   // DELETE user by id
   public static async deleteUser(req: Request, res: Response) {
     const id = req.params.id;
-    await User.deleteOne({ _id: id }, (err: any, deleted: any) => {
-      if (!err) {
-        res.send(`user ${id} was deleted!`);
-      } else {
-        throw err;
-      }
-    })
-      .clone()
-      .catch((err) => console.log(err));
+
+    const deletedUser = await User.findOneAndDelete({ _id: id });
+
+    if (!deletedUser) {
+      return res.json({ error: `User with id ${id} was not found` });
+    }
+
+    res.status(200).json(deletedUser);
   }
 
   // PATCH user by id
@@ -76,15 +75,20 @@ class UserController {
       const newPassword = req.body.password;
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(newPassword, salt);
-      const user = await User.findOneAndUpdate(
+      const updatedUser = await User.findOneAndUpdate(
         { _id: id },
-        { ...req.body, password: hashedPassword }
+        { ...req.body, password: hashedPassword },
+        { returnOriginal: false }
       );
-      res.json(user);
+      res.status(200).json(updatedUser);
     } else {
       try {
-        const user = await User.findOneAndUpdate({ _id: id }, { ...req.body });
-        res.json(user);
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: id },
+          { ...req.body },
+          { returnOriginal: false }
+        );
+        res.status(200).json(updatedUser);
       } catch (error) {
         res.json(`The update attempt to user ${id} has failed`);
       }

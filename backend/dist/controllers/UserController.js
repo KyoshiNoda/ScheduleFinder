@@ -63,11 +63,11 @@ class UserController {
             });
             user
                 .save()
-                .then(() => {
-                console.log('one entry added');
+                .then((savedUser) => {
+                res.status(200).send(savedUser);
             })
                 .catch((err) => {
-                console.log(err);
+                res.send(err);
             });
         });
     }
@@ -75,16 +75,11 @@ class UserController {
     static deleteUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            yield userModel_1.default.deleteOne({ _id: id }, (err, deleted) => {
-                if (!err) {
-                    res.send(`user ${id} was deleted!`);
-                }
-                else {
-                    throw err;
-                }
-            })
-                .clone()
-                .catch((err) => console.log(err));
+            const deletedUser = yield userModel_1.default.findOneAndDelete({ _id: id });
+            if (!deletedUser) {
+                return res.json({ error: `User with id ${id} was not found` });
+            }
+            res.status(200).json(deletedUser);
         });
     }
     // PATCH user by id
@@ -95,13 +90,13 @@ class UserController {
                 const newPassword = req.body.password;
                 const salt = yield bcrypt_1.default.genSalt();
                 const hashedPassword = yield bcrypt_1.default.hash(newPassword, salt);
-                const user = yield userModel_1.default.findOneAndUpdate({ _id: id }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }));
-                res.json(user);
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: id }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }), { returnOriginal: false });
+                res.status(200).json(updatedUser);
             }
             else {
                 try {
-                    const user = yield userModel_1.default.findOneAndUpdate({ _id: id }, Object.assign({}, req.body));
-                    res.json(user);
+                    const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: id }, Object.assign({}, req.body), { returnOriginal: false });
+                    res.status(200).json(updatedUser);
                 }
                 catch (error) {
                     res.json(`The update attempt to user ${id} has failed`);
