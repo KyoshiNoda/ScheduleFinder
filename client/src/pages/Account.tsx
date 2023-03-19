@@ -1,4 +1,3 @@
-import React from 'react';
 import Toggle from '../components/Toggle';
 import AccountBox from '../components/Account/AccountBox';
 type Props = {};

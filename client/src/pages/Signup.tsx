@@ -1,4 +1,3 @@
-import React from 'react';
 import Toggle from '../components/Toggle';
 import SignUpBox from '../components/Signup/SignUpBox';
 import pic1 from '../assets/loggingOn.png';

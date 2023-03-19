@@ -21,17 +21,17 @@ function Tab(props: Props): JSX.Element {
         <li className="mr-10">
           <div
             className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            onClick={() => props.getTab("Password")}
+            onClick={() => props.getTab("Personal")}
           >
-            Password
+            Personal
           </div>
         </li>
         <li className="mr-10">
           <div
             className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            onClick={() => props.getTab("Personal")}
+            onClick={() => props.getTab("Friends")}
           >
-            Personal
+            Friends
           </div>
         </li>
       </ul>

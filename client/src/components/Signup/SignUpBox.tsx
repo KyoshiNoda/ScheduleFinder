@@ -1,4 +1,3 @@
-import React from 'react';
 import SignUpForm from './SignUpForm';
 import GoogleAuth from '../Auth/GoogleAuth';
 type Props = {};
