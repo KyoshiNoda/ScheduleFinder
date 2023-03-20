@@ -1,11 +1,11 @@
 import { Dropdown } from "flowbite-react"
 type Props = {}
 
-function PersonalTab({ }: Props) {
+function PersonalTab({}: Props) {
   return (
-    <div className="flex flex-col gap-28">
+    <div className="flex flex-col gap-6 sm:gap-28">
       <form id='changes'>
-        <div className="grid grid-rows-3 grid-cols-2 gap-3">
+        <div className="grid sm:grid-rows-3 sm:grid-cols-2 gap-3">
           <div>
             <label
               htmlFor="first_name"
@@ -67,7 +67,7 @@ function PersonalTab({ }: Props) {
               required
             />
           </div>
-          <div>
+          <div className="flex items-end">
             <Dropdown
               label="Gender"
               size="lg"
@@ -86,6 +86,9 @@ function PersonalTab({ }: Props) {
               </Dropdown.Item>
               <Dropdown.Item>
                 Intersex
+              </Dropdown.Item>
+              <Dropdown.Item>
+                Other
               </Dropdown.Item>
               <Dropdown.Item>
                 I prefer not to say
