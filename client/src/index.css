@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.active-tab {
+  color: #1c64f2;
+  border-bottom: 2px solid #1c64f2;
+}
+
+.active-tab:hover {
+  color: #1c64f2 !important;
+  border-bottom: 2px solid #1c64f2 !important;
+}

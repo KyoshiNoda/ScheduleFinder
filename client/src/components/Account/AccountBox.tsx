@@ -8,13 +8,14 @@ type Props = {};
 
 function AccountBox({ }: Props) {
   const [currentTab, setCurrentTab] = useState<string | null>("Profile");
+
   const tabHandler = (tab: string | null) => {
     setCurrentTab(tab);
   };
 
   return (
     <div className="bg-gray-100 dark:bg-slate-800 w-2/5 rounded-lg p-4">
-      <Tab getTab={tabHandler} />
+      <Tab getTab={tabHandler} activeTab={currentTab} />
       {
         currentTab === "Profile" && <ProfileTab />
       }
