@@ -88,6 +88,9 @@ function PersonalTab({ }: Props) {
                 Intersex
               </Dropdown.Item>
               <Dropdown.Item>
+                Other
+              </Dropdown.Item>
+              <Dropdown.Item>
                 I prefer not to say
               </Dropdown.Item>
             </Dropdown>
