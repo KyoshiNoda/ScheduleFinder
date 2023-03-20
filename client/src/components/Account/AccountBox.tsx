@@ -1,28 +1,28 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import Tab from './Tab';
 import ProfileTab from './Profile/ProfileTab';
 import PersonalTab from './Personal/PersonalTab';
-import PasswordTab from './Password/PasswordTab';
+import FriendsTab from './Friends/FriendsTab';
 
 type Props = {};
 
-function AccountBox({}: Props) {
-  const [currentTab,setCurrentTab] = useState<string | null>("Profile");
+function AccountBox({ }: Props) {
+  const [currentTab, setCurrentTab] = useState<string | null>("Profile");
   const tabHandler = (tab: string | null) => {
-   setCurrentTab(tab);
+    setCurrentTab(tab);
   };
 
   return (
     <div className="bg-gray-100 dark:bg-slate-800 w-2/5 rounded-lg p-4">
-      <Tab getTab={tabHandler}/>
+      <Tab getTab={tabHandler} />
       {
-        currentTab === "Profile" && <ProfileTab/>
+        currentTab === "Profile" && <ProfileTab />
       }
       {
-         currentTab === "Password" && <PasswordTab/>
+        currentTab === "Personal" && <PersonalTab />
       }
       {
-         currentTab === "Personal" &&  <PersonalTab/>
+        currentTab === "Friends" && <FriendsTab />
       }
     </div>
   );

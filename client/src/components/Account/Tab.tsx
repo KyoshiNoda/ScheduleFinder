@@ -11,7 +11,7 @@ function Tab(props: Props): JSX.Element {
       <ul className="flex flex-wrap -mb-px">
       <li className="mr-10">
           <div
-            className="inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg dark:text-blue-500 dark:border-blue-500"
+            className="inline-block p-4  border-b-2 border-blue-600 rounded-t-lg dark:text-blue-500 hover:text-blue-600 dark:border-blue-500"
             aria-current="page"
             onClick={() => props.getTab("Profile")}
           >
@@ -20,18 +20,18 @@ function Tab(props: Props): JSX.Element {
         </li>
         <li className="mr-10">
           <div
-            className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            onClick={() => props.getTab("Password")}
+            className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-blue-600 hover:border-gray-300 dark:hover:text-gray-300"
+            onClick={() => props.getTab("Personal")}
           >
-            Password
+            Personal
           </div>
         </li>
         <li className="mr-10">
           <div
-            className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-            onClick={() => props.getTab("Personal")}
+            className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-blue-600 hover:border-gray-300 dark:hover:text-gray-300"
+            onClick={() => props.getTab("Friends")}
           >
-            Personal
+            Friends
           </div>
         </li>
       </ul>
