@@ -111,7 +111,7 @@ function PersonalTab({}: Props) {
           </div>
         </div>
       </form>
-      <button type='submit' form='changes' className="w-full px-8 py-3 font-semibold rounded-full bg-blue-600 dark:bg-gray-100 dark:text-gray-800 text-white">Save Changes</button>
+      <button type='submit' form='changes' className="w-full px-8 py-3 font-semibold rounded-full bg-blue-600 text-white">Save Changes</button>
     </div>
   )
 }

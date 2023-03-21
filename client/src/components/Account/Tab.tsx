@@ -5,11 +5,11 @@ type Props = {
 
 function Tab(props: Props): JSX.Element {
   return (
-    <div className="flex justify-center text-lg mb-5 font-medium text-center text-gray-500 border-gray-200 dark:text-gray-400 dark:border-gray-700">
+    <div className="mb-5 flex justify-center border-gray-200 text-center text-lg font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400">
       <ul className="flex flex-wrap sm:gap-5">
         <li>
           <div
-            className={`inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 cursor-pointer ${
+            className={`inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300 ${
               props.activeTab === 'Profile' && 'active-tab'
             }`}
             aria-current="page"
@@ -20,7 +20,7 @@ function Tab(props: Props): JSX.Element {
         </li>
         <li>
           <div
-            className={`inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 cursor-pointer ${
+            className={`inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300 ${
               props.activeTab === 'Personal' && 'active-tab'
             }`}
             onClick={() => props.getTab('Personal')}
@@ -30,7 +30,7 @@ function Tab(props: Props): JSX.Element {
         </li>
         <li>
           <div
-            className={`inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 cursor-pointer ${
+            className={`inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300 ${
               props.activeTab === 'Friends' && 'active-tab'
             }`}
             onClick={() => props.getTab('Friends')}

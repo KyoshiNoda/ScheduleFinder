@@ -14,7 +14,7 @@ function AccountBox({}: Props) {
   };
 
   return (
-    <div className="bg-gray-100 max-w-lg dark:bg-slate-800 rounded-lg p-4 sm:w-5/6 sm:p-8">
+    <div className="max-w-lg rounded-lg bg-gray-100 p-4 dark:bg-slate-800 sm:w-5/6 sm:p-8">
       <Tab getTab={tabHandler} activeTab={currentTab} />
       {currentTab === 'Profile' && <ProfileTab />}
       {currentTab === 'Personal' && <PersonalTab />}
