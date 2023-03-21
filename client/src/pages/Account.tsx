@@ -4,11 +4,11 @@ type Props = {};
 
 function Account({}: Props) {
   return (
-    <div className="flex flex-col gap-20 min-h-full p-3 bg-slate-400 dark:bg-slate-900">
+    <div className="flex min-h-full flex-col gap-20 bg-slate-400 p-3 dark:bg-slate-900">
       <div className="flex justify-end">
         <Toggle />
       </div>
-      <div className="flex justify-center min-h-full">
+      <div className="flex min-h-full justify-center">
         <AccountBox />
       </div>
     </div>
