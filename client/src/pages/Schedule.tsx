@@ -31,16 +31,13 @@ function Schedule({ }: Props) {
     Axios.get('http://localhost:3001/api/schedules')
       .then((res) => {
         setSchedules(res.data);
-        console.log(res.data)
       })
   }, [])
-  const timeBlock = schedules?.[0].timeSlot[0]
-  const startTime = dayjs(timeBlock?.startTime, 'h:mm A');
-  const endTime = dayjs(timeBlock?.endTime, 'h:mm A');
-  const totalTime = endTime.diff(startTime, 'hours');
-  console.log(timeBlock);
+  const timeSlot = schedules?.[0].timeSlot[0]; // a single timeSlot from DB
+  const startTime = dayjs(timeSlot?.startTime, 'h:mm A'); // 2023-03-21T10:25:00-04:00
+  const endTime = dayjs(timeSlot?.endTime, 'h:mm A'); // 2023-03-21T12:30:00-04:00
+  const totalTime = endTime.diff(startTime, 'hours'); // total time from timeSlot
   console.log(totalTime);
-
   return (
     <div>Schedule</div>
   )
