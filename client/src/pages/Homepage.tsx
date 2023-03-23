@@ -6,7 +6,7 @@ type Props = {};
 
 function Homepage({ }: Props) {
   const [width, setWidth] = useState<number>(window.innerWidth);
-  const [theme,setTheme] = useState<string>("light");
+  const [theme, setTheme] = useState<string>("white");
   useEffect(() => {
     const handleResize = () => {
       setWidth(window.innerWidth);
@@ -20,7 +20,7 @@ function Homepage({ }: Props) {
     <div className="flex min-h-full w-screen flex-col gap-10 bg-slate-100 p-3 dark:bg-slate-900">
       <div>
         <div className="flex justify-end">
-          <Toggle getTheme={(theme) => setTheme(theme)}/>
+          <Toggle getTheme={(theme) => setTheme(theme)} />
         </div>
       </div>
       {width < 640 ? (
@@ -32,14 +32,17 @@ function Homepage({ }: Props) {
             Easily create schedules to see your friends. <br />
             Discover new people within your free time periods.
           </p>
-          <div className="flex justify-center">
+          <div className="flex justify-center gap-1">
             <button
               type="submit"
               form="changes"
-              className="w-full rounded-full bg-blue-600 px-8 py-3 font-semibold text-white"
+              className="w-1/2 rounded-full bg-blue-600 px-8 py-3 font-semibold text-white"
             >
               Get Started
             </button>
+            <a className='cursor-pointer w-3' href={'https://github.com/KyoshiNoda/ScheduleFinder'}>
+              <AiFillGithub size={'96'} color={`${theme}`} />
+            </a>
           </div>
           <img src={scheduleImg} className="max-w-screen-sm text-center" />
         </div>
@@ -60,17 +63,16 @@ function Homepage({ }: Props) {
                 Discover new people within your free time periods.
               </p>
             </div>
-            <button
-              type="submit"
-              form="changes"
-              className="w-2/5 float-right rounded-full bg-blue-600 px-8 py-3 text-xl font-semibold text-white"
+            <a
+              className="flex justify-center w-2/5 float-right rounded-full bg-blue-600 px-8 py-3 text-xl font-semibold text-white"
+              href={'/signup'}
             >
               Get Started
-            </button>
+            </a>
           </div>
-          <div className="flex gap-4 p-3">
-            <AiFillGithub size={'96'} color = {`${theme}`} />
-          </div>
+          <a className='cursor-pointer w-3' href={'https://github.com/KyoshiNoda/ScheduleFinder'}>
+            <AiFillGithub size={'96'} color={`${theme}`} />
+          </a>
         </div>
       )}
     </div>
