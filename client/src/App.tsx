@@ -5,17 +5,20 @@ import Homepage from './pages/Homepage';
 import Login from './pages/Login';
 import Account from './pages/Account';
 import Schedule from './pages/Schedule';
+import PageLayout from './components/PageLayout';
 
 function App() {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/account" element={<Account />} />
-        <Route path="/schedule" element={<Schedule />} />
+        <Route path="/auth" element={<PageLayout />}>
+          <Route path="account" element={<Account />} />
+          <Route path="schedule" element={<Schedule />} />
+        </Route>
       </Routes>
     </>
   );
