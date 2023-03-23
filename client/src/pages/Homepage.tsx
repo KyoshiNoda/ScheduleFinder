@@ -70,7 +70,6 @@ function Homepage({ }: Props) {
           </div>
           <div className="flex gap-4 p-3">
             <AiFillGithub size={'96'} color = {`${theme}`} />
-            <AiFillGithub size={'96'} color = {`${theme}`} />
           </div>
         </div>
       )}
