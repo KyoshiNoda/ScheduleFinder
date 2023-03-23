@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   return (
-    <div className="flex justify-between p-4 dark:bg-slate-800">
+    <div className="flex justify-between p-4 shadow dark:bg-slate-800">
       <a href="#" className="flex items-center">
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
           ScheduleFinder
@@ -41,6 +41,9 @@ const Navbar = () => {
             <Dropdown.Item>Home</Dropdown.Item>
           </Link>
           <Dropdown.Item>My Schedule</Dropdown.Item>
+          <Link to={'/findUsers'}>
+            <Dropdown.Item>Find Users</Dropdown.Item>
+          </Link>
           <Link to={'/account'}>
             <Dropdown.Item>Account Settings</Dropdown.Item>
           </Link>
