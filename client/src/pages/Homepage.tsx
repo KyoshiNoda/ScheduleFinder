@@ -4,7 +4,7 @@ import scheduleImg from '../assets/schedule.png';
 import Github from '../components/Logos/Github';
 type Props = {};
 
-function Homepage({}: Props) {
+function Homepage({ }: Props) {
   const [width, setWidth] = useState<number>(window.innerWidth);
   useEffect(() => {
     const handleResize = () => {
@@ -16,7 +16,7 @@ function Homepage({}: Props) {
     };
   }, []);
   return (
-    <div className="flex min-h-full w-screen flex-col gap-10 bg-slate-100 p-3 dark:bg-slate-900 lg:gap-40">
+    <div className="flex min-h-full w-screen flex-col gap-10 bg-slate-100 p-3 dark:bg-slate-900">
       <div>
         <div className="flex justify-end">
           <Toggle />
@@ -27,9 +27,9 @@ function Homepage({}: Props) {
           <div className="flex justify-center text-5xl dark:text-white">
             ScheduleFinder
           </div>
-          <p className="flex justify-center p-5 dark:text-white">
-            Easily create schedules to see your friends or make new friends
-            within your free time periods.
+          <p className="flex justify-center p-3 dark:text-white font-medium">
+            Easily create schedules to see your friends. <br />
+            Discover new people within your free time periods.
           </p>
           <div className="flex justify-center">
             <button
@@ -44,21 +44,25 @@ function Homepage({}: Props) {
         </div>
       ) : (
         <div className="flex flex-col">
-          <div className="h-96 p-7">
-            <img src={scheduleImg} className="inline-block" />
-            <div className="float-right flex h-1/2 items-center text-5xl dark:text-white">
-              ScheduleFinder
+          <div className="p-7 flex items-center">
+            <div className="flex-1 mr-1 items-center w-1/2">
+              <img src={scheduleImg} className="inline-block w-full max-w-md" />
+            </div>
+            <div className="flex-1 flex flex-col justify-center items-center text-5xl lg:text-7xl dark:text-white">
+              <div className="my-auto">ScheduleFinder</div>
             </div>
           </div>
-          <div className="flex">
-            <p className="flex justify-center p-5 dark:text-white">
-              Easily create schedules to see your friends or make new friends
-              within your free time periods.
-            </p>
+          <div className="flex gap-28 p-3">
+            <div className='w-1/2 inline-block'>
+              <p className="dark:text-white text-lg  font-medium">
+                Easily create schedules to see your friends. <br />
+                Discover new people within your free time periods.
+              </p>
+            </div>
             <button
               type="submit"
               form="changes"
-              className="w-3/5 rounded-full bg-blue-600 px-8 py-3 text-xl font-semibold text-white"
+              className="w-2/5 float-right rounded-full bg-blue-600 px-8 py-3 text-xl font-semibold text-white"
             >
               Get Started
             </button>
