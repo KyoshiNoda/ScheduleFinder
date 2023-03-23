@@ -1,22 +1,24 @@
 import Sun from "./Logos/Sun"
 import Moon from "./Logos/Moon"
 import { useState, useEffect } from "react";
-type Props = {}
+type Props = {
+  getTheme? : (theme : string) => void;
+}
 
-function Toggle({ }: Props) {
-  const [theme, setTheme] = useState<string | null>(null);
+function Toggle(props : Props) {
+  const [theme, setTheme] = useState<string>("light");
 
   useEffect(() => {
     if(window.matchMedia('(prefers-color-scheme: dark)').matches){
-      setTheme('dark');
+      setTheme('white');
     }
     else {
-      setTheme('light');
+      setTheme('black');
     }
   }, [])
 
   useEffect(() => {
-    if (theme === "dark") {
+    if (theme === "black") {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
@@ -24,7 +26,8 @@ function Toggle({ }: Props) {
   }, [theme]);
 
   const handleThemeSwitch = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    setTheme(theme === "black" ? "white" : "black");
+    props.getTheme?.(theme);
   };
 
   return (

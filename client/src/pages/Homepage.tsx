@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import Toggle from '../components/Toggle';
 import scheduleImg from '../assets/schedule.png';
-import Github from '../components/Logos/Github';
+import { AiFillGithub } from 'react-icons/ai';
 type Props = {};
 
 function Homepage({ }: Props) {
   const [width, setWidth] = useState<number>(window.innerWidth);
+  const [theme,setTheme] = useState<string>("light");
   useEffect(() => {
     const handleResize = () => {
       setWidth(window.innerWidth);
@@ -19,7 +20,7 @@ function Homepage({ }: Props) {
     <div className="flex min-h-full w-screen flex-col gap-10 bg-slate-100 p-3 dark:bg-slate-900">
       <div>
         <div className="flex justify-end">
-          <Toggle />
+          <Toggle getTheme={(theme) => setTheme(theme)}/>
         </div>
       </div>
       {width < 640 ? (
@@ -68,8 +69,8 @@ function Homepage({ }: Props) {
             </button>
           </div>
           <div className="flex gap-4 p-3">
-            <Github />
-            <Github />
+            <AiFillGithub size={'96'} color = {`${theme}`} />
+            <AiFillGithub size={'96'} color = {`${theme}`} />
           </div>
         </div>
       )}
