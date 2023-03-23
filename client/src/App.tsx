@@ -5,12 +5,12 @@ import Homepage from './pages/Homepage';
 import Login from './pages/Login';
 import Account from './pages/Account';
 import Schedule from './pages/Schedule';
+import FindUser from './pages/FindUser';
 import PageLayout from './components/PageLayout';
 
 function App() {
   return (
     <>
-      {/* <Navbar /> */}
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/login" element={<Login />} />
@@ -18,6 +18,7 @@ function App() {
         <Route path="/auth" element={<PageLayout />}>
           <Route path="account" element={<Account />} />
           <Route path="schedule" element={<Schedule />} />
+          <Route path="findUsers" element={<FindUser />} />
         </Route>
       </Routes>
     </>
