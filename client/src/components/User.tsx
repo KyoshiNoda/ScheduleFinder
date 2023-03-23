@@ -12,7 +12,7 @@ const User = ({ photoURL, firstName, lastName }: UserProps) => {
   return (
     <div className="max-w-sm">
       <Card>
-        <div className="flex flex-col items-center pb-10">
+        <div className="flex flex-col items-center">
           <img
             className="mb-3 max-h-32 w-32 rounded-full object-cover shadow-lg"
             src={photoURL}

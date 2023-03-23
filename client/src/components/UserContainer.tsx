@@ -31,19 +31,21 @@ const UserContainer = () => {
   return (
     <section>
       {isLoading && (
-        <div className='text-center'>
-          <Spinner aria-label="Loading users" size="xl" />
+        <div className="text-center">
+          <Spinner aria-label="Center-aligned spinner example" />
         </div>
       )}
-      {users &&
-        users.map((user) => (
-          <User
-            key={user._id}
-            photoURL={user.photoURL}
-            firstName={user.firstName}
-            lastName={user.lastName}
-          />
-        ))}
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        {users &&
+          users.map((user) => (
+            <User
+              key={user._id}
+              photoURL={user.photoURL}
+              firstName={user.firstName}
+              lastName={user.lastName}
+            />
+          ))}
+      </div>
     </section>
   );
 };
