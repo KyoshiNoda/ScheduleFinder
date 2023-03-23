@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Spinner } from 'flowbite-react';
 import User from './User';
 
 type User = {
@@ -20,12 +21,20 @@ const UserContainer = () => {
   useEffect(() => {
     fetch('http://localhost:3001/api/users')
       .then((res) => res.json())
-      .then((data) => setUsers(data))
+      .then((data) => {
+        setUsers(data);
+        setIsLoading(false);
+      })
       .catch((err) => console.log(err));
   }, []);
 
   return (
     <section>
+      {isLoading && (
+        <div className='text-center'>
+          <Spinner aria-label="Loading users" size="xl" />
+        </div>
+      )}
       {users &&
         users.map((user) => (
           <User
