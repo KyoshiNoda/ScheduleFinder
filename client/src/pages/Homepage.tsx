@@ -5,8 +5,9 @@ import { AiFillGithub } from 'react-icons/ai';
 type Props = {};
 
 function Homepage({ }: Props) {
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
   const [width, setWidth] = useState<number>(window.innerWidth);
-  const [theme, setTheme] = useState<string>("white");
+  const [theme, setTheme] = useState<string>(mediaQuery.matches ? 'white' : 'black');
   useEffect(() => {
     const handleResize = () => {
       setWidth(window.innerWidth);
