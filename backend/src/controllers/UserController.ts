@@ -43,6 +43,7 @@ class UserController {
       password: hashedPassword,
       gender: req.body.gender,
       school: req.body.school,
+      major : req.body.major
     });
 
     user
