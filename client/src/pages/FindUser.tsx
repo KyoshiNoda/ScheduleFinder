@@ -1,9 +1,11 @@
 import { Label, TextInput } from 'flowbite-react';
-import UserContainer from '../components/UserContainer';
+import UserContainer from '../components/findUsers/UserContainer';
 import Toggle from '../components/Toggle';
 import { useState } from 'react';
 
 const FindUser = () => {
+  const [inputValue, setInputValue] = useState<string>('');
+
   return (
     <div className="flex min-h-full flex-col items-center space-y-10 bg-slate-400 p-6 dark:bg-slate-900">
       <div className="self-end">
@@ -18,14 +20,16 @@ const FindUser = () => {
             />
           </div>
           <TextInput
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
             id="student-name"
             type="text"
-            placeholder="Enter student name"
+            placeholder="Enter student's name"
             required={true}
           />
         </form>
       </div>
-      <UserContainer />
+      <UserContainer inputValue={inputValue} />
     </div>
   );
 };

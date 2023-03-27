@@ -4,9 +4,10 @@ type UserProps = {
   photoURL: string;
   firstName: string;
   lastName: string;
+  major: string;
 };
 
-const User = ({ photoURL, firstName, lastName }: UserProps) => {
+const User = ({ photoURL, firstName, lastName, major }: UserProps) => {
   const fullName = `${firstName} ${lastName}`;
 
   return (
@@ -21,9 +22,8 @@ const User = ({ photoURL, firstName, lastName }: UserProps) => {
           <h2 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
             {fullName}
           </h2>
-          {/* TODO: Change this for the student's major once the database has been updated */}
           <span className="text-sm text-gray-500 dark:text-gray-400">
-            {`Student's Major should go here`}
+            {major}
           </span>
           <div className="mt-4 flex space-x-3 lg:mt-6">
             <a

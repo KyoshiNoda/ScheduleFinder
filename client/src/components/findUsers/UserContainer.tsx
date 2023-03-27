@@ -12,11 +12,23 @@ type User = {
   password: string;
   gender: string;
   school: string;
+  major: string;
 };
 
-const UserContainer = () => {
+type UserContainerProps = {
+  inputValue: string;
+};
+
+const UserContainer = ({ inputValue }: UserContainerProps) => {
   const [users, setUsers] = useState<User[]>();
   const [isLoading, setIsLoading] = useState(true);
+
+  const filteredUsers = users?.filter((user) =>
+    `${user.firstName} ${user.lastName}`
+      .toLowerCase()
+      .replace(/[^a-zA-Z]+/g, '')
+      .includes(inputValue.toLowerCase().replace(/[^a-zA-Z]+/g, ''))
+  );
 
   useEffect(() => {
     fetch('http://localhost:3001/api/users')
@@ -35,14 +47,20 @@ const UserContainer = () => {
           <Spinner aria-label="Center-aligned spinner example" />
         </div>
       )}
+      {filteredUsers?.length === 0 && (
+        <span className="block text-center text-3xl dark:text-white">
+          No users found
+        </span>
+      )}
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-        {users &&
-          users.map((user) => (
+        {filteredUsers &&
+          filteredUsers.map((user) => (
             <User
               key={user._id}
               photoURL={user.photoURL}
               firstName={user.firstName}
               lastName={user.lastName}
+              major={user.major}
             />
           ))}
       </div>
