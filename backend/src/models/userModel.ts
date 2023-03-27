@@ -8,6 +8,7 @@ export interface IUser extends Document {
   photoURL?: string;
   age?: number;
   school?: string;
+  major? : string;
 }
 
 const userSchema: Schema = new mongoose.Schema({
@@ -19,6 +20,7 @@ const userSchema: Schema = new mongoose.Schema({
   photoURL: String,
   gender: String,
   school: String,
+  major : String
 });
 
 const User = mongoose.model<IUser>('User', userSchema);
