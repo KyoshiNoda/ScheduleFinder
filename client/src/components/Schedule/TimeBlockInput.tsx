@@ -2,7 +2,7 @@ type Props = {}
 
 function TimeBlockInput({ }: Props) {
   return (
-    <div className="w-1/2 bg-slate-50 dark:bg-black flex flex-col p-5 rounded-lg">
+    <div className="w-1/2 h-1/2 bg-slate-50 dark:bg-black flex flex-col p-5 rounded-lg">
       <div>
         <label
           htmlFor="title"
