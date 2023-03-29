@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import TimeBlockInput from '../components/Schedule/TimeBlockInput';
+import Toggle from '../components/Toggle';
 import Axios from 'axios';
 import dayjs, {Dayjs} from 'dayjs/esm';
 import customParseFormat from 'dayjs/esm/plugin/customParseFormat';
@@ -54,7 +56,14 @@ function Schedule({ }: Props) {
   const totalTime : number = time1.endTime.diff(time1.startTime, 'hours'); // total time from timeSlot
   console.log(totalTime);
   return (
-    <div>Schedule</div>
+    <div className="flex min-h-full flex-col gap-20 bg-slate-400 p-3 dark:bg-slate-900">
+      <div className="flex justify-end">
+        <Toggle />
+      </div>
+      <div className="flex min-h-full justify-center">
+        <TimeBlockInput/>
+      </div>
+    </div>
   )
 }
 
