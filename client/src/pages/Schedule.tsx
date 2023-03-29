@@ -58,6 +58,7 @@ function Schedule({}: Props) {
 
   const totalTime: number = time1.endTime.diff(time1.startTime, 'hours'); // total time from timeSlot
   console.log(totalTime);
+
   return (
     <div className="flex min-h-full flex-col gap-10 bg-slate-400 p-5 dark:bg-slate-900">
       <div className="flex justify-end">
