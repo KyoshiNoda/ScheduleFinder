@@ -5,10 +5,11 @@ type UserProps = {
   photoURL: string;
   firstName: string;
   lastName: string;
+  school: string;
   major: string;
 };
 
-const User = ({ id, photoURL, firstName, lastName, major }: UserProps) => {
+const User = ({ id, photoURL, firstName, lastName, school, major }: UserProps) => {
   const fullName = `${firstName} ${lastName}`;
 
   return (
@@ -25,6 +26,9 @@ const User = ({ id, photoURL, firstName, lastName, major }: UserProps) => {
           </h2>
           <span className="text-sm text-gray-500 dark:text-gray-400">
             {major}
+          </span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            {school}
           </span>
           <div className="mt-4 flex space-x-3 lg:mt-6">
             <a

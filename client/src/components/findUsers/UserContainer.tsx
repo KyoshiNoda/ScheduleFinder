@@ -85,6 +85,7 @@ const UserContainer = ({
               photoURL={user.photoURL}
               firstName={user.firstName}
               lastName={user.lastName}
+              school={user.school}
               major={user.major}
             />
           ))}
