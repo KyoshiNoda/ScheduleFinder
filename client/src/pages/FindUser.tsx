@@ -15,7 +15,7 @@ const FindUser = () => {
         <Toggle />
       </div>
       <div>
-        <form action="">
+        <form className="flex flex-col gap-8 lg:flex-row">
           {/* <Button onClick={() => setVisible(true)}>Toggle modal</Button>
           <Modal
             show={visible}
