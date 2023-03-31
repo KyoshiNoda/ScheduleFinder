@@ -16,20 +16,42 @@ type User = {
 };
 
 type UserContainerProps = {
-  inputValue: string;
+  schoolSearch: string;
+  nameSearch: string;
+  majorSearch: string;
 };
 
-const UserContainer = ({ inputValue }: UserContainerProps) => {
+const UserContainer = ({
+  schoolSearch,
+  nameSearch,
+  majorSearch,
+}: UserContainerProps) => {
   const [users, setUsers] = useState<User[]>();
   const [isLoading, setIsLoading] = useState(true);
 
   const filterUsers = (users: User[]) => {
-    return users.filter((user) =>
+    const filteredBySchool = users.filter((user) =>
+      user.school
+        .toLowerCase()
+        .replace(/[^a-zA-Z]+/g, '')
+        .includes(schoolSearch.toLowerCase().replace(/[^a-zA-Z]+/g, ''))
+    );
+
+    const filteredByName = filteredBySchool.filter((user) =>
       `${user.firstName} ${user.lastName}`
         .toLowerCase()
         .replace(/[^a-zA-Z]+/g, '')
-        .includes(inputValue.toLowerCase().replace(/[^a-zA-Z]+/g, ''))
+        .includes(nameSearch.toLowerCase().replace(/[^a-zA-Z]+/g, ''))
     );
+
+    const filteredByMajor = filteredByName.filter((user) =>
+      user.major
+        .toLowerCase()
+        .replace(/[^a-zA-Z]+/g, '')
+        .includes(majorSearch.toLowerCase().replace(/[^a-zA-Z]+/g, ''))
+    );
+
+    return filteredByMajor;
   };
 
   useEffect(() => {

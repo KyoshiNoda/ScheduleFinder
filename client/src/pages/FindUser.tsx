@@ -4,7 +4,9 @@ import Toggle from '../components/Toggle';
 import { useState } from 'react';
 
 const FindUser = () => {
-  const [inputValue, setInputValue] = useState<string>('');
+  const [nameSearch, setNameSearch] = useState<string>('');
+  const [schoolSearch, setSchoolSearch] = useState<string>('');
+  const [majorSearch, setMajorSearch] = useState<string>('');
   const [visible, setVisible] = useState<boolean>(false);
 
   return (
@@ -14,30 +16,76 @@ const FindUser = () => {
       </div>
       <div>
         <form action="">
-          <Button onClick={() => setVisible(true)}>Toggle modal</Button>
-          <Modal show={visible} size="md" popup={true} onClose={() => setVisible(false)}>
+          {/* <Button onClick={() => setVisible(true)}>Toggle modal</Button>
+          <Modal
+            show={visible}
+            size="md"
+            popup={true}
+            onClose={() => setVisible(false)}
+          >
             <Modal.Header />
             <Modal.Body>
-            
+
             </Modal.Body>
-          </Modal>
-          <div className="mb-2 block">
-            <Label
-              htmlFor="student-name"
-              value="Search the name of the student you are looking for!"
+          </Modal> */}
+
+          <div>
+            <div className="mb-2 block">
+              <Label
+                htmlFor="student-school"
+                value="Search the school of the student you are looking for!"
+              />
+            </div>
+            <TextInput
+              value={schoolSearch}
+              onChange={(e) => setSchoolSearch(e.target.value)}
+              id="student-school"
+              type="search"
+              placeholder="Enter student's school"
+              required={true}
             />
           </div>
-          <TextInput
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            id="student-name"
-            type="search"
-            placeholder="Enter student's name"
-            required={true}
-          />
+
+          <div>
+            <div className="mb-2 block">
+              <Label
+                htmlFor="student-name"
+                value="Search the name of the student you are looking for!"
+              />
+            </div>
+            <TextInput
+              value={nameSearch}
+              onChange={(e) => setNameSearch(e.target.value)}
+              id="student-name"
+              type="search"
+              placeholder="Enter student's name"
+              required={true}
+            />
+          </div>
+
+          <div>
+            <div className="mb-2 block">
+              <Label
+                htmlFor="student-major"
+                value="Search the major of the student you are looking for!"
+              />
+            </div>
+            <TextInput
+              value={majorSearch}
+              onChange={(e) => setMajorSearch(e.target.value)}
+              id="student-major"
+              type="search"
+              placeholder="Enter student's major"
+              required={true}
+            />
+          </div>
         </form>
       </div>
-      <UserContainer inputValue={inputValue} />
+      <UserContainer
+        schoolSearch={schoolSearch}
+        nameSearch={nameSearch}
+        majorSearch={majorSearch}
+      />
     </div>
   );
 };
