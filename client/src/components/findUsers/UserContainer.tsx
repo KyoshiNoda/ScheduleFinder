@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Spinner } from 'flowbite-react';
+import { Spinner, Button } from 'flowbite-react';
 import User from './User';
 
 type User = {
@@ -27,7 +27,8 @@ const UserContainer = ({
   majorSearch,
 }: UserContainerProps) => {
   const [users, setUsers] = useState<User[]>();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [paginate, setPaginate] = useState<number>(12);
 
   const filterUsers = (users: User[]) => {
     const filteredBySchool = users.filter((user) =>
@@ -54,6 +55,10 @@ const UserContainer = ({
     return filteredByMajor;
   };
 
+  const loadMore = () => {
+    setPaginate((prevState) => (prevState += 12));
+  };
+
   useEffect(() => {
     fetch('http://localhost:3001/api/users')
       .then((res) => res.json())
@@ -78,18 +83,23 @@ const UserContainer = ({
       )}
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {users &&
-          filterUsers(users).map((user) => (
-            <User
-              key={user._id}
-              id={user._id}
-              photoURL={user.photoURL}
-              firstName={user.firstName}
-              lastName={user.lastName}
-              school={user.school}
-              major={user.major}
-            />
-          ))}
+          filterUsers(users)
+            .slice(0, paginate)
+            .map((user) => (
+              <User
+                key={user._id}
+                id={user._id}
+                photoURL={user.photoURL}
+                firstName={user.firstName}
+                lastName={user.lastName}
+                school={user.school}
+                major={user.major}
+              />
+            ))}
       </div>
+      <Button onClick={loadMore} size="lg" className="mx-auto my-10 uppercase">
+        load more
+      </Button>
     </section>
   );
 };
