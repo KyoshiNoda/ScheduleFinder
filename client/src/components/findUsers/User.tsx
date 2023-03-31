@@ -1,13 +1,14 @@
 import { Card } from 'flowbite-react';
 
 type UserProps = {
+  id: string;
   photoURL: string;
   firstName: string;
   lastName: string;
   major: string;
 };
 
-const User = ({ photoURL, firstName, lastName, major }: UserProps) => {
+const User = ({ id, photoURL, firstName, lastName, major }: UserProps) => {
   const fullName = `${firstName} ${lastName}`;
 
   return (
