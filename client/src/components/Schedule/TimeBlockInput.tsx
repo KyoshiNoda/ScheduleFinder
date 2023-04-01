@@ -18,7 +18,7 @@ function TimeBlockInput({}: Props) {
     'rose',
   ];
   return (
-    <div className="flex h-5/6 w-1/2 flex-col rounded-lg bg-slate-50 p-5 dark:bg-black sm:h-1/2">
+    <div className="flex h-1/4 w-1/2 mt-6 flex-col rounded-lg bg-slate-50 p-5 dark:bg-black sm:h-1/2">
       <div>
         <label
           htmlFor="title"
