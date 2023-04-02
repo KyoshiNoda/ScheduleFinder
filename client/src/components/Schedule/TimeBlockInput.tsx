@@ -1,3 +1,5 @@
+import ColorsPalette from '../Utils/ColorsPalette';
+
 type Props = {};
 
 function TimeBlockInput({}: Props) {
@@ -18,7 +20,8 @@ function TimeBlockInput({}: Props) {
     'rose',
   ];
   return (
-    <div className="flex h-1/4 w-1/2 mt-6 flex-col rounded-lg bg-slate-50 p-5 dark:bg-black sm:h-1/2">
+    <div className="mt-6 flex h-1/4 w-1/2 flex-col rounded-lg bg-slate-50 p-5 dark:bg-black sm:h-1/2">
+      <ColorsPalette />
       <div>
         <label
           htmlFor="title"

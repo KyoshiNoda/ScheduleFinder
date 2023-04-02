@@ -12,7 +12,7 @@ function ScheduleBox({}: Props) {
           <div>Friday</div>
         </div>
 
-        <div className="h-[936px] rounded bg-slate-600">
+        <div className="h-[1008px] rounded mb-6 bg-white dark:bg-black dark:text-white">
           <div className="relative h-[936px]">
             <span className="absolute top-[0px]">7</span>
             <span className="absolute top-[72px]">8</span>
