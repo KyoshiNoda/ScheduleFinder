@@ -37,18 +37,19 @@ const Navbar = () => {
               jdoe@flowbite.com
             </span>
           </Dropdown.Header>
-          <Link to={'/'}>
-            <Dropdown.Item>Home</Dropdown.Item>
+          <Link to={'/auth/schedule'}>
+            <Dropdown.Item>My Schedule</Dropdown.Item>
           </Link>
-          <Dropdown.Item>My Schedule</Dropdown.Item>
-          <Link to={'/findUsers'}>
+          <Link to={'/auth/findUsers'}>
             <Dropdown.Item>Find Users</Dropdown.Item>
           </Link>
-          <Link to={'/account'}>
+          <Link to={'/auth/account'}>
             <Dropdown.Item>Account Settings</Dropdown.Item>
           </Link>
           <Dropdown.Divider />
-          <Dropdown.Item>Sign out</Dropdown.Item>
+          <Link to={'/'}>
+            <Dropdown.Item>Sign out</Dropdown.Item>
+          </Link>
         </Dropdown>
       </div>
     </div>
