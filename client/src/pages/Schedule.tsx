@@ -66,7 +66,6 @@ function Schedule({}: Props) {
       </div>
       <div className="flex gap-10">
         <ScheduleBox />
-
         <TimeBlockInput />
       </div>
     </div>
