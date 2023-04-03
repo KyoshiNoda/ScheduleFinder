@@ -97,9 +97,15 @@ const UserContainer = ({
               />
             ))}
       </div>
-      <Button onClick={loadMore} size="lg" className="mx-auto my-10 uppercase">
-        load more
-      </Button>
+      {users && paginate < users.length && (
+        <Button
+          onClick={loadMore}
+          size="lg"
+          className="mx-auto my-10 uppercase"
+        >
+          load more
+        </Button>
+      )}
     </section>
   );
 };
