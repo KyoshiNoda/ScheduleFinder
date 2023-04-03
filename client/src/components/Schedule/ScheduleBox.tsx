@@ -1,3 +1,5 @@
+import TimeSlot from './TimeSlot';
+
 type Props = {};
 
 function ScheduleBox({}: Props) {
@@ -32,24 +34,22 @@ function ScheduleBox({}: Props) {
           </div>
           <div className="relative h-[1008px] w-1/5 bg-purple-500">
             <div className="flex justify-center">
-              <div className="absolute top-[0px] h-[72px] w-3/4 rounded bg-white"> {/* 7 AM starting so start at 0 px*/}
-                7 AM - 8 AM {/* 1 hours total = 72 px*/}
-              </div>
+              <TimeSlot top="0px" height="72px" time="7 AM - 8 AM" />
             </div>
           </div>
-          <div className="relative h-[1008px] w-1/5 bg-red-500"></div>
+          <div className="relative h-[1008px] w-1/5 bg-red-500">
+            <div className="flex justify-center">
+              <TimeSlot top="72px" height="72px" time="8 AM - 9 AM" />
+            </div>
+          </div>
           <div className="relative h-[1008px] w-1/5 bg-green-500">
             <div className="flex justify-center">
-              <div className="absolute top-[252px] h-[144px] w-3/4 rounded bg-white"> {/* 10:30 AM starting so start at 252 px*/}
-                10:30 AM - 12:30 PM {/* 2 hours total = 144 px*/}
-              </div>
+              <TimeSlot top="252px" height="144px" time="10:30 AM - 12:30 PM" />
             </div>
           </div>
           <div className="relative h-[1008px] w-1/5 bg-blue-500">
             <div className="flex justify-center">
-              <div className="absolute top-[0px] h-[72px] w-3/4 rounded bg-white">
-                7 AM - 8 AM {/* 1 hours total = 72 px*/}
-              </div>
+              <TimeSlot top="0px" height="72px" time="7 AM - 8 AM" />
             </div>
           </div>
           <div className="relative h-[1008px] w-1/5 bg-teal-500"></div>

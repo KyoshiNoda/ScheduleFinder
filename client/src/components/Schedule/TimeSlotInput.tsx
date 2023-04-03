@@ -2,7 +2,7 @@ import ColorsPalette from '../Utils/ColorsPalette';
 
 type Props = {};
 
-function TimeBlockInput({}: Props) {
+function TimeSlotInput({}: Props) {
   const colors: string[] = [
     'slate',
     'red',
@@ -211,4 +211,4 @@ function TimeBlockInput({}: Props) {
   );
 }
 
-export default TimeBlockInput;
+export default TimeSlotInput;
