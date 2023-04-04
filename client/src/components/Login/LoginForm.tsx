@@ -26,8 +26,8 @@ function LoginForm({}: Props) {
             type="password"
             name="password"
             id="password"
-            placeholder="Password"
-            className="w-full px-4 py-3 text-sm rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
+            placeholder="••••••••"
+            className="w-full text-sm px-4 py-3 bg-gray-50 rounded-md border-gray-100  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
           />
           <div className="flex justify-end text-xs dark:text-gray-400">
             <a rel="noopener noreferrer" href="#">

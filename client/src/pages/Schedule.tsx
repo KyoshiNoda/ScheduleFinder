@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import TimeBlockInput from '../components/Schedule/TimeBlockInput';
+import TimeSlotInput from '../components/Schedule/TimeSlotInput';
 import ScheduleBox from '../components/Schedule/ScheduleBox';
 import Toggle from '../components/Toggle';
 import Axios from 'axios';
@@ -60,13 +60,13 @@ function Schedule({}: Props) {
   console.log(totalTime);
 
   return (
-    <div className="flex min-h-full flex-col gap-10 bg-slate-400 p-5 dark:bg-slate-900">
+    <div className="flex min-h-full flex-col gap-10 bg-slate-400 px-5 dark:bg-slate-900">
       <div className="flex justify-end">
         <Toggle />
       </div>
-      <div className="flex h-screen gap-12">
+      <div className="flex gap-10">
         <ScheduleBox />
-        <TimeBlockInput />
+        <TimeSlotInput />
       </div>
     </div>
   );
