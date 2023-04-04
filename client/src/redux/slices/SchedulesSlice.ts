@@ -33,7 +33,7 @@ export const schedulesSlice = createSlice({
   reducers: {
     loadSchedules: (state, action: PayloadAction<Schedule[]>) => {
       state.value = action.payload;
-    },
+    }
   },
 });
 
