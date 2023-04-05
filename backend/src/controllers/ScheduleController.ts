@@ -23,10 +23,11 @@ class ScheduleController {
   }
   // PATCH an existing schedule by Token
   public static async updateSchedule(req: any, res: any) {
-    const userID = req.user.data;
+    const userID = req.user.data._id;
+    const scheduleID = req.params.id;
     try {
       const schedule = await Schedule.findOneAndUpdate(
-        { _id: req.params.id, user_id: userID },
+        { _id: scheduleID, user_id: userID },
         { ...req.body },
         { new: true }
       );
@@ -34,7 +35,29 @@ class ScheduleController {
     } catch (error) {
       res
         .status(400)
-        .json(`The update attempt to user ${req.params._id} has failed`);
+        .json(`The update attempt to schedule ${req.params._id} has failed`);
+    }
+  }
+  // DELETE an existing schedule
+  public static async deleteScheduleByID(req: any, res: any) {
+    const userID = req.user.data._id;
+    const scheduleID = req.params.id;
+    try {
+      Schedule.findOneAndDelete(
+        { _id: scheduleID, user_id: userID },
+        (err: any, docs: any) => {
+          if (err) {
+            res
+              .status(400)
+              .json(
+                `The delete attempt to schedule ${req.params._id} has failed`
+              );
+          }
+          res.status(200).send(docs);
+        }
+      );
+    } catch (error) {
+      res.status(400).json(`${error}`);
     }
   }
   // GET all schedules
@@ -138,18 +161,6 @@ class ScheduleController {
     }
     await schedule?.save();
     res.send(deletedTimeSlot);
-  }
-
-  // DELETE an existing schedule
-  public static async deleteScheduleByID(req: Request, res: Response) {
-    const id = req.params.id;
-    Schedule.findOneAndDelete({ _id: id }, (err: any, docs: any) => {
-      if (err) {
-        res.send(err);
-      }
-
-      res.status(200).send(docs);
-    });
   }
 }
 

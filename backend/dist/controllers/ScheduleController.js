@@ -58,15 +58,36 @@ class ScheduleController {
     // PATCH an existing schedule by Token
     static updateSchedule(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data;
+            const userID = req.user.data._id;
+            const scheduleID = req.params.id;
             try {
-                const schedule = yield scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id, user_id: userID }, Object.assign({}, req.body), { new: true });
+                const schedule = yield scheduleModel_1.default.findOneAndUpdate({ _id: scheduleID, user_id: userID }, Object.assign({}, req.body), { new: true });
                 res.status(200).send(schedule);
             }
             catch (error) {
                 res
                     .status(400)
-                    .json(`The update attempt to user ${req.params._id} has failed`);
+                    .json(`The update attempt to schedule ${req.params._id} has failed`);
+            }
+        });
+    }
+    // DELETE an existing schedule
+    static deleteScheduleByID(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data._id;
+            const scheduleID = req.params.id;
+            try {
+                scheduleModel_1.default.findOneAndDelete({ _id: scheduleID, user_id: userID }, (err, docs) => {
+                    if (err) {
+                        res
+                            .status(400)
+                            .json(`The delete attempt to schedule ${req.params._id} has failed`);
+                    }
+                    res.status(200).send(docs);
+                });
+            }
+            catch (error) {
+                res.status(400).json(`${error}`);
             }
         });
     }
@@ -157,18 +178,6 @@ class ScheduleController {
             }
             yield (schedule === null || schedule === void 0 ? void 0 : schedule.save());
             res.send(deletedTimeSlot);
-        });
-    }
-    // DELETE an existing schedule
-    static deleteScheduleByID(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const id = req.params.id;
-            scheduleModel_1.default.findOneAndDelete({ _id: id }, (err, docs) => {
-                if (err) {
-                    res.send(err);
-                }
-                res.status(200).send(docs);
-            });
         });
     }
 }
