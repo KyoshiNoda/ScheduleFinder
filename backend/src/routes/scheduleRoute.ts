@@ -7,7 +7,7 @@ router.get('/mySchedule',AuthController.authenticateToken,ScheduleController.get
 router.get('/:id',ScheduleController.getScheduleById);
 
 router.post('/',ScheduleController.createSchedule);
-router.post('/:id',ScheduleController.insertTimeSlot);
+router.post('/:id',AuthController.authenticateToken,ScheduleController.insertTimeSlot);
 
 router.patch('/:id',AuthController.authenticateToken,ScheduleController.updateSchedule);
 router.patch('/:id/timeSlot',ScheduleController.updateTimeSlot);

@@ -7,20 +7,23 @@ class ScheduleController {
   // GET USER's Schedule by Token
   public static async getMySchedule(req: any, res: any) {
     const userID = req.user.data._id;
-    const userSchedule = await Schedule.find(
-      { user_id: userID },
-      (err: Error, found: any) => {
-        if (!err) {
-          return found;
-        } else {
-          res.status(400).json(err);
-        }
+    try {
+      const userSchedule = await Schedule.find({ user_id: userID }).exec();
+      if (!userSchedule) {
+        return res.status(404).json({
+          message: `Schedule for user ${userID} not found`,
+        });
       }
-    )
-      .clone()
-      .catch((err) => console.log(err));
-    res.json(userSchedule);
+      res.json(userSchedule);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: `Error while getting schedule for user ${userID}`,
+        error: err,
+      });
+    }
   }
+
   // PATCH an existing schedule by Token
   public static async updateSchedule(req: any, res: any) {
     const userID = req.user.data._id;
@@ -31,70 +34,45 @@ class ScheduleController {
         { ...req.body },
         { new: true }
       );
+      if (!schedule) {
+        return res.status(404).json({ error: 'Schedule not found' });
+      }
       res.status(200).send(schedule);
     } catch (error) {
-      res
-        .status(400)
-        .json(`The update attempt to schedule ${req.params._id} has failed`);
+      res.status(400).send({
+        error: `The update attempt to schedule ${scheduleID} has failed`,
+      });
     }
   }
-  // DELETE an existing schedule
+
+  // DELETE an existing schedule using JWT
   public static async deleteScheduleByID(req: any, res: any) {
     const userID = req.user.data._id;
     const scheduleID = req.params.id;
     try {
-      Schedule.findOneAndDelete(
-        { _id: scheduleID, user_id: userID },
-        (err: any, docs: any) => {
-          if (err) {
-            res
-              .status(400)
-              .json(
-                `The delete attempt to schedule ${req.params._id} has failed`
-              );
-          }
-          res.status(200).send(docs);
-        }
-      );
-    } catch (error) {
-      res.status(400).json(`${error}`);
-    }
-  }
-  // GET all schedules
-  public static async getAllSchedules(req: Request, res: Response) {
-    await Schedule.find({}, (err: Error, result: any) => {
-      if (!err) {
-        res.send(result);
-      } else {
-        res.status(404).json(err);
+      const schedule = await Schedule.findOneAndDelete({
+        _id: scheduleID,
+        user_id: userID,
+      });
+      if (!schedule) {
+        return res
+          .status(404)
+          .json(`No schedule found with ID ${scheduleID} for user ${userID}`);
       }
-    })
-      .clone()
-      .catch((err) => console.log(err));
-  }
-
-  // GET single schedule by id
-  public static async getScheduleById(req: Request, res: Response) {
-    const id = req.params.id;
-    const user = await Schedule.findById(id);
-    res.json(user);
-  }
-
-  // POST new schedule
-  public static async createSchedule(req: Request, res: Response) {
-    const schedule = new Schedule({
-      user_id: req.body.user_id,
-      visibility: req.body.visibility,
-      timeSlot: [],
-    });
-    schedule
-      .save()
-      .then((savedSchedule) => res.status(200).send(savedSchedule))
-      .catch((err) => res.send(err));
+      res.status(200).send(schedule);
+    } catch (error) {
+      res
+        .status(400)
+        .json(
+          `Failed to delete schedule with ID ${scheduleID} for user ${userID}`
+        );
+    }
   }
 
   // POST new time slot into existing schedule
-  public static async insertTimeSlot(req: Request, res: Response) {
+  public static async insertTimeSlot(req: any, res: any) {
+    const userID = req.user.data._id;
+    const scheduleID = req.params.id;
     const newTimeSlot: TimeSlot = {
       _id: new mongoose.Types.ObjectId(),
       day: req.body.day,
@@ -106,11 +84,15 @@ class ScheduleController {
       location: req.body.location,
       professor: req.body.professor,
     };
-    await Schedule.findOneAndUpdate(
-      { _id: req.params.id },
-      { $push: { timeSlot: newTimeSlot } },
-      { new: true }
-    ).then(() => res.status(200).send(newTimeSlot));
+    try {
+      await Schedule.findOneAndUpdate(
+        { _id: scheduleID, user_id: userID },
+        { $push: { timeSlot: newTimeSlot } },
+        { new: true }
+      ).then(() => res.status(200).send(newTimeSlot));
+    } catch (error) {
+      res.status(400).json(`${error}`);
+    }
   }
 
   // PATCH an existing time slot
@@ -161,6 +143,38 @@ class ScheduleController {
     }
     await schedule?.save();
     res.send(deletedTimeSlot);
+  }
+  // GET all schedules
+  public static async getAllSchedules(req: Request, res: Response) {
+    await Schedule.find({}, (err: Error, result: any) => {
+      if (!err) {
+        res.send(result);
+      } else {
+        res.status(404).json(err);
+      }
+    })
+      .clone()
+      .catch((err) => console.log(err));
+  }
+
+  // GET single schedule by id
+  public static async getScheduleById(req: Request, res: Response) {
+    const id = req.params.id;
+    const user = await Schedule.findById(id);
+    res.json(user);
+  }
+
+  // POST new schedule
+  public static async createSchedule(req: Request, res: Response) {
+    const schedule = new Schedule({
+      user_id: req.body.user_id,
+      visibility: req.body.visibility,
+      timeSlot: [],
+    });
+    schedule
+      .save()
+      .then((savedSchedule) => res.status(200).send(savedSchedule))
+      .catch((err) => res.send(err));
   }
 }
 
