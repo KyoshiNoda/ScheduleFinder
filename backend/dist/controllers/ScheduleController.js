@@ -108,6 +108,9 @@ class ScheduleController {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.user.data._id;
             const scheduleID = req.params.id;
+            if (!req.body.title || !req.body.startTime || !req.body.endTime || !req.body.color || !req.body.day) {
+                return res.status(400).json({ message: 'Missing required properties' });
+            }
             const newTimeSlot = {
                 _id: new mongoose.Types.ObjectId(),
                 day: req.body.day,
@@ -120,7 +123,11 @@ class ScheduleController {
                 professor: req.body.professor,
             };
             try {
-                yield scheduleModel_1.default.findOneAndUpdate({ _id: scheduleID, user_id: userID }, { $push: { timeSlot: newTimeSlot } }, { new: true }).then(() => res.status(200).send(newTimeSlot));
+                const schedule = yield scheduleModel_1.default.findOneAndUpdate({ _id: scheduleID, user_id: userID }, { $push: { timeSlot: newTimeSlot } }, { new: true });
+                if (!schedule) {
+                    return res.status(404).json({ message: 'Schedule not found' });
+                }
+                res.status(200).send(newTimeSlot);
             }
             catch (error) {
                 res.status(400).json(`${error}`);
@@ -130,36 +137,61 @@ class ScheduleController {
     // PATCH an existing time slot
     static updateTimeSlot(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const schedule = yield scheduleModel_1.default.findOne({ _id: req.params.id }, (err, found) => {
-                if (!err) {
-                    return found;
+            const userID = req.user.data._id;
+            const scheduleID = req.params.id;
+            try {
+                const schedule = yield scheduleModel_1.default.findOne({ _id: scheduleID, user_id: userID }, (err, found) => {
+                    if (!err) {
+                        return found;
+                    }
+                }).clone();
+                if (!schedule) {
+                    return res
+                        .status(404)
+                        .json(`Schedule not found for user with ID ${userID}`);
                 }
-            }).clone();
-            const timeSlotIndex = schedule === null || schedule === void 0 ? void 0 : schedule.timeSlot.findIndex((timeSlot) => timeSlot._id == req.body._id);
-            schedule.timeSlot[timeSlotIndex] = Object.assign(Object.assign({}, schedule === null || schedule === void 0 ? void 0 : schedule.timeSlot[timeSlotIndex]), req.body);
-            yield (schedule === null || schedule === void 0 ? void 0 : schedule.save());
-            res.status(200).send(schedule.timeSlot[timeSlotIndex]);
+                const timeSlotIndex = schedule === null || schedule === void 0 ? void 0 : schedule.timeSlot.findIndex((timeSlot) => timeSlot._id == req.body._id);
+                if (timeSlotIndex < 0) {
+                    return res
+                        .status(404)
+                        .json(`Time slot with ID ${req.body._id} not found in schedule`);
+                }
+                schedule.timeSlot[timeSlotIndex] = Object.assign(Object.assign({}, schedule === null || schedule === void 0 ? void 0 : schedule.timeSlot[timeSlotIndex]), req.body);
+                yield (schedule === null || schedule === void 0 ? void 0 : schedule.save());
+                res.status(200).send(schedule.timeSlot[timeSlotIndex]);
+            }
+            catch (error) {
+                res.status(400).json(`${error}`);
+            }
         });
     }
     // DELETE  a time slot
     static deleteTimeSlot(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const schedule = yield scheduleModel_1.default.findOne({ _id: req.params.id }, (err, found) => {
-                if (!err) {
-                    return found;
+            const userID = req.user.data._id;
+            const scheduleID = req.params.id;
+            try {
+                const schedule = yield scheduleModel_1.default.findOne({
+                    _id: scheduleID,
+                    user_id: userID,
+                }).clone();
+                if (!schedule) {
+                    res.status(404).json({ error: 'Schedule not found' });
+                    return;
                 }
-                else {
-                    res.status(404).json({ error: 'Schedule not Found' });
+                const timeSlotId = req.body._id;
+                const deletedTimeSlot = schedule.timeSlot.find((timeSlot) => timeSlot._id.toString() === timeSlotId);
+                if (!deletedTimeSlot) {
+                    res.status(404).json({ error: 'Time slot not found' });
+                    return;
                 }
-            }).clone();
-            let deletedTimeSlot = null;
-            if (schedule && schedule.timeSlot) {
-                deletedTimeSlot = schedule.timeSlot.find((timeSlot) => timeSlot._id == req.body._id);
-                console.log(deletedTimeSlot);
-                schedule.timeSlot = schedule.timeSlot.filter((deletedItem) => deletedItem._id != req.body._id);
+                schedule.timeSlot = schedule.timeSlot.filter((timeSlot) => timeSlot._id.toString() !== timeSlotId);
+                yield schedule.save();
+                res.status(200).send(deletedTimeSlot);
             }
-            yield (schedule === null || schedule === void 0 ? void 0 : schedule.save());
-            res.send(deletedTimeSlot);
+            catch (error) {
+                res.status(500).json({ error: 'Internal server error' });
+            }
         });
     }
     // GET all schedules

@@ -8,12 +8,12 @@ const ScheduleController_1 = __importDefault(require("../controllers/ScheduleCon
 const AuthController_1 = __importDefault(require("../controllers/AuthController"));
 const router = express_1.default.Router();
 router.get('/', ScheduleController_1.default.getAllSchedules);
-router.get('/mySchedule', AuthController_1.default.authenticateToken, ScheduleController_1.default.getMySchedule);
 router.get('/:id', ScheduleController_1.default.getScheduleById);
 router.post('/', ScheduleController_1.default.createSchedule);
+router.get('/mySchedule', AuthController_1.default.authenticateToken, ScheduleController_1.default.getMySchedule);
 router.post('/:id', AuthController_1.default.authenticateToken, ScheduleController_1.default.insertTimeSlot);
 router.patch('/:id', AuthController_1.default.authenticateToken, ScheduleController_1.default.updateSchedule);
-router.patch('/:id/timeSlot', ScheduleController_1.default.updateTimeSlot);
+router.patch('/:id/timeSlot', AuthController_1.default.authenticateToken, ScheduleController_1.default.updateTimeSlot);
 router.delete('/:id', AuthController_1.default.authenticateToken, ScheduleController_1.default.deleteScheduleByID);
-router.delete('/:id/timeSlot', ScheduleController_1.default.deleteTimeSlot);
+router.delete('/:id/timeSlot', AuthController_1.default.authenticateToken, ScheduleController_1.default.deleteTimeSlot);
 exports.default = router;
