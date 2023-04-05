@@ -143,8 +143,8 @@ class ScheduleController {
     }
     static getScheduleByToken(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user_ID = req.user.data._id;
-            const user = yield scheduleModel_1.default.find({ user_id: user_ID }, (err, found) => {
+            const userID = req.user.data._id;
+            const userSchedule = yield scheduleModel_1.default.find({ user_id: userID }, (err, found) => {
                 if (!err) {
                     return found;
                 }
@@ -154,7 +154,7 @@ class ScheduleController {
             })
                 .clone()
                 .catch((err) => console.log(err));
-            res.json(user);
+            res.json(userSchedule);
         });
     }
     // DELETE an existing schedule

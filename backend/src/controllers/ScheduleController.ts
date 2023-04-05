@@ -122,11 +122,10 @@ class ScheduleController {
     await schedule?.save();
     res.send(deletedTimeSlot);
   }
-
   public static async getScheduleByToken(req: any, res: any) {
-    const user_ID: string = req.user.data._id;
-    const user = await Schedule.find(
-      { user_id: user_ID },
+    const userID = req.user.data._id;
+    const userSchedule = await Schedule.find(
+      { user_id: userID },
       (err: Error, found: any) => {
         if (!err) {
           return found;
@@ -137,7 +136,7 @@ class ScheduleController {
     )
       .clone()
       .catch((err) => console.log(err));
-    res.json(user);
+    res.json(userSchedule);
   }
 
   // DELETE an existing schedule

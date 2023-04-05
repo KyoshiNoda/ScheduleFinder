@@ -35,7 +35,7 @@ class AuthController {
             res.send({ token: accessToken });
         });
     }
-    static authToken(req, res, next) {
+    static authenticateToken(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const authHeader = req.headers['authorization'];
             const token = authHeader && authHeader.split(' ')[1];
