@@ -4,6 +4,39 @@ import * as mongoose from 'mongoose';
 import Schedule, { TimeSlot } from '../models/scheduleModel';
 
 class ScheduleController {
+  // GET USER's Schedule by Token
+  public static async getMySchedule(req: any, res: any) {
+    const userID = req.user.data._id;
+    const userSchedule = await Schedule.find(
+      { user_id: userID },
+      (err: Error, found: any) => {
+        if (!err) {
+          return found;
+        } else {
+          res.status(400).json(err);
+        }
+      }
+    )
+      .clone()
+      .catch((err) => console.log(err));
+    res.json(userSchedule);
+  }
+  // PATCH an existing schedule by Token
+  public static async updateSchedule(req: any, res: any) {
+    const userID = req.user.data;
+    try {
+      const schedule = await Schedule.findOneAndUpdate(
+        { _id: req.params.id, user_id: userID },
+        { ...req.body },
+        { new: true }
+      );
+      res.status(200).send(schedule);
+    } catch (error) {
+      res
+        .status(400)
+        .json(`The update attempt to user ${req.params._id} has failed`);
+    }
+  }
   // GET all schedules
   public static async getAllSchedules(req: Request, res: Response) {
     await Schedule.find({}, (err: Error, result: any) => {
@@ -57,22 +90,6 @@ class ScheduleController {
     ).then(() => res.status(200).send(newTimeSlot));
   }
 
-  // PATCH an existing schedule
-  public static async updateSchedule(req: Request, res: Response) {
-    try {
-      const schedule = await Schedule.findOneAndUpdate(
-        { _id: req.params.id },
-        { ...req.body },
-        { new: true }
-      );
-      res.status(200).send(schedule);
-    } catch (error) {
-      res
-        .status(400)
-        .json(`The update attempt to user ${req.params._id} has failed`);
-    }
-  }
-
   // PATCH an existing time slot
   public static async updateTimeSlot(req: Request, res: Response) {
     const schedule = await Schedule.findOne(
@@ -121,22 +138,6 @@ class ScheduleController {
     }
     await schedule?.save();
     res.send(deletedTimeSlot);
-  }
-  public static async getScheduleByToken(req: any, res: any) {
-    const userID = req.user.data._id;
-    const userSchedule = await Schedule.find(
-      { user_id: userID },
-      (err: Error, found: any) => {
-        if (!err) {
-          return found;
-        } else {
-          res.status(400).json(err);
-        }
-      }
-    )
-      .clone()
-      .catch((err) => console.log(err));
-    res.json(userSchedule);
   }
 
   // DELETE an existing schedule

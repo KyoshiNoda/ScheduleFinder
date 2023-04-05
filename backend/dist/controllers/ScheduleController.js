@@ -38,6 +38,38 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = __importStar(require("mongoose"));
 const scheduleModel_1 = __importDefault(require("../models/scheduleModel"));
 class ScheduleController {
+    // GET USER's Schedule by Token
+    static getMySchedule(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data._id;
+            const userSchedule = yield scheduleModel_1.default.find({ user_id: userID }, (err, found) => {
+                if (!err) {
+                    return found;
+                }
+                else {
+                    res.status(400).json(err);
+                }
+            })
+                .clone()
+                .catch((err) => console.log(err));
+            res.json(userSchedule);
+        });
+    }
+    // PATCH an existing schedule by Token
+    static updateSchedule(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data;
+            try {
+                const schedule = yield scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id, user_id: userID }, Object.assign({}, req.body), { new: true });
+                res.status(200).send(schedule);
+            }
+            catch (error) {
+                res
+                    .status(400)
+                    .json(`The update attempt to user ${req.params._id} has failed`);
+            }
+        });
+    }
     // GET all schedules
     static getAllSchedules(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -92,20 +124,6 @@ class ScheduleController {
             yield scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id }, { $push: { timeSlot: newTimeSlot } }, { new: true }).then(() => res.status(200).send(newTimeSlot));
         });
     }
-    // PATCH an existing schedule
-    static updateSchedule(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const schedule = yield scheduleModel_1.default.findOneAndUpdate({ _id: req.params.id }, Object.assign({}, req.body), { new: true });
-                res.status(200).send(schedule);
-            }
-            catch (error) {
-                res
-                    .status(400)
-                    .json(`The update attempt to user ${req.params._id} has failed`);
-            }
-        });
-    }
     // PATCH an existing time slot
     static updateTimeSlot(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -139,22 +157,6 @@ class ScheduleController {
             }
             yield (schedule === null || schedule === void 0 ? void 0 : schedule.save());
             res.send(deletedTimeSlot);
-        });
-    }
-    static getScheduleByToken(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
-            const userSchedule = yield scheduleModel_1.default.find({ user_id: userID }, (err, found) => {
-                if (!err) {
-                    return found;
-                }
-                else {
-                    res.status(400).json(err);
-                }
-            })
-                .clone()
-                .catch((err) => console.log(err));
-            res.json(userSchedule);
         });
     }
     // DELETE an existing schedule

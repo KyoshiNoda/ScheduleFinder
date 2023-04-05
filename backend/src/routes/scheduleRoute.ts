@@ -3,13 +3,13 @@ import ScheduleController from '../controllers/ScheduleController';
 import AuthController from '../controllers/AuthController';
 const router = express.Router();
 router.get('/', ScheduleController.getAllSchedules);
-router.get('/userSchedule', AuthController.authenticateToken,ScheduleController.getScheduleByToken);
+router.get('/mySchedule', AuthController.authenticateToken,ScheduleController.getMySchedule);
 router.get('/:id',ScheduleController.getScheduleById);
 
 router.post('/',ScheduleController.createSchedule);
 router.post('/:id',ScheduleController.insertTimeSlot);
 
-router.patch('/:id',ScheduleController.updateSchedule);
+router.patch('/:id',AuthController.authenticateToken,ScheduleController.updateSchedule);
 router.patch('/:id/timeSlot',ScheduleController.updateTimeSlot);
 
 router.delete('/:id',ScheduleController.deleteScheduleByID);
