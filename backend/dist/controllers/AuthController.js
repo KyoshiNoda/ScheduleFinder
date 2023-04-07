@@ -18,28 +18,24 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class AuthController {
     static loginUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield userModel_1.default.findOne({ email: req.body.email }, (err, found) => __awaiter(this, void 0, void 0, function* () {
-                if (!(found === undefined)) {
-                    if (yield bcrypt_1.default.compare(req.body.password, found === null || found === void 0 ? void 0 : found.password)) {
-                        return found;
-                    }
-                    else {
-                        res.send('not allowed');
-                    }
-                }
-                else {
-                    res.status(400).send('No user Found');
-                }
-            }))
-                .clone()
-                .exec()
-                .then((docs) => {
-                const accessToken = jsonwebtoken_1.default.sign({ data: docs }, `${process.env.ACCESS_TOKEN_SECRET}`);
-                res.send({ token: accessToken });
-            });
+            const email = req.body.email;
+            const password = req.body.password;
+            if (!email || !password) {
+                return res.status(400).send('Email and password are required.');
+            }
+            const user = yield userModel_1.default.findOne({ email });
+            if (!user) {
+                return res.status(400).send('User not found.');
+            }
+            const match = yield bcrypt_1.default.compare(password, user.password);
+            if (!match) {
+                return res.status(400).send('Incorrect password.');
+            }
+            const accessToken = jsonwebtoken_1.default.sign({ data: user }, `${process.env.ACCESS_TOKEN_SECRET}`);
+            res.send({ token: accessToken });
         });
     }
-    static authToken(req, res, next) {
+    static authenticateToken(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const authHeader = req.headers['authorization'];
             const token = authHeader && authHeader.split(' ')[1];

@@ -1,12 +1,41 @@
-import React from 'react'
+import { ChangeEvent, FormEventHandler, useState } from 'react';
+import Axios from 'axios';
 
-type Props = {}
+type Props = {};
+function LoginForm(props: Props) {
+  const [showModal, setShowModal] = useState(false);
+  const [email, setEmail] = useState<string | undefined>(undefined);
+  const [password, setPassword] = useState<string | undefined>(undefined);
+  const emailHandler = (event: ChangeEvent<HTMLInputElement>): void => {
+    setEmail(event.target.value);
+  };
+  const passwordHandler = (event: ChangeEvent<HTMLInputElement>): void => {
+    setPassword(event.target.value);
+  };
+  const formHandler: FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
 
-function LoginForm({}: Props) {
+    Axios.post('http://localhost:3001/api/auth/login', {
+      email: email,
+      password: password,
+    })
+      .then((res) => {
+       alert('correct password')
+       console.log(res.data);
+      })
+      .catch((err) => {
+        alert('wrong password');
+      });
+  };
+
   return (
-      <form action="" className="space-y-6 ng-untouched ng-pristine ng-valid">
+    <>
+      <form
+        className="ng-untouched ng-pristine ng-valid space-y-6"
+        onSubmit={formHandler}
+      >
         <div className="space-y-1 text-sm">
-          <label htmlFor="email" className="block text-sm md:text-lg font-bold">
+          <label htmlFor="email" className="block text-sm font-bold md:text-lg">
             Email
           </label>
           <input
@@ -14,12 +43,16 @@ function LoginForm({}: Props) {
             name="email"
             id="email"
             placeholder="Email"
-            className="w-full text-sm px-4 py-3 bg-gray-50 rounded-md border-gray-100  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
+            onChange={emailHandler}
+            className="w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
           />
         </div>
 
         <div className="space-y-1 text-sm">
-          <label htmlFor="password" className="block text:sm md:text-lg font-bold">
+          <label
+            htmlFor="password"
+            className="text:sm block font-bold md:text-lg"
+          >
             Password
           </label>
           <input
@@ -27,20 +60,24 @@ function LoginForm({}: Props) {
             name="password"
             id="password"
             placeholder="••••••••"
-            className="w-full text-sm px-4 py-3 bg-gray-50 rounded-md border-gray-100  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
+            onChange={passwordHandler}
+            className="w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
           />
           <div className="flex justify-end text-xs dark:text-gray-400">
             <a rel="noopener noreferrer" href="#">
               Forgot Password?
             </a>
           </div>
-
         </div>
-        <button className="block w-full p-3 text-center rounded-sm bg-blue-400 text-white dark:text-gray-900 font-bold dark:bg-slate-300 ">
+        <button
+          type="submit"
+          className="block w-full rounded-sm bg-blue-400 p-3 text-center font-bold text-white dark:bg-slate-300 dark:text-gray-900"
+        >
           Sign in
         </button>
       </form>
-  )
+    </>
+  );
 }
 
-export default LoginForm
+export default LoginForm;
