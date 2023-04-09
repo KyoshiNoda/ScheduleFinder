@@ -74,26 +74,36 @@ function ScheduleBox({}: Props) {
   return (
     <>
       <div className="flex w-full flex-col">
-        <div className="mb-6 flex h-[1008px] rounded bg-white dark:bg-black dark:text-white">
-          <div className="h-[1008px] w-[20px]">
-            <div className="relative">
-              <span className="absolute top-[0px]">7</span>
-              <span className="absolute top-[72px]">8</span>
-              <span className="absolute top-[144px]">9</span>
-              <span className="absolute top-[216px]">10</span>
-              <span className="absolute top-[288px]">11</span>
-              <span className="absolute top-[360px]">12</span>
-              <span className="absolute top-[432px]">1</span>
-              <span className="absolute top-[504px]">2</span>
-              <span className="absolute top-[576px]">3</span>
-              <span className="absolute top-[648px]">4</span>
-              <span className="absolute top-[720px]">5</span>
-              <span className="absolute top-[792px]">6</span>
-              <span className="absolute top-[864px]">7</span>
-              <span className="absolute top-[936px]">8</span>
-            </div>
-          </div>
-          <div className="relative h-[1008px] w-1/5 bg-purple-5">
+        <div className="relative mb-6 flex h-[1008px] rounded bg-white dark:bg-black dark:text-white">
+          <span className="absolute top-[-11px] -left-5">7</span>
+          <span className="absolute top-[61px] -left-5">8</span>
+          <span className="absolute top-[133px] -left-5">9</span>
+          <span className="absolute top-[205px] -left-6">10</span>
+          <span className="absolute top-[277px] -left-6">11</span>
+          <span className="absolute top-[349px] -left-6">12</span>
+          <span className="absolute top-[421px] -left-5">1</span>
+          <span className="absolute top-[493px] -left-5">2</span>
+          <span className="absolute top-[565px] -left-5">3</span>
+          <span className="absolute top-[637px] -left-5">4</span>
+          <span className="absolute top-[709px] -left-5">5</span>
+          <span className="absolute top-[781px] -left-5">6</span>
+          <span className="absolute top-[853px] -left-5">7</span>
+          <span className="absolute top-[925px] -left-5">8</span>
+          <hr className="absolute top-0 w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[72px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[144px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[216px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[288px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[360px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[432px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[504px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[576px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[648px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[720px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[792px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[864px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[936px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <div className="bg-purple-5 relative h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               monday
             </h2>
@@ -118,7 +128,7 @@ function ScheduleBox({}: Props) {
                   />
                 ))}
           </div>
-          <div className="relative h-[1008px] w-1/5 bg-red-5">
+          <div className="bg-red-5 relative h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               tuesday
             </h2>
@@ -143,7 +153,7 @@ function ScheduleBox({}: Props) {
                   />
                 ))}
           </div>
-          <div className="relative h-[1008px] w-1/5 bg-green-5">
+          <div className="bg-green-5 relative h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               wednesday
             </h2>
@@ -168,7 +178,7 @@ function ScheduleBox({}: Props) {
                   />
                 ))}
           </div>
-          <div className="relative h-[1008px] w-1/5 bg-blue-5">
+          <div className="bg-blue-5 relative h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               thursday
             </h2>
@@ -193,7 +203,7 @@ function ScheduleBox({}: Props) {
                   />
                 ))}
           </div>
-          <div className="relative h-[1008px] w-1/5 bg-teal-5">
+          <div className="bg-teal-5 relative h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               friday
             </h2>
