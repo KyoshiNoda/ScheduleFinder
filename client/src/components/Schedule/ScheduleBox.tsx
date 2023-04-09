@@ -1,18 +1,79 @@
 import TimeSlot from './TimeSlot';
+import { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
+import 'dayjs/locale/en';
 
 type Props = {};
 
+type TimeSlot = {
+  _id: string;
+  day: string;
+  category: string;
+  title: string;
+  startTime: string;
+  endTime: string;
+  location: string | null;
+  professor: string | null;
+  color: string;
+};
+
 function ScheduleBox({}: Props) {
+  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>();
+
+  useEffect(() => {
+    fetch(`http://localhost:3001/api/schedules/63f2dbdeef9b9d56ba5fc264`)
+      .then((res) => res.json())
+      .then((data) => setTimeSlots(data.timeSlot));
+  }, []);
+
+  const convertTimeToMinutes = (time: string) => {
+    const lastTwoChars: string = time.slice(time.length - 2, time.length);
+    time = time.slice(0, time.indexOf(' '));
+    const [hour, minutes] = time.split(':');
+
+    let hourNumber: number = parseInt(hour);
+    const minutesNumber: number = parseInt(minutes);
+
+    if (lastTwoChars === 'PM' && hourNumber < 12) {
+      hourNumber += 12;
+    }
+
+    return [hourNumber, minutesNumber];
+  };
+
+  const calculateHeight = (startTime: string, endTime: string) => {
+    const [startHour, startMinutes] = convertTimeToMinutes(startTime);
+    const [endHour, endMinutes] = convertTimeToMinutes(endTime);
+
+    let hours: number = endHour - startHour;
+    let minutes: number = endMinutes - startMinutes;
+
+    if (minutes < 0) {
+      minutes += 60;
+      hours -= 1;
+    }
+
+    const totalMinutes: number = hours * 60 + minutes;
+    const height: number = (totalMinutes * 72) / 60;
+
+    return height.toString();
+  };
+
+  const calculateMinutesFromTop = (time: string) => {
+    const [hour, minutes] = convertTimeToMinutes(time);
+    const minutesFromTop: number = (hour - 7) * 60 + minutes;
+    return minutesFromTop;
+  };
+
+  const calculateDistanceFromTop = (startTime: string) => {
+    const minutes: number = calculateMinutesFromTop(startTime);
+    const distanceFromTop: number = (minutes * 72) / 60;
+    return distanceFromTop.toString();
+  };
+
   return (
     <>
       <div className="flex w-full flex-col">
-        <div className="flex justify-evenly dark:text-white">
-          <div>Monday</div>
-          <div>Tuesday</div>
-          <div>Wednesday</div>
-          <div>Thursday</div>
-          <div>Friday</div>
-        </div>
         <div className="mb-6 flex h-[1008px] rounded bg-white dark:bg-black dark:text-white">
           <div className="h-[1008px] w-[20px]">
             <div className="relative">
@@ -32,27 +93,131 @@ function ScheduleBox({}: Props) {
               <span className="absolute top-[936px]">8</span>
             </div>
           </div>
-          <div className="relative h-[1008px] w-1/5 bg-purple-500">
-            <div className="flex justify-center">
-              <TimeSlot top="0px" height="72px" time="7 AM - 8 AM" />
-            </div>
+          <div className="relative h-[1008px] w-1/5 bg-purple-5">
+            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
+              monday
+            </h2>
+            {timeSlots &&
+              timeSlots
+                .filter((timeSlot) => timeSlot.day === 'Monday')
+                .map((timeSlot) => (
+                  <TimeSlot
+                    key={timeSlot._id}
+                    id={timeSlot._id}
+                    top={calculateDistanceFromTop(timeSlot.startTime)}
+                    height={calculateHeight(
+                      timeSlot.startTime,
+                      timeSlot.endTime
+                    )}
+                    title={timeSlot.title}
+                    startTime={timeSlot.startTime}
+                    endTime={timeSlot.endTime}
+                    location={timeSlot.location}
+                    professor={timeSlot.professor}
+                    color={timeSlot.color}
+                  />
+                ))}
           </div>
-          <div className="relative h-[1008px] w-1/5 bg-red-500">
-            <div className="flex justify-center">
-              <TimeSlot top="72px" height="72px" time="8 AM - 9 AM" />
-            </div>
+          <div className="relative h-[1008px] w-1/5 bg-red-5">
+            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
+              tuesday
+            </h2>
+            {timeSlots &&
+              timeSlots
+                .filter((timeSlot) => timeSlot.day === 'Tuesday')
+                .map((timeSlot) => (
+                  <TimeSlot
+                    key={timeSlot._id}
+                    id={timeSlot._id}
+                    top={calculateDistanceFromTop(timeSlot.startTime)}
+                    height={calculateHeight(
+                      timeSlot.startTime,
+                      timeSlot.endTime
+                    )}
+                    title={timeSlot.title}
+                    startTime={timeSlot.startTime}
+                    endTime={timeSlot.endTime}
+                    location={timeSlot.location}
+                    professor={timeSlot.professor}
+                    color={timeSlot.color}
+                  />
+                ))}
           </div>
-          <div className="relative h-[1008px] w-1/5 bg-green-500">
-            <div className="flex justify-center">
-              <TimeSlot top="252px" height="144px" time="10:30 AM - 12:30 PM" />
-            </div>
+          <div className="relative h-[1008px] w-1/5 bg-green-5">
+            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
+              wednesday
+            </h2>
+            {timeSlots &&
+              timeSlots
+                .filter((timeSlot) => timeSlot.day === 'Wednesday')
+                .map((timeSlot) => (
+                  <TimeSlot
+                    key={timeSlot._id}
+                    id={timeSlot._id}
+                    top={calculateDistanceFromTop(timeSlot.startTime)}
+                    height={calculateHeight(
+                      timeSlot.startTime,
+                      timeSlot.endTime
+                    )}
+                    title={timeSlot.title}
+                    startTime={timeSlot.startTime}
+                    endTime={timeSlot.endTime}
+                    location={timeSlot.location}
+                    professor={timeSlot.professor}
+                    color={timeSlot.color}
+                  />
+                ))}
           </div>
-          <div className="relative h-[1008px] w-1/5 bg-blue-500">
-            <div className="flex justify-center">
-              <TimeSlot top="0px" height="72px" time="7 AM - 8 AM" />
-            </div>
+          <div className="relative h-[1008px] w-1/5 bg-blue-5">
+            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
+              thursday
+            </h2>
+            {timeSlots &&
+              timeSlots
+                .filter((timeSlot) => timeSlot.day === 'Thursday')
+                .map((timeSlot) => (
+                  <TimeSlot
+                    key={timeSlot._id}
+                    id={timeSlot._id}
+                    top={calculateDistanceFromTop(timeSlot.startTime)}
+                    height={calculateHeight(
+                      timeSlot.startTime,
+                      timeSlot.endTime
+                    )}
+                    title={timeSlot.title}
+                    startTime={timeSlot.startTime}
+                    endTime={timeSlot.endTime}
+                    location={timeSlot.location}
+                    professor={timeSlot.professor}
+                    color={timeSlot.color}
+                  />
+                ))}
           </div>
-          <div className="relative h-[1008px] w-1/5 bg-teal-500"></div>
+          <div className="relative h-[1008px] w-1/5 bg-teal-5">
+            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
+              friday
+            </h2>
+            {timeSlots &&
+              timeSlots
+                .filter((timeSlot) => timeSlot.day === 'Friday')
+                .map((timeSlot) => (
+                  <TimeSlot
+                    key={timeSlot._id}
+                    id={timeSlot._id}
+                    top={calculateDistanceFromTop(timeSlot.startTime)}
+                    height={calculateHeight(
+                      timeSlot.startTime,
+                      timeSlot.endTime
+                    )}
+                    title={timeSlot.title}
+                    startTime={timeSlot.startTime}
+                    endTime={timeSlot.endTime}
+                    location={timeSlot.location}
+                    professor={timeSlot.professor}
+                    color={timeSlot.color}
+                  />
+                ))}
+          </div>
         </div>
       </div>
     </>
