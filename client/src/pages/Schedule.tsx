@@ -54,13 +54,11 @@ function Schedule({}: Props) {
   let result: string = time1.startTime.isSame(time2.startTime)
     ? 'its the same'
     : 'not same'; // checks if start or end time are the same
-  console.log(result);
 
   const totalTime: number = time1.endTime.diff(time1.startTime, 'hours'); // total time from timeSlot
-  console.log(totalTime);
 
   return (
-    <div className="flex min-h-full flex-col gap-10 bg-slate-400 px-5 dark:bg-slate-900">
+    <div className="flex min-h-full h-[1110px] flex-col gap-10 bg-slate-400 px-12 dark:bg-slate-900">
       <div className="flex justify-end">
         <Toggle />
       </div>
