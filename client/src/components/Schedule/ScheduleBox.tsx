@@ -103,7 +103,7 @@ function ScheduleBox({}: Props) {
           <hr className="absolute top-[792px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
           <hr className="absolute top-[864px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
           <hr className="absolute top-[936px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
-          <div className="bg-purple-5 relative h-[1008px] w-1/5">
+          <div className="relative h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               monday
             </h2>
@@ -128,7 +128,7 @@ function ScheduleBox({}: Props) {
                   />
                 ))}
           </div>
-          <div className="bg-red-5 relative h-[1008px] w-1/5">
+          <div className="relative h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               tuesday
             </h2>
@@ -153,7 +153,7 @@ function ScheduleBox({}: Props) {
                   />
                 ))}
           </div>
-          <div className="bg-green-5 relative h-[1008px] w-1/5">
+          <div className="relative h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               wednesday
             </h2>
@@ -178,7 +178,7 @@ function ScheduleBox({}: Props) {
                   />
                 ))}
           </div>
-          <div className="bg-blue-5 relative h-[1008px] w-1/5">
+          <div className="relative h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               thursday
             </h2>
@@ -203,7 +203,7 @@ function ScheduleBox({}: Props) {
                   />
                 ))}
           </div>
-          <div className="bg-teal-5 relative h-[1008px] w-1/5">
+          <div className="relative h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               friday
             </h2>
