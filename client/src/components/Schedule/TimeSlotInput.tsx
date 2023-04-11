@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import ColorsPalette from '../Utils/ColorsPalette';
 
 type Props = {};
@@ -8,27 +9,37 @@ const formActions = {
   DELETE: 'delete',
 };
 
-function TimeSlotInput({}: Props) {
-  const colors: string[] = [
-    'slate',
-    'red',
-    'orange',
-    'amber',
-    'yellow',
-    'lime',
-    'green',
-    'emerald',
-    'teal',
-    'blue',
-    'violet',
-    'purple',
-    'fuchsia',
-    'rose',
-  ];
+const colors: string[] = [
+  'slate',
+  'red',
+  'orange',
+  'amber',
+  'yellow',
+  'lime',
+  'green',
+  'emerald',
+  'teal',
+  'blue',
+  'violet',
+  'purple',
+  'fuchsia',
+  'rose',
+];
 
-  const addTimeSlot = (e: React.FormEvent<HTMLFormElement>) => {
-    
-  };
+function TimeSlotInput({}: Props) {
+  const titleRef = useRef(null);
+  const mondayRef = useRef(null);
+  const tuesdayRef = useRef(null);
+  const wednesdayRef = useRef(null);
+  const thursdayRef = useRef(null);
+  const fridayRef = useRef(null);
+  const startTimeRef = useRef(null);
+  const endTimeRef = useRef(null);
+  const locationRef = useRef(null);
+  const professorRef = useRef(null);
+  // const Ref = useRef(null);
+
+  const addTimeSlot = (e: React.FormEvent<HTMLFormElement>) => {};
 
   const handleSubmit = (
     e: React.FormEvent<HTMLFormElement>,
@@ -50,6 +61,7 @@ function TimeSlotInput({}: Props) {
             Title
           </label>
           <input
+            ref={titleRef}
             type="text"
             id="title"
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -68,9 +80,10 @@ function TimeSlotInput({}: Props) {
             <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
               <div className="flex items-center pl-3">
                 <input
+                  ref={mondayRef}
                   id="vue-checkbox-list"
                   type="checkbox"
-                  value=""
+                  value="monday"
                   className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                 />
                 <label
@@ -84,9 +97,10 @@ function TimeSlotInput({}: Props) {
             <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
               <div className="flex items-center pl-3">
                 <input
+                  ref={tuesdayRef}
                   id="react-checkbox-list"
                   type="checkbox"
-                  value=""
+                  value="tuesday"
                   className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                 />
                 <label
@@ -100,9 +114,10 @@ function TimeSlotInput({}: Props) {
             <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
               <div className="flex items-center pl-3">
                 <input
+                  ref={wednesdayRef}
                   id="angular-checkbox-list"
                   type="checkbox"
-                  value=""
+                  value="wednesday"
                   className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                 />
                 <label
@@ -116,9 +131,10 @@ function TimeSlotInput({}: Props) {
             <li className="w-full dark:border-gray-600">
               <div className="flex items-center pl-3">
                 <input
+                  ref={thursdayRef}
                   id="laravel-checkbox-list"
                   type="checkbox"
-                  value=""
+                  value="thursday"
                   className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                 />
                 <label
@@ -132,9 +148,10 @@ function TimeSlotInput({}: Props) {
             <li className="w-full dark:border-gray-600">
               <div className="flex items-center pl-3">
                 <input
+                  ref={fridayRef}
                   id="laravel-checkbox-list"
                   type="checkbox"
-                  value=""
+                  value="friday"
                   className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                 />
                 <label
@@ -156,6 +173,7 @@ function TimeSlotInput({}: Props) {
               Start Time
             </label>
             <input
+              ref={startTimeRef}
               type="text"
               id="title"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -171,6 +189,7 @@ function TimeSlotInput({}: Props) {
               End Time
             </label>
             <input
+              ref={endTimeRef}
               type="text"
               id="title"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -188,6 +207,7 @@ function TimeSlotInput({}: Props) {
               Location
             </label>
             <input
+              ref={locationRef}
               type="text"
               id="location"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -203,6 +223,7 @@ function TimeSlotInput({}: Props) {
               Professor
             </label>
             <input
+              ref={professorRef}
               type="text"
               id="professor"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
