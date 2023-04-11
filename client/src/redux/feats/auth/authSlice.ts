@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { registerUser, loginUser } from './authAction';
+import { registerUser, loginUser } from './authActions';
+
 const userToken = localStorage.getItem('userToken')
   ? localStorage.getItem('userToken')
   : null;
+
 const initialState = {
   loading: false,
   userInfo: {}, // for user object
@@ -25,6 +27,21 @@ const authSlice = createSlice({
       state.success = true;
     },
     [`${registerUser.rejected}`]: (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+    },
+    
+    
+    [`${loginUser.pending}`]: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    [`${loginUser.fulfilled}`]: (state, { payload }) => {
+      state.loading = false;
+      state.userInfo = payload;
+      state.userToken = payload.userToken;
+    },
+    [`${loginUser.rejected}`]: (state, { payload }) => {
       state.loading = false;
       state.error = payload;
     },

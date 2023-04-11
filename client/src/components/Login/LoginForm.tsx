@@ -1,31 +1,19 @@
 import { ChangeEvent, FormEventHandler, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../../redux/feats/auth/authActions';
+import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
 
 type Props = {};
 function LoginForm(props: Props) {
-  const [showModal, setShowModal] = useState(false);
-  const [email, setEmail] = useState<string | undefined>(undefined);
-  const [password, setPassword] = useState<string | undefined>(undefined);
-  const emailHandler = (event: ChangeEvent<HTMLInputElement>): void => {
-    setEmail(event.target.value);
-  };
-  const passwordHandler = (event: ChangeEvent<HTMLInputElement>): void => {
-    setPassword(event.target.value);
-  };
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  // const { loading, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
   const formHandler: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
-
-    Axios.post('http://localhost:3001/api/auth/login', {
-      email: email,
-      password: password,
-    })
-      .then((res) => {
-       alert('correct password')
-       console.log(res.data);
-      })
-      .catch((err) => {
-        alert('wrong password');
-      });
+    dispatch({ type: 'api/users', payload: loginUser({email,password}) });
   };
 
   return (
@@ -43,7 +31,7 @@ function LoginForm(props: Props) {
             name="email"
             id="email"
             placeholder="Email"
-            onChange={emailHandler}
+            onChange={(event) => setEmail(event.target.value)}
             className="w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
           />
         </div>
@@ -60,7 +48,7 @@ function LoginForm(props: Props) {
             name="password"
             id="password"
             placeholder="••••••••"
-            onChange={passwordHandler}
+            onChange={(event) => setPassword(event.target.value)}
             className="w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
           />
           <div className="flex justify-end text-xs dark:text-gray-400">
@@ -81,3 +69,15 @@ function LoginForm(props: Props) {
 }
 
 export default LoginForm;
+
+// Axios.post('http://localhost:3001/api/auth/login', {
+//   email: email,
+//   password: password,
+// })
+//   .then((res) => {
+//     alert('correct password');
+//     console.log(res.data);
+//   })
+//   .catch((err) => {
+//     alert('wrong password');
+//   });
