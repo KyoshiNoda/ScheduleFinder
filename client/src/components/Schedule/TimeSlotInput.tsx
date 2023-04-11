@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useState, useRef } from 'react';
 import ColorsPalette from '../Utils/ColorsPalette';
 
 type Props = {};
@@ -27,32 +27,75 @@ const colors: string[] = [
 ];
 
 function TimeSlotInput({}: Props) {
-  const titleRef = useRef(null);
-  const mondayRef = useRef(null);
-  const tuesdayRef = useRef(null);
-  const wednesdayRef = useRef(null);
-  const thursdayRef = useRef(null);
-  const fridayRef = useRef(null);
-  const startTimeRef = useRef(null);
-  const endTimeRef = useRef(null);
-  const locationRef = useRef(null);
-  const professorRef = useRef(null);
-  // const Ref = useRef(null);
+  const titleRef = useRef(document.createElement('input'));
+  const mondayRef = useRef(document.createElement('input'));
+  const tuesdayRef = useRef(document.createElement('input'));
+  const wednesdayRef = useRef(document.createElement('input'));
+  const thursdayRef = useRef(document.createElement('input'));
+  const fridayRef = useRef(document.createElement('input'));
+  const startTimeRef = useRef(document.createElement('input'));
+  const endTimeRef = useRef(document.createElement('input'));
+  const locationRef = useRef(document.createElement('input'));
+  const professorRef = useRef(document.createElement('input'));
+  const [timeSlotColor, setTimeSlotColor] = useState<string>('slate');
 
-  const addTimeSlot = (e: React.FormEvent<HTMLFormElement>) => {};
+  const addTimeSlot = (e: React.FormEvent<HTMLFormElement>) => {
+    // If no checkboxes have been selected, the form shouldn't be submitted.
+    if (
+      !(
+        mondayRef.current.checked ||
+        tuesdayRef.current.checked ||
+        wednesdayRef.current.checked ||
+        thursdayRef.current.checked ||
+        fridayRef.current.checked
+      )
+    )
+      return;
+
+    const daySelection = {
+      monday: false,
+      tuesday: false,
+      wednesday: false,
+      thursday: false,
+      friday: false,
+    };
+
+    if (mondayRef.current.checked) daySelection.monday = true;
+    if (tuesdayRef.current.checked) daySelection.tuesday = true;
+    if (wednesdayRef.current.checked) daySelection.wednesday = true;
+    if (thursdayRef.current.checked) daySelection.thursday = true;
+    if (fridayRef.current.checked) daySelection.friday = true;
+
+    const timeSlot = {
+      days: daySelection,
+      title: titleRef.current.value,
+      startTime: startTimeRef.current.value,
+      endTimeRef: endTimeRef.current.value,
+      location: locationRef.current.value || null,
+      professorRef: professorRef.current.value || null,
+      color: timeSlotColor,
+    };
+
+    // fetch(`http://localhost:3001/api/schedules/63f2dbdeef9b9d56ba5fc264`, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(timeSlot),
+    // }).then();
+
+    console.log(timeSlot)
+  };
 
   const handleSubmit = (
     e: React.FormEvent<HTMLFormElement>,
     action: string
   ) => {
     e.preventDefault();
-    if (action === 'create') addTimeSlot(e);
+    if (action === formActions.CREATE) addTimeSlot(e);
   };
 
   return (
     <div className="mt-6 flex h-1/4 w-1/2 flex-col rounded-lg bg-slate-50 p-5 dark:bg-black sm:h-1/2">
       <form onSubmit={(e) => handleSubmit(e, formActions.CREATE)}>
-        <ColorsPalette />
         <div>
           <label
             htmlFor="title"
@@ -212,7 +255,6 @@ function TimeSlotInput({}: Props) {
               id="location"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               placeholder="Whitman Hall"
-              required
             />
           </div>
           <div className="w-1/2">
@@ -228,16 +270,16 @@ function TimeSlotInput({}: Props) {
               id="professor"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               placeholder="Dr. Gerstl"
-              required
             />
           </div>
         </div>
         <div className="flex justify-center">
           <div className="grid grid-cols-7 grid-rows-2 gap-2 p-2">
-            {colors.map((item) => (
+            {colors.map((color) => (
               <div
-                key={item}
-                className={`bg-${item}-400 h-10 w-10 cursor-pointer rounded-full p-1 text-white`}
+                onClick={() => setTimeSlotColor(color)}
+                key={color}
+                className={`bg-${color}-400 h-10 w-10 cursor-pointer rounded-full p-1 text-white`}
               />
             ))}
           </div>

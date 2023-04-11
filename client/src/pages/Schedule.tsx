@@ -12,9 +12,19 @@ dayjs.extend(localizedFormat);
 dayjs.locale('en');
 
 type Props = {};
+
+type days = {
+  monday: boolean;
+  tuesday: boolean;
+  wednesday: boolean;
+  thursday: boolean;
+  friday: boolean;
+  saturday: boolean;
+  sunday: boolean;
+};
+
 type TimeSlot = {
-  day: string;
-  category: string;
+  days: days;
   title: string;
   startTime: string;
   endTime: string;
@@ -22,6 +32,7 @@ type TimeSlot = {
   location?: string;
   professor?: string;
 };
+
 type Schedule = {
   _id: string;
   user_id: string;

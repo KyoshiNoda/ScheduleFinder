@@ -1,14 +1,21 @@
 import TimeSlot from './TimeSlot';
 import { useState, useEffect } from 'react';
-import dayjs from 'dayjs';
-import 'dayjs/locale/en';
 
 type Props = {};
 
+type days = {
+  monday: boolean;
+  tuesday: boolean;
+  wednesday: boolean;
+  thursday: boolean;
+  friday: boolean;
+  saturday: boolean;
+  sunday: boolean;
+};
+
 type TimeSlot = {
   _id: string;
-  day: string;
-  category: string;
+  days: days;
   title: string;
   startTime: string;
   endTime: string;
@@ -109,7 +116,7 @@ function ScheduleBox({}: Props) {
             </h2>
             {timeSlots &&
               timeSlots
-                .filter((timeSlot) => timeSlot.day === 'Monday')
+                .filter((timeSlot) => timeSlot.days.monday)
                 .map((timeSlot) => (
                   <TimeSlot
                     key={timeSlot._id}
@@ -134,7 +141,7 @@ function ScheduleBox({}: Props) {
             </h2>
             {timeSlots &&
               timeSlots
-                .filter((timeSlot) => timeSlot.day === 'Tuesday')
+                .filter((timeSlot) => timeSlot.days.tuesday)
                 .map((timeSlot) => (
                   <TimeSlot
                     key={timeSlot._id}
@@ -159,7 +166,7 @@ function ScheduleBox({}: Props) {
             </h2>
             {timeSlots &&
               timeSlots
-                .filter((timeSlot) => timeSlot.day === 'Wednesday')
+                .filter((timeSlot) => timeSlot.days.wednesday)
                 .map((timeSlot) => (
                   <TimeSlot
                     key={timeSlot._id}
@@ -184,7 +191,7 @@ function ScheduleBox({}: Props) {
             </h2>
             {timeSlots &&
               timeSlots
-                .filter((timeSlot) => timeSlot.day === 'Thursday')
+                .filter((timeSlot) => timeSlot.days.thursday)
                 .map((timeSlot) => (
                   <TimeSlot
                     key={timeSlot._id}
@@ -209,7 +216,7 @@ function ScheduleBox({}: Props) {
             </h2>
             {timeSlots &&
               timeSlots
-                .filter((timeSlot) => timeSlot.day === 'Friday')
+                .filter((timeSlot) => timeSlot.days.friday)
                 .map((timeSlot) => (
                   <TimeSlot
                     key={timeSlot._id}
