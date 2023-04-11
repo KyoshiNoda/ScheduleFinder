@@ -1,19 +1,23 @@
 import { ChangeEvent, FormEventHandler, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../redux/feats/auth/authActions';
-import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
+import { useAppDispatch, useAppSelector } from '../../redux/stores/store';
 
 type Props = {};
 function LoginForm(props: Props) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  // const { loading, error } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
+  const loading = useAppSelector((state) => state.auth.loading);
+  const error = useAppSelector((state) => state.auth.error);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const formHandler: FormEventHandler<HTMLFormElement> = (event) => {
+  const formHandler: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
-    dispatch({ type: 'api/users', payload: loginUser({email,password}) });
+    console.log(loading);
+    await dispatch(loginUser({ email, password })).unwrap();
+    navigate('/auth/schedule');
   };
 
   return (
@@ -69,15 +73,3 @@ function LoginForm(props: Props) {
 }
 
 export default LoginForm;
-
-// Axios.post('http://localhost:3001/api/auth/login', {
-//   email: email,
-//   password: password,
-// })
-//   .then((res) => {
-//     alert('correct password');
-//     console.log(res.data);
-//   })
-//   .catch((err) => {
-//     alert('wrong password');
-//   });
