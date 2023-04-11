@@ -106,15 +106,14 @@ class ScheduleController {
     // POST new time slot into existing schedule
     static insertTimeSlot(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            // const userID: string = req.user.data._id;
             const scheduleID = req.params.id;
-            if (!req.body.title || !req.body.startTime || !req.body.endTime || !req.body.color || !req.body.day) {
+            if (!(req.body.title && req.body.startTime && req.body.endTime && req.body.color && req.body.days)) {
                 return res.status(400).json({ message: 'Missing required properties' });
             }
             const newTimeSlot = {
                 _id: new mongoose.Types.ObjectId(),
-                day: req.body.day,
-                category: req.body.category,
+                days: req.body.days,
                 title: req.body.title,
                 startTime: req.body.startTime,
                 endTime: req.body.endTime,
@@ -123,7 +122,7 @@ class ScheduleController {
                 professor: req.body.professor,
             };
             try {
-                const schedule = yield scheduleModel_1.default.findOneAndUpdate({ _id: scheduleID, user_id: userID }, { $push: { timeSlot: newTimeSlot } }, { new: true });
+                const schedule = yield scheduleModel_1.default.findOneAndUpdate({ _id: scheduleID }, { $push: { timeSlot: newTimeSlot } }, { new: true });
                 if (!schedule) {
                     return res.status(404).json({ message: 'Schedule not found' });
                 }

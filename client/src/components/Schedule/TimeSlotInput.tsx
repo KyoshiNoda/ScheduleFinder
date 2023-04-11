@@ -70,19 +70,22 @@ function TimeSlotInput({}: Props) {
       days: daySelection,
       title: titleRef.current.value,
       startTime: startTimeRef.current.value,
-      endTimeRef: endTimeRef.current.value,
+      endTime: endTimeRef.current.value,
       location: locationRef.current.value || null,
-      professorRef: professorRef.current.value || null,
+      professor: professorRef.current.value || null,
       color: timeSlotColor,
     };
 
-    // fetch(`http://localhost:3001/api/schedules/63f2dbdeef9b9d56ba5fc264`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(timeSlot),
-    // }).then();
+    fetch(`http://localhost:3001/api/schedules/63f2dbdeef9b9d56ba5fc264`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(timeSlot),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
 
-    console.log(timeSlot)
+    // console.log(timeSlot);
   };
 
   const handleSubmit = (

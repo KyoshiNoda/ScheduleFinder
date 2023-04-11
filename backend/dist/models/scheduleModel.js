@@ -7,7 +7,6 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const timeSlotSchema = new mongoose_1.default.Schema({
     _id: { type: Number, required: true },
     day: { type: String, required: true },
-    category: { type: String, required: true },
     title: { type: String, required: true },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
