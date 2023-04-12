@@ -2,7 +2,7 @@ import { ChangeEvent, FormEventHandler, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../redux/feats/auth/authActions';
 import Axios from 'axios';
-import { useAppDispatch, useAppSelector } from '../../redux/stores/store';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
 
 type Props = {};
 function LoginForm(props: Props) {

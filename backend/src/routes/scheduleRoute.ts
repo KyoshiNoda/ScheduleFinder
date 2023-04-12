@@ -2,10 +2,6 @@ import express from 'express';
 import ScheduleController from '../controllers/ScheduleController';
 import AuthController from '../controllers/AuthController';
 const router = express.Router();
-router.get('/', ScheduleController.getAllSchedules);
-router.get('/:id', ScheduleController.getScheduleById);
-router.post('/', ScheduleController.createSchedule);
-
 router.get(
   '/mySchedule',
   AuthController.authenticateToken,
@@ -39,4 +35,12 @@ router.delete(
   AuthController.authenticateToken,
   ScheduleController.deleteTimeSlot
 );
+
+
+router.get('/', ScheduleController.getAllSchedules);
+router.get('/:id', ScheduleController.getScheduleById);
+router.post('/', ScheduleController.createSchedule);
+
+
+
 export default router;
