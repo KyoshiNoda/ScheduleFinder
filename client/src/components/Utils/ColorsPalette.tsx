@@ -1,11 +1,8 @@
 import React from 'react';
 
-type Props = {};
-
-function ColorsPalette({}: Props) {
+function ColorsPalette() {
   return (
     <div className="hidden">
-      <div className="bg-slate-400"></div>
       <div className="bg-red-400"></div>
       <div className="bg-orange-400"></div>
       <div className="bg-amber-400"></div>

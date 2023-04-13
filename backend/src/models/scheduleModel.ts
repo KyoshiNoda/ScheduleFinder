@@ -1,8 +1,16 @@
 import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+type Days ={
+  monday : boolean;
+  tuesday : boolean;
+  wednesday : boolean;
+  thursday : boolean;
+  friday : boolean;
+  saturday : boolean;
+  sunday : boolean;
+}
 export interface TimeSlot {
   _id: mongoose.Types.ObjectId;
-  day: string;
-  category: string;
+  days: Days;
   title: string;
   startTime: string;
   endTime: string;
@@ -20,7 +28,6 @@ export interface ISchedule extends Document {
 const timeSlotSchema: Schema = new mongoose.Schema({
   _id: { type: Number, required: true },
   day: { type: String, required: true },
-  category: { type: String, required: true },
   title: { type: String, required: true },
   startTime: { type: String, required: true },
   endTime: { type: String, required: true },

@@ -1,14 +1,18 @@
 import TimeSlot from './TimeSlot';
-import { useState, useEffect } from 'react';
-import dayjs from 'dayjs';
-import 'dayjs/locale/en';
 
-type Props = {};
+type days = {
+  monday: boolean;
+  tuesday: boolean;
+  wednesday: boolean;
+  thursday: boolean;
+  friday: boolean;
+  saturday: boolean;
+  sunday: boolean;
+};
 
 type TimeSlot = {
   _id: string;
-  day: string;
-  category: string;
+  days: days;
   title: string;
   startTime: string;
   endTime: string;
@@ -17,15 +21,11 @@ type TimeSlot = {
   color: string;
 };
 
-function ScheduleBox({}: Props) {
-  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>();
+type Props = {
+  timeSlots: TimeSlot[];
+};
 
-  useEffect(() => {
-    fetch(`http://localhost:3001/api/schedules/63f2dbdeef9b9d56ba5fc264`)
-      .then((res) => res.json())
-      .then((data) => setTimeSlots(data.timeSlot));
-  }, []);
-
+function ScheduleBox({ timeSlots }: Props) {
   const convertTimeToMinutes = (time: string) => {
     const lastTwoChars: string = time.slice(time.length - 2, time.length);
     time = time.slice(0, time.indexOf(' '));
@@ -103,13 +103,13 @@ function ScheduleBox({}: Props) {
           <hr className="absolute top-[792px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
           <hr className="absolute top-[864px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
           <hr className="absolute top-[936px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
-          <div className="relative h-[1008px] w-1/5">
+          <div className="relative mx-2 h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               monday
             </h2>
             {timeSlots &&
               timeSlots
-                .filter((timeSlot) => timeSlot.day === 'Monday')
+                .filter((timeSlot) => timeSlot.days.monday)
                 .map((timeSlot) => (
                   <TimeSlot
                     key={timeSlot._id}
@@ -128,13 +128,13 @@ function ScheduleBox({}: Props) {
                   />
                 ))}
           </div>
-          <div className="relative h-[1008px] w-1/5">
+          <div className="relative mx-2 h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               tuesday
             </h2>
             {timeSlots &&
               timeSlots
-                .filter((timeSlot) => timeSlot.day === 'Tuesday')
+                .filter((timeSlot) => timeSlot.days.tuesday)
                 .map((timeSlot) => (
                   <TimeSlot
                     key={timeSlot._id}
@@ -153,13 +153,13 @@ function ScheduleBox({}: Props) {
                   />
                 ))}
           </div>
-          <div className="relative h-[1008px] w-1/5">
+          <div className="relative mx-2 h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               wednesday
             </h2>
             {timeSlots &&
               timeSlots
-                .filter((timeSlot) => timeSlot.day === 'Wednesday')
+                .filter((timeSlot) => timeSlot.days.wednesday)
                 .map((timeSlot) => (
                   <TimeSlot
                     key={timeSlot._id}
@@ -178,13 +178,13 @@ function ScheduleBox({}: Props) {
                   />
                 ))}
           </div>
-          <div className="relative h-[1008px] w-1/5">
+          <div className="relative mx-2 h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               thursday
             </h2>
             {timeSlots &&
               timeSlots
-                .filter((timeSlot) => timeSlot.day === 'Thursday')
+                .filter((timeSlot) => timeSlot.days.thursday)
                 .map((timeSlot) => (
                   <TimeSlot
                     key={timeSlot._id}
@@ -203,13 +203,13 @@ function ScheduleBox({}: Props) {
                   />
                 ))}
           </div>
-          <div className="relative h-[1008px] w-1/5">
+          <div className="relative mx-2 h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               friday
             </h2>
             {timeSlots &&
               timeSlots
-                .filter((timeSlot) => timeSlot.day === 'Friday')
+                .filter((timeSlot) => timeSlot.days.friday)
                 .map((timeSlot) => (
                   <TimeSlot
                     key={timeSlot._id}

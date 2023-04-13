@@ -12,59 +12,60 @@ dayjs.extend(localizedFormat);
 dayjs.locale('en');
 
 type Props = {};
+
+type days = {
+  monday: boolean;
+  tuesday: boolean;
+  wednesday: boolean;
+  thursday: boolean;
+  friday: boolean;
+  saturday: boolean;
+  sunday: boolean;
+};
+
 type TimeSlot = {
-  day: string;
-  category: string;
+  _id: string;
+  days: days;
   title: string;
   startTime: string;
   endTime: string;
+  location: string | null;
+  professor: string | null;
   color: string;
-  location?: string;
-  professor?: string;
 };
+
 type Schedule = {
   _id: string;
   user_id: string;
   visibility: string;
   timeSlot: TimeSlot[];
 };
-type TimeSection = {
-  startTime: Dayjs;
-  endTime: Dayjs;
-};
+
 function Schedule({}: Props) {
   const [schedules, setSchedules] = useState<[Schedule]>();
+
   useEffect(() => {
     Axios.get('http://localhost:3001/api/schedules').then((res) => {
       setSchedules(res.data);
     });
   }, []);
-  const timeSlot: TimeSlot | undefined = schedules?.[0].timeSlot[0]; // a single timeSlot from DB
 
-  const time1: TimeSection = {
-    //
-    startTime: dayjs(timeSlot?.startTime, 'h:mm A'), // 2023-03-21T10:25:00-04:00
-    endTime: dayjs(timeSlot?.endTime, 'h:mm A'), // 2023-03-21T12:30:00-04:00
-  };
-  const time2: TimeSection = {
-    startTime: dayjs('10:25 AM', 'h:mm A'),
-    endTime: dayjs('12:30 PM', 'h:mm A'),
-  };
+  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
 
-  let result: string = time1.startTime.isSame(time2.startTime)
-    ? 'its the same'
-    : 'not same'; // checks if start or end time are the same
-
-  const totalTime: number = time1.endTime.diff(time1.startTime, 'hours'); // total time from timeSlot
+  useEffect(() => {
+    fetch(`http://localhost:3001/api/schedules/63f2dbdeef9b9d56ba5fc264`)
+      .then((res) => res.json())
+      .then((data) => setTimeSlots(data.timeSlot));
+  }, []);
 
   return (
-    <div className="flex min-h-full h-[1110px] flex-col gap-10 bg-slate-400 px-12 dark:bg-slate-900">
+    <div className="flex h-[1110px] min-h-full flex-col gap-10 bg-slate-400 px-12 dark:bg-slate-900">
       <div className="flex justify-end">
         <Toggle />
       </div>
       <div className="flex gap-10">
-        <ScheduleBox />
-        <TimeSlotInput />
+        <ScheduleBox timeSlots={timeSlots} />
+        <TimeSlotInput setTimeSlots={setTimeSlots} />
       </div>
     </div>
   );
