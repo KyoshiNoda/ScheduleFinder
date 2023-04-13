@@ -1,6 +1,29 @@
 import { useState, useRef } from 'react';
 
-type Props = {};
+type days = {
+  monday: boolean;
+  tuesday: boolean;
+  wednesday: boolean;
+  thursday: boolean;
+  friday: boolean;
+  saturday: boolean;
+  sunday: boolean;
+};
+
+type TimeSlot = {
+  _id: string;
+  days: days;
+  title: string;
+  startTime: string;
+  endTime: string;
+  location: string | null;
+  professor: string | null;
+  color: string;
+};
+
+type Props = {
+  setTimeSlots: React.Dispatch<React.SetStateAction<TimeSlot[]>>;
+};
 
 const formActions = {
   CREATE: 'create',
@@ -25,7 +48,8 @@ const colors: string[] = [
   'rose',
 ];
 
-function TimeSlotInput({}: Props) {
+function TimeSlotInput({ setTimeSlots }: Props) {
+  const formRef = useRef(document.createElement('form'));
   const titleRef = useRef(document.createElement('input'));
   const mondayRef = useRef(document.createElement('input'));
   const tuesdayRef = useRef(document.createElement('input'));
@@ -81,10 +105,8 @@ function TimeSlotInput({}: Props) {
       body: JSON.stringify(timeSlot),
     })
       .then((res) => res.json())
-      .then((data) => console.log(data))
+      .then((data) => setTimeSlots((prevState) => [...prevState, data]))
       .catch((err) => console.log(err));
-
-    // console.log(timeSlot);
   };
 
   const handleSubmit = (
@@ -93,11 +115,12 @@ function TimeSlotInput({}: Props) {
   ) => {
     e.preventDefault();
     if (action === formActions.CREATE) addTimeSlot(e);
+    formRef.current.reset();
   };
 
   return (
     <div className="mt-6 flex h-1/4 w-1/2 flex-col rounded-lg bg-slate-50 p-5 dark:bg-black sm:h-1/2">
-      <form onSubmit={(e) => handleSubmit(e, formActions.CREATE)}>
+      <form ref={formRef} onSubmit={(e) => handleSubmit(e, formActions.CREATE)}>
         <div>
           <label
             htmlFor="title"
