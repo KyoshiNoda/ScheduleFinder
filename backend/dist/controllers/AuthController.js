@@ -21,18 +21,20 @@ class AuthController {
             const email = req.body.email;
             const password = req.body.password;
             if (!email || !password) {
-                return res.status(400).send('Email and password are required.');
+                return res
+                    .status(400)
+                    .send({ error: 'Email and password are required.' });
             }
             const user = yield userModel_1.default.findOne({ email });
             if (!user) {
-                return res.status(400).send('User not found.');
+                return res.status(400).send({ error: 'User not found.' });
             }
             const match = yield bcrypt_1.default.compare(password, user.password);
             if (!match) {
-                return res.status(400).send('Incorrect password.');
+                return res.status(400).send({ error: 'Incorrect password.' });
             }
             const accessToken = jsonwebtoken_1.default.sign({ data: user }, `${process.env.ACCESS_TOKEN_SECRET}`);
-            res.send({ token: accessToken });
+            res.send({ token: accessToken, user: user });
         });
     }
     static authenticateToken(req, res, next) {

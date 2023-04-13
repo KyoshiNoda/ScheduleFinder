@@ -1,11 +1,17 @@
-import React from 'react'
+import React from 'react';
 
-type Props = {}
+type Props = {
+  picture: string;
+};
 
-function ProfilePic({}: Props) {
+function ProfilePic(props: Props) {
   return (
-    <img alt="" className="w-24 h-24 border rounded-full dark:bg-gray-500 dark:border-gray-700" src="https://source.unsplash.com/40x40/?portrait?1" />
-  )
+    <img
+      alt=""
+      className="h-24 w-24 rounded-full border dark:border-gray-700 dark:bg-gray-500"
+      src={props.picture}
+    />
+  );
 }
 
 export default ProfilePic;

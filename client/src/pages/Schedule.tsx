@@ -7,10 +7,10 @@ import dayjs, { Dayjs } from 'dayjs/esm';
 import customParseFormat from 'dayjs/esm/plugin/customParseFormat';
 import localizedFormat from 'dayjs/esm/plugin/localizedFormat';
 import 'dayjs/locale/en';
+import { useSelector } from 'react-redux';
 dayjs.extend(customParseFormat);
 dayjs.extend(localizedFormat);
 dayjs.locale('en');
-
 type Props = {};
 
 type days = {
@@ -43,13 +43,12 @@ type Schedule = {
 
 function Schedule({}: Props) {
   const [schedules, setSchedules] = useState<[Schedule]>();
-
+  const { userInfo,userToken } = useSelector((state: any) => state.auth);
   useEffect(() => {
     Axios.get('http://localhost:3001/api/schedules').then((res) => {
       setSchedules(res.data);
     });
   }, []);
-
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
 
   useEffect(() => {

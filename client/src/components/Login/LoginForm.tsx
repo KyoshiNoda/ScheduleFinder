@@ -1,31 +1,23 @@
 import { ChangeEvent, FormEventHandler, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../../redux/feats/auth/authActions';
 import Axios from 'axios';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
 
 type Props = {};
 function LoginForm(props: Props) {
-  const [showModal, setShowModal] = useState(false);
-  const [email, setEmail] = useState<string | undefined>(undefined);
-  const [password, setPassword] = useState<string | undefined>(undefined);
-  const emailHandler = (event: ChangeEvent<HTMLInputElement>): void => {
-    setEmail(event.target.value);
-  };
-  const passwordHandler = (event: ChangeEvent<HTMLInputElement>): void => {
-    setPassword(event.target.value);
-  };
-  const formHandler: FormEventHandler<HTMLFormElement> = (event) => {
-    event.preventDefault();
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const loading = useAppSelector((state) => state.auth.loading);
+  const error = useAppSelector((state) => state.auth.error);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-    Axios.post('http://localhost:3001/api/auth/login', {
-      email: email,
-      password: password,
-    })
-      .then((res) => {
-       alert('correct password')
-       console.log(res.data);
-      })
-      .catch((err) => {
-        alert('wrong password');
-      });
+  const formHandler: FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+    console.log(loading);
+    await dispatch(loginUser({ email, password })).unwrap();
+    navigate('/auth/schedule');
   };
 
   return (
@@ -43,7 +35,7 @@ function LoginForm(props: Props) {
             name="email"
             id="email"
             placeholder="Email"
-            onChange={emailHandler}
+            onChange={(event) => setEmail(event.target.value)}
             className="w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
           />
         </div>
@@ -60,7 +52,7 @@ function LoginForm(props: Props) {
             name="password"
             id="password"
             placeholder="••••••••"
-            onChange={passwordHandler}
+            onChange={(event) => setPassword(event.target.value)}
             className="w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
           />
           <div className="flex justify-end text-xs dark:text-gray-400">

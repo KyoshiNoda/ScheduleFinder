@@ -4,7 +4,6 @@ type TimeSlot = {
   _id: string;
   day: string;
   title: string;
-  category: string;
   startTime: string;
   endTime: string;
   location: string;
@@ -33,7 +32,7 @@ export const schedulesSlice = createSlice({
   reducers: {
     loadSchedules: (state, action: PayloadAction<Schedule[]>) => {
       state.value = action.payload;
-    }
+    },
   },
 });
 
