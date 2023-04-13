@@ -1,58 +1,233 @@
 import TimeSlot from './TimeSlot';
 
-type Props = {};
+type days = {
+  monday: boolean;
+  tuesday: boolean;
+  wednesday: boolean;
+  thursday: boolean;
+  friday: boolean;
+  saturday: boolean;
+  sunday: boolean;
+};
 
-function ScheduleBox({}: Props) {
+type TimeSlot = {
+  _id: string;
+  days: days;
+  title: string;
+  startTime: string;
+  endTime: string;
+  location: string | null;
+  professor: string | null;
+  color: string;
+};
+
+type Props = {
+  timeSlots: TimeSlot[];
+};
+
+function ScheduleBox({ timeSlots }: Props) {
+  const convertTimeToMinutes = (time: string) => {
+    const lastTwoChars: string = time.slice(time.length - 2, time.length);
+    time = time.slice(0, time.indexOf(' '));
+    const [hour, minutes] = time.split(':');
+
+    let hourNumber: number = parseInt(hour);
+    const minutesNumber: number = parseInt(minutes);
+
+    if (lastTwoChars === 'PM' && hourNumber < 12) {
+      hourNumber += 12;
+    }
+
+    return [hourNumber, minutesNumber];
+  };
+
+  const calculateHeight = (startTime: string, endTime: string) => {
+    const [startHour, startMinutes] = convertTimeToMinutes(startTime);
+    const [endHour, endMinutes] = convertTimeToMinutes(endTime);
+
+    let hours: number = endHour - startHour;
+    let minutes: number = endMinutes - startMinutes;
+
+    if (minutes < 0) {
+      minutes += 60;
+      hours -= 1;
+    }
+
+    const totalMinutes: number = hours * 60 + minutes;
+    const height: number = (totalMinutes * 72) / 60;
+
+    return height.toString();
+  };
+
+  const calculateMinutesFromTop = (time: string) => {
+    const [hour, minutes] = convertTimeToMinutes(time);
+    const minutesFromTop: number = (hour - 7) * 60 + minutes;
+    return minutesFromTop;
+  };
+
+  const calculateDistanceFromTop = (startTime: string) => {
+    const minutes: number = calculateMinutesFromTop(startTime);
+    const distanceFromTop: number = (minutes * 72) / 60;
+    return distanceFromTop.toString();
+  };
+
   return (
     <>
       <div className="flex w-full flex-col">
-        <div className="flex justify-evenly dark:text-white">
-          <div>Monday</div>
-          <div>Tuesday</div>
-          <div>Wednesday</div>
-          <div>Thursday</div>
-          <div>Friday</div>
-        </div>
-        <div className="mb-6 flex h-[1008px] rounded bg-white dark:bg-black dark:text-white">
-          <div className="h-[1008px] w-[20px]">
-            <div className="relative">
-              <span className="absolute top-[0px]">7</span>
-              <span className="absolute top-[72px]">8</span>
-              <span className="absolute top-[144px]">9</span>
-              <span className="absolute top-[216px]">10</span>
-              <span className="absolute top-[288px]">11</span>
-              <span className="absolute top-[360px]">12</span>
-              <span className="absolute top-[432px]">1</span>
-              <span className="absolute top-[504px]">2</span>
-              <span className="absolute top-[576px]">3</span>
-              <span className="absolute top-[648px]">4</span>
-              <span className="absolute top-[720px]">5</span>
-              <span className="absolute top-[792px]">6</span>
-              <span className="absolute top-[864px]">7</span>
-              <span className="absolute top-[936px]">8</span>
-            </div>
+        <div className="relative mb-6 flex h-[1008px] rounded bg-white dark:bg-black dark:text-white">
+          <span className="absolute top-[-11px] -left-5">7</span>
+          <span className="absolute top-[61px] -left-5">8</span>
+          <span className="absolute top-[133px] -left-5">9</span>
+          <span className="absolute top-[205px] -left-6">10</span>
+          <span className="absolute top-[277px] -left-6">11</span>
+          <span className="absolute top-[349px] -left-6">12</span>
+          <span className="absolute top-[421px] -left-5">1</span>
+          <span className="absolute top-[493px] -left-5">2</span>
+          <span className="absolute top-[565px] -left-5">3</span>
+          <span className="absolute top-[637px] -left-5">4</span>
+          <span className="absolute top-[709px] -left-5">5</span>
+          <span className="absolute top-[781px] -left-5">6</span>
+          <span className="absolute top-[853px] -left-5">7</span>
+          <span className="absolute top-[925px] -left-5">8</span>
+          <hr className="absolute top-0 w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[72px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[144px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[216px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[288px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[360px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[432px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[504px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[576px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[648px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[720px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[792px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[864px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[936px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <div className="relative mx-2 h-[1008px] w-1/5">
+            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
+              monday
+            </h2>
+            {timeSlots &&
+              timeSlots
+                .filter((timeSlot) => timeSlot.days.monday)
+                .map((timeSlot) => (
+                  <TimeSlot
+                    key={timeSlot._id}
+                    id={timeSlot._id}
+                    top={calculateDistanceFromTop(timeSlot.startTime)}
+                    height={calculateHeight(
+                      timeSlot.startTime,
+                      timeSlot.endTime
+                    )}
+                    title={timeSlot.title}
+                    startTime={timeSlot.startTime}
+                    endTime={timeSlot.endTime}
+                    location={timeSlot.location}
+                    professor={timeSlot.professor}
+                    color={timeSlot.color}
+                  />
+                ))}
           </div>
-          <div className="relative h-[1008px] w-1/5 bg-purple-500">
-            <div className="flex justify-center">
-              <TimeSlot top="0px" height="72px" time="7 AM - 8 AM" />
-            </div>
+          <div className="relative mx-2 h-[1008px] w-1/5">
+            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
+              tuesday
+            </h2>
+            {timeSlots &&
+              timeSlots
+                .filter((timeSlot) => timeSlot.days.tuesday)
+                .map((timeSlot) => (
+                  <TimeSlot
+                    key={timeSlot._id}
+                    id={timeSlot._id}
+                    top={calculateDistanceFromTop(timeSlot.startTime)}
+                    height={calculateHeight(
+                      timeSlot.startTime,
+                      timeSlot.endTime
+                    )}
+                    title={timeSlot.title}
+                    startTime={timeSlot.startTime}
+                    endTime={timeSlot.endTime}
+                    location={timeSlot.location}
+                    professor={timeSlot.professor}
+                    color={timeSlot.color}
+                  />
+                ))}
           </div>
-          <div className="relative h-[1008px] w-1/5 bg-red-500">
-            <div className="flex justify-center">
-              <TimeSlot top="72px" height="72px" time="8 AM - 9 AM" />
-            </div>
+          <div className="relative mx-2 h-[1008px] w-1/5">
+            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
+              wednesday
+            </h2>
+            {timeSlots &&
+              timeSlots
+                .filter((timeSlot) => timeSlot.days.wednesday)
+                .map((timeSlot) => (
+                  <TimeSlot
+                    key={timeSlot._id}
+                    id={timeSlot._id}
+                    top={calculateDistanceFromTop(timeSlot.startTime)}
+                    height={calculateHeight(
+                      timeSlot.startTime,
+                      timeSlot.endTime
+                    )}
+                    title={timeSlot.title}
+                    startTime={timeSlot.startTime}
+                    endTime={timeSlot.endTime}
+                    location={timeSlot.location}
+                    professor={timeSlot.professor}
+                    color={timeSlot.color}
+                  />
+                ))}
           </div>
-          <div className="relative h-[1008px] w-1/5 bg-green-500">
-            <div className="flex justify-center">
-              <TimeSlot top="252px" height="144px" time="10:30 AM - 12:30 PM" />
-            </div>
+          <div className="relative mx-2 h-[1008px] w-1/5">
+            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
+              thursday
+            </h2>
+            {timeSlots &&
+              timeSlots
+                .filter((timeSlot) => timeSlot.days.thursday)
+                .map((timeSlot) => (
+                  <TimeSlot
+                    key={timeSlot._id}
+                    id={timeSlot._id}
+                    top={calculateDistanceFromTop(timeSlot.startTime)}
+                    height={calculateHeight(
+                      timeSlot.startTime,
+                      timeSlot.endTime
+                    )}
+                    title={timeSlot.title}
+                    startTime={timeSlot.startTime}
+                    endTime={timeSlot.endTime}
+                    location={timeSlot.location}
+                    professor={timeSlot.professor}
+                    color={timeSlot.color}
+                  />
+                ))}
           </div>
-          <div className="relative h-[1008px] w-1/5 bg-blue-500">
-            <div className="flex justify-center">
-              <TimeSlot top="0px" height="72px" time="7 AM - 8 AM" />
-            </div>
+          <div className="relative mx-2 h-[1008px] w-1/5">
+            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
+              friday
+            </h2>
+            {timeSlots &&
+              timeSlots
+                .filter((timeSlot) => timeSlot.days.friday)
+                .map((timeSlot) => (
+                  <TimeSlot
+                    key={timeSlot._id}
+                    id={timeSlot._id}
+                    top={calculateDistanceFromTop(timeSlot.startTime)}
+                    height={calculateHeight(
+                      timeSlot.startTime,
+                      timeSlot.endTime
+                    )}
+                    title={timeSlot.title}
+                    startTime={timeSlot.startTime}
+                    endTime={timeSlot.endTime}
+                    location={timeSlot.location}
+                    professor={timeSlot.professor}
+                    color={timeSlot.color}
+                  />
+                ))}
           </div>
-          <div className="relative h-[1008px] w-1/5 bg-teal-500"></div>
         </div>
       </div>
     </>

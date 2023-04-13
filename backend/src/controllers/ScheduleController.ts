@@ -71,15 +71,14 @@ class ScheduleController {
 
   // POST new time slot into existing schedule
   public static async insertTimeSlot(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    // const userID: string = req.user.data._id;
     const scheduleID: string = req.params.id;
-    if (!req.body.title || !req.body.startTime || !req.body.endTime || !req.body.color || !req.body.day) {
+    if (!(req.body.title && req.body.startTime && req.body.endTime && req.body.color && req.body.days)) {
       return res.status(400).json({ message: 'Missing required properties' });
     }
     const newTimeSlot: TimeSlot = {
       _id: new mongoose.Types.ObjectId(),
-      day: req.body.day,
-      category: req.body.category,
+      days: req.body.days,
       title: req.body.title,
       startTime: req.body.startTime,
       endTime: req.body.endTime,
@@ -89,7 +88,7 @@ class ScheduleController {
     };
     try {
       const schedule = await Schedule.findOneAndUpdate(
-        { _id: scheduleID, user_id: userID },
+        { _id: scheduleID},
         { $push: { timeSlot: newTimeSlot } },
         { new: true }
       );

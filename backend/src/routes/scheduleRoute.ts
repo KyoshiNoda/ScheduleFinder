@@ -10,7 +10,6 @@ router.get(
 
 router.post(
   '/:id',
-  AuthController.authenticateToken,
   ScheduleController.insertTimeSlot
 );
 
