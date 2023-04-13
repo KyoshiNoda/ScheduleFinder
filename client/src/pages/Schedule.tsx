@@ -35,8 +35,6 @@ type TimeSection = {
 function Schedule({}: Props) {
   const [schedules, setSchedules] = useState<[Schedule]>();
   const { userInfo,userToken } = useSelector((state: any) => state.auth);
-  console.log(userInfo);
-  console.log(userToken)
   useEffect(() => {
     Axios.get('http://localhost:3001/api/schedules').then((res) => {
       setSchedules(res.data);
