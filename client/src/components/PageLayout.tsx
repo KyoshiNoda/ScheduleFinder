@@ -5,7 +5,7 @@ import Navbar from './Navbar';
 type Props = {};
 function PageLayout({}: Props) {
   const { userInfo } = useAppSelector((state) => state.auth);
-  if (Object.keys(userInfo).length === 0) {
+  if (Object.keys(userInfo).length === 0) { // checks if userInfo is empty
     return (
       <div>
         <h1>Unauthorized</h1>
@@ -17,7 +17,7 @@ function PageLayout({}: Props) {
   }
   return (
     <>
-      <Navbar />
+      <Navbar user = {userInfo}/>
       <Outlet />
     </>
   );
