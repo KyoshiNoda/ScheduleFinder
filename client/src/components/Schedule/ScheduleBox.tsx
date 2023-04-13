@@ -1,7 +1,4 @@
 import TimeSlot from './TimeSlot';
-import { useState, useEffect } from 'react';
-
-type Props = {};
 
 type days = {
   monday: boolean;
@@ -24,14 +21,11 @@ type TimeSlot = {
   color: string;
 };
 
-function ScheduleBox({}: Props) {
-  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>();
+type Props = {
+  timeSlots: TimeSlot[];
+};
 
-  useEffect(() => {
-    fetch(`http://localhost:3001/api/schedules/63f2dbdeef9b9d56ba5fc264`)
-      .then((res) => res.json())
-      .then((data) => setTimeSlots(data.timeSlot));
-  }, []);
+function ScheduleBox({ timeSlots }: Props) {
 
   const convertTimeToMinutes = (time: string) => {
     const lastTwoChars: string = time.slice(time.length - 2, time.length);

@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react';
-import ColorsPalette from '../Utils/ColorsPalette';
 
 type Props = {};
 
