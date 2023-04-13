@@ -8,27 +8,33 @@ class AuthController {
     const email = req.body.email;
     const password = req.body.password;
     if (!email || !password) {
-      return res.status(400).send('Email and password are required.');
+      return res
+        .status(400)
+        .send({ error: 'Email and password are required.' });
     }
-    
+
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).send('User not found.');
+      return res.status(400).send({ error: 'User not found.' });
     }
-    
+
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      return res.status(400).send('Incorrect password.');
+      return res.status(400).send({ error: 'Incorrect password.' });
     }
-  
+
     const accessToken = jwt.sign(
       { data: user },
       `${process.env.ACCESS_TOKEN_SECRET}`
     );
-    res.send({ token: accessToken });
+    res.send({ token: accessToken, user: user });
   }
 
-  public static async authenticateToken(req: any, res: Response, next: NextFunction) {
+  public static async authenticateToken(
+    req: any,
+    res: Response,
+    next: NextFunction
+  ) {
     const authHeader = req.headers['authorization']!;
     const token = authHeader && authHeader.split(' ')[1];
     if (token === null) {
