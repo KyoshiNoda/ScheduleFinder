@@ -1,38 +1,40 @@
-import { Dropdown } from "flowbite-react"
-type Props = {}
+import { Dropdown } from 'flowbite-react';
+import { useAppSelector } from '../../../redux/store';
+type Props = {};
 
 function PersonalTab({}: Props) {
+  const { userInfo } = useAppSelector((state) => state.auth);
   return (
     <div className="flex flex-col gap-6 sm:gap-28">
-      <form id='changes'>
-        <div className="grid sm:grid-rows-3 sm:grid-cols-2 gap-3">
+      <form id="changes">
+        <div className="grid gap-3 sm:grid-cols-2 sm:grid-rows-3">
           <div>
             <label
               htmlFor="first_name"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
             >
               First name
             </label>
             <input
               type="text"
               id="first_name"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="John"
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              placeholder={userInfo.firstName}
               required
             />
           </div>
           <div>
             <label
               htmlFor="last_name"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
             >
               Last name
             </label>
             <input
               type="text"
               id="last_name"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Doe"
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              placeholder= {userInfo.lastName}
               required
             />
           </div>
@@ -40,80 +42,69 @@ function PersonalTab({}: Props) {
           <div>
             <label
               htmlFor="school"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
             >
               School
             </label>
             <input
               type="text"
               id="school"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="UCLA"
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              placeholder= {userInfo.school}
               required
             />
           </div>
           <div>
             <label
               htmlFor="Major"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
             >
               Major
             </label>
             <input
               type="text"
               id="Major"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Computer Science"
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              placeholder= {userInfo.major}
               required
             />
           </div>
           <div className="flex items-end">
-            <Dropdown
-              label="Gender"
-              size="lg"
-            >
-              <Dropdown.Item>
-                Male
-              </Dropdown.Item>
-              <Dropdown.Item>
-                Female
-              </Dropdown.Item>
-              <Dropdown.Item>
-                Binary
-              </Dropdown.Item>
-              <Dropdown.Item>
-                Transgender
-              </Dropdown.Item>
-              <Dropdown.Item>
-                Intersex
-              </Dropdown.Item>
-              <Dropdown.Item>
-                Other
-              </Dropdown.Item>
-              <Dropdown.Item>
-                I prefer not to say
-              </Dropdown.Item>
+            <Dropdown label={userInfo.gender} size="lg">
+              <Dropdown.Item>Male</Dropdown.Item>
+              <Dropdown.Item>Female</Dropdown.Item>
+              <Dropdown.Item>Binary</Dropdown.Item>
+              <Dropdown.Item>Transgender</Dropdown.Item>
+              <Dropdown.Item>Intersex</Dropdown.Item>
+              <Dropdown.Item>Other</Dropdown.Item>
+              <Dropdown.Item>I prefer not to say</Dropdown.Item>
             </Dropdown>
           </div>
           <div>
             <label
               htmlFor="birthdate"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
             >
               Date of Birth
             </label>
             <input
               type="date"
               id="birthdate"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               required
             />
           </div>
         </div>
       </form>
-      <button type='submit' form='changes' className="w-full px-8 py-3 font-semibold rounded-full bg-blue-600 text-white">Save Changes</button>
+      <button
+        type="submit"
+        form="changes"
+        className="w-full rounded-full bg-blue-600 px-8 py-3 font-semibold text-white"
+      >
+        Save Changes
+      </button>
     </div>
-  )
+  );
 }
 
-export default PersonalTab
+export default PersonalTab;
