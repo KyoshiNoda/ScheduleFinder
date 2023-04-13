@@ -11,6 +11,7 @@ type Props = {
 };
 
 function TimeSlot(props: Props) {
+  console.log(props);
   return (
     <div
       className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${props.color}-400 w-full dark:text-black`}
