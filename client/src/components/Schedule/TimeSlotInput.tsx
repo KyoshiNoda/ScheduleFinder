@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-
+import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 type days = {
   monday: boolean;
   tuesday: boolean;
@@ -61,6 +61,13 @@ function TimeSlotInput({ setTimeSlots }: Props) {
   const locationRef = useRef(document.createElement('input'));
   const professorRef = useRef(document.createElement('input'));
   const [timeSlotColor, setTimeSlotColor] = useState<string>('slate');
+  const { data, isFetching } = useGetScheduleQuery('schedule', {
+    pollingInterval: 900000,
+  });
+  if(!isFetching && data){
+    const [schedule] = data;
+    console.log(schedule)
+  }
 
   const addTimeSlot = (e: React.FormEvent<HTMLFormElement>) => {
     // If no checkboxes have been selected, the form shouldn't be submitted.
