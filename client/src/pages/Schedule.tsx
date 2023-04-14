@@ -8,6 +8,7 @@ import customParseFormat from 'dayjs/esm/plugin/customParseFormat';
 import localizedFormat from 'dayjs/esm/plugin/localizedFormat';
 import 'dayjs/locale/en';
 import { useSelector } from 'react-redux';
+import { useGetScheduleQuery } from '../redux/services/auth/authService';
 dayjs.extend(customParseFormat);
 dayjs.extend(localizedFormat);
 dayjs.locale('en');
@@ -42,20 +43,20 @@ type Schedule = {
 };
 
 function Schedule({}: Props) {
-  const [schedules, setSchedules] = useState<[Schedule]>();
-  const { userInfo,userToken } = useSelector((state: any) => state.auth);
-  useEffect(() => {
-    Axios.get('http://localhost:3001/api/schedules').then((res) => {
-      setSchedules(res.data);
-    });
-  }, []);
+  const { data, isFetching } = useGetScheduleQuery('schedule', {
+    pollingInterval: 900000,
+  });
+  const [schedule, setSchedule] = useState<Schedule>();
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
-
   useEffect(() => {
-    fetch(`http://localhost:3001/api/schedules/63f2dbdeef9b9d56ba5fc264`)
-      .then((res) => res.json())
-      .then((data) => setTimeSlots(data.timeSlot));
-  }, []);
+    if (!isFetching && data) {
+      setSchedule(data[0]);
+      setTimeSlots((prevTimeSlots) => [
+        ...prevTimeSlots,
+        ...(schedule?.timeSlot || []),
+      ]);
+    }
+  }, [data, isFetching, schedule]);
 
   return (
     <div className="flex h-[1110px] min-h-full flex-col gap-10 bg-slate-400 px-12 dark:bg-slate-900">
