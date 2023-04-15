@@ -42,18 +42,23 @@ const CompareSchedule = () => {
     pollingInterval: 900000,
   });
   // Schedule A is the schedule of the user that is signed in.
-  const [scheduleA] = data;
+  const [scheduleA, setScheduleA] = useState<Schedule>();
+
+  useEffect(() => {
+    if (!isFetching && data) {
+      setScheduleA(data[0]);
+    }
+  }, []);
 
   // Schedule B is the schedule to compare against.
   const [scheduleB, setScheduleB] = useState<Schedule>();
 
   useEffect(() => {
     fetch(`http://localhost:3001/api/schedules/${userId}/user`)
-      .then((res) => res.json())
+      .then((res) => res.json()) 
       .then((data) => {
-        const [schedule] = data;
-        setScheduleB(schedule);
-        setTimeSlots(scheduleB?.timeSlot);
+        setScheduleB(data[0]); 
+        setTimeSlots(data[0].timeSlot);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -68,13 +73,13 @@ const CompareSchedule = () => {
           >
             Other user schedule
           </Button>
-          <Button onClick={() => setTimeSlots(scheduleA.timeSlot)} color="gray">
+          <Button onClick={() => setTimeSlots(scheduleA?.timeSlot)} color="gray">
             My schedule
           </Button>
           <Button
-            onClick={() =>
-              setTimeSlots([...scheduleA.timeSlot].concat(scheduleB?.timeSlot))
-            }
+            // onClick={() =>
+            //   setTimeSlots([].concat(scheduleB?.timeSlot))
+            // }
             color="gray"
           >
             Compare schedules
