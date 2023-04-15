@@ -2,27 +2,7 @@ import { useState, useRef } from 'react';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { useAppDispatch } from '../../redux/store';
-type days = {
-  monday: boolean;
-  tuesday: boolean;
-  wednesday: boolean;
-  thursday: boolean;
-  friday: boolean;
-  saturday: boolean;
-  sunday: boolean;
-};
-
-type TimeSlot = {
-  _id?: undefined | string;
-  days: days;
-  title: string;
-  startTime: string;
-  endTime: string;
-  location?: string | null;
-  professor?: string | null;
-  color: string;
-};
-
+import { TimeSlot as TimeSlotType } from '../../types';
 type Props = {
   setTimeSlots: any;
 };
@@ -104,7 +84,7 @@ function TimeSlotInput({ setTimeSlots }: Props) {
     if (thursdayRef.current.checked) daySelection.thursday = true;
     if (fridayRef.current.checked) daySelection.friday = true;
 
-    const currentTimeSlot: TimeSlot = {
+    const currentTimeSlot: TimeSlotType = {
       days: daySelection,
       title: titleRef.current.value,
       startTime: startTimeRef.current.value,

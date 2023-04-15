@@ -1,28 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-type Schedule = {
-  user_id: string;
-  visibility: string;
-  timeSlot: TimeSlot[];
-};
-type TimeSlot = {
-  _id?: string;
-  days: Days;
-  title: string;
-  startTime: string;
-  endTime: string;
-  color: string;
-  location?: string | null;
-  professor?: string | null;
-};
-type Days = {
-  monday: boolean;
-  tuesday: boolean;
-  wednesday: boolean;
-  thursday: boolean;
-  friday: boolean;
-  saturday: boolean;
-  sunday: boolean;
-};
+import { Schedule as ScheduleType} from '../../../types';
+import { TimeSlot as TimeSlotType } from '../../../types';
 
 export const scheduleAPI = createApi({
   reducerPath: 'scheduleAPI',
@@ -38,8 +16,8 @@ export const scheduleAPI = createApi({
   }),
   endpoints: (builder) => ({
     createTimeSlot: builder.mutation<
-      Schedule,
-      { scheduleId: string; timeSlot: TimeSlot }
+    ScheduleType,
+      { scheduleId: string; timeSlot: TimeSlotType }
     >({
       query: ({ scheduleId, timeSlot }) => ({
         url: `api/schedules/${scheduleId}/`,

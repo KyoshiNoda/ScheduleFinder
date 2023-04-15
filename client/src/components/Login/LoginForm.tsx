@@ -9,7 +9,6 @@ function LoginForm(props: Props) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const loading = useAppSelector((state) => state.auth.loading);
-  const error = useAppSelector((state) => state.auth.error);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
