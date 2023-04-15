@@ -1,17 +1,16 @@
 import express from 'express';
 import ScheduleController from '../controllers/ScheduleController';
 import AuthController from '../controllers/AuthController';
+
 const router = express.Router();
+
 router.get(
   '/mySchedule',
   AuthController.authenticateToken,
   ScheduleController.getMySchedule
 );
 
-router.post(
-  '/:id',
-  ScheduleController.insertTimeSlot
-);
+router.post('/:id', ScheduleController.insertTimeSlot);
 
 router.patch(
   '/:id',
@@ -35,11 +34,9 @@ router.delete(
   ScheduleController.deleteTimeSlot
 );
 
-
 router.get('/', ScheduleController.getAllSchedules);
 router.get('/:id', ScheduleController.getScheduleById);
+router.get('/:id/user', ScheduleController.getScheduleByUserId);
 router.post('/', ScheduleController.createSchedule);
-
-
 
 export default router;
