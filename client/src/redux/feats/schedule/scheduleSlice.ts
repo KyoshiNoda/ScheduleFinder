@@ -1,25 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-type TimeSlot = {
-  _id: string;
-  day: string;
-  title: string;
-  startTime: string;
-  endTime: string;
-  location: string;
-  professor: string | null;
-  color: string;
-};
-
-type Schedule = {
-  _id: string
-  userId: string
-  visibility: string
-  timeSlots: TimeSlot[];
-};
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { Schedule as ScheduleType } from '../../../types';
 
 interface SchedulesState {
-  value: Schedule[];
+  value: ScheduleType[];
 }
 
 const initialState: SchedulesState = {
@@ -30,7 +13,7 @@ export const schedulesSlice = createSlice({
   name: 'schedules',
   initialState,
   reducers: {
-    loadSchedules: (state, action: PayloadAction<Schedule[]>) => {
+    loadSchedules: (state, action: PayloadAction<ScheduleType[]>) => {
       state.value = action.payload;
     },
   },

@@ -1,5 +1,5 @@
 type Props = {
-  id: string;
+  id?: undefined | string;
   top: string;
   height: string;
   title: string;

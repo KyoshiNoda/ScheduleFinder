@@ -1,4 +1,4 @@
-import { Button, Dropdown, Avatar } from 'flowbite-react';
+import { Dropdown, Avatar } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../redux/store';
 import { logout } from '../redux/feats/auth/authSlice';
@@ -44,7 +44,7 @@ const Navbar = (props: Props) => {
               {props.user.firstName} {props.user.lastName}
             </span>
             <span className="block truncate text-sm font-medium">
-             {props.user.email}
+              {props.user.email}
             </span>
           </Dropdown.Header>
           <Link to={'/auth/schedule'}>
@@ -57,7 +57,12 @@ const Navbar = (props: Props) => {
             <Dropdown.Item>Account Settings</Dropdown.Item>
           </Link>
           <Dropdown.Divider />
-          <Link to={'/'} onClick={() => {dispatch(logout())}}>
+          <Link
+            to={'/'}
+            onClick={() => {
+              dispatch(logout());
+            }}
+          >
             <Dropdown.Item>Sign out</Dropdown.Item>
           </Link>
         </Dropdown>

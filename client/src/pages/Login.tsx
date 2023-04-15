@@ -2,10 +2,6 @@ import { useState, useEffect } from 'react';
 import LoginBox from '../components/Login/LoginBox';
 import hero2 from '../assets/plsWork.png';
 import Toggle from '../components/Toggle';
-
-import { useDispatch, useSelector } from 'react-redux'
-import { NavLink } from 'react-router-dom';
-import { useGetScheduleQuery } from '../redux/services/auth/authService';
 type Props = {};
 
 function Login({}: Props) {

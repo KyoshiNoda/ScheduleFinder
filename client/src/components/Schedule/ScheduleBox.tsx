@@ -1,28 +1,7 @@
+import { TimeSlot as TimeSlotType } from '../../types';
 import TimeSlot from './TimeSlot';
-
-type days = {
-  monday: boolean;
-  tuesday: boolean;
-  wednesday: boolean;
-  thursday: boolean;
-  friday: boolean;
-  saturday: boolean;
-  sunday: boolean;
-};
-
-type TimeSlot = {
-  _id: string;
-  days: days;
-  title: string;
-  startTime: string;
-  endTime: string;
-  location: string | null;
-  professor: string | null;
-  color: string;
-};
-
 type Props = {
-  timeSlots: TimeSlot[];
+  timeSlots: TimeSlotType[];
 };
 
 function ScheduleBox({ timeSlots }: Props) {
