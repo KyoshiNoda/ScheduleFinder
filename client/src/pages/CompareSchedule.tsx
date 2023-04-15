@@ -43,12 +43,6 @@ const CompareSchedule = () => {
     pollingInterval: 900000,
   });
 
-  // useEffect(() => {
-  //   if (!isFetching && data) {
-  //     setScheduleA(data[0]);
-  //   }
-  // }, []);
-
   // Schedule B is the schedule to compare against.
   const [scheduleB, setScheduleB] = useState<Schedule>();
 
@@ -76,9 +70,9 @@ const CompareSchedule = () => {
             My schedule
           </Button>
           <Button
-            // onClick={() =>
-            //   setTimeSlots([].concat(scheduleB?.timeSlot))
-            // }
+            onClick={() =>
+              setTimeSlots([...data[0].timeSlot].concat(scheduleB?.timeSlot))
+            }
             color="gray"
           >
             Compare schedules
