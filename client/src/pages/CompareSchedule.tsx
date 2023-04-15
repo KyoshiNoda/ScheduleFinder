@@ -38,17 +38,16 @@ const CompareSchedule = () => {
   // This state represents the current time slots that are being displayed in the schedule box.
   const [timeSlots, setTimeSlots] = useState<TimeSlot[] | undefined>([]);
 
+  // The first index of data represents scheduleA (the schedule of the user that is logged in).
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
-  // Schedule A is the schedule of the user that is signed in.
-  const [scheduleA, setScheduleA] = useState<Schedule>();
 
-  useEffect(() => {
-    if (!isFetching && data) {
-      setScheduleA(data[0]);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!isFetching && data) {
+  //     setScheduleA(data[0]);
+  //   }
+  // }, []);
 
   // Schedule B is the schedule to compare against.
   const [scheduleB, setScheduleB] = useState<Schedule>();
@@ -73,7 +72,7 @@ const CompareSchedule = () => {
           >
             Other user schedule
           </Button>
-          <Button onClick={() => setTimeSlots(scheduleA?.timeSlot)} color="gray">
+          <Button onClick={() => setTimeSlots(data[0].timeSlot)} color="gray">
             My schedule
           </Button>
           <Button
