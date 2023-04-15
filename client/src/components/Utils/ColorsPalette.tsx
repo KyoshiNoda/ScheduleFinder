@@ -1,5 +1,3 @@
-import React from 'react';
-
 function ColorsPalette() {
   return (
     <div className="hidden">
