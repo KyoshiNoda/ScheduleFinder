@@ -47,6 +47,13 @@ mongoose_1.default
     .connect(`${process.env.DB_URI}`, {})
     .then(() => console.log('connected to DB!'))
     .catch((err) => console.log(err));
-app.listen(3001, () => {
+const server = app.listen(3001, () => {
     console.log('listening on port 3001');
+});
+process.on('SIGTERM', () => {
+    console.log('Received SIGTERM, shutting down gracefully...');
+    server.close(() => {
+        console.log('Server shutdown complete.');
+        process.exit(0);
+    });
 });

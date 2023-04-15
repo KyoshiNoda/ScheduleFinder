@@ -16,7 +16,7 @@ export const authAPI = createApi({
     getSchedule: builder.query({
       query: () => ({
         url: 'api/schedules/mySchedule',
-        method: 'GET'
+        method: 'GET' 
       })
     })
   })

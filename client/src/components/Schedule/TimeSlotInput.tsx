@@ -1,5 +1,7 @@
 import { useState, useRef } from 'react';
-
+import { useGetScheduleQuery } from '../../redux/services/auth/authService';
+import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
+import { useAppDispatch } from '../../redux/store';
 type days = {
   monday: boolean;
   tuesday: boolean;
@@ -11,18 +13,18 @@ type days = {
 };
 
 type TimeSlot = {
-  _id: string;
+  _id?: undefined | string;
   days: days;
   title: string;
   startTime: string;
   endTime: string;
-  location: string | null;
-  professor: string | null;
+  location?: string | null;
+  professor?: string | null;
   color: string;
 };
 
 type Props = {
-  setTimeSlots: React.Dispatch<React.SetStateAction<TimeSlot[]>>;
+  setTimeSlots: any;
 };
 
 const formActions = {
@@ -62,7 +64,18 @@ function TimeSlotInput({ setTimeSlots }: Props) {
   const professorRef = useRef(document.createElement('input'));
   const [timeSlotColor, setTimeSlotColor] = useState<string>('slate');
 
-  const addTimeSlot = (e: React.FormEvent<HTMLFormElement>) => {
+  const [createTimeSlotMutation, { isError, isLoading }] =
+    useCreateTimeSlotMutation();
+  const dispatch = useAppDispatch();
+  let scheduleID = '';
+  const { data, isFetching } = useGetScheduleQuery('schedule', {
+    pollingInterval: 900000,
+  });
+  if (!isFetching && data) {
+    scheduleID = data[0]._id;
+  }
+
+  const addTimeSlot = async (e: React.FormEvent<HTMLFormElement>) => {
     // If no checkboxes have been selected, the form shouldn't be submitted.
     if (
       !(
@@ -81,6 +94,8 @@ function TimeSlotInput({ setTimeSlots }: Props) {
       wednesday: false,
       thursday: false,
       friday: false,
+      saturday: false,
+      sunday: false,
     };
 
     if (mondayRef.current.checked) daySelection.monday = true;
@@ -89,7 +104,7 @@ function TimeSlotInput({ setTimeSlots }: Props) {
     if (thursdayRef.current.checked) daySelection.thursday = true;
     if (fridayRef.current.checked) daySelection.friday = true;
 
-    const timeSlot = {
+    const currentTimeSlot: TimeSlot = {
       days: daySelection,
       title: titleRef.current.value,
       startTime: startTimeRef.current.value,
@@ -99,14 +114,18 @@ function TimeSlotInput({ setTimeSlots }: Props) {
       color: timeSlotColor,
     };
 
-    fetch(`http://localhost:3001/api/schedules/63f2dbdeef9b9d56ba5fc264`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(timeSlot),
-    })
-      .then((res) => res.json())
-      .then((data) => setTimeSlots((prevState) => [...prevState, data]))
-      .catch((err) => console.log(err));
+    try {
+      const result = await createTimeSlotMutation({
+        scheduleId: scheduleID,
+        timeSlot: currentTimeSlot,
+      });
+      if ('data' in result) {
+        const { data } = result;
+        setTimeSlots((prevState : any) => [...prevState, data]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleSubmit = (
