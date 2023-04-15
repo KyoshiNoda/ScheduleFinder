@@ -22,7 +22,7 @@ type TimeSlot = {
 };
 
 type Props = {
-  timeSlots: TimeSlot[];
+  timeSlots: TimeSlot[] | undefined;
 };
 
 function ScheduleBox({ timeSlots }: Props) {

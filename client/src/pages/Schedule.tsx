@@ -46,8 +46,12 @@ function Schedule({}: Props) {
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
+
   const [schedule, setSchedule] = useState<Schedule>();
+  
+  // TODO: use the Redux query to post a time slot and delete the timeSlots state in this file.
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
+  
   useEffect(() => {
     if (!isFetching && data) {
       setSchedule(data[0]);
