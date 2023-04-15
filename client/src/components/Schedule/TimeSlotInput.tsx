@@ -115,10 +115,14 @@ function TimeSlotInput({ setTimeSlots }: Props) {
     };
 
     try {
-      createTimeSlotMutation({
+      const result = await createTimeSlotMutation({
         scheduleId: scheduleID,
         timeSlot: currentTimeSlot,
       });
+      if ('data' in result) {
+        const { data } = result;
+        setTimeSlots((prevState : any) => [...prevState, data]);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -336,11 +340,3 @@ function TimeSlotInput({ setTimeSlots }: Props) {
 }
 
 export default TimeSlotInput;
-// fetch(`http://localhost:3001/api/schedules/63f2dbdeef9b9d56ba5fc264`, {
-//   method: 'POST',
-//   headers: { 'Content-Type': 'application/json' },
-//   body: JSON.stringify(timeSlot),
-// })
-//   .then((res) => res.json())
-// .then((data) => setTimeSlots((prevState) => [...prevState, data]))
-//   .catch((err) => console.log(err));
