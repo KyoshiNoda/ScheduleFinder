@@ -2,16 +2,7 @@ import { useState, useEffect } from 'react';
 import TimeSlotInput from '../components/Schedule/TimeSlotInput';
 import ScheduleBox from '../components/Schedule/ScheduleBox';
 import Toggle from '../components/Toggle';
-import Axios from 'axios';
-import dayjs, { Dayjs } from 'dayjs/esm';
-import customParseFormat from 'dayjs/esm/plugin/customParseFormat';
-import localizedFormat from 'dayjs/esm/plugin/localizedFormat';
-import 'dayjs/locale/en';
-import { useSelector } from 'react-redux';
 import { useGetScheduleQuery } from '../redux/services/auth/authService';
-dayjs.extend(customParseFormat);
-dayjs.extend(localizedFormat);
-dayjs.locale('en');
 type Props = {};
 
 type days = {
@@ -40,6 +31,7 @@ type Schedule = {
   user_id: string;
   visibility: string;
   timeSlot: TimeSlot[];
+  
 };
 
 function Schedule({}: Props) {
