@@ -66,19 +66,13 @@ const CompareSchedule = () => {
   }, []);
 
   const mergeTimeSlots = () => {
-    let timeSlotsA: any = [];
-    if (data[0].timeSlot.length > 0) {
-      timeSlotsA = data[0].timeSlot.map((timeSlot: TimeSlot) => {
-        return { ...timeSlot, color: 'red' };
-      });
-    }
+    const timeSlotsA = data[0].timeSlot.map((timeSlot: TimeSlot) => {
+      return { ...timeSlot, color: 'red' };
+    });
 
-    let timeSlotsB: any = [];
-    if (scheduleB.timeSlot.length > 0) {
-      timeSlotsB = scheduleB.timeSlot.map((timeSlot: TimeSlot) => {
-        return { ...timeSlot, color: 'blue' };
-      });
-    }
+    const timeSlotsB = scheduleB.timeSlot.map((timeSlot: TimeSlot) => {
+      return { ...timeSlot, color: 'blue' };
+    });
 
     const mergedTimeSlots: TimeSlot[] = [...timeSlotsA, ...timeSlotsB];
     return mergedTimeSlots;
@@ -103,7 +97,6 @@ const CompareSchedule = () => {
 
   const findFreeIntervals = (timeSlots: TimeSlot[], day: string) => {
     timeSlots.sort(compareTimeSlots);
-    console.log(timeSlots);
     if (timeSlots.length < 2) return timeSlots;
 
     const free: TimeSlot[] = [];
@@ -196,6 +189,7 @@ const CompareSchedule = () => {
     const freeTimeSlots: any = free.map((timeSlot) => {
       return {
         ...timeSlot,
+        _id: crypto.randomUUID(),
         color: 'green',
         location: '',
         professor: null,
@@ -249,6 +243,12 @@ const CompareSchedule = () => {
     ];
   };
 
+  const combineFreeAndMergedTimeSlots = () => {
+    const freeTimeSlots = getFreeTimeSlots();
+    const mergedTimeSlots = mergeTimeSlots();
+    return [...freeTimeSlots, ...mergedTimeSlots];
+  }
+
   return (
     <div className="min-h-full bg-slate-400 p-6 dark:bg-slate-900">
       <div className="flex flex-col items-center gap-16">
@@ -259,7 +259,7 @@ const CompareSchedule = () => {
           <Button onClick={() => setTimeSlots(data[0].timeSlot)} color="gray">
             My schedule
           </Button>
-          <Button onClick={() => setTimeSlots(getFreeTimeSlots)} color="gray">
+          <Button onClick={() => setTimeSlots(combineFreeAndMergedTimeSlots)} color="gray">
             Compare schedules
           </Button>
         </Button.Group>

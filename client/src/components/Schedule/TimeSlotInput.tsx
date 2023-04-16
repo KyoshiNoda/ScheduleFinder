@@ -66,7 +66,6 @@ function TimeSlotInput({ setTimeSlots }: Props) {
   });
   if(!isFetching && data){
     const [schedule] = data;
-    console.log(schedule)
   }
 
   const addTimeSlot = (e: React.FormEvent<HTMLFormElement>) => {
