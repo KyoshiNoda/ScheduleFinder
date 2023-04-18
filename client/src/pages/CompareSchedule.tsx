@@ -33,10 +33,16 @@ type Schedule = {
 };
 
 const CompareSchedule = () => {
+  console.log('re-render');
   const { userId } = useParams();
 
   // This state is used to check whether the toggles should be displayed or not
   const [showToggles, setShowToggle] = useState<boolean>(false);
+
+  // These are the states of the toggles
+  const [displayUserSlots, setDisplayUserSlots] = useState<boolean>(true);
+  const [displayOtherSlots, setDisplayOtherSlots] = useState<boolean>(true);
+  const [displayFreeSlots, setDisplayFreeSlots] = useState<boolean>(true);
 
   // This state represents the current time slots that are being displayed in the schedule box.
   const [timeSlots, setTimeSlots] = useState<TimeSlot[] | undefined>([]);
@@ -70,11 +76,11 @@ const CompareSchedule = () => {
 
   const mergeTimeSlots = () => {
     const timeSlotsA = data[0].timeSlot.map((timeSlot: TimeSlot) => {
-      return { ...timeSlot, color: 'red' };
+      return { ...timeSlot, color: 'red', _id: crypto.randomUUID() };
     });
 
     const timeSlotsB = scheduleB.timeSlot.map((timeSlot: TimeSlot) => {
-      return { ...timeSlot, color: 'blue' };
+      return { ...timeSlot, color: 'blue', _id: crypto.randomUUID() };
     });
 
     const mergedTimeSlots: TimeSlot[] = [...timeSlotsA, ...timeSlotsB];
@@ -247,10 +253,25 @@ const CompareSchedule = () => {
   };
 
   const combineFreeAndMergedTimeSlots = () => {
-    setShowToggle(true);
-    const freeTimeSlots = getFreeTimeSlots();
+    // const freeTimeSlots = getFreeTimeSlots();
     const mergedTimeSlots = mergeTimeSlots();
-    return [...freeTimeSlots, ...mergedTimeSlots];
+    // return [...freeTimeSlots, ...mergedTimeSlots];
+    const userTimeSlots = mergedTimeSlots.filter(
+      (timeSlot) => timeSlot.color === 'red'
+    );
+    const otherTimeSlots = mergedTimeSlots.filter(
+      (timeSlot) => timeSlot.color === 'blue'
+    );
+
+    const timeSlotsToDisplay = [];
+console.log('RED: ', displayUserSlots)
+console.log('BLUE: ',displayOtherSlots)
+console.log('GREEN: ', displayFreeSlots)
+    if (displayUserSlots) timeSlotsToDisplay.push(...userTimeSlots);
+    if (displayOtherSlots) timeSlotsToDisplay.push(...otherTimeSlots);
+    if (displayFreeSlots) timeSlotsToDisplay.push(...getFreeTimeSlots());
+
+    return timeSlotsToDisplay;
   };
 
   return (
@@ -276,7 +297,10 @@ const CompareSchedule = () => {
             My schedule
           </Button>
           <Button
-            onClick={() => setTimeSlots(combineFreeAndMergedTimeSlots)}
+            onClick={() => {
+              setTimeSlots(combineFreeAndMergedTimeSlots);
+              setShowToggle(true);
+            }}
             color="gray"
           >
             Compare schedules
@@ -286,7 +310,15 @@ const CompareSchedule = () => {
         {showToggles && (
           <div>
             <label className="relative mr-5 inline-flex cursor-pointer items-center">
-              <input type="checkbox" className="peer sr-only" />
+              <input
+                checked={displayUserSlots}
+                onChange={() => {
+                  setDisplayUserSlots((prev) => !prev);
+                  setTimeSlots(combineFreeAndMergedTimeSlots);
+                }}
+                type="checkbox"
+                className="peer sr-only"
+              />
               <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:top-0.5 after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-red-400 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-red-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-red-600"></div>
               <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                 My schedule
@@ -294,18 +326,35 @@ const CompareSchedule = () => {
             </label>
 
             <label className="relative mr-5 inline-flex cursor-pointer items-center">
-              <input type="checkbox" value="" className="peer sr-only" />
-              <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:top-0.5 after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-400 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-red-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-600"></div>
+              <input
+                checked={displayOtherSlots}
+                onChange={() => {
+                  setDisplayOtherSlots((prev) => !prev);
+                  setTimeSlots(combineFreeAndMergedTimeSlots);
+                }}
+                type="checkbox"
+                value=""
+                className="peer sr-only"
+              />
+              <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:top-0.5 after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-400 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-600"></div>
               <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                 Other schedule
               </span>
             </label>
 
             <label className="relative mr-5 inline-flex cursor-pointer items-center">
-              <input type="checkbox" className="peer sr-only" />
-              <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:top-0.5 after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-400 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-red-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-green-600"></div>
+              <input
+                checked={displayFreeSlots}
+                onChange={() => {
+                  setDisplayFreeSlots((prev) => !prev);
+                  setTimeSlots(combineFreeAndMergedTimeSlots);
+                }}
+                type="checkbox"
+                className="peer sr-only"
+              />
+              <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:top-0.5 after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-400 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-green-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-green-600"></div>
               <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Free time
+                Free times
               </span>
             </label>
           </div>
