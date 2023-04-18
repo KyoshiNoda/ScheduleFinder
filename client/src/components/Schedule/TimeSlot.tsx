@@ -5,7 +5,7 @@ import { colors } from './TimeSlotInput';
 import { ToggleSwitch } from 'flowbite-react';
 import DaysChecked from './DaysChecked';
 import { DaysChecked as DaysCheckedType } from '../../types';
-
+import { useDeleteTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 type Props = {
   id?: undefined | string;
@@ -23,6 +23,8 @@ function TimeSlot(props: Props) {
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
+  let scheduleID: string = data[0]._id;
+  const [deleteTimeSlotMutation] = useDeleteTimeSlotMutation();
 
   let days: DaysCheckedType | undefined;
 
@@ -45,9 +47,19 @@ function TimeSlot(props: Props) {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(props.title);
 
-  const deleteHandler = () => {
+  const deleteHandler = async () => {
     setEditMode(false);
     setIsTimeSlotClicked(false);
+    try {
+      const result = await deleteTimeSlotMutation({
+        scheduleId: scheduleID,
+        timeSlot: { _id: props.id! },
+      });
+
+      console.log(result); // check the result in the console
+    } catch (error) {
+      console.log(error); // handle errors here
+    }
   };
   const saveHandler = () => {
     setEditMode(false);
