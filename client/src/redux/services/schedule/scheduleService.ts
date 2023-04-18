@@ -24,8 +24,10 @@ export const scheduleAPI = createApi({
         method: 'POST',
         body: timeSlot,
       }),
+      
     }),
   }),
+  
 });
 
 export const { useCreateTimeSlotMutation } = scheduleAPI;

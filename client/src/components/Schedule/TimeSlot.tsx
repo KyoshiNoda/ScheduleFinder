@@ -23,9 +23,18 @@ function TimeSlot(props: Props) {
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
-  let days: DaysCheckedType = data[0].timeSlot.filter(
-    (element: any) => element._id == props.id
-  )[0].days;
+
+  let days: DaysCheckedType | undefined;
+
+  if (data && data[0] && data[0].timeSlot) {
+    const matchingTimeSlot = data[0].timeSlot.find(
+      (element: any) => element._id === props.id
+    );
+
+    if (matchingTimeSlot) {
+      days = matchingTimeSlot.days;
+    }
+  }
 
   const testHandler = (days: DaysCheckedType) => {
     // console.log(days);
@@ -36,13 +45,25 @@ function TimeSlot(props: Props) {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(props.title);
 
+  const deleteHandler = () => {
+    setEditMode(false);
+    setIsTimeSlotClicked(false);
+  };
+  const saveHandler = () => {
+    setEditMode(false);
+    setIsTimeSlotClicked(false);
+  };
+
   return (
     <>
       <Modal
         show={isTimeSlotClicked}
         size="5xl"
         popup={true}
-        onClose={() => setIsTimeSlotClicked(false)}
+        onClose={() => {
+          setIsTimeSlotClicked(false);
+          setEditMode(false);
+        }}
       >
         <Modal.Header />
         <Modal.Body>
@@ -106,12 +127,14 @@ function TimeSlot(props: Props) {
                 <span>{props.endTime}</span>
               )}
             </div>
-            <div className="flex justify-center text-2xl">
-              {days.monday && <p>M</p>}
-              {days.tuesday && <>T</>}
-              {days.wednesday && <>W</>}
-              {days.thursday && <>TH</>}
-              {days.friday && <>F</>}
+
+            <div className="flex justify-center gap-3 text-2xl">
+              <div>Days:</div>
+              <div>{days?.monday && <>M</>}</div>
+              <div>{days?.tuesday && <>T</>}</div>
+              <div>{days?.wednesday && <>W</>}</div>
+              <div>{days?.thursday && <>TH</>}</div>
+              <div>{days?.friday && <>F</>}</div>
             </div>
 
             {editMode ? <DaysChecked setDays={testHandler} /> : <></>}
@@ -180,12 +203,14 @@ function TimeSlot(props: Props) {
             <button
               type="submit"
               className="w-full rounded-full bg-green-400 px-8 py-3 text-lg font-semibold text-white dark:bg-slate-300 dark:text-black"
+              onClick={saveHandler}
             >
               Save
             </button>
             <button
               type="submit"
               className="w-full rounded-full bg-red-400 px-8 py-3 text-lg font-semibold text-white dark:bg-slate-300 dark:text-black"
+              onClick={deleteHandler}
             >
               Delete
             </button>
