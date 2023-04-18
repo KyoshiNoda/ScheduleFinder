@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Schedule as ScheduleType} from '../../../types';
+import { Schedule as ScheduleType } from '../../../types';
 import { TimeSlot as TimeSlotType } from '../../../types';
 
 export const scheduleAPI = createApi({
@@ -16,7 +16,7 @@ export const scheduleAPI = createApi({
   }),
   endpoints: (builder) => ({
     createTimeSlot: builder.mutation<
-    ScheduleType,
+      ScheduleType,
       { scheduleId: string; timeSlot: TimeSlotType }
     >({
       query: ({ scheduleId, timeSlot }) => ({
@@ -25,7 +25,18 @@ export const scheduleAPI = createApi({
         body: timeSlot,
       }),
     }),
+    deleteTimeSlot: builder.mutation<
+      ScheduleType,
+      { scheduleId: string; timeSlot: { _id: string } }
+    >({
+      query: ({ scheduleId, timeSlot }) => ({
+        url: `api/schedules/${scheduleId}/timeSlot`,
+        method: 'DELETE',
+        body: timeSlot,
+      }),
+    }),
   }),
 });
 
-export const { useCreateTimeSlotMutation } = scheduleAPI;
+export const { useCreateTimeSlotMutation, useDeleteTimeSlotMutation } =
+  scheduleAPI;

@@ -3,7 +3,7 @@ import TimeSlotInput from '../components/Schedule/TimeSlotInput';
 import ScheduleBox from '../components/Schedule/ScheduleBox';
 import Toggle from '../components/Toggle';
 import { useGetScheduleQuery } from '../redux/services/auth/authService';
-import {Schedule as ScheduleType} from '../types';
+import { Schedule as ScheduleType } from '../types';
 import { TimeSlot as TimeSLotType } from '../types';
 type Props = {};
 
@@ -11,6 +11,7 @@ function Schedule({}: Props) {
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
+
   const [schedule, setSchedule] = useState<ScheduleType>();
   const [timeSlots, setTimeSlots] = useState<TimeSLotType[]>([]);
   useEffect(() => {
