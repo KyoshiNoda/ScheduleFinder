@@ -282,6 +282,9 @@ console.log('GREEN: ', displayFreeSlots)
             onClick={() => {
               setTimeSlots(scheduleB.timeSlot);
               setShowToggle(false);
+              setDisplayUserSlots(true);
+              setDisplayOtherSlots(true);
+              setDisplayFreeSlots(true);
             }}
             color="gray"
           >
@@ -291,6 +294,9 @@ console.log('GREEN: ', displayFreeSlots)
             onClick={() => {
               setTimeSlots(data[0].timeSlot);
               setShowToggle(false);
+              setDisplayUserSlots(true);
+              setDisplayOtherSlots(true);
+              setDisplayFreeSlots(true);
             }}
             color="gray"
           >
