@@ -108,7 +108,11 @@ class ScheduleController {
         return __awaiter(this, void 0, void 0, function* () {
             // const userID: string = req.user.data._id;
             const scheduleID = req.params.id;
-            if (!(req.body.title && req.body.startTime && req.body.endTime && req.body.color && req.body.days)) {
+            if (!(req.body.title &&
+                req.body.startTime &&
+                req.body.endTime &&
+                req.body.color &&
+                req.body.days)) {
                 return res.status(400).json({ message: 'Missing required properties' });
             }
             const newTimeSlot = {

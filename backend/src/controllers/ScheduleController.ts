@@ -73,7 +73,15 @@ class ScheduleController {
   public static async insertTimeSlot(req: any, res: any) {
     // const userID: string = req.user.data._id;
     const scheduleID: string = req.params.id;
-    if (!(req.body.title && req.body.startTime && req.body.endTime && req.body.color && req.body.days)) {
+    if (
+      !(
+        req.body.title &&
+        req.body.startTime &&
+        req.body.endTime &&
+        req.body.color &&
+        req.body.days
+      )
+    ) {
       return res.status(400).json({ message: 'Missing required properties' });
     }
     const newTimeSlot: TimeSlot = {
@@ -88,7 +96,7 @@ class ScheduleController {
     };
     try {
       const schedule = await Schedule.findOneAndUpdate(
-        { _id: scheduleID},
+        { _id: scheduleID },
         { $push: { timeSlot: newTimeSlot } },
         { new: true }
       );

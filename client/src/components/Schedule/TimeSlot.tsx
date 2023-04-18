@@ -4,8 +4,14 @@ import { Modal, Label, Button, Checkbox, TextInput } from 'flowbite-react';
 import { colors } from './TimeSlotInput';
 import { ToggleSwitch } from 'flowbite-react';
 import DaysChecked from './DaysChecked';
-import { DaysChecked as DaysCheckedType } from '../../types';
-import { useDeleteTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
+import {
+  DaysChecked as DaysCheckedType,
+  TimeSlot as TimeSlotType,
+} from '../../types';
+import {
+  useDeleteTimeSlotMutation,
+  useUpdateTimeSlotMutation,
+} from '../../redux/services/schedule/scheduleService';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 type Props = {
   id?: undefined | string;
@@ -25,8 +31,10 @@ function TimeSlot(props: Props) {
   });
   let scheduleID: string = data[0]._id;
   const [deleteTimeSlotMutation] = useDeleteTimeSlotMutation();
+  const [updateTimeSlotMutation] = useUpdateTimeSlotMutation();
 
   let days: DaysCheckedType | undefined;
+  console.log(days);
 
   if (data && data[0] && data[0].timeSlot) {
     const matchingTimeSlot = data[0].timeSlot.find(
@@ -45,7 +53,17 @@ function TimeSlot(props: Props) {
   const [isTimeSlotClicked, setIsTimeSlotClicked] = useState<boolean>(false);
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
   const [editMode, setEditMode] = useState<boolean>(false);
+
   const [title, setTitle] = useState<string>(props.title);
+  const [color, setColor] = useState<string>(props.color);
+  const [startTime, setStartTime] = useState<string>(props.startTime);
+  const [endTime, setEndTime] = useState<string>(props.endTime);
+  const [location, setLocation] = useState<string | null>(
+    props.location ?? null
+  );
+  const [professor, setProfessor] = useState<string | null>(
+    props.professor ?? null
+  );
 
   const deleteHandler = async () => {
     setEditMode(false);
@@ -61,9 +79,28 @@ function TimeSlot(props: Props) {
     }
     window.location.reload();
   };
-  const saveHandler = () => {
+  const saveHandler = async () => {
     setEditMode(false);
     setIsTimeSlotClicked(false);
+    let updatedTimeSlot: TimeSlotType = {
+      _id : props.id!,
+      title: title,
+      startTime: startTime,
+      endTime: endTime,
+      color: color,
+      professor: professor,
+      location: location,
+      days: days!,
+    };
+    try {
+      const result = await updateTimeSlotMutation({
+        scheduleId: scheduleID,
+        timeSlot: updatedTimeSlot
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    window.location.reload();
   };
 
   return (
@@ -95,6 +132,8 @@ function TimeSlot(props: Props) {
                     id="title"
                     type="text"
                     placeholder={props.title}
+                    value = {title}
+                    onChange={(event) => setTitle(event.target.value)}
                     className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                   />
                 </div>
@@ -114,6 +153,7 @@ function TimeSlot(props: Props) {
                     id="startTime"
                     type="text"
                     placeholder={props.startTime}
+                    onChange={(event) => setStartTime(event.target.value)}
                     className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                   />
                 </div>
@@ -132,6 +172,7 @@ function TimeSlot(props: Props) {
                     id="endTime"
                     type="text"
                     placeholder={props.endTime}
+                    onChange={(event) => setEndTime(event.target.value)}
                     className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                   />
                 </div>
@@ -140,16 +181,18 @@ function TimeSlot(props: Props) {
               )}
             </div>
 
-            <div className="flex justify-center gap-3 text-2xl dark:text-white">
-              <div>Days:</div>
-              <div>{days?.monday && <>M</>}</div>
-              <div>{days?.tuesday && <>T</>}</div>
-              <div>{days?.wednesday && <>W</>}</div>
-              <div>{days?.thursday && <>TH</>}</div>
-              <div>{days?.friday && <>F</>}</div>
-            </div>
-
-            {editMode ? <DaysChecked setDays={testHandler} /> : <></>}
+            {editMode ? (
+              <DaysChecked setDays={testHandler} />
+            ) : (
+              <div className="flex justify-center gap-3 text-2xl dark:text-white">
+                <div>Days:</div>
+                <div>{days?.monday && <>M</>}</div>
+                <div>{days?.tuesday && <>T</>}</div>
+                <div>{days?.wednesday && <>W</>}</div>
+                <div>{days?.thursday && <>TH</>}</div>
+                <div>{days?.friday && <>F</>}</div>
+              </div>
+            )}
             <div className="flex justify-evenly">
               <div>
                 {editMode ? (
@@ -160,6 +203,7 @@ function TimeSlot(props: Props) {
                     <input
                       id="location"
                       type="text"
+                      onChange={(event) => setLocation(event.target.value)}
                       placeholder={props.location!}
                       className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                     />
@@ -183,6 +227,7 @@ function TimeSlot(props: Props) {
                       id="professor"
                       type="text"
                       placeholder={props.professor!}
+                      onChange={(event) => setProfessor(event.target.value)}
                       className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                     />
                   </>
