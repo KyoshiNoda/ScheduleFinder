@@ -252,7 +252,7 @@ const CompareSchedule = () => {
     ];
   };
 
-  const combineFreeAndMergedTimeSlots = () => {
+  const combineFreeAndMergedTimeSlots = (isChecked1=true, isChecked2=true, isChecked3=true) => {
     // const freeTimeSlots = getFreeTimeSlots();
     const mergedTimeSlots = mergeTimeSlots();
     // return [...freeTimeSlots, ...mergedTimeSlots];
@@ -267,9 +267,9 @@ const CompareSchedule = () => {
 console.log('RED: ', displayUserSlots)
 console.log('BLUE: ',displayOtherSlots)
 console.log('GREEN: ', displayFreeSlots)
-    if (displayUserSlots) timeSlotsToDisplay.push(...userTimeSlots);
-    if (displayOtherSlots) timeSlotsToDisplay.push(...otherTimeSlots);
-    if (displayFreeSlots) timeSlotsToDisplay.push(...getFreeTimeSlots());
+    if (isChecked1) timeSlotsToDisplay.push(...userTimeSlots);
+    if (isChecked2) timeSlotsToDisplay.push(...otherTimeSlots);
+    if (isChecked3) timeSlotsToDisplay.push(...getFreeTimeSlots());
 
     return timeSlotsToDisplay;
   };
@@ -298,7 +298,7 @@ console.log('GREEN: ', displayFreeSlots)
           </Button>
           <Button
             onClick={() => {
-              setTimeSlots(combineFreeAndMergedTimeSlots);
+              setTimeSlots(() => combineFreeAndMergedTimeSlots());
               setShowToggle(true);
             }}
             color="gray"
@@ -314,7 +314,7 @@ console.log('GREEN: ', displayFreeSlots)
                 checked={displayUserSlots}
                 onChange={() => {
                   setDisplayUserSlots((prev) => !prev);
-                  setTimeSlots(combineFreeAndMergedTimeSlots);
+                  setTimeSlots(() => combineFreeAndMergedTimeSlots(!displayUserSlots, displayOtherSlots, displayFreeSlots));
                 }}
                 type="checkbox"
                 className="peer sr-only"
@@ -330,10 +330,9 @@ console.log('GREEN: ', displayFreeSlots)
                 checked={displayOtherSlots}
                 onChange={() => {
                   setDisplayOtherSlots((prev) => !prev);
-                  setTimeSlots(combineFreeAndMergedTimeSlots);
+                  setTimeSlots(() => combineFreeAndMergedTimeSlots(displayUserSlots, !displayOtherSlots, displayFreeSlots));
                 }}
                 type="checkbox"
-                value=""
                 className="peer sr-only"
               />
               <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:top-0.5 after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-400 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-600"></div>
@@ -347,7 +346,7 @@ console.log('GREEN: ', displayFreeSlots)
                 checked={displayFreeSlots}
                 onChange={() => {
                   setDisplayFreeSlots((prev) => !prev);
-                  setTimeSlots(combineFreeAndMergedTimeSlots);
+                  setTimeSlots(() => combineFreeAndMergedTimeSlots(displayUserSlots, displayOtherSlots, !displayFreeSlots));
                 }}
                 type="checkbox"
                 className="peer sr-only"
