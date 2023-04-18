@@ -20,7 +20,7 @@ type Props = {
 };
 
 function TimeSlot(props: Props) {
-  const { data, isFetching,refetch } = useGetScheduleQuery('schedule', {
+  const { data, isFetching, refetch } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
   let scheduleID: string = data[0]._id;
@@ -59,7 +59,7 @@ function TimeSlot(props: Props) {
     } catch (error) {
       console.log(error); // handle errors here
     }
-    refetch();
+    window.location.reload();
   };
   const saveHandler = () => {
     setEditMode(false);
@@ -221,7 +221,7 @@ function TimeSlot(props: Props) {
             </button>
             <button
               type="submit"
-              className="w-full rounded-full bg-red-500 px-8 py-3 text-lg font-semibold text-white  dark:text-white dark:bg-rose-700"
+              className="w-full rounded-full bg-red-500 px-8 py-3 text-lg font-semibold text-white  dark:bg-rose-700 dark:text-white"
               onClick={deleteHandler}
             >
               Delete
