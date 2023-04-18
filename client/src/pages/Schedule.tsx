@@ -11,6 +11,8 @@ function Schedule({}: Props) {
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
+
+
   const [schedule, setSchedule] = useState<ScheduleType>();
   const [timeSlots, setTimeSlots] = useState<TimeSLotType[]>([]);
   useEffect(() => {

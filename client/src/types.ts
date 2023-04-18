@@ -11,7 +11,7 @@ export type User = {
   major: string;
 };
 
-type daysChecked = {
+export type DaysChecked = {
   monday: boolean;
   tuesday: boolean;
   wednesday: boolean;
@@ -23,7 +23,7 @@ type daysChecked = {
 
 export type TimeSlot = {
   _id?: undefined | string;
-  days: daysChecked;
+  days: DaysChecked;
   title: string;
   startTime: string;
   endTime: string;
