@@ -35,6 +35,9 @@ type Schedule = {
 const CompareSchedule = () => {
   const { userId } = useParams();
 
+  // This state is used to check whether the toggles should be displayed or not
+  const [showToggles, setShowToggle] = useState<boolean>(false);
+
   // This state represents the current time slots that are being displayed in the schedule box.
   const [timeSlots, setTimeSlots] = useState<TimeSlot[] | undefined>([]);
 
@@ -44,7 +47,7 @@ const CompareSchedule = () => {
   });
 
   // This schedule is used to initialize the scheduleB state with an initial schedule and avoid
-  // annoying errors about it potentially being undefined.
+  // annoying errors about it being undefined.
   const defaultSchedule = {
     _id: '',
     user_id: '',
@@ -78,7 +81,7 @@ const CompareSchedule = () => {
     return mergedTimeSlots;
   };
 
-  // This function is used to sort the time slots in the findIntervalsFunction by their startTime.
+  // This function is used to sort the time slots by their startTime.
   const compareTimeSlots = (a: TimeSlot, b: TimeSlot) => {
     if (
       new Date(`January 1, 1970 ${a.startTime}`) <
@@ -244,25 +247,69 @@ const CompareSchedule = () => {
   };
 
   const combineFreeAndMergedTimeSlots = () => {
+    setShowToggle(true);
     const freeTimeSlots = getFreeTimeSlots();
     const mergedTimeSlots = mergeTimeSlots();
     return [...freeTimeSlots, ...mergedTimeSlots];
-  }
+  };
 
   return (
     <div className="min-h-full bg-slate-400 p-6 dark:bg-slate-900">
       <div className="flex flex-col items-center gap-16">
         <Button.Group outline={true}>
-          <Button onClick={() => setTimeSlots(scheduleB.timeSlot)} color="gray">
+          <Button
+            onClick={() => {
+              setTimeSlots(scheduleB.timeSlot);
+              setShowToggle(false);
+            }}
+            color="gray"
+          >
             Other user schedule
           </Button>
-          <Button onClick={() => setTimeSlots(data[0].timeSlot)} color="gray">
+          <Button
+            onClick={() => {
+              setTimeSlots(data[0].timeSlot);
+              setShowToggle(false);
+            }}
+            color="gray"
+          >
             My schedule
           </Button>
-          <Button onClick={() => setTimeSlots(combineFreeAndMergedTimeSlots)} color="gray">
+          <Button
+            onClick={() => setTimeSlots(combineFreeAndMergedTimeSlots)}
+            color="gray"
+          >
             Compare schedules
           </Button>
         </Button.Group>
+
+        {showToggles && (
+          <div>
+            <label className="relative mr-5 inline-flex cursor-pointer items-center">
+              <input type="checkbox" className="peer sr-only" />
+              <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:top-0.5 after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-red-400 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-red-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-red-600"></div>
+              <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                My schedule
+              </span>
+            </label>
+
+            <label className="relative mr-5 inline-flex cursor-pointer items-center">
+              <input type="checkbox" value="" className="peer sr-only" />
+              <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:top-0.5 after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-400 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-red-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-600"></div>
+              <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                Other schedule
+              </span>
+            </label>
+
+            <label className="relative mr-5 inline-flex cursor-pointer items-center">
+              <input type="checkbox" className="peer sr-only" />
+              <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:top-0.5 after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-400 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-red-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-green-600"></div>
+              <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                Free time
+              </span>
+            </label>
+          </div>
+        )}
 
         <div className="w-4/6">
           <ScheduleBox timeSlots={timeSlots} />
