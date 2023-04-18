@@ -20,7 +20,7 @@ type Props = {
 };
 
 function TimeSlot(props: Props) {
-  const { data, isFetching } = useGetScheduleQuery('schedule', {
+  const { data, isFetching,refetch } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
   let scheduleID: string = data[0]._id;
@@ -55,11 +55,11 @@ function TimeSlot(props: Props) {
         scheduleId: scheduleID,
         timeSlot: { _id: props.id! },
       });
-
-      console.log(result); // check the result in the console
+      refetch();
     } catch (error) {
       console.log(error); // handle errors here
     }
+    refetch();
   };
   const saveHandler = () => {
     setEditMode(false);
@@ -140,7 +140,7 @@ function TimeSlot(props: Props) {
               )}
             </div>
 
-            <div className="flex justify-center gap-3 text-2xl">
+            <div className="flex justify-center gap-3 text-2xl dark:text-white">
               <div>Days:</div>
               <div>{days?.monday && <>M</>}</div>
               <div>{days?.tuesday && <>T</>}</div>
@@ -165,7 +165,7 @@ function TimeSlot(props: Props) {
                     />
                   </>
                 ) : (
-                  <div className="text-2xl">
+                  <div className="text-2xl dark:text-white">
                     <p>Location:</p>
                     <span>
                       {props.location === null ? <>null</> : props.location}
@@ -187,7 +187,7 @@ function TimeSlot(props: Props) {
                     />
                   </>
                 ) : (
-                  <div className="text-2xl">
+                  <div className="text-2xl dark:text-white">
                     <p>Professor:</p>
                     <span>
                       {props.professor === null ? <>null</> : props.professor}
@@ -214,14 +214,14 @@ function TimeSlot(props: Props) {
             </div>
             <button
               type="submit"
-              className="w-full rounded-full bg-green-400 px-8 py-3 text-lg font-semibold text-white dark:bg-slate-300 dark:text-black"
+              className="w-full rounded-full bg-green-400 px-8 py-3 text-lg font-semibold text-white dark:bg-green-700 dark:text-white"
               onClick={saveHandler}
             >
               Save
             </button>
             <button
               type="submit"
-              className="w-full rounded-full bg-red-400 px-8 py-3 text-lg font-semibold text-white dark:bg-slate-300 dark:text-black"
+              className="w-full rounded-full bg-red-500 px-8 py-3 text-lg font-semibold text-white  dark:text-white dark:bg-rose-700"
               onClick={deleteHandler}
             >
               Delete
