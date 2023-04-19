@@ -301,7 +301,7 @@ const CompareSchedule = () => {
             }}
             color="gray"
           >
-            Other user schedule
+            {`${userName}'s`} schedule
           </Button>
           <Button
             onClick={() => {
