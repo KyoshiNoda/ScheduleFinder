@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, ChangeEvent } from 'react';
+import { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { AiFillEdit } from 'react-icons/ai';
 import { Modal, Label, Button, Checkbox, TextInput } from 'flowbite-react';
 import { colors } from './TimeSlotInput';
@@ -40,13 +40,12 @@ function TimeSlot(props: Props) {
   const [title, setTitle] = useState<string>(props.title);
   const [startTime, setStartTime] = useState<string>(props.startTime);
   const [endTime, setEndTime] = useState<string>(props.endTime);
-  const [days, setDays] = useState<DaysCheckedType>({
-    monday: false,
-    tuesday: false,
-    wednesday: false,
-    thursday: false,
-    friday: false,
-  });
+  const [days, setDays] = useState<DaysCheckedType>(props.days);
+  const mondayRef = useRef(document.createElement('input'));
+  const tuesdayRef = useRef(document.createElement('input'));
+  const wednesdayRef = useRef(document.createElement('input'));
+  const thursdayRef = useRef(document.createElement('input'));
+  const fridayRef = useRef(document.createElement('input'));
 
   const [location, setLocation] = useState<string | null>(
     props.location ?? null
@@ -55,38 +54,43 @@ function TimeSlot(props: Props) {
     props.professor ?? null
   );
 
-  const handleCheckboxChange = (e: any) => {
-    const { id, checked } = e.target;
-    setDays((prevDays) => ({
-      ...prevDays,
-      [id]: checked,
-    }));
-  };
+  const saveHandler = async () => {
+    const daySelection = {
+      monday: false,
+      tuesday: false,
+      wednesday: false,
+      thursday: false,
+      friday: false,
+      saturday: false,
+      sunday: false,
+    };
+    if (mondayRef.current.checked) daySelection.monday = true;
+    if (tuesdayRef.current.checked) daySelection.tuesday = true;
+    if (wednesdayRef.current.checked) daySelection.wednesday = true;
+    if (thursdayRef.current.checked) daySelection.thursday = true;
+    if (fridayRef.current.checked) daySelection.friday = true;
 
-  useEffect(() => {
-    setDays({
-      monday: props.days.monday ?? false,
-      tuesday: props.days.tuesday ?? false,
-      wednesday: props.days.wednesday ?? false,
-      thursday: props.days.thursday ?? false,
-      friday: props.days.friday ?? false,
-    });
-  }, [props.days]);
-
-  const saveHandler = () => {
-    setEditMode(false);
-    setIsTimeSlotClicked(false);
     const updatedTimeSlot: TimeSlotType = {
       _id: props.id!,
       title,
       startTime,
       endTime,
       color: timeSlotColor,
-      professor,
-      location,
-      days,
+      professor: professor,
+      location: location,
+      days: daySelection,
     };
-    console.log(updatedTimeSlot);
+    
+    // try {
+    //   const result = await updateTimeSlotMutation({
+    //     scheduleId: scheduleID,
+    //     timeSlot: updatedTimeSlot,
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    setEditMode(false);
+    setIsTimeSlotClicked(false);
   };
 
   const deleteHandler = async () => {
@@ -186,7 +190,7 @@ function TimeSlot(props: Props) {
                 <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
                   <div className="flex items-center pl-3">
                     <input
-                      onChange={handleCheckboxChange}
+                      ref={mondayRef}
                       id="monday"
                       type="checkbox"
                       value="monday"
@@ -203,7 +207,7 @@ function TimeSlot(props: Props) {
                 <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
                   <div className="flex items-center pl-3">
                     <input
-                      onChange={handleCheckboxChange}
+                      ref={tuesdayRef}
                       id="tuesday"
                       type="checkbox"
                       value="tuesday"
@@ -220,7 +224,7 @@ function TimeSlot(props: Props) {
                 <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
                   <div className="flex items-center pl-3">
                     <input
-                      onChange={handleCheckboxChange}
+                      ref={wednesdayRef}
                       id="wednesday"
                       type="checkbox"
                       value="wednesday"
@@ -237,7 +241,7 @@ function TimeSlot(props: Props) {
                 <li className="w-full dark:border-gray-600">
                   <div className="flex items-center pl-3">
                     <input
-                      onChange={handleCheckboxChange}
+                      ref={thursdayRef}
                       id="thursday"
                       type="checkbox"
                       value="thursday"
@@ -254,7 +258,7 @@ function TimeSlot(props: Props) {
                 <li className="w-full dark:border-gray-600">
                   <div className="flex items-center pl-3">
                     <input
-                      onChange={handleCheckboxChange}
+                      ref={fridayRef}
                       id="friday"
                       type="checkbox"
                       value="friday"
