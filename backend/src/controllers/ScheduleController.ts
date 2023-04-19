@@ -73,7 +73,15 @@ class ScheduleController {
   public static async insertTimeSlot(req: any, res: any) {
     // const userID: string = req.user.data._id;
     const scheduleID: string = req.params.id;
-    if (!(req.body.title && req.body.startTime && req.body.endTime && req.body.color && req.body.days)) {
+    if (
+      !(
+        req.body.title &&
+        req.body.startTime &&
+        req.body.endTime &&
+        req.body.color &&
+        req.body.days
+      )
+    ) {
       return res.status(400).json({ message: 'Missing required properties' });
     }
     const newTimeSlot: TimeSlot = {
@@ -88,7 +96,7 @@ class ScheduleController {
     };
     try {
       const schedule = await Schedule.findOneAndUpdate(
-        { _id: scheduleID},
+        { _id: scheduleID },
         { $push: { timeSlot: newTimeSlot } },
         { new: true }
       );
@@ -188,11 +196,24 @@ class ScheduleController {
       .catch((err) => console.log(err));
   }
 
-  // GET single schedule by id
+  // GET single schedule by schedule id
   public static async getScheduleById(req: Request, res: Response) {
     const id = req.params.id;
-    const user = await Schedule.findById(id);
-    res.json(user);
+    const schedule = await Schedule.findById(id);
+    res.json(schedule);
+  }
+
+  // GET single schedule by user id
+  public static async getScheduleByUserId(req: Request, res: Response) {
+    // This is the user's id
+    const id = req.params.id;
+
+    try {
+      const schedule = await Schedule.find({ user_id: id });
+      res.send(schedule);
+    } catch (error) {
+      res.send({ message: 'Error retrieving schedule' });
+    }
   }
 
   // POST new schedule

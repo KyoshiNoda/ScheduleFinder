@@ -240,10 +240,12 @@ function TimeSlot(props: Props) {
           {isHovering ? (
             <AiFillEdit size={'96'} />
           ) : (
-            <>
-              <h2 className="text-center font-bold">{props.title}</h2>
-              <span>{`${props.startTime} - ${props.endTime}`}</span>
-            </>
+              {parseInt(props.height) > 55 && (
+                <div>
+                  <h2 className="text-center font-bold">{props.title}</h2>
+                  <span>{`${props.startTime} - ${props.endTime}`}</span>
+                </div>
+              )}
           )}
         </>
       </div>

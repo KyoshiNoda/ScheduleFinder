@@ -4,16 +4,17 @@ import ScheduleBox from '../components/Schedule/ScheduleBox';
 import Toggle from '../components/Toggle';
 import { useGetScheduleQuery } from '../redux/services/auth/authService';
 import { Schedule as ScheduleType } from '../types';
-import { TimeSlot as TimeSLotType } from '../types';
+import { TimeSlot as TimeSlotType } from '../types';
 type Props = {};
 
 function Schedule({}: Props) {
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
-
+  
   const [schedule, setSchedule] = useState<ScheduleType>();
-  const [timeSlots, setTimeSlots] = useState<TimeSLotType[]>([]);
+  const [timeSlots, setTimeSlots] = useState<TimeSlotType[]>([]);
+
   useEffect(() => {
     if (!isFetching && data) {
       setSchedule(data[0]);
