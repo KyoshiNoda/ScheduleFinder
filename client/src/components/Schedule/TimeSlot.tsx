@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef, ChangeEvent } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { AiFillEdit } from 'react-icons/ai';
-import { Modal, Label, Button, Checkbox, TextInput } from 'flowbite-react';
+import { Modal } from 'flowbite-react';
 import { colors } from './TimeSlotInput';
 import { ToggleSwitch } from 'flowbite-react';
-import DaysChecked from './DaysChecked';
 import {
   DaysChecked as DaysCheckedType,
   TimeSlot as TimeSlotType,
@@ -53,6 +52,9 @@ function TimeSlot(props: Props) {
   const [professor, setProfessor] = useState<string | null>(
     props.professor ?? null
   );
+  useEffect(() => {
+    setTimeSlotColor(props.color);
+  }, []);
 
   const saveHandler = async () => {
     const updatedTimeSlot: TimeSlotType = {
@@ -65,43 +67,61 @@ function TimeSlot(props: Props) {
       location: location,
       days: props.days,
     };
+    if (
+      !(
+        mondayRef.current.checked ||
+        tuesdayRef.current.checked ||
+        wednesdayRef.current.checked ||
+        thursdayRef.current.checked ||
+        fridayRef.current.checked
+      )
+    ) {
+      try {
+        await updateTimeSlotMutation({
+          scheduleId: scheduleID,
+          timeSlot: updatedTimeSlot,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      const daySelection = {
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+        sunday: false,
+      };
 
-    const daySelection = {
-      monday: false,
-      tuesday: false,
-      wednesday: false,
-      thursday: false,
-      friday: false,
-      saturday: false,
-      sunday: false,
-    };
+      if (mondayRef.current.checked) daySelection.monday = true;
+      if (tuesdayRef.current.checked) daySelection.tuesday = true;
+      if (wednesdayRef.current.checked) daySelection.wednesday = true;
+      if (thursdayRef.current.checked) daySelection.thursday = true;
+      if (fridayRef.current.checked) daySelection.friday = true;
 
-
-    if (mondayRef.current.checked) daySelection.monday = true;
-    if (tuesdayRef.current.checked) daySelection.tuesday = true;
-    if (wednesdayRef.current.checked) daySelection.wednesday = true;
-    if (thursdayRef.current.checked) daySelection.thursday = true;
-    if (fridayRef.current.checked) daySelection.friday = true;
-
-    updatedTimeSlot.days = daySelection;
-
-    try {
-      const result = await updateTimeSlotMutation({
-        scheduleId: scheduleID,
-        timeSlot: updatedTimeSlot,
-      });
-    } catch (error) {
-      console.log(error);
+      updatedTimeSlot.days = daySelection;
+      updatedTimeSlot.color = timeSlotColor;
+      try {
+        await updateTimeSlotMutation({
+          scheduleId: scheduleID,
+          timeSlot: updatedTimeSlot,
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
     setEditMode(false);
     setIsTimeSlotClicked(false);
+    window.location.reload();
   };
 
   const deleteHandler = async () => {
     setEditMode(false);
     setIsTimeSlotClicked(false);
     try {
-      const result = await deleteTimeSlotMutation({
+      await deleteTimeSlotMutation({
         scheduleId: scheduleID,
         timeSlot: { _id: props.id! },
       });
@@ -346,7 +366,11 @@ function TimeSlot(props: Props) {
                           ? 'border-blue-700'
                           : 'border-none'
                       }`}
-                      onClick={() => setTimeSlotColor(color)}
+                      onClick={() => {
+                        setTimeSlotColor((prevColor) =>
+                          prevColor === color ? '' : color
+                        );
+                      }}
                     />
                   ))}
               </div>
