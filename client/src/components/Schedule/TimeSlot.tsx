@@ -55,6 +55,17 @@ function TimeSlot(props: Props) {
   );
 
   const saveHandler = async () => {
+    const updatedTimeSlot: TimeSlotType = {
+      _id: props.id!,
+      title: title,
+      startTime: startTime,
+      endTime: endTime,
+      color: timeSlotColor,
+      professor: professor,
+      location: location,
+      days: props.days,
+    };
+
     const daySelection = {
       monday: false,
       tuesday: false,
@@ -64,31 +75,24 @@ function TimeSlot(props: Props) {
       saturday: false,
       sunday: false,
     };
+
+
     if (mondayRef.current.checked) daySelection.monday = true;
     if (tuesdayRef.current.checked) daySelection.tuesday = true;
     if (wednesdayRef.current.checked) daySelection.wednesday = true;
     if (thursdayRef.current.checked) daySelection.thursday = true;
     if (fridayRef.current.checked) daySelection.friday = true;
 
-    const updatedTimeSlot: TimeSlotType = {
-      _id: props.id!,
-      title,
-      startTime,
-      endTime,
-      color: timeSlotColor,
-      professor: professor,
-      location: location,
-      days: daySelection,
-    };
-    
-    // try {
-    //   const result = await updateTimeSlotMutation({
-    //     scheduleId: scheduleID,
-    //     timeSlot: updatedTimeSlot,
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    updatedTimeSlot.days = daySelection;
+
+    try {
+      const result = await updateTimeSlotMutation({
+        scheduleId: scheduleID,
+        timeSlot: updatedTimeSlot,
+      });
+    } catch (error) {
+      console.log(error);
+    }
     setEditMode(false);
     setIsTimeSlotClicked(false);
   };

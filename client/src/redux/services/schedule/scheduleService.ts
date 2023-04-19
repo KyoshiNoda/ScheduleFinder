@@ -41,7 +41,7 @@ export const scheduleAPI = createApi({
     >({
       query: ({ scheduleId, timeSlot }) => ({
         url: `api/schedules/${scheduleId}/timeSlot`,
-        method: 'UPDATE',
+        method: 'PATCH',
         body: timeSlot,
       }),
     }),
