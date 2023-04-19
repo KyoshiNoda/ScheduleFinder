@@ -33,11 +33,13 @@ type Schedule = {
 };
 
 const CompareSchedule = () => {
-  console.log('re-render');
   const { userId } = useParams();
 
-  // This state is used to check whether the toggles should be displayed or not
-  const [showToggles, setShowToggle] = useState<boolean>(false);
+  // This states are used to conditionallly render the titles of the scheduls and the toggles.
+  const [showOtherSchedule, setShowOtherSchedule] = useState<boolean>(true);
+  const [showUserSchedule, setShowUserSchedule] = useState<boolean>(false);
+  const [showCompareSchedule, setShowCompareSchedule] =
+    useState<boolean>(false);
 
   // These are the states of the toggles
   const [displayUserSlots, setDisplayUserSlots] = useState<boolean>(true);
@@ -71,6 +73,16 @@ const CompareSchedule = () => {
         setScheduleB(data[0]);
         setTimeSlots(data[0].timeSlot);
       })
+      .catch((err) => console.log(err));
+  }, []);
+
+  // State used to store the name of the user that will be displayed in the page.
+  const [userName, setUserName] = useState<string>('');
+
+  useEffect(() => {
+    fetch(`http://localhost:3001/api/users/${userId}`)
+      .then((res) => res.json())
+      .then((data) => setUserName(data[0].firstName))
       .catch((err) => console.log(err));
   }, []);
 
@@ -252,10 +264,12 @@ const CompareSchedule = () => {
     ];
   };
 
-  const combineFreeAndMergedTimeSlots = (isChecked1=true, isChecked2=true, isChecked3=true) => {
-    // const freeTimeSlots = getFreeTimeSlots();
+  const combineFreeAndMergedTimeSlots = (
+    isChecked1 = true,
+    isChecked2 = true,
+    isChecked3 = true
+  ) => {
     const mergedTimeSlots = mergeTimeSlots();
-    // return [...freeTimeSlots, ...mergedTimeSlots];
     const userTimeSlots = mergedTimeSlots.filter(
       (timeSlot) => timeSlot.color === 'red'
     );
@@ -264,9 +278,6 @@ const CompareSchedule = () => {
     );
 
     const timeSlotsToDisplay = [];
-console.log('RED: ', displayUserSlots)
-console.log('BLUE: ',displayOtherSlots)
-console.log('GREEN: ', displayFreeSlots)
     if (isChecked1) timeSlotsToDisplay.push(...userTimeSlots);
     if (isChecked2) timeSlotsToDisplay.push(...otherTimeSlots);
     if (isChecked3) timeSlotsToDisplay.push(...getFreeTimeSlots());
@@ -276,12 +287,14 @@ console.log('GREEN: ', displayFreeSlots)
 
   return (
     <div className="min-h-full bg-slate-400 p-6 dark:bg-slate-900">
-      <div className="flex flex-col items-center gap-16">
+      <div className="flex flex-col items-center gap-16 mt-5">
         <Button.Group outline={true}>
           <Button
             onClick={() => {
               setTimeSlots(scheduleB.timeSlot);
-              setShowToggle(false);
+              setShowCompareSchedule(false);
+              setShowOtherSchedule(true);
+              setShowUserSchedule(false);
               setDisplayUserSlots(true);
               setDisplayOtherSlots(true);
               setDisplayFreeSlots(true);
@@ -293,7 +306,9 @@ console.log('GREEN: ', displayFreeSlots)
           <Button
             onClick={() => {
               setTimeSlots(data[0].timeSlot);
-              setShowToggle(false);
+              setShowCompareSchedule(false);
+              setShowOtherSchedule(false);
+              setShowUserSchedule(true);
               setDisplayUserSlots(true);
               setDisplayOtherSlots(true);
               setDisplayFreeSlots(true);
@@ -305,7 +320,9 @@ console.log('GREEN: ', displayFreeSlots)
           <Button
             onClick={() => {
               setTimeSlots(() => combineFreeAndMergedTimeSlots());
-              setShowToggle(true);
+              setShowCompareSchedule(true);
+              setShowOtherSchedule(false);
+              setShowUserSchedule(false);
             }}
             color="gray"
           >
@@ -313,14 +330,25 @@ console.log('GREEN: ', displayFreeSlots)
           </Button>
         </Button.Group>
 
-        {showToggles && (
+        {showOtherSchedule && (
+          <h1 className="text-4xl">{`${userName}'s Schedule`}</h1>
+        )}
+        {showUserSchedule && <h1 className="text-4xl">My Schedule</h1>}
+
+        {showCompareSchedule && (
           <div>
             <label className="relative mr-5 inline-flex cursor-pointer items-center">
               <input
                 checked={displayUserSlots}
                 onChange={() => {
                   setDisplayUserSlots((prev) => !prev);
-                  setTimeSlots(() => combineFreeAndMergedTimeSlots(!displayUserSlots, displayOtherSlots, displayFreeSlots));
+                  setTimeSlots(() =>
+                    combineFreeAndMergedTimeSlots(
+                      !displayUserSlots,
+                      displayOtherSlots,
+                      displayFreeSlots
+                    )
+                  );
                 }}
                 type="checkbox"
                 className="peer sr-only"
@@ -336,7 +364,13 @@ console.log('GREEN: ', displayFreeSlots)
                 checked={displayOtherSlots}
                 onChange={() => {
                   setDisplayOtherSlots((prev) => !prev);
-                  setTimeSlots(() => combineFreeAndMergedTimeSlots(displayUserSlots, !displayOtherSlots, displayFreeSlots));
+                  setTimeSlots(() =>
+                    combineFreeAndMergedTimeSlots(
+                      displayUserSlots,
+                      !displayOtherSlots,
+                      displayFreeSlots
+                    )
+                  );
                 }}
                 type="checkbox"
                 className="peer sr-only"
@@ -352,7 +386,13 @@ console.log('GREEN: ', displayFreeSlots)
                 checked={displayFreeSlots}
                 onChange={() => {
                   setDisplayFreeSlots((prev) => !prev);
-                  setTimeSlots(() => combineFreeAndMergedTimeSlots(displayUserSlots, displayOtherSlots, !displayFreeSlots));
+                  setTimeSlots(() =>
+                    combineFreeAndMergedTimeSlots(
+                      displayUserSlots,
+                      displayOtherSlots,
+                      !displayFreeSlots
+                    )
+                  );
                 }}
                 type="checkbox"
                 className="peer sr-only"
