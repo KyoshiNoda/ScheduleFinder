@@ -1,5 +1,4 @@
 import { AiFillGithub } from 'react-icons/ai';
-import { FiGithub } from 'react-icons/fi'
 type Props = {};
 
 function Github({ }: Props) {

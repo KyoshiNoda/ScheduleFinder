@@ -1,28 +1,9 @@
 import { useState, useRef } from 'react';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
-type days = {
-  monday: boolean;
-  tuesday: boolean;
-  wednesday: boolean;
-  thursday: boolean;
-  friday: boolean;
-  saturday: boolean;
-  sunday: boolean;
-};
-
-type TimeSlot = {
-  _id: string;
-  days: days;
-  title: string;
-  startTime: string;
-  endTime: string;
-  location: string | null;
-  professor: string | null;
-  color: string;
-};
-
+import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
+import { TimeSlot as TimeSlotType } from '../../types';
 type Props = {
-  setTimeSlots: React.Dispatch<React.SetStateAction<TimeSlot[]>>;
+  setTimeSlots: any;
 };
 
 const formActions = {
@@ -31,7 +12,7 @@ const formActions = {
   DELETE: 'delete',
 };
 
-const colors: string[] = [
+export const colors: string[] = [
   'slate',
   'red',
   'orange',
@@ -60,15 +41,21 @@ function TimeSlotInput({ setTimeSlots }: Props) {
   const endTimeRef = useRef(document.createElement('input'));
   const locationRef = useRef(document.createElement('input'));
   const professorRef = useRef(document.createElement('input'));
-  const [timeSlotColor, setTimeSlotColor] = useState<string>('slate');
+
+  const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
+
+  const [createTimeSlotMutation, { isError, isLoading }] =
+    useCreateTimeSlotMutation();
+ 
+  let scheduleID = '';
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
-  if(!isFetching && data){
-    const [schedule] = data;
+  if (!isFetching && data) {
+    scheduleID = data[0]._id;
   }
 
-  const addTimeSlot = (e: React.FormEvent<HTMLFormElement>) => {
+  const addTimeSlot = async (e: React.FormEvent<HTMLFormElement>) => {
     // If no checkboxes have been selected, the form shouldn't be submitted.
     if (
       !(
@@ -87,6 +74,8 @@ function TimeSlotInput({ setTimeSlots }: Props) {
       wednesday: false,
       thursday: false,
       friday: false,
+      saturday: false,
+      sunday: false,
     };
 
     if (mondayRef.current.checked) daySelection.monday = true;
@@ -95,7 +84,7 @@ function TimeSlotInput({ setTimeSlots }: Props) {
     if (thursdayRef.current.checked) daySelection.thursday = true;
     if (fridayRef.current.checked) daySelection.friday = true;
 
-    const timeSlot = {
+    const currentTimeSlot: TimeSlotType = {
       days: daySelection,
       title: titleRef.current.value,
       startTime: startTimeRef.current.value,
@@ -105,14 +94,18 @@ function TimeSlotInput({ setTimeSlots }: Props) {
       color: timeSlotColor,
     };
 
-    fetch(`http://localhost:3001/api/schedules/63f2dbdeef9b9d56ba5fc264`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(timeSlot),
-    })
-      .then((res) => res.json())
-      .then((data) => setTimeSlots((prevState) => [...prevState, data]))
-      .catch((err) => console.log(err));
+    try {
+      const result = await createTimeSlotMutation({
+        scheduleId: scheduleID,
+        timeSlot: currentTimeSlot,
+      });
+      if ('data' in result) {
+        const { data } = result;
+        setTimeSlots((prevState: any) => [...prevState, data]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleSubmit = (
@@ -122,6 +115,7 @@ function TimeSlotInput({ setTimeSlots }: Props) {
     e.preventDefault();
     if (action === formActions.CREATE) addTimeSlot(e);
     formRef.current.reset();
+    setTimeSlotColor('border-none');
   };
 
   return (
@@ -155,13 +149,13 @@ function TimeSlotInput({ setTimeSlots }: Props) {
               <div className="flex items-center pl-3">
                 <input
                   ref={mondayRef}
-                  id="vue-checkbox-list"
+                  id="monday"
                   type="checkbox"
                   value="monday"
                   className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                 />
                 <label
-                  htmlFor="vue-checkbox-list"
+                  htmlFor="monday"
                   className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Mon
@@ -172,13 +166,13 @@ function TimeSlotInput({ setTimeSlots }: Props) {
               <div className="flex items-center pl-3">
                 <input
                   ref={tuesdayRef}
-                  id="react-checkbox-list"
+                  id="tuesday"
                   type="checkbox"
                   value="tuesday"
                   className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                 />
                 <label
-                  htmlFor="react-checkbox-list"
+                  htmlFor="tuesday"
                   className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Tues
@@ -189,13 +183,13 @@ function TimeSlotInput({ setTimeSlots }: Props) {
               <div className="flex items-center pl-3">
                 <input
                   ref={wednesdayRef}
-                  id="angular-checkbox-list"
+                  id="wednesday"
                   type="checkbox"
                   value="wednesday"
                   className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                 />
                 <label
-                  htmlFor="angular-checkbox-list"
+                  htmlFor="wednesday"
                   className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Wed
@@ -206,13 +200,13 @@ function TimeSlotInput({ setTimeSlots }: Props) {
               <div className="flex items-center pl-3">
                 <input
                   ref={thursdayRef}
-                  id="laravel-checkbox-list"
+                  id="thursday"
                   type="checkbox"
                   value="thursday"
                   className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                 />
                 <label
-                  htmlFor="laravel-checkbox-list"
+                  htmlFor="thursday"
                   className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Thurs
@@ -223,13 +217,13 @@ function TimeSlotInput({ setTimeSlots }: Props) {
               <div className="flex items-center pl-3">
                 <input
                   ref={fridayRef}
-                  id="laravel-checkbox-list"
+                  id="friday"
                   type="checkbox"
                   value="friday"
                   className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                 />
                 <label
-                  htmlFor="laravel-checkbox-list"
+                  htmlFor="friday"
                   className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Fri
@@ -310,7 +304,9 @@ function TimeSlotInput({ setTimeSlots }: Props) {
               <div
                 onClick={() => setTimeSlotColor(color)}
                 key={color}
-                className={`bg-${color}-400 h-10 w-10 cursor-pointer rounded-full p-1 text-white`}
+                className={`bg-${color}-400 h-10 w-10 cursor-pointer rounded-full border-4 p-1 ${
+                  timeSlotColor === color ? 'border-blue-700' : 'border-none'
+                }`}
               />
             ))}
           </div>

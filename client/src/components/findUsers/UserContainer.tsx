@@ -1,19 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Spinner, Button } from 'flowbite-react';
 import User from './User';
-
-type User = {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  age: number;
-  photoURL: string;
-  email: string;
-  password: string;
-  gender: string;
-  school: string;
-  major: string;
-};
+import { User as UserType } from '../../types';
 
 type UserContainerProps = {
   schoolSearch: string;
@@ -26,11 +14,11 @@ const UserContainer = ({
   nameSearch,
   majorSearch,
 }: UserContainerProps) => {
-  const [users, setUsers] = useState<User[]>();
+  const [users, setUsers] = useState<UserType[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [paginate, setPaginate] = useState<number>(12);
 
-  const filterUsers = (users: User[]) => {
+  const filterUsers = (users: UserType[]) => {
     const filteredBySchool = users.filter((user) =>
       user.school
         .toLowerCase()

@@ -1,4 +1,4 @@
-import Axios, { AxiosResponse } from 'axios';
+import Axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 interface registerUserData {

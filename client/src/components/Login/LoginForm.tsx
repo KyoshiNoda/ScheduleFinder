@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEventHandler, useState } from 'react';
+import {FormEventHandler, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../redux/feats/auth/authActions';
 import Axios from 'axios';
@@ -9,7 +9,6 @@ function LoginForm(props: Props) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const loading = useAppSelector((state) => state.auth.loading);
-  const error = useAppSelector((state) => state.auth.error);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 

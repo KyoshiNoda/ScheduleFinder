@@ -1,4 +1,4 @@
-import { Label, TextInput, Button, Modal } from 'flowbite-react';
+import { Label, TextInput } from 'flowbite-react';
 import UserContainer from '../components/findUsers/UserContainer';
 import Toggle from '../components/Toggle';
 import { useState } from 'react';
@@ -66,8 +66,6 @@ const FindUser = () => {
               required={true}
             />
           </div>
-
-          
         </form>
       </div>
       <UserContainer
