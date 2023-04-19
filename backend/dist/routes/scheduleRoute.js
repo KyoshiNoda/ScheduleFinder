@@ -15,5 +15,6 @@ router.delete('/:id', AuthController_1.default.authenticateToken, ScheduleContro
 router.delete('/:id/timeSlot', AuthController_1.default.authenticateToken, ScheduleController_1.default.deleteTimeSlot);
 router.get('/', ScheduleController_1.default.getAllSchedules);
 router.get('/:id', ScheduleController_1.default.getScheduleById);
+router.get('/:id/user', ScheduleController_1.default.getScheduleByUserId);
 router.post('/', ScheduleController_1.default.createSchedule);
 exports.default = router;

@@ -196,11 +196,24 @@ class ScheduleController {
       .catch((err) => console.log(err));
   }
 
-  // GET single schedule by id
+  // GET single schedule by schedule id
   public static async getScheduleById(req: Request, res: Response) {
     const id = req.params.id;
-    const user = await Schedule.findById(id);
-    res.json(user);
+    const schedule = await Schedule.findById(id);
+    res.json(schedule);
+  }
+
+  // GET single schedule by user id
+  public static async getScheduleByUserId(req: Request, res: Response) {
+    // This is the user's id
+    const id = req.params.id;
+
+    try {
+      const schedule = await Schedule.find({ user_id: id });
+      res.send(schedule);
+    } catch (error) {
+      res.send({ message: 'Error retrieving schedule' });
+    }
   }
 
   // POST new schedule

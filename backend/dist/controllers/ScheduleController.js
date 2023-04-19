@@ -212,12 +212,26 @@ class ScheduleController {
                 .catch((err) => console.log(err));
         });
     }
-    // GET single schedule by id
+    // GET single schedule by schedule id
     static getScheduleById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            const user = yield scheduleModel_1.default.findById(id);
-            res.json(user);
+            const schedule = yield scheduleModel_1.default.findById(id);
+            res.json(schedule);
+        });
+    }
+    // GET single schedule by user id
+    static getScheduleByUserId(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // This is the user's id
+            const id = req.params.id;
+            try {
+                const schedule = yield scheduleModel_1.default.find({ user_id: id });
+                res.send(schedule);
+            }
+            catch (error) {
+                res.send({ message: 'Error retrieving schedule' });
+            }
         });
     }
     // POST new schedule

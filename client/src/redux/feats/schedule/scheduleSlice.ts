@@ -15,7 +15,7 @@ export const schedulesSlice = createSlice({
   reducers: {
     loadSchedules: (state, action: PayloadAction<ScheduleType[]>) => {
       state.value = action.payload;
-    },
+    }
   },
 });
 

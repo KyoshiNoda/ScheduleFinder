@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Account from './pages/Account';
 import Schedule from './pages/Schedule';
 import FindUser from './pages/FindUser';
+import CompareSchedule from './pages/CompareSchedule';
 import PageLayout from './components/PageLayout';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="account" element={<Account />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="findUsers" element={<FindUser />} />
+          <Route path="compareSchedule/:userId" element={<CompareSchedule />} />
         </Route>
       </Routes>
     </>

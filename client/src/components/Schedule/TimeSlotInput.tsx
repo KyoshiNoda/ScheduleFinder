@@ -41,6 +41,7 @@ function TimeSlotInput({ setTimeSlots }: Props) {
   const endTimeRef = useRef(document.createElement('input'));
   const locationRef = useRef(document.createElement('input'));
   const professorRef = useRef(document.createElement('input'));
+
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
 
   const [createTimeSlotMutation, { isError, isLoading }] =
