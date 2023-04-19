@@ -14,7 +14,6 @@ function Schedule({}: Props) {
   
   const [schedule, setSchedule] = useState<ScheduleType>();
   const [timeSlots, setTimeSlots] = useState<TimeSlotType[]>([]);
-
   useEffect(() => {
     if (!isFetching && data) {
       setSchedule(data[0]);

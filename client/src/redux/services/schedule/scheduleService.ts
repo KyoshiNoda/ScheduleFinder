@@ -35,8 +35,21 @@ export const scheduleAPI = createApi({
         body: timeSlot,
       }),
     }),
+    updateTimeSlot: builder.mutation<
+      ScheduleType,
+      { scheduleId: string; timeSlot: TimeSlotType }
+    >({
+      query: ({ scheduleId, timeSlot }) => ({
+        url: `api/schedules/${scheduleId}/timeSlot`,
+        method: 'PATCH',
+        body: timeSlot,
+      }),
+    }),
   }),
 });
 
-export const { useCreateTimeSlotMutation, useDeleteTimeSlotMutation } =
-  scheduleAPI;
+export const {
+  useCreateTimeSlotMutation,
+  useDeleteTimeSlotMutation,
+  useUpdateTimeSlotMutation,
+} = scheduleAPI;

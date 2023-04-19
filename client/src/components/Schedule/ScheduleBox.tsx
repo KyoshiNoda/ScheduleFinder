@@ -104,6 +104,7 @@ function ScheduleBox({ timeSlots }: Props) {
                     location={timeSlot.location}
                     professor={timeSlot.professor}
                     color={timeSlot.color}
+                    days = {timeSlot.days}
                   />
                 ))}
           </div>
@@ -129,6 +130,7 @@ function ScheduleBox({ timeSlots }: Props) {
                     location={timeSlot.location}
                     professor={timeSlot.professor}
                     color={timeSlot.color}
+                    days = {timeSlot.days}
                   />
                 ))}
           </div>
@@ -154,6 +156,7 @@ function ScheduleBox({ timeSlots }: Props) {
                     location={timeSlot.location}
                     professor={timeSlot.professor}
                     color={timeSlot.color}
+                    days = {timeSlot.days}
                   />
                 ))}
           </div>
@@ -179,6 +182,7 @@ function ScheduleBox({ timeSlots }: Props) {
                     location={timeSlot.location}
                     professor={timeSlot.professor}
                     color={timeSlot.color}
+                    days = {timeSlot.days}
                   />
                 ))}
           </div>
@@ -204,6 +208,7 @@ function ScheduleBox({ timeSlots }: Props) {
                     location={timeSlot.location}
                     professor={timeSlot.professor}
                     color={timeSlot.color}
+                    days = {timeSlot.days}
                   />
                 ))}
           </div>

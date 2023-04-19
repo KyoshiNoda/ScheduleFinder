@@ -1,11 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { AiFillEdit } from 'react-icons/ai';
-import { Modal, Label, Button, Checkbox, TextInput } from 'flowbite-react';
+import { Modal } from 'flowbite-react';
 import { colors } from './TimeSlotInput';
 import { ToggleSwitch } from 'flowbite-react';
-import DaysChecked from './DaysChecked';
-import { DaysChecked as DaysCheckedType } from '../../types';
-import { useDeleteTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
+import {
+  DaysChecked as DaysCheckedType,
+  TimeSlot as TimeSlotType,
+} from '../../types';
+import {
+  useDeleteTimeSlotMutation,
+  useUpdateTimeSlotMutation,
+} from '../../redux/services/schedule/scheduleService';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 
 type Props = {
@@ -18,6 +23,7 @@ type Props = {
   location?: string | null;
   professor?: string | null;
   color: string;
+  days: DaysCheckedType;
 };
 
 function TimeSlot(props: Props) {
@@ -31,33 +37,97 @@ function TimeSlot(props: Props) {
   }
 
   const [deleteTimeSlotMutation] = useDeleteTimeSlotMutation();
-
-  let days: DaysCheckedType | undefined;
-
-  if (data && data[0] && data[0].timeSlot) {
-    const matchingTimeSlot = data[0].timeSlot.find(
-      (element: any) => element._id === props.id
-    );
-
-    if (matchingTimeSlot) {
-      days = matchingTimeSlot.days;
-    }
-  }
-
-  const testHandler = (days: DaysCheckedType) => {
-    // console.log(days);
-  };
+  const [updateTimeSlotMutation] = useUpdateTimeSlotMutation();
   const [isHovering, setIsHovering] = useState<boolean>(false);
   const [isTimeSlotClicked, setIsTimeSlotClicked] = useState<boolean>(false);
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
   const [editMode, setEditMode] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(props.title);
+  const [startTime, setStartTime] = useState<string>(props.startTime);
+  const [endTime, setEndTime] = useState<string>(props.endTime);
+  const [days, setDays] = useState<DaysCheckedType>(props.days);
+  const mondayRef = useRef(document.createElement('input'));
+  const tuesdayRef = useRef(document.createElement('input'));
+  const wednesdayRef = useRef(document.createElement('input'));
+  const thursdayRef = useRef(document.createElement('input'));
+  const fridayRef = useRef(document.createElement('input'));
+
+  const [location, setLocation] = useState<string | null>(
+    props.location ?? null
+  );
+  const [professor, setProfessor] = useState<string | null>(
+    props.professor ?? null
+  );
+  useEffect(() => {
+    setTimeSlotColor(props.color);
+  }, []);
+
+  const saveHandler = async () => {
+    const updatedTimeSlot: TimeSlotType = {
+      _id: props.id!,
+      title: title,
+      startTime: startTime,
+      endTime: endTime,
+      color: timeSlotColor,
+      professor: professor,
+      location: location,
+      days: props.days,
+    };
+    if (
+      !(
+        mondayRef.current.checked ||
+        tuesdayRef.current.checked ||
+        wednesdayRef.current.checked ||
+        thursdayRef.current.checked ||
+        fridayRef.current.checked
+      )
+    ) {
+      try {
+        await updateTimeSlotMutation({
+          scheduleId: scheduleID,
+          timeSlot: updatedTimeSlot,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      const daySelection = {
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+        sunday: false,
+      };
+
+      if (mondayRef.current.checked) daySelection.monday = true;
+      if (tuesdayRef.current.checked) daySelection.tuesday = true;
+      if (wednesdayRef.current.checked) daySelection.wednesday = true;
+      if (thursdayRef.current.checked) daySelection.thursday = true;
+      if (fridayRef.current.checked) daySelection.friday = true;
+
+      updatedTimeSlot.days = daySelection;
+      updatedTimeSlot.color = timeSlotColor;
+      try {
+        await updateTimeSlotMutation({
+          scheduleId: scheduleID,
+          timeSlot: updatedTimeSlot,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    setEditMode(false);
+    setIsTimeSlotClicked(false);
+    window.location.reload();
+  };
 
   const deleteHandler = async () => {
     setEditMode(false);
     setIsTimeSlotClicked(false);
     try {
-      const result = await deleteTimeSlotMutation({
+      await deleteTimeSlotMutation({
         scheduleId: scheduleID,
         timeSlot: { _id: props.id! },
       });
@@ -66,10 +136,6 @@ function TimeSlot(props: Props) {
       console.log(error); // handle errors here
     }
     window.location.reload();
-  };
-  const saveHandler = () => {
-    setEditMode(false);
-    setIsTimeSlotClicked(false);
   };
 
   return (
@@ -101,6 +167,7 @@ function TimeSlot(props: Props) {
                     id="title"
                     type="text"
                     placeholder={props.title}
+                    onBlur={(event) => setTitle(event.target.value)}
                     className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                   />
                 </div>
@@ -120,6 +187,7 @@ function TimeSlot(props: Props) {
                     id="startTime"
                     type="text"
                     placeholder={props.startTime}
+                    onBlur={(event) => setStartTime(event.target.value)}
                     className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                   />
                 </div>
@@ -138,6 +206,7 @@ function TimeSlot(props: Props) {
                     id="endTime"
                     type="text"
                     placeholder={props.endTime}
+                    onBlur={(event) => setEndTime(event.target.value)}
                     className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                   />
                 </div>
@@ -146,16 +215,104 @@ function TimeSlot(props: Props) {
               )}
             </div>
 
-            <div className="flex justify-center gap-3 text-2xl dark:text-white">
-              <div>Days:</div>
-              <div>{days?.monday && <>M</>}</div>
-              <div>{days?.tuesday && <>T</>}</div>
-              <div>{days?.wednesday && <>W</>}</div>
-              <div>{days?.thursday && <>TH</>}</div>
-              <div>{days?.friday && <>F</>}</div>
-            </div>
-
-            {editMode ? <DaysChecked setDays={testHandler} /> : <></>}
+            {editMode ? (
+              <ul className="w-full items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex">
+                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
+                  <div className="flex items-center pl-3">
+                    <input
+                      ref={mondayRef}
+                      id="monday"
+                      type="checkbox"
+                      value="monday"
+                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
+                    />
+                    <label
+                      htmlFor="monday"
+                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      Mon
+                    </label>
+                  </div>
+                </li>
+                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
+                  <div className="flex items-center pl-3">
+                    <input
+                      ref={tuesdayRef}
+                      id="tuesday"
+                      type="checkbox"
+                      value="tuesday"
+                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
+                    />
+                    <label
+                      htmlFor="tuesday"
+                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      Tues
+                    </label>
+                  </div>
+                </li>
+                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
+                  <div className="flex items-center pl-3">
+                    <input
+                      ref={wednesdayRef}
+                      id="wednesday"
+                      type="checkbox"
+                      value="wednesday"
+                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
+                    />
+                    <label
+                      htmlFor="wednesday"
+                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      Wed
+                    </label>
+                  </div>
+                </li>
+                <li className="w-full dark:border-gray-600">
+                  <div className="flex items-center pl-3">
+                    <input
+                      ref={thursdayRef}
+                      id="thursday"
+                      type="checkbox"
+                      value="thursday"
+                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
+                    />
+                    <label
+                      htmlFor="thursday"
+                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      Thurs
+                    </label>
+                  </div>
+                </li>
+                <li className="w-full dark:border-gray-600">
+                  <div className="flex items-center pl-3">
+                    <input
+                      ref={fridayRef}
+                      id="friday"
+                      type="checkbox"
+                      value="friday"
+                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
+                    />
+                    <label
+                      htmlFor="friday"
+                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      Fri
+                    </label>
+                  </div>
+                </li>
+              </ul>
+            ) : (
+              <div className="flex justify-center gap-3 text-2xl dark:text-white">
+                <div>Days:</div>
+                <div>{days?.monday && <>M</>}</div>
+                <div>{days?.tuesday && <>T</>}</div>
+                <div>{days?.wednesday && <>W</>}</div>
+                <div>{days?.thursday && <>TH</>}</div>
+                <div>{days?.friday && <>F</>}</div>
+              </div>
+            )}
             <div className="flex justify-evenly">
               <div>
                 {editMode ? (
@@ -166,6 +323,7 @@ function TimeSlot(props: Props) {
                     <input
                       id="location"
                       type="text"
+                      onBlur={(event) => setLocation(event.target.value)}
                       placeholder={props.location!}
                       className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                     />
@@ -189,6 +347,7 @@ function TimeSlot(props: Props) {
                       id="professor"
                       type="text"
                       placeholder={props.professor!}
+                      onBlur={(event) => setProfessor(event.target.value)}
                       className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                     />
                   </>
@@ -213,7 +372,11 @@ function TimeSlot(props: Props) {
                           ? 'border-blue-700'
                           : 'border-none'
                       }`}
-                      onClick={() => setTimeSlotColor(color)}
+                      onClick={() => {
+                        setTimeSlotColor((prevColor) =>
+                          prevColor === color ? '' : color
+                        );
+                      }}
                     />
                   ))}
               </div>
