@@ -17,8 +17,8 @@ export type DaysChecked = {
   wednesday: boolean;
   thursday: boolean;
   friday: boolean;
-  saturday: boolean;
-  sunday: boolean;
+  saturday?: boolean;
+  sunday?: boolean;
 };
 
 export type TimeSlot = {

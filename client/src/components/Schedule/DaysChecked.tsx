@@ -1,21 +1,60 @@
-import { useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { DaysChecked as DaysCheckedType } from '../../types';
 type Props = {
   setDays: (days: DaysCheckedType) => void;
 };
 
 function DaysChecked({ setDays }: Props) {
-  const mondayRef = useRef(document.createElement('input'));
-  const tuesdayRef = useRef(document.createElement('input'));
-  const wednesdayRef = useRef(document.createElement('input'));
-  const thursdayRef = useRef(document.createElement('input'));
-  const fridayRef = useRef(document.createElement('input'));
+  const [mondayChecked, setMondayChecked] = useState(false);
+  const [tuesdayChecked, setTuesdayChecked] = useState(false);
+  const [wednesdayChecked, setWednesdayChecked] = useState(false);
+  const [thursdayChecked, setThursdayChecked] = useState(false);
+  const [fridayChecked, setFridayChecked] = useState(false);
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = event.target;
+    switch (name) {
+      case 'monday':
+        setMondayChecked(checked);
+        break;
+      case 'tuesday':
+        setTuesdayChecked(checked);
+        break;
+      case 'wednesday':
+        setWednesdayChecked(checked);
+        break;
+      case 'thursday':
+        setThursdayChecked(checked);
+        break;
+      case 'friday':
+        setFridayChecked(checked);
+        break;
+    }
+  };
+
+  useEffect(() => {
+    const result: DaysCheckedType = {
+      monday: mondayChecked,
+      tuesday: tuesdayChecked,
+      wednesday: wednesdayChecked,
+      thursday: thursdayChecked,
+      friday: fridayChecked,
+    };
+    setDays(result);
+  }, [
+    mondayChecked,
+    tuesdayChecked,
+    wednesdayChecked,
+    thursdayChecked,
+    fridayChecked,
+  ]);
+
   return (
     <ul className="w-full items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex">
       <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
         <div className="flex items-center pl-3">
           <input
-            ref={mondayRef}
+            onChange={handleCheckboxChange}
             id="monday"
             type="checkbox"
             value="monday"
@@ -32,7 +71,7 @@ function DaysChecked({ setDays }: Props) {
       <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
         <div className="flex items-center pl-3">
           <input
-            ref={tuesdayRef}
+            onChange={handleCheckboxChange}
             id="tuesday"
             type="checkbox"
             value="tuesday"
@@ -49,7 +88,7 @@ function DaysChecked({ setDays }: Props) {
       <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
         <div className="flex items-center pl-3">
           <input
-            ref={wednesdayRef}
+            onChange={handleCheckboxChange}
             id="wednesday"
             type="checkbox"
             value="wednesday"
@@ -66,7 +105,7 @@ function DaysChecked({ setDays }: Props) {
       <li className="w-full dark:border-gray-600">
         <div className="flex items-center pl-3">
           <input
-            ref={thursdayRef}
+            onChange={handleCheckboxChange}
             id="thursday"
             type="checkbox"
             value="thursday"
@@ -83,7 +122,7 @@ function DaysChecked({ setDays }: Props) {
       <li className="w-full dark:border-gray-600">
         <div className="flex items-center pl-3">
           <input
-            ref={fridayRef}
+            onChange={handleCheckboxChange}
             id="friday"
             type="checkbox"
             value="friday"

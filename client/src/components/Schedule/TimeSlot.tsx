@@ -23,6 +23,7 @@ type Props = {
   location?: string | null;
   professor?: string | null;
   color: string;
+  days: DaysCheckedType;
 };
 
 function TimeSlot(props: Props) {
@@ -32,38 +33,25 @@ function TimeSlot(props: Props) {
   let scheduleID: string = data[0]._id;
   const [deleteTimeSlotMutation] = useDeleteTimeSlotMutation();
   const [updateTimeSlotMutation] = useUpdateTimeSlotMutation();
-
-  let days: DaysCheckedType | undefined;
-  console.log(days);
-
-  if (data && data[0] && data[0].timeSlot) {
-    const matchingTimeSlot = data[0].timeSlot.find(
-      (element: any) => element._id === props.id
-    );
-
-    if (matchingTimeSlot) {
-      days = matchingTimeSlot.days;
-    }
-  }
-
-  const testHandler = (days: DaysCheckedType) => {
-    // console.log(days);
-  };
   const [isHovering, setIsHovering] = useState<boolean>(false);
   const [isTimeSlotClicked, setIsTimeSlotClicked] = useState<boolean>(false);
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
   const [editMode, setEditMode] = useState<boolean>(false);
-
   const [title, setTitle] = useState<string>(props.title);
   const [color, setColor] = useState<string>(props.color);
   const [startTime, setStartTime] = useState<string>(props.startTime);
   const [endTime, setEndTime] = useState<string>(props.endTime);
+  const [days, setDays] = useState<DaysCheckedType>(props.days);
   const [location, setLocation] = useState<string | null>(
     props.location ?? null
   );
   const [professor, setProfessor] = useState<string | null>(
     props.professor ?? null
   );
+
+  const testHandler = (days: DaysCheckedType) => {
+    setDays(days);
+  };
 
   const deleteHandler = async () => {
     setEditMode(false);
@@ -83,7 +71,7 @@ function TimeSlot(props: Props) {
     setEditMode(false);
     setIsTimeSlotClicked(false);
     let updatedTimeSlot: TimeSlotType = {
-      _id : props.id!,
+      _id: props.id!,
       title: title,
       startTime: startTime,
       endTime: endTime,
@@ -92,15 +80,17 @@ function TimeSlot(props: Props) {
       location: location,
       days: days!,
     };
-    try {
-      const result = await updateTimeSlotMutation({
-        scheduleId: scheduleID,
-        timeSlot: updatedTimeSlot
-      });
-    } catch (error) {
-      console.log(error);
-    }
-    window.location.reload();
+    console.log(updatedTimeSlot);
+
+    // try {
+    //   const result = await updateTimeSlotMutation({
+    //     scheduleId: scheduleID,
+    //     timeSlot: updatedTimeSlot,
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    // window.location.reload()
   };
 
   return (
@@ -132,8 +122,7 @@ function TimeSlot(props: Props) {
                     id="title"
                     type="text"
                     placeholder={props.title}
-                    value = {title}
-                    onChange={(event) => setTitle(event.target.value)}
+                    onBlur={(event) => setTitle(event.target.value)}
                     className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                   />
                 </div>
@@ -153,7 +142,7 @@ function TimeSlot(props: Props) {
                     id="startTime"
                     type="text"
                     placeholder={props.startTime}
-                    onChange={(event) => setStartTime(event.target.value)}
+                    onBlur={(event) => setStartTime(event.target.value)}
                     className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                   />
                 </div>
@@ -172,7 +161,7 @@ function TimeSlot(props: Props) {
                     id="endTime"
                     type="text"
                     placeholder={props.endTime}
-                    onChange={(event) => setEndTime(event.target.value)}
+                    onBlur={(event) => setEndTime(event.target.value)}
                     className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                   />
                 </div>
@@ -203,7 +192,7 @@ function TimeSlot(props: Props) {
                     <input
                       id="location"
                       type="text"
-                      onChange={(event) => setLocation(event.target.value)}
+                      onBlur={(event) => setLocation(event.target.value)}
                       placeholder={props.location!}
                       className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                     />
@@ -227,7 +216,7 @@ function TimeSlot(props: Props) {
                       id="professor"
                       type="text"
                       placeholder={props.professor!}
-                      onChange={(event) => setProfessor(event.target.value)}
+                      onBlur={(event) => setProfessor(event.target.value)}
                       className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                     />
                   </>
@@ -286,8 +275,12 @@ function TimeSlot(props: Props) {
             <AiFillEdit size={'96'} />
           ) : (
             <>
-              <h2 className="text-center font-bold">{props.title}</h2>
-              <span>{`${props.startTime} - ${props.endTime}`}</span>
+              {parseInt(props.height) > 55 && (
+                <div>
+                  <h2 className="text-center font-bold">{props.title}</h2>
+                  <span>{`${props.startTime} - ${props.endTime}`}</span>
+                </div>
+              )}
             </>
           )}
         </>
