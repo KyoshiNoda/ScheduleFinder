@@ -1,7 +1,7 @@
 import { TimeSlot as TimeSlotType } from '../../types';
 import TimeSlot from './TimeSlot';
-type Props = {
-  timeSlots: TimeSlot[] | undefined;
+type Props = { 
+  timeSlots: TimeSlotType[] | undefined;
 };
 
 function ScheduleBox({ timeSlots }: Props) {
