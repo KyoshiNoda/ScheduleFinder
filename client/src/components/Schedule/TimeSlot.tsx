@@ -7,6 +7,7 @@ import DaysChecked from './DaysChecked';
 import { DaysChecked as DaysCheckedType } from '../../types';
 import { useDeleteTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
+
 type Props = {
   id?: undefined | string;
   top: string;
@@ -23,7 +24,12 @@ function TimeSlot(props: Props) {
   const { data, isFetching, refetch } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
-  let scheduleID: string = data[0]._id;
+
+  let scheduleID: string;
+  if (!isFetching) {
+    scheduleID = data[0]._id;
+  }
+
   const [deleteTimeSlotMutation] = useDeleteTimeSlotMutation();
 
   let days: DaysCheckedType | undefined;
@@ -237,7 +243,7 @@ function TimeSlot(props: Props) {
         onMouseLeave={() => setIsHovering(false)}
       >
         <>
-          {isHovering ? (
+          {/* {isHovering ? (
             <AiFillEdit size={'96'} />
           ) : (
               {parseInt(props.height) > 55 && (
@@ -246,6 +252,13 @@ function TimeSlot(props: Props) {
                   <span>{`${props.startTime} - ${props.endTime}`}</span>
                 </div>
               )}
+          )} */}
+          {isHovering && <AiFillEdit size={'96'} />}
+          {parseInt(props.height) > 55 && (
+            <div>
+              <h2 className="text-center font-bold">{props.title}</h2>
+              <span>{`${props.startTime} - ${props.endTime}`}</span>
+            </div>
           )}
         </>
       </div>
