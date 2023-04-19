@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, ChangeEvent } from 'react';
 import { AiFillEdit } from 'react-icons/ai';
 import { Modal, Label, Button, Checkbox, TextInput } from 'flowbite-react';
 import { colors } from './TimeSlotInput';
@@ -38,10 +38,16 @@ function TimeSlot(props: Props) {
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
   const [editMode, setEditMode] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(props.title);
-  const [color, setColor] = useState<string>(props.color);
   const [startTime, setStartTime] = useState<string>(props.startTime);
   const [endTime, setEndTime] = useState<string>(props.endTime);
-  const [days, setDays] = useState<DaysCheckedType>(props.days);
+  const [days, setDays] = useState<DaysCheckedType>({
+    monday: false,
+    tuesday: false,
+    wednesday: false,
+    thursday: false,
+    friday: false,
+  });
+
   const [location, setLocation] = useState<string | null>(
     props.location ?? null
   );
@@ -49,8 +55,38 @@ function TimeSlot(props: Props) {
     props.professor ?? null
   );
 
-  const testHandler = (days: DaysCheckedType) => {
-    setDays(days);
+  const handleCheckboxChange = (e: any) => {
+    const { id, checked } = e.target;
+    setDays((prevDays) => ({
+      ...prevDays,
+      [id]: checked,
+    }));
+  };
+
+  useEffect(() => {
+    setDays({
+      monday: props.days.monday ?? false,
+      tuesday: props.days.tuesday ?? false,
+      wednesday: props.days.wednesday ?? false,
+      thursday: props.days.thursday ?? false,
+      friday: props.days.friday ?? false,
+    });
+  }, [props.days]);
+
+  const saveHandler = () => {
+    setEditMode(false);
+    setIsTimeSlotClicked(false);
+    const updatedTimeSlot: TimeSlotType = {
+      _id: props.id!,
+      title,
+      startTime,
+      endTime,
+      color: timeSlotColor,
+      professor,
+      location,
+      days,
+    };
+    console.log(updatedTimeSlot);
   };
 
   const deleteHandler = async () => {
@@ -66,31 +102,6 @@ function TimeSlot(props: Props) {
       console.log(error); // handle errors here
     }
     window.location.reload();
-  };
-  const saveHandler = async () => {
-    setEditMode(false);
-    setIsTimeSlotClicked(false);
-    let updatedTimeSlot: TimeSlotType = {
-      _id: props.id!,
-      title: title,
-      startTime: startTime,
-      endTime: endTime,
-      color: color,
-      professor: professor,
-      location: location,
-      days: days!,
-    };
-    console.log(updatedTimeSlot);
-
-    // try {
-    //   const result = await updateTimeSlotMutation({
-    //     scheduleId: scheduleID,
-    //     timeSlot: updatedTimeSlot,
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    // window.location.reload()
   };
 
   return (
@@ -171,7 +182,93 @@ function TimeSlot(props: Props) {
             </div>
 
             {editMode ? (
-              <DaysChecked setDays={testHandler} />
+              <ul className="w-full items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex">
+                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
+                  <div className="flex items-center pl-3">
+                    <input
+                      onChange={handleCheckboxChange}
+                      id="monday"
+                      type="checkbox"
+                      value="monday"
+                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
+                    />
+                    <label
+                      htmlFor="monday"
+                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      Mon
+                    </label>
+                  </div>
+                </li>
+                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
+                  <div className="flex items-center pl-3">
+                    <input
+                      onChange={handleCheckboxChange}
+                      id="tuesday"
+                      type="checkbox"
+                      value="tuesday"
+                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
+                    />
+                    <label
+                      htmlFor="tuesday"
+                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      Tues
+                    </label>
+                  </div>
+                </li>
+                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
+                  <div className="flex items-center pl-3">
+                    <input
+                      onChange={handleCheckboxChange}
+                      id="wednesday"
+                      type="checkbox"
+                      value="wednesday"
+                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
+                    />
+                    <label
+                      htmlFor="wednesday"
+                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      Wed
+                    </label>
+                  </div>
+                </li>
+                <li className="w-full dark:border-gray-600">
+                  <div className="flex items-center pl-3">
+                    <input
+                      onChange={handleCheckboxChange}
+                      id="thursday"
+                      type="checkbox"
+                      value="thursday"
+                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
+                    />
+                    <label
+                      htmlFor="thursday"
+                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      Thurs
+                    </label>
+                  </div>
+                </li>
+                <li className="w-full dark:border-gray-600">
+                  <div className="flex items-center pl-3">
+                    <input
+                      onChange={handleCheckboxChange}
+                      id="friday"
+                      type="checkbox"
+                      value="friday"
+                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
+                    />
+                    <label
+                      htmlFor="friday"
+                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      Fri
+                    </label>
+                  </div>
+                </li>
+              </ul>
             ) : (
               <div className="flex justify-center gap-3 text-2xl dark:text-white">
                 <div>Days:</div>
