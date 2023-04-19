@@ -243,16 +243,6 @@ function TimeSlot(props: Props) {
         onMouseLeave={() => setIsHovering(false)}
       >
         <>
-          {/* {isHovering ? (
-            <AiFillEdit size={'96'} />
-          ) : (
-              {parseInt(props.height) > 55 && (
-                <div>
-                  <h2 className="text-center font-bold">{props.title}</h2>
-                  <span>{`${props.startTime} - ${props.endTime}`}</span>
-                </div>
-              )}
-          )} */}
           {isHovering && <AiFillEdit size={'96'} />}
           {parseInt(props.height) > 55 && (
             <div>
