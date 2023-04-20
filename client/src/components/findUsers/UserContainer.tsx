@@ -33,11 +33,13 @@ const UserContainer = ({
         .includes(nameSearch.toLowerCase().replace(/[^a-zA-Z]+/g, ''))
     );
 
-    const filteredByMajor = filteredByName.filter((user) =>
-      user.major
-        .toLowerCase()
-        .replace(/[^a-zA-Z]+/g, '')
-        .includes(majorSearch.toLowerCase().replace(/[^a-zA-Z]+/g, ''))
+    const filteredByMajor = filteredByName.filter(
+      (user) =>
+        user.major &&
+        user.major
+          .toLowerCase()
+          .replace(/[^a-zA-Z]+/g, '')
+          .includes(majorSearch.toLowerCase().replace(/[^a-zA-Z]+/g, ''))
     );
 
     return filteredByMajor;

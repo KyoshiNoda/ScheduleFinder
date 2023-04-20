@@ -9,11 +9,12 @@ const userSchema = new mongoose_1.default.Schema({
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    birthday: { type: Date, required: true },
     age: Number,
     photoURL: String,
     gender: String,
     school: String,
-    major: String
+    major: String,
 });
 const User = mongoose_1.default.model('User', userSchema);
 exports.default = User;

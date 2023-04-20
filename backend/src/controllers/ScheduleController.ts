@@ -220,7 +220,7 @@ class ScheduleController {
   public static async createSchedule(req: Request, res: Response) {
     const schedule = new Schedule({
       user_id: req.body.user_id,
-      visibility: req.body.visibility,
+      visibility: 'public',
       timeSlot: [],
     });
     schedule

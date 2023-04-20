@@ -7,7 +7,6 @@ const FindUser = () => {
   const [nameSearch, setNameSearch] = useState<string>('');
   const [schoolSearch, setSchoolSearch] = useState<string>('');
   const [majorSearch, setMajorSearch] = useState<string>('');
-  const [visible, setVisible] = useState<boolean>(false);
 
   return (
     <div className="flex min-h-full flex-col items-center space-y-10 bg-slate-400 p-6 dark:bg-slate-900">
