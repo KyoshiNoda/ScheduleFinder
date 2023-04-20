@@ -1,7 +1,9 @@
 import { useRef } from 'react';
+import { RegisterUser as RegisterUserType } from '../../types';
 type Props = {};
 
 function SignUpForm({}: Props) {
+  const form = useRef(document.createElement('form'));
   const firstName = useRef(document.createElement('input'));
   const lastName = useRef(document.createElement('input'));
   const email = useRef(document.createElement('input'));
@@ -9,8 +11,24 @@ function SignUpForm({}: Props) {
   const confirmPassword = useRef(document.createElement('input'));
   const school = useRef(document.createElement('input'));
   const birthday = useRef(document.createElement('input'));
+
+  const formHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const birthDay = new Date(birthday.current.value);
+    let newUser: RegisterUserType = {
+      firstName: firstName.current.value,
+      lastName: lastName.current.value,
+      email: email.current.value,
+      password: password.current.value,
+      school: school.current.value,
+      birthday: birthDay,
+    };
+    
+
+    form.current.reset();
+  };
   return (
-    <form>
+    <form onSubmit={formHandler}>
       <div className="flex flex-col">
         <div className="mb-6 grid gap-6 md:grid-cols-2">
           <div>
@@ -37,7 +55,7 @@ function SignUpForm({}: Props) {
               Last name
             </label>
             <input
-              ref = {lastName}
+              ref={lastName}
               type="text"
               id="last_name"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -53,7 +71,7 @@ function SignUpForm({}: Props) {
               Email
             </label>
             <input
-              ref = {email}
+              ref={email}
               type="text"
               id="email"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -73,7 +91,7 @@ function SignUpForm({}: Props) {
               id="phone"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               placeholder="123-45-678"
-              pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
+              // pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
               required
             />
           </div>
@@ -85,7 +103,7 @@ function SignUpForm({}: Props) {
               Password
             </label>
             <input
-              ref = {password}
+              ref={password}
               type="password"
               id="password"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -101,7 +119,7 @@ function SignUpForm({}: Props) {
               Confirm password
             </label>
             <input
-              ref = {confirmPassword}
+              ref={confirmPassword}
               type="password"
               id="confirm_password"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -117,6 +135,7 @@ function SignUpForm({}: Props) {
               School
             </label>
             <input
+              ref={school}
               type="text"
               id="school"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -132,6 +151,7 @@ function SignUpForm({}: Props) {
               Date of Birth
             </label>
             <input
+              ref={birthday}
               type="date"
               id="birthdate"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -142,7 +162,7 @@ function SignUpForm({}: Props) {
         </div>
       </div>
       <button
-        type="button"
+        type="submit"
         className="w-full rounded-full bg-blue-400 px-8 py-3 text-lg font-semibold text-white dark:bg-slate-300 dark:text-black"
       >
         Submit

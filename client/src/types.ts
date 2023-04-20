@@ -1,3 +1,14 @@
+import dayjs from 'dayjs';
+
+export type RegisterUser = {
+  _id?: string | undefined;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  birthday: Date,
+  school: string;
+};
 export type User = {
   _id: string;
   firstName: string;

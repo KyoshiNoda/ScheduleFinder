@@ -29,6 +29,42 @@ class AuthController {
     );
     res.send({ token: accessToken, user: user });
   }
+  public static async registerUser(req: Request, res: Response) {
+    const { firstName, lastName, email, password } = req.body;
+    if (!firstName || !lastName || !email || !password) {
+      return res.status(400).send({ error: 'All fields are required.' });
+    }
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).send({ error: 'Email already in use.' });
+    }
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    const user = new User({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      age: req.body.age,
+      birthday: req.body.birthday,
+      photoURL: null,
+      email: req.body.email,
+      password: hashedPassword,
+      gender: null,
+      school: req.body.school,
+      major: req.body.major,
+    });
+
+    try {
+      const savedUser = await user.save();
+      const accessToken = jwt.sign(
+        { data: savedUser },
+        `${process.env.ACCESS_TOKEN_SECRET}`
+      );
+      res.send({ token: accessToken, user: savedUser });
+    } catch (err) {
+      return res.status(500).send({ error: 'Unable to register user.' });
+    }
+  }
 
   public static async authenticateToken(
     req: any,
