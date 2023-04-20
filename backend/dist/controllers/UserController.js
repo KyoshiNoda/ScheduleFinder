@@ -46,11 +46,6 @@ class UserController {
                 .catch((err) => console.log(err));
         });
     }
-    // POST new user
-    static createUser(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-        });
-    }
     // DELETE user by id
     static deleteUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

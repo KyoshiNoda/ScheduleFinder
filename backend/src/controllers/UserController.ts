@@ -30,10 +30,6 @@ class UserController {
       .catch((err) => console.log(err));
   }
 
-  // POST new user
-  public static async createUser(req: Request, res: Response): Promise<any> {
-
-  }
 
   // DELETE user by id
   public static async deleteUser(req: Request, res: Response) {
