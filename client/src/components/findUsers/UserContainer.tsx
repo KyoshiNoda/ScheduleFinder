@@ -97,6 +97,8 @@ const UserContainer = ({
               />
             ))}
       </div>
+      {/* This condition checks that the "load more" butotn will only be displayed if there 
+      are any users left to be rendered. */}
       {paginate < users.length && paginate < filterUsers(users).length && (
         <Button
           onClick={loadMore}
