@@ -23,6 +23,7 @@ function SignUpForm({}: Props) {
     const birthDay = new Date(birthday.current.value);
     if(password !== confirmPassword){
       alert('passwords dont match!');
+      return;
     }
     let newUser: RegisterUserType = {
       firstName: firstName.current.value,
