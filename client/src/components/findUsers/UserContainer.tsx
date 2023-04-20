@@ -25,9 +25,9 @@ const UserContainer = ({
   let loggedUserId: string = '';
   if (!isFetching) loggedUserId = data[0].user_id;
 
-  const [users, setUsers] = useState<UserType[]>();
+  const [users, setUsers] = useState<UserType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [paginate, setPaginate] = useState<number>(12);
+  const [paginate, setPaginate] = useState<number>(9);
 
   const filterUsers = (users: UserType[]) => {
     const filteredBySchool = users.filter((user) =>
@@ -55,7 +55,7 @@ const UserContainer = ({
   };
 
   const loadMore = () => {
-    setPaginate((prevState) => (prevState += 12));
+    setPaginate((prevState) => (prevState += 9));
   };
 
   useEffect(() => {
@@ -97,7 +97,7 @@ const UserContainer = ({
               />
             ))}
       </div>
-      {users && paginate < users.length && (
+      {paginate < users.length && paginate < filterUsers(users).length && (
         <Button
           onClick={loadMore}
           size="lg"
