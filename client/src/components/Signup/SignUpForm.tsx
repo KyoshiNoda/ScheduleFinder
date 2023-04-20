@@ -21,6 +21,9 @@ function SignUpForm({}: Props) {
   const formHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const birthDay = new Date(birthday.current.value);
+    if(password !== confirmPassword){
+      alert('passwords dont match!');
+    }
     let newUser: RegisterUserType = {
       firstName: firstName.current.value,
       lastName: lastName.current.value,
@@ -99,7 +102,6 @@ function SignUpForm({}: Props) {
               id="phone"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               placeholder="123-45-678"
-              // pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
               required
             />
           </div>
