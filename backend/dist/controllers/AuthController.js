@@ -59,7 +59,7 @@ class AuthController {
                 password: hashedPassword,
                 gender: null,
                 school: req.body.school,
-                major: req.body.major,
+                major: null
             });
             try {
                 const savedUser = yield user.save();

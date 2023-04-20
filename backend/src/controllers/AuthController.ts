@@ -29,6 +29,7 @@ class AuthController {
     );
     res.send({ token: accessToken, user: user });
   }
+
   public static async registerUser(req: Request, res: Response) {
     const { firstName, lastName, email, password } = req.body;
     if (!firstName || !lastName || !email || !password) {
@@ -51,7 +52,7 @@ class AuthController {
       password: hashedPassword,
       gender: null,
       school: req.body.school,
-      major: req.body.major,
+      major: null
     });
 
     try {
