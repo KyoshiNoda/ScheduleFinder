@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Spinner, Button } from 'flowbite-react';
 import User from './User';
 import { User as UserType } from '../../types';
+import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 
 type UserContainerProps = {
   schoolSearch: string;
@@ -14,6 +15,16 @@ const UserContainer = ({
   nameSearch,
   majorSearch,
 }: UserContainerProps) => {
+  const { data, isFetching } = useGetScheduleQuery('schedule', {
+    pollingInterval: 900000,
+  });
+
+  // This is used to get the ID of the user that is currently logged in and filter it out
+  // of the array of users that are displayed in the FindUser page because it doesn't make
+  // sense that the user sees themselves when they are trying to find a user.
+  let loggedUserId: string = '';
+  if (!isFetching) loggedUserId = data[0].user_id;
+
   const [users, setUsers] = useState<UserType[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [paginate, setPaginate] = useState<number>(12);
@@ -72,6 +83,7 @@ const UserContainer = ({
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {users &&
           filterUsers(users)
+            .filter((user) => user._id !== loggedUserId)
             .slice(0, paginate)
             .map((user) => (
               <User
