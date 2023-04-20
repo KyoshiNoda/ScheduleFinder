@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 
 type UserProps = {
   id: string;
-  photoURL: string;
+  photoURL: string | undefined;
   firstName: string;
   lastName: string;
   school: string;
-  major: string;
+  major: string | undefined;
 };
 
 const User = ({ id, photoURL, firstName, lastName, school, major }: UserProps) => {

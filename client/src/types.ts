@@ -4,23 +4,24 @@ export type RegisterUser = {
   lastName: string;
   email: string;
   password: string;
-  birthday: Date,
+  birthday: Date;
   school: string;
-  photoURL? : null,
-  major? : null,
-  gender? : null
+  photoURL?: null;
+  major?: null;
+  gender?: null;
 };
 export type User = {
   _id: string;
   firstName: string;
   lastName: string;
-  age: number;
-  photoURL: string;
+  birthday?: Date;
+  age?: number;
+  photoURL?: string | undefined;
   email: string;
   password: string;
-  gender: string;
+  gender?: string | undefined,
   school: string;
-  major: string;
+  major?: string | undefined,
 };
 
 export type DaysChecked = {
