@@ -1,20 +1,17 @@
 import {FormEventHandler, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../redux/feats/auth/authActions';
-import Axios from 'axios';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { useAppDispatch } from '../../redux/store';
 
 type Props = {};
 function LoginForm(props: Props) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const loading = useAppSelector((state) => state.auth.loading);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const formHandler: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
-    console.log(loading);
     await dispatch(loginUser({ email, password })).unwrap();
     navigate('/auth/schedule');
   };

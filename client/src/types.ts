@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 export type RegisterUser = {
   _id?: string | undefined;
   firstName: string;
@@ -8,6 +6,9 @@ export type RegisterUser = {
   password: string;
   birthday: Date,
   school: string;
+  photoURL? : null,
+  major? : null,
+  gender? : null
 };
 export type User = {
   _id: string;

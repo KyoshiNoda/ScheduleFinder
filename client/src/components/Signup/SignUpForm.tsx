@@ -1,5 +1,8 @@
 import { useRef } from 'react';
+import { useAppDispatch } from '../../redux/store';
 import { RegisterUser as RegisterUserType } from '../../types';
+import { registerUser } from '../../redux/feats/auth/authActions';
+import { useNavigate } from 'react-router-dom';
 type Props = {};
 
 function SignUpForm({}: Props) {
@@ -12,6 +15,9 @@ function SignUpForm({}: Props) {
   const school = useRef(document.createElement('input'));
   const birthday = useRef(document.createElement('input'));
 
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const formHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const birthDay = new Date(birthday.current.value);
@@ -21,12 +27,14 @@ function SignUpForm({}: Props) {
       email: email.current.value,
       password: password.current.value,
       school: school.current.value,
-      birthday: birthDay,
+      birthday: birthDay
     };
     
-
+    dispatch(registerUser(newUser));
+    navigate('/auth/schedule');
     form.current.reset();
   };
+
   return (
     <form onSubmit={formHandler}>
       <div className="flex flex-col">
