@@ -1,4 +1,4 @@
-import {FormEventHandler, useState } from 'react';
+import { FormEventHandler, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../redux/feats/auth/authActions';
 import { useAppDispatch } from '../../redux/store';
@@ -7,13 +7,22 @@ type Props = {};
 function LoginForm(props: Props) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const formHandler: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
-    await dispatch(loginUser({ email, password })).unwrap();
-    navigate('/auth/schedule');
+    try {
+      await dispatch(loginUser({ email, password })).unwrap();
+      navigate('/auth/schedule');
+    } catch (error: any) {
+      setError(true);
+      error.response
+        ? setErrorMessage(error.response.data.error)
+        : setErrorMessage('something went wrong');
+    }
   };
 
   return (
@@ -32,7 +41,9 @@ function LoginForm(props: Props) {
             id="email"
             placeholder="Email"
             onChange={(event) => setEmail(event.target.value)}
-            className="w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
+            className={`w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400 ${
+              error && !email ? 'border-red-500' : ''
+            }`}
           />
         </div>
 

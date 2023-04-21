@@ -31,8 +31,15 @@ class AuthController {
   }
 
   public static async registerUser(req: Request, res: Response) {
-    const { firstName, lastName, email, password } = req.body;
-    if (!firstName || !lastName || !email || !password) {
+    const { firstName, lastName, email, password, school, birthday } = req.body;
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !school ||
+      !birthday
+    ) {
       return res.status(400).send({ error: 'All fields are required.' });
     }
     const userExists = await User.findOne({ email });
@@ -52,7 +59,7 @@ class AuthController {
       password: hashedPassword,
       gender: null,
       school: req.body.school,
-      major: null
+      major: null,
     });
 
     try {
@@ -61,7 +68,7 @@ class AuthController {
         { data: savedUser },
         `${process.env.ACCESS_TOKEN_SECRET}`
       );
-      res.send({ token: accessToken, user: savedUser });
+      res.status(200).send({ token: accessToken, user: savedUser });
     } catch (err) {
       return res.status(500).send({ error: 'Unable to register user.' });
     }

@@ -10,10 +10,12 @@ export const registerUser = createAsyncThunk(
         'http://localhost:3001/api/auth/register',
         userData
       );
-      let newUserID = result.data.user._id;
-      await Axios.post('http://localhost:3001/api/schedules/', {
-        user_id: newUserID,
-      });
+      if (result.status === 200) {
+        let newUserID = result.data.user._id;
+        await Axios.post('http://localhost:3001/api/schedules/', {
+          user_id: newUserID,
+        });
+      }
       return result;
     } catch (error) {
       return rejectWithValue(error);

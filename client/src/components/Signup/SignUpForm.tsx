@@ -21,7 +21,7 @@ function SignUpForm({}: Props) {
   const formHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const birthDay = new Date(birthday.current.value);
-    if(password !== confirmPassword){
+    if(password.current.value !== confirmPassword.current.value){
       alert('passwords dont match!');
       return;
     }
