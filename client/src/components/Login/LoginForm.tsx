@@ -11,6 +11,12 @@ function LoginForm(props: Props) {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [emailError, setEmailError] = useState<boolean>(false);
+  const [passwordError, setPasswordError] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log(emailError, passwordError);
+  }, [emailError, passwordError]);
 
   const formHandler: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
@@ -18,10 +24,15 @@ function LoginForm(props: Props) {
       await dispatch(loginUser({ email, password })).unwrap();
       navigate('/auth/schedule');
     } catch (error: any) {
-      setError(true);
-      error.response
-        ? setErrorMessage(error.response.data.error)
-        : setErrorMessage('something went wrong');
+      if (error.response && error.response.status === 400) {
+        setErrorMessage(error.response.data.error);
+        console.log(error.response.data.error);
+        error.response.data.error.includes('User') && setEmailError(true);
+        error.response.data.error.includes('password') &&
+          setPasswordError(true);
+      } else {
+        setErrorMessage('something went wrong');
+      }
     }
   };
 
@@ -42,9 +53,12 @@ function LoginForm(props: Props) {
             placeholder="Email"
             onChange={(event) => setEmail(event.target.value)}
             className={`w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400 ${
-              error && !email ? 'border-red-500' : ''
+              emailError ? 'border-rose-500' : ''
             }`}
           />
+          {emailError && (
+            <span className="text-xs text-red-500">Email is incorrect</span>
+          )}
         </div>
 
         <div className="space-y-1 text-sm">
@@ -60,8 +74,13 @@ function LoginForm(props: Props) {
             id="password"
             placeholder="••••••••"
             onChange={(event) => setPassword(event.target.value)}
-            className="w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
+            className={`w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400 ${
+              passwordError ? 'border-rose-500' : ''
+            }`}
           />
+          {passwordError && (
+            <span className="text-xs text-red-500">Password is incorrect</span>
+          )}
           <div className="flex justify-end text-xs dark:text-gray-400">
             <a rel="noopener noreferrer" href="#">
               Forgot Password?
