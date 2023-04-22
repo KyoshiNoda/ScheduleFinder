@@ -7,29 +7,33 @@ type Props = {};
 function LoginForm(props: Props) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const [emailError, setEmailError] = useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<boolean>(false);
-
-  useEffect(() => {
-    console.log(emailError, passwordError);
-  }, [emailError, passwordError]);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const formHandler: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
     try {
+      // attempts to login user if sucesss navigate to schedule
       await dispatch(loginUser({ email, password })).unwrap();
       navigate('/auth/schedule');
     } catch (error: any) {
+      // if login is not successful render input error styles and display backend error message
       if (error.response && error.response.status === 400) {
-        setErrorMessage(error.response.data.error);
-        console.log(error.response.data.error);
-        error.response.data.error.includes('User') && setEmailError(true);
-        error.response.data.error.includes('password') &&
+        // gets the error from backend
+        let errorMessage: string = error.response.data.error;
+
+        // checks if response includes a user or password to dynmically render
+        if (errorMessage.includes('User')) {
+          setEmailError(true);
+          setErrorMessage(errorMessage);
+        }
+        if (errorMessage.includes('password')) {
           setPasswordError(true);
+          setErrorMessage(errorMessage);
+        }
       } else {
         setErrorMessage('something went wrong');
       }
@@ -57,7 +61,7 @@ function LoginForm(props: Props) {
             }`}
           />
           {emailError && (
-            <span className="text-xs text-red-500">Email is incorrect</span>
+            <span className="text-xs text-red-500">{errorMessage}</span>
           )}
         </div>
 
@@ -79,7 +83,7 @@ function LoginForm(props: Props) {
             }`}
           />
           {passwordError && (
-            <span className="text-xs text-red-500">Password is incorrect</span>
+            <span className="text-xs text-red-500">{errorMessage}</span>
           )}
           <div className="flex justify-end text-xs dark:text-gray-400">
             <a rel="noopener noreferrer" href="#">
