@@ -2,6 +2,9 @@ import { useState, useRef } from 'react';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { TimeSlot as TimeSlotType } from '../../types';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 type Props = {
   setTimeSlots: any;
 };
@@ -38,6 +41,7 @@ function TimeSlotInput({ setTimeSlots }: Props) {
 
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
   const [daysError, setDaysError] = useState<boolean>(false);
+  const [timeError, setTimeError] = useState<boolean>(false);
 
   const [createTimeSlotMutation, { isError, isLoading }] =
     useCreateTimeSlotMutation();
@@ -97,6 +101,14 @@ function TimeSlotInput({ setTimeSlots }: Props) {
       setDaysError(false);
     }
 
+    let start = dayjs(startTimeRef.current.value);
+    let end = dayjs(endTimeRef.current.value);
+
+    if (start.isAfter(end)) {
+      setTimeError(true);
+      return;
+    }
+
     const currentTimeSlot: TimeSlotType = {
       days: daySelection,
       title: titleRef.current.value,
@@ -106,7 +118,6 @@ function TimeSlotInput({ setTimeSlots }: Props) {
       professor: professorRef.current.value || null,
       color: timeSlotColor,
     };
-
     try {
       const result = await createTimeSlotMutation({
         scheduleId: scheduleID,
@@ -257,10 +268,13 @@ function TimeSlotInput({ setTimeSlots }: Props) {
               ref={startTimeRef}
               type="text"
               id="title"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className={`block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500${
+                timeError ? 'borer-rose-500' : ''
+              }`}
               placeholder="10:30 AM"
               required
-            />
+            />{' '}
+            {timeError && <p className="text-rose-500">Invalid Time</p>}
           </div>
           <div className="w-1/2">
             <label
