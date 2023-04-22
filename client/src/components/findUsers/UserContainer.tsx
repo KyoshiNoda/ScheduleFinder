@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import { Spinner, Button } from 'flowbite-react';
 import User from './User';
+import LoadingUser from './LoadingUser';
+import { useState, useEffect } from 'react';
+import { Button } from 'flowbite-react';
 import { User as UserType } from '../../types';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 
@@ -26,7 +27,6 @@ const UserContainer = ({
   if (!isFetching) loggedUserId = data[0].user_id;
 
   const [users, setUsers] = useState<UserType[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [paginate, setPaginate] = useState<number>(9);
 
   const filterUsers = (users: UserType[]) => {
@@ -64,24 +64,23 @@ const UserContainer = ({
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);
-        setIsLoading(false);
       })
       .catch((err) => console.log(err));
   }, []);
 
+  const loadingUsers = [0, 0, 0, 0, 0, 0];
+
   return (
     <section>
-      {isLoading && (
-        <div className="text-center">
-          <Spinner aria-label="Center-aligned spinner example" />
-        </div>
-      )}
-      {filterUsers?.length === 0 && (
+      {isFetching && filterUsers?.length === 0 && (
         <span className="block text-center text-3xl dark:text-white">
           No users found
         </span>
       )}
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        {isFetching && loadingUsers.map((user) => (
+          <LoadingUser />
+        ))}
         {users &&
           filterUsers(users)
             .filter((user) => user._id !== loggedUserId)

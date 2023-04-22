@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .dark-gradient {
+    background: linear-gradient(110deg, #262e3b 8%, #262e3b 18%, #262e3b 33%);
+  }
+}
+
 html,
 body,
 #root {
@@ -16,4 +22,21 @@ body,
 .active-tab:hover {
   color: #1c64f2 !important;
   border-bottom: 2px solid #1c64f2 !important;
+}
+
+/* Loading User Card Styles */
+.is-loading {
+  background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+  animation: 0.3s shine linear infinite;
+}
+
+/* .is-loading-dark {
+  background: linear-gradient(110deg, #262e3b 8%, #262e3b 18%, #262e3b 33%);
+  animation: 0.3s shine linear infinite;
+} */
+
+@keyframes shine {
+  to {
+    background-position-x: -200%;
+  }
 }
