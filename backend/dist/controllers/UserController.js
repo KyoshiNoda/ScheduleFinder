@@ -46,32 +46,6 @@ class UserController {
                 .catch((err) => console.log(err));
         });
     }
-    // POST new user
-    static createUser(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const salt = yield bcrypt_1.default.genSalt();
-            const hashedPassword = yield bcrypt_1.default.hash(req.body.password, salt);
-            const user = new userModel_1.default({
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                age: req.body.age,
-                photoURL: req.body.photoURL,
-                email: req.body.email,
-                password: hashedPassword,
-                gender: req.body.gender,
-                school: req.body.school,
-                major: req.body.major
-            });
-            user
-                .save()
-                .then((savedUser) => {
-                res.status(200).send(savedUser);
-            })
-                .catch((err) => {
-                res.send(err);
-            });
-        });
-    }
     // DELETE user by id
     static deleteUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

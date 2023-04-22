@@ -51,7 +51,6 @@ const UserContainer = ({
         .replace(/[^a-zA-Z]+/g, '')
         .includes(majorSearch.toLowerCase().replace(/[^a-zA-Z]+/g, ''));
     });
-
     return filteredByMajor;
   };
 

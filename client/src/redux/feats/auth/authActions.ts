@@ -1,25 +1,22 @@
 import Axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-
-interface registerUserData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  age: number;
-  photoURL: string;
-  gender: string;
-  school: string;
-  major: string;
-}
+import { RegisterUser } from '../../../types';
 
 export const registerUser = createAsyncThunk(
   '/api/auth',
-  async (userData: registerUserData, { rejectWithValue }) => {
+  async (userData: RegisterUser, { rejectWithValue }) => {
     try {
-      await Axios.post('http://localhost:3001/api/auth/', userData);
+      const result = await Axios.post(
+        'http://localhost:3001/api/auth/register',
+        userData
+      );
+      let newUserID = result.data.user._id;
+      await Axios.post('http://localhost:3001/api/schedules/', {
+        user_id: newUserID,
+      });
+      return result;
     } catch (error) {
-      console.log(error);
+      return rejectWithValue(error);
     }
   }
 );

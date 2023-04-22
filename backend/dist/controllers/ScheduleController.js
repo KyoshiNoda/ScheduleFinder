@@ -239,7 +239,7 @@ class ScheduleController {
         return __awaiter(this, void 0, void 0, function* () {
             const schedule = new scheduleModel_1.default({
                 user_id: req.body.user_id,
-                visibility: req.body.visibility,
+                visibility: 'public',
                 timeSlot: [],
             });
             schedule

@@ -30,31 +30,6 @@ class UserController {
       .catch((err) => console.log(err));
   }
 
-  // POST new user
-  public static async createUser(req: Request, res: Response): Promise<any> {
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
-    const user = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      age: req.body.age,
-      photoURL: req.body.photoURL,
-      email: req.body.email,
-      password: hashedPassword,
-      gender: req.body.gender,
-      school: req.body.school,
-      major : req.body.major
-    });
-
-    user
-      .save()
-      .then((savedUser) => {
-        res.status(200).send(savedUser);
-      })
-      .catch((err) => {
-        res.send(err);
-      });
-  }
 
   // DELETE user by id
   public static async deleteUser(req: Request, res: Response) {
