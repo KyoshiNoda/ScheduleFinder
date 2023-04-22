@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useAppDispatch } from '../../redux/store';
 import { RegisterUser as RegisterUserType } from '../../types';
 import { registerUser } from '../../redux/feats/auth/authActions';
@@ -15,13 +15,14 @@ function SignUpForm({}: Props) {
   const school = useRef(document.createElement('input'));
   const birthday = useRef(document.createElement('input'));
 
+  const [emailError, setEmailError] = useState<string>('');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const formHandler = (event: React.FormEvent<HTMLFormElement>) => {
+  const formHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const birthDay = new Date(birthday.current.value);
-    if(password.current.value !== confirmPassword.current.value){
+    if (password.current.value !== confirmPassword.current.value) {
       alert('passwords dont match!');
       return;
     }
@@ -31,11 +32,15 @@ function SignUpForm({}: Props) {
       email: email.current.value,
       password: password.current.value,
       school: school.current.value,
-      birthday: birthDay
+      birthday: birthDay,
     };
-    
-    dispatch(registerUser(newUser));
-    navigate('/auth/schedule');
+    try {
+      await dispatch(registerUser(newUser)).unwrap();
+      navigate('/auth/schedule');
+    } catch (error: any) {
+      let errorMessage: string = error.response.data.error;
+      setEmailError(errorMessage);
+    }
     form.current.reset();
   };
 
@@ -86,10 +91,15 @@ function SignUpForm({}: Props) {
               ref={email}
               type="text"
               id="email"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className={`block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                emailError ? 'border-rose-500' : ''
+              }`}
               placeholder="johndoe@gmail.com"
               required
             />
+            {emailError && (
+              <span className="text-xs text-red-500">{emailError}</span>
+            )}
           </div>
           <div>
             <label

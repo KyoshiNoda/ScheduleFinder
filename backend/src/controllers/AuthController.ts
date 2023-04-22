@@ -15,7 +15,7 @@ class AuthController {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).send({ error: 'User not found.' });
+      return res.status(400).send({ error: 'Email not found.' });
     }
 
     const match = await bcrypt.compare(password, user.password);
@@ -46,6 +46,7 @@ class AuthController {
     if (userExists) {
       return res.status(400).send({ error: 'Email already in use.' });
     }
+
 
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(req.body.password, salt);

@@ -27,7 +27,7 @@ class AuthController {
             }
             const user = yield userModel_1.default.findOne({ email });
             if (!user) {
-                return res.status(400).send({ error: 'User not found.' });
+                return res.status(400).send({ error: 'Email not found.' });
             }
             const match = yield bcrypt_1.default.compare(password, user.password);
             if (!match) {

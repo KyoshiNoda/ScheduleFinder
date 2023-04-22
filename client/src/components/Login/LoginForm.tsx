@@ -5,9 +5,14 @@ import { useAppDispatch } from '../../redux/store';
 
 type Props = {};
 function LoginForm(props: Props) {
+  const defaultError: string = 'Something went wrong!';
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [emailErrorMessage, setEmailErrorMessage] =
+    useState<string>(defaultError);
+  const [passwordErrorMessage, setPasswordErrorMessage] =
+    useState<string>(defaultError);
   const [emailError, setEmailError] = useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -26,16 +31,16 @@ function LoginForm(props: Props) {
         let errorMessage: string = error.response.data.error;
 
         // checks if response includes a user or password to dynmically render
-        if (errorMessage.includes('User')) {
+        if (errorMessage.includes('Email')) {
           setEmailError(true);
-          setErrorMessage(errorMessage);
+          setEmailErrorMessage(errorMessage);
+        } else {
+          setEmailError(false);
         }
         if (errorMessage.includes('password')) {
           setPasswordError(true);
-          setErrorMessage(errorMessage);
+          setPasswordErrorMessage(errorMessage);
         }
-      } else {
-        setErrorMessage('something went wrong');
       }
     }
   };
@@ -61,7 +66,7 @@ function LoginForm(props: Props) {
             }`}
           />
           {emailError && (
-            <span className="text-xs text-red-500">{errorMessage}</span>
+            <span className="text-xs text-red-500">{emailErrorMessage}</span>
           )}
         </div>
 
@@ -83,7 +88,7 @@ function LoginForm(props: Props) {
             }`}
           />
           {passwordError && (
-            <span className="text-xs text-red-500">{errorMessage}</span>
+            <span className="text-xs text-red-500">{passwordErrorMessage}</span>
           )}
           <div className="flex justify-end text-xs dark:text-gray-400">
             <a rel="noopener noreferrer" href="#">
