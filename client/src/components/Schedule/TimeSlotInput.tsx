@@ -6,12 +6,6 @@ type Props = {
   setTimeSlots: any;
 };
 
-const formActions = {
-  CREATE: 'create',
-  UPDATE: 'update',
-  DELETE: 'delete',
-};
-
 export const colors: string[] = [
   'slate',
   'red',
@@ -56,7 +50,8 @@ function TimeSlotInput({ setTimeSlots }: Props) {
     scheduleID = data[0]._id;
   }
 
-  const addTimeSlot = async (e: React.FormEvent<HTMLFormElement>) => {
+  const addTimeSlot = async (event: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
     // If no checkboxes have been selected, the form shouldn't be submitted.
     if (
       !(
@@ -121,24 +116,16 @@ function TimeSlotInput({ setTimeSlots }: Props) {
         const { data } = result;
         setTimeSlots((prevState: any) => [...prevState, data]);
       }
+      setTimeSlotColor('border-none');
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const handleSubmit = (
-    e: React.FormEvent<HTMLFormElement>,
-    action: string
-  ) => {
-    e.preventDefault();
-    if (action === formActions.CREATE) addTimeSlot(e);
-    setTimeSlotColor('border-none');
     formRef.current.reset();
   };
 
   return (
     <div className="mt-6 flex h-1/4 w-1/2 flex-col rounded-lg bg-slate-50 p-5 dark:bg-black sm:h-1/2">
-      <form ref={formRef} onSubmit={(e) => handleSubmit(e, formActions.CREATE)}>
+      <form ref={formRef} onSubmit={addTimeSlot}>
         <div>
           <label
             htmlFor="title"
@@ -148,6 +135,7 @@ function TimeSlotInput({ setTimeSlots }: Props) {
           </label>
           <input
             ref={titleRef}
+            required
             type="text"
             id="title"
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -163,7 +151,7 @@ function TimeSlotInput({ setTimeSlots }: Props) {
           </label>
           <ul
             className={`w-full items-center rounded-lg border bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex ${
-              daysError ? ' border-rose-400' : ''
+              daysError ? ' border-rose-400 dark:border-rose-400' : ''
             }`}
           >
             <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
