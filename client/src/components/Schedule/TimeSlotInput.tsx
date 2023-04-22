@@ -43,10 +43,11 @@ function TimeSlotInput({ setTimeSlots }: Props) {
   const professorRef = useRef(document.createElement('input'));
 
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
+  const [daysError, setDaysError] = useState<boolean>(false);
 
   const [createTimeSlotMutation, { isError, isLoading }] =
     useCreateTimeSlotMutation();
- 
+
   let scheduleID = '';
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
@@ -65,8 +66,10 @@ function TimeSlotInput({ setTimeSlots }: Props) {
         thursdayRef.current.checked ||
         fridayRef.current.checked
       )
-    )
+    ) {
+      setDaysError(true);
       return;
+    }
 
     const daySelection = {
       monday: false,
@@ -78,11 +81,26 @@ function TimeSlotInput({ setTimeSlots }: Props) {
       sunday: false,
     };
 
-    if (mondayRef.current.checked) daySelection.monday = true;
-    if (tuesdayRef.current.checked) daySelection.tuesday = true;
-    if (wednesdayRef.current.checked) daySelection.wednesday = true;
-    if (thursdayRef.current.checked) daySelection.thursday = true;
-    if (fridayRef.current.checked) daySelection.friday = true;
+    if (mondayRef.current.checked) {
+      daySelection.monday = true;
+      setDaysError(false);
+    }
+    if (tuesdayRef.current.checked) {
+      daySelection.tuesday = true;
+      setDaysError(false);
+    }
+    if (wednesdayRef.current.checked) {
+      daySelection.wednesday = true;
+      setDaysError(false);
+    }
+    if (thursdayRef.current.checked) {
+      daySelection.thursday = true;
+      setDaysError(false);
+    }
+    if (fridayRef.current.checked) {
+      daySelection.friday = true;
+      setDaysError(false);
+    }
 
     const currentTimeSlot: TimeSlotType = {
       days: daySelection,
@@ -114,8 +132,8 @@ function TimeSlotInput({ setTimeSlots }: Props) {
   ) => {
     e.preventDefault();
     if (action === formActions.CREATE) addTimeSlot(e);
-    formRef.current.reset();
     setTimeSlotColor('border-none');
+    formRef.current.reset();
   };
 
   return (
@@ -134,7 +152,6 @@ function TimeSlotInput({ setTimeSlots }: Props) {
             id="title"
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="BIO130"
-            required
           />
         </div>
         <div>
@@ -144,7 +161,11 @@ function TimeSlotInput({ setTimeSlots }: Props) {
           >
             Days
           </label>
-          <ul className="w-full items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex">
+          <ul
+            className={`w-full items-center rounded-lg border bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex ${
+              daysError ? ' border-rose-400' : ''
+            }`}
+          >
             <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
               <div className="flex items-center pl-3">
                 <input
@@ -231,6 +252,10 @@ function TimeSlotInput({ setTimeSlots }: Props) {
               </div>
             </li>
           </ul>
+          <div className="flex w-full justify-center">
+            {' '}
+            {daysError && <p className="text-rose-500">Please pick a day!</p>}
+          </div>
         </div>
         <div className="flex gap-12">
           <div className="w-1/2">
