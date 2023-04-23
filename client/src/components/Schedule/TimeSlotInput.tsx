@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { TimeSlot as TimeSlotType } from '../../types';
-import dayjs from 'dayjs';
+import * as dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 type Props = {
@@ -27,6 +27,39 @@ export const colors: string[] = [
 ];
 
 function TimeSlotInput({ setTimeSlots }: Props) {
+  function isSecondTimeAfterFirst(firstTime: string, secondTime: string) {
+    // Convert the input strings to 24-hour format
+    let firstTime24 = convertTo24Hour(firstTime);
+    let secondTime24 = convertTo24Hour(secondTime);
+
+    // Compare the times and return the result
+    return secondTime24 > firstTime24;
+  }
+
+  function convertTo24Hour(time12: any) {
+    // Split the input string into hours and minutes
+    let [hour, minute] = time12.split(':');
+
+    // Extract the period (AM or PM) from the end of the string
+    let period = time12.slice(-2);
+
+    // Convert the hour to a number
+    hour = parseInt(hour);
+
+    // If the period is PM and the hour is not 12, add 12 to the hour
+    if (period === 'PM' && hour !== 12) {
+      hour += 12;
+    }
+
+    // If the period is AM and the hour is 12, set the hour to 0
+    if (period === 'AM' && hour === 12) {
+      hour = 0;
+    }
+
+    // Return the time in 24-hour format as a number
+    return hour * 60 + parseInt(minute);
+  }
+
   const formRef = useRef(document.createElement('form'));
   const titleRef = useRef(document.createElement('input'));
   const mondayRef = useRef(document.createElement('input'));
@@ -101,37 +134,38 @@ function TimeSlotInput({ setTimeSlots }: Props) {
       setDaysError(false);
     }
 
-    let start = dayjs(startTimeRef.current.value);
-    let end = dayjs(endTimeRef.current.value);
-
-    if (start.isAfter(end)) {
+    if (
+      !isSecondTimeAfterFirst(
+        startTimeRef.current.value,
+        endTimeRef.current.value
+      )
+    ) {
       setTimeError(true);
       return;
     }
-
-    const currentTimeSlot: TimeSlotType = {
-      days: daySelection,
-      title: titleRef.current.value,
-      startTime: startTimeRef.current.value,
-      endTime: endTimeRef.current.value,
-      location: locationRef.current.value || null,
-      professor: professorRef.current.value || null,
-      color: timeSlotColor,
-    };
-    try {
-      const result = await createTimeSlotMutation({
-        scheduleId: scheduleID,
-        timeSlot: currentTimeSlot,
-      });
-      if ('data' in result) {
-        const { data } = result;
-        setTimeSlots((prevState: any) => [...prevState, data]);
-      }
-      setTimeSlotColor('border-none');
-    } catch (error) {
-      console.error(error);
-    }
-    formRef.current.reset();
+    // const currentTimeSlot: TimeSlotType = {
+    //   days: daySelection,
+    //   title: titleRef.current.value,
+    //   startTime: startTimeRef.current.value,
+    //   endTime: endTimeRef.current.value,
+    //   location: locationRef.current.value || null,
+    //   professor: professorRef.current.value || null,
+    //   color: timeSlotColor,
+    // };
+    // try {
+    //   const result = await createTimeSlotMutation({
+    //     scheduleId: scheduleID,
+    //     timeSlot: currentTimeSlot,
+    //   });
+    //   if ('data' in result) {
+    //     const { data } = result;
+    //     setTimeSlots((prevState: any) => [...prevState, data]);
+    //   }
+    //   setTimeSlotColor('border-none');
+    // } catch (error) {
+    //   console.error(error);
+    // }
+    // formRef.current.reset();
   };
 
   return (
@@ -268,9 +302,7 @@ function TimeSlotInput({ setTimeSlots }: Props) {
               ref={startTimeRef}
               type="text"
               id="title"
-              className={`block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500${
-                timeError ? 'borer-rose-500' : ''
-              }`}
+              className={`block w-full rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${timeError ? 'border-rose-500' : ''}`}
               placeholder="10:30 AM"
               required
             />{' '}
@@ -287,10 +319,12 @@ function TimeSlotInput({ setTimeSlots }: Props) {
               ref={endTimeRef}
               type="text"
               id="title"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className={`block w-full rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${timeError ? 'border-rose-500' : ''}`}
               placeholder="12:30 PM"
               required
             />
+            {' '}
+            {timeError && <p className="text-rose-500">Invalid Time</p>}
           </div>
         </div>
         <div className="flex gap-12">
