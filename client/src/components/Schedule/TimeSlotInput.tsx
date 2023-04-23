@@ -75,6 +75,7 @@ function TimeSlotInput({ setTimeSlots }: Props) {
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
   const [daysError, setDaysError] = useState<boolean>(false);
   const [timeError, setTimeError] = useState<boolean>(false);
+  const [colorError, setColorError] = useState<boolean>(false);
 
   const [createTimeSlotMutation, { isError, isLoading }] =
     useCreateTimeSlotMutation();
@@ -143,29 +144,34 @@ function TimeSlotInput({ setTimeSlots }: Props) {
       setTimeError(true);
       return;
     }
-    // const currentTimeSlot: TimeSlotType = {
-    //   days: daySelection,
-    //   title: titleRef.current.value,
-    //   startTime: startTimeRef.current.value,
-    //   endTime: endTimeRef.current.value,
-    //   location: locationRef.current.value || null,
-    //   professor: professorRef.current.value || null,
-    //   color: timeSlotColor,
-    // };
-    // try {
-    //   const result = await createTimeSlotMutation({
-    //     scheduleId: scheduleID,
-    //     timeSlot: currentTimeSlot,
-    //   });
-    //   if ('data' in result) {
-    //     const { data } = result;
-    //     setTimeSlots((prevState: any) => [...prevState, data]);
-    //   }
-    //   setTimeSlotColor('border-none');
-    // } catch (error) {
-    //   console.error(error);
-    // }
-    // formRef.current.reset();
+    if (timeSlotColor === 'border-none') {
+      setColorError(true);
+      return;
+    }
+    const currentTimeSlot: TimeSlotType = {
+      days: daySelection,
+      title: titleRef.current.value,
+      startTime: startTimeRef.current.value,
+      endTime: endTimeRef.current.value,
+      location: locationRef.current.value || null,
+      professor: professorRef.current.value || null,
+      color: timeSlotColor,
+    };
+    try {
+      const result = await createTimeSlotMutation({
+        scheduleId: scheduleID,
+        timeSlot: currentTimeSlot,
+      });
+      if ('data' in result) {
+        const { data } = result;
+        setTimeSlots((prevState: any) => [...prevState, data]);
+      }
+      setTimeSlotColor('border-none');
+      setColorError(false);
+    } catch (error) {
+      console.error(error);
+    }
+    formRef.current.reset();
   };
 
   return (
@@ -302,7 +308,9 @@ function TimeSlotInput({ setTimeSlots }: Props) {
               ref={startTimeRef}
               type="text"
               id="title"
-              className={`block w-full rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${timeError ? 'border-rose-500' : ''}`}
+              className={`block w-full rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                timeError ? 'border-rose-500' : 'border-gray-300'
+              }`}
               placeholder="10:30 AM"
               required
             />{' '}
@@ -319,11 +327,12 @@ function TimeSlotInput({ setTimeSlots }: Props) {
               ref={endTimeRef}
               type="text"
               id="title"
-              className={`block w-full rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${timeError ? 'border-rose-500' : ''}`}
+              className={`block w-full rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                timeError ? 'border-rose-500' : 'border-gray-300'
+              }`}
               placeholder="12:30 PM"
               required
-            />
-            {' '}
+            />{' '}
             {timeError && <p className="text-rose-500">Invalid Time</p>}
           </div>
         </div>
@@ -359,18 +368,25 @@ function TimeSlotInput({ setTimeSlots }: Props) {
             />
           </div>
         </div>
-        <div className="flex justify-center">
-          <div className="grid grid-cols-7 grid-rows-2 gap-2 p-2">
-            {colors.map((color) => (
-              <div
-                onClick={() => setTimeSlotColor(color)}
-                key={color}
-                className={`bg-${color}-400 h-10 w-10 cursor-pointer rounded-full border-4 p-1 ${
-                  timeSlotColor === color ? 'border-blue-700' : 'border-none'
-                }`}
-              />
-            ))}
+        <div>
+          <div className="flex justify-center">
+            <div className="grid grid-cols-7 grid-rows-2 gap-2 p-2">
+              {colors.map((color) => (
+                <div
+                  onClick={() => setTimeSlotColor(color)}
+                  key={color}
+                  className={`bg-${color}-400 h-10 w-10 cursor-pointer rounded-full border-4 p-1 ${
+                    timeSlotColor === color ? 'border-blue-700' : 'border-none'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
+          {colorError && (
+            <p className="text-center font-bold text-rose-500">
+              Please pick a color!
+            </p>
+          )}
         </div>
         <button
           type="submit"
