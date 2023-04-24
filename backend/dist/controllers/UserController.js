@@ -83,22 +83,31 @@ class UserController {
     static updateUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.user.data._id;
-            if (req.body.password) {
-                const newPassword = req.body.password;
-                const salt = yield bcrypt_1.default.genSalt();
-                const hashedPassword = yield bcrypt_1.default.hash(newPassword, salt);
-                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }), { returnOriginal: false });
+            try {
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, Object.assign({}, req.body), { returnOriginal: false });
                 res.status(200).json(updatedUser);
             }
-            else {
-                try {
-                    const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, Object.assign({}, req.body), { returnOriginal: false });
-                    res.status(200).json(updatedUser);
-                }
-                catch (error) {
-                    res.json(`The update attempt to user ${userID} has failed`);
-                }
+            catch (error) {
+                res.json(`The update attempt to user ${userID} has failed`);
             }
+        });
+    }
+    // change password with Token
+    static changePassword(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data._id;
+            const userPassword = req.user.data.password;
+            const passwordMatch = yield bcrypt_1.default.compare(req.body.password, userPassword);
+            if (!passwordMatch) {
+                res.status(401).send('Incorrect Password!');
+            }
+            if (req.body.newPassword !== req.body.confirmNewPassword) {
+                res.status(401).send("Passwords dont match!'");
+            }
+            const salt = yield bcrypt_1.default.genSalt();
+            const hashedPassword = yield bcrypt_1.default.hash(req.body.newPassword, salt);
+            yield userModel_1.default.findOneAndUpdate({ _id: userID }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }), { returnOriginal: false });
+            res.status(200).send({ message: 'Password Changed!' });
         });
     }
 }

@@ -11,8 +11,19 @@ function ProfileTab() {
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
   const [changePassword, setChangePassword] = useState<boolean>(false);
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserInfoMutation();
+  
+  const [currentPasswordError, setCurrentPasswordError] = useState<boolean>(false);
+  const [newPasswordError, setNewPasswordError] = useState<boolean>(false);
+  const [confirmedNewPasswordError, setConfirmedNewPasswordError] = useState<boolean>(false);
+
+
   const emailRef = useRef(document.createElement('input'));
-  const passwordRef = useRef(document.createElement('input'));
+
+  const currentPassword = useRef(document.createElement('input'));
+  const newPassword = useRef(document.createElement('input'));
+  const newConfirmedPassword = useRef(document.createElement('input'));
+
+  
 
   useEffect(() => {
     if (data && !isLoading) {
@@ -34,6 +45,13 @@ function ProfileTab() {
       console.log(error);
     }
   };
+
+  const passwordHandler = () =>{
+
+
+
+    setChangePassword(false);
+  }
 
   return (
     <div>
@@ -96,6 +114,7 @@ function ProfileTab() {
                         />
                       </div>
                       <TextInput
+                        ref={currentPassword}
                         id="currentPassword"
                         placeholder="••••••••"
                         required={true}
@@ -107,6 +126,7 @@ function ProfileTab() {
                         <Label htmlFor="password" value="New Password" />
                       </div>
                       <TextInput
+                        ref={newPassword}
                         id="NewPassword"
                         type="password"
                         required={true}
@@ -116,19 +136,20 @@ function ProfileTab() {
                     <div>
                       <div className="mb-2 block">
                         <Label
-                          htmlFor="confirmPassword"
+                          htmlFor="newConfirmedPassword"
                           value="Confirm Password"
                         />
                       </div>
                       <TextInput
-                        id="confirmPassword"
+                        ref={newConfirmedPassword}
+                        id="newConfirmedPassword"
                         type="password"
                         required={true}
                         placeholder="••••••••"
                       />
                     </div>
                   </div>
-                  <Button onClick={() => setChangePassword(true)} size="xl">
+                  <Button onClick={passwordHandler} size="xl">
                     Submit
                   </Button>
                 </div>
@@ -152,12 +173,3 @@ function ProfileTab() {
 }
 
 export default ProfileTab;
-{
-  /* <button
-type="button"
-onClick={() => setChangePassword(true)}
-className="w-full rounded bg-blue-400 px-8 py-3 text-lg font-semibold text-white dark:bg-blue-800"
->
-Change Password
-</button> */
-}
