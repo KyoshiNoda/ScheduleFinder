@@ -5,6 +5,11 @@ const router = express.Router();
 
 router.get('/', AuthController.authenticateToken, UserController.getUserInfo);
 router.patch('/', AuthController.authenticateToken, UserController.updateUser);
+router.post(
+  '/changePassword',
+  AuthController.authenticateToken,
+  UserController.changePassword
+);
 router.get('/allUsers', UserController.getAllUsers);
 router.get('/:id', UserController.getUserById);
 router.delete('/:id', UserController.deleteUser);

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Modal, Button, Label, TextInput } from 'flowbite-react';
+import { useChangePasswordMutation } from '../../../redux/services/user/userService';
 import {
   useGetUserInfoQuery,
   useUpdateUserInfoMutation,
@@ -9,21 +10,22 @@ import ProfilePic from './ProfilePic';
 function ProfileTab() {
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
-  const [changePassword, setChangePassword] = useState<boolean>(false);
+  const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserInfoMutation();
-  
-  const [currentPasswordError, setCurrentPasswordError] = useState<boolean>(false);
-  const [newPasswordError, setNewPasswordError] = useState<boolean>(false);
-  const [confirmedNewPasswordError, setConfirmedNewPasswordError] = useState<boolean>(false);
+  const [changePassword, { isSuccess, isError, error }] =
+    useChangePasswordMutation();
 
+  const [currentPasswordError, setCurrentPasswordError] =
+    useState<boolean>(false);
+  const [newPasswordError, setNewPasswordError] = useState<boolean>(false);
+  const [confirmedNewPasswordError, setConfirmedNewPasswordError] =
+    useState<boolean>(false);
 
   const emailRef = useRef(document.createElement('input'));
 
-  const currentPassword = useRef(document.createElement('input'));
-  const newPassword = useRef(document.createElement('input'));
-  const newConfirmedPassword = useRef(document.createElement('input'));
-
-  
+  const currentPasswordRef = useRef(document.createElement('input'));
+  const newPasswordRef = useRef(document.createElement('input'));
+  const newConfirmedPasswordRef = useRef(document.createElement('input'));
 
   useEffect(() => {
     if (data && !isLoading) {
@@ -46,12 +48,19 @@ function ProfileTab() {
     }
   };
 
-  const passwordHandler = () =>{
-
-
-
-    setChangePassword(false);
-  }
+  const passwordHandler = async () => {
+    try {
+      await changePassword({
+        currentPassword: currentPasswordRef.current.value,
+        newPassword: newPasswordRef.current.value,
+        confirmNewPassword: newConfirmedPasswordRef.current.value,
+      });
+    } catch (error: any) {
+      if (error.response && error.repsonse.status === 401) {
+        console.log(error.response.data.error);
+      }
+    }
+  };
 
   return (
     <div>
@@ -88,16 +97,16 @@ function ProfileTab() {
             </button>
             <button
               type="button"
-              onClick={() => setChangePassword(true)}
+              onClick={() => setIsChangePassword(true)}
               className="w-full rounded bg-blue-400 px-8 py-3 text-lg font-semibold text-white dark:bg-blue-800"
             >
               Change Password
             </button>{' '}
             <Modal
-              show={changePassword}
+              show={isChangePassword}
               size="md"
               popup={true}
-              onClose={() => setChangePassword(false)}
+              onClose={() => setIsChangePassword(false)}
             >
               <Modal.Header />
               <Modal.Body>
@@ -114,7 +123,7 @@ function ProfileTab() {
                         />
                       </div>
                       <TextInput
-                        ref={currentPassword}
+                        ref={currentPasswordRef}
                         id="currentPassword"
                         placeholder="••••••••"
                         required={true}
@@ -126,7 +135,7 @@ function ProfileTab() {
                         <Label htmlFor="password" value="New Password" />
                       </div>
                       <TextInput
-                        ref={newPassword}
+                        ref={newPasswordRef}
                         id="NewPassword"
                         type="password"
                         required={true}
@@ -141,7 +150,7 @@ function ProfileTab() {
                         />
                       </div>
                       <TextInput
-                        ref={newConfirmedPassword}
+                        ref={newConfirmedPasswordRef}
                         id="newConfirmedPassword"
                         type="password"
                         required={true}

@@ -97,7 +97,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.user.data._id;
             const userPassword = req.user.data.password;
-            const passwordMatch = yield bcrypt_1.default.compare(req.body.password, userPassword);
+            const passwordMatch = yield bcrypt_1.default.compare(req.body.currentPassword, userPassword);
             if (!passwordMatch) {
                 res.status(401).send('Incorrect Password!');
             }

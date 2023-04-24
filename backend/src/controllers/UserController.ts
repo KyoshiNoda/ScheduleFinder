@@ -81,7 +81,7 @@ class UserController {
   public static async changePassword(req: any, res: any) {
     const userID: string = req.user.data._id;
     const userPassword: string = req.user.data.password;
-    const passwordMatch = await bcrypt.compare(req.body.password, userPassword);
+    const passwordMatch = await bcrypt.compare(req.body.currentPassword, userPassword);
 
     if (!passwordMatch) {
       res.status(401).send('Incorrect Password!');
