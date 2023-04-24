@@ -7,6 +7,11 @@ export const scheduleAPI = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:3001/',
     prepareHeaders: (headers, { getState }: any) => {
+      headers.set('Accept', 'application/json');
+      headers.set('Cache-Control', 'no-cache');
+      headers.set('Pragma', 'no-cache');
+      headers.set('Expires', '0');
+
       const token: string | undefined = getState().auth.userToken;
       if (token) {
         headers.set('authorization', `Bearer ${token}`);
@@ -14,12 +19,14 @@ export const scheduleAPI = createApi({
       }
     },
   }),
+  tagTypes: ['Schedule'],
   endpoints: (builder) => ({
     getSchedule: builder.query({
       query: () => ({
         url: 'api/schedules/mySchedule',
         method: 'GET',
       }),
+      providesTags: ['Schedule'],
     }),
     createTimeSlot: builder.mutation<
       ScheduleType,
@@ -30,6 +37,7 @@ export const scheduleAPI = createApi({
         method: 'POST',
         body: timeSlot,
       }),
+      invalidatesTags: ['Schedule'],
     }),
     deleteTimeSlot: builder.mutation<
       ScheduleType,
@@ -40,6 +48,7 @@ export const scheduleAPI = createApi({
         method: 'DELETE',
         body: timeSlot,
       }),
+      invalidatesTags: ['Schedule'],
     }),
     updateTimeSlot: builder.mutation<
       ScheduleType,
@@ -50,6 +59,7 @@ export const scheduleAPI = createApi({
         method: 'PATCH',
         body: timeSlot,
       }),
+      invalidatesTags: ['Schedule'],
     }),
   }),
 });

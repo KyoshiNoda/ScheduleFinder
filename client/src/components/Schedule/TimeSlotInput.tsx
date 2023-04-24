@@ -2,9 +2,7 @@ import { useState, useRef } from 'react';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { TimeSlot as TimeSlotType } from '../../types';
-type Props = {
-  setTimeSlots: any;
-};
+type Props = {};
 
 const formActions = {
   CREATE: 'create',
@@ -29,7 +27,7 @@ export const colors: string[] = [
   'rose',
 ];
 
-function TimeSlotInput({ setTimeSlots }: Props) {
+function TimeSlotInput({}: Props) {
   const formRef = useRef(document.createElement('form'));
   const titleRef = useRef(document.createElement('input'));
   const mondayRef = useRef(document.createElement('input'));
@@ -46,7 +44,7 @@ function TimeSlotInput({ setTimeSlots }: Props) {
 
   const [createTimeSlotMutation, { isError, isLoading }] =
     useCreateTimeSlotMutation();
- 
+
   let scheduleID = '';
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
@@ -101,7 +99,6 @@ function TimeSlotInput({ setTimeSlots }: Props) {
       });
       if ('data' in result) {
         const { data } = result;
-        setTimeSlots((prevState: any) => [...prevState, data]);
       }
     } catch (error) {
       console.error(error);

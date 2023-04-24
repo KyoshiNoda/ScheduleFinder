@@ -3,7 +3,6 @@ import TimeSlot from './TimeSlot';
 import { useGetScheduleQuery } from '../../redux/services/schedule/scheduleService';
 
 type Props = {
-  timeSlots: TimeSlotType[] | undefined;
 };
 
 function ScheduleBox({}: Props) {
