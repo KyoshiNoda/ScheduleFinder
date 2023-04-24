@@ -15,6 +15,12 @@ export const scheduleAPI = createApi({
     },
   }),
   endpoints: (builder) => ({
+    getSchedule: builder.query({
+      query: () => ({
+        url: 'api/schedules/mySchedule',
+        method: 'GET',
+      }),
+    }),
     createTimeSlot: builder.mutation<
       ScheduleType,
       { scheduleId: string; timeSlot: TimeSlotType }
@@ -49,6 +55,7 @@ export const scheduleAPI = createApi({
 });
 
 export const {
+  useGetScheduleQuery,
   useCreateTimeSlotMutation,
   useDeleteTimeSlotMutation,
   useUpdateTimeSlotMutation,

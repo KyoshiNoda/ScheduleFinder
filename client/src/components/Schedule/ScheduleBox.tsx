@@ -1,10 +1,16 @@
 import { TimeSlot as TimeSlotType } from '../../types';
 import TimeSlot from './TimeSlot';
-type Props = { 
+import { useGetScheduleQuery } from '../../redux/services/schedule/scheduleService';
+
+type Props = {
   timeSlots: TimeSlotType[] | undefined;
 };
 
-function ScheduleBox({ timeSlots }: Props) {
+function ScheduleBox({}: Props) {
+  const { data, isFetching } = useGetScheduleQuery('schedule', {
+    pollingInterval: 900000,
+  });
+
   const convertTimeToMinutes = (time: string) => {
     const lastTwoChars: string = time.slice(time.length - 2, time.length);
     time = time.slice(0, time.indexOf(' '));
@@ -86,10 +92,10 @@ function ScheduleBox({ timeSlots }: Props) {
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               monday
             </h2>
-            {timeSlots &&
-              timeSlots
-                .filter((timeSlot) => timeSlot.days.monday)
-                .map((timeSlot) => (
+            {!isFetching &&
+              data[0].timeSlot
+                .filter((timeSlot: TimeSlotType) => timeSlot.days.monday)
+                .map((timeSlot: TimeSlotType) => (
                   <TimeSlot
                     key={timeSlot._id}
                     id={timeSlot._id}
@@ -104,7 +110,7 @@ function ScheduleBox({ timeSlots }: Props) {
                     location={timeSlot.location}
                     professor={timeSlot.professor}
                     color={timeSlot.color}
-                    days = {timeSlot.days}
+                    days={timeSlot.days}
                   />
                 ))}
           </div>
@@ -112,10 +118,10 @@ function ScheduleBox({ timeSlots }: Props) {
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               tuesday
             </h2>
-            {timeSlots &&
-              timeSlots
-                .filter((timeSlot) => timeSlot.days.tuesday)
-                .map((timeSlot) => (
+            {!isFetching &&
+              data[0].timeSlot
+                .filter((timeSlot: TimeSlotType) => timeSlot.days.tuesday)
+                .map((timeSlot: TimeSlotType) => (
                   <TimeSlot
                     key={timeSlot._id}
                     id={timeSlot._id}
@@ -130,7 +136,7 @@ function ScheduleBox({ timeSlots }: Props) {
                     location={timeSlot.location}
                     professor={timeSlot.professor}
                     color={timeSlot.color}
-                    days = {timeSlot.days}
+                    days={timeSlot.days}
                   />
                 ))}
           </div>
@@ -138,10 +144,10 @@ function ScheduleBox({ timeSlots }: Props) {
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               wednesday
             </h2>
-            {timeSlots &&
-              timeSlots
-                .filter((timeSlot) => timeSlot.days.wednesday)
-                .map((timeSlot) => (
+            {!isFetching &&
+              data[0].timeSlot
+                .filter((timeSlot: TimeSlotType) => timeSlot.days.wednesday)
+                .map((timeSlot: TimeSlotType) => (
                   <TimeSlot
                     key={timeSlot._id}
                     id={timeSlot._id}
@@ -156,7 +162,7 @@ function ScheduleBox({ timeSlots }: Props) {
                     location={timeSlot.location}
                     professor={timeSlot.professor}
                     color={timeSlot.color}
-                    days = {timeSlot.days}
+                    days={timeSlot.days}
                   />
                 ))}
           </div>
@@ -164,10 +170,10 @@ function ScheduleBox({ timeSlots }: Props) {
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               thursday
             </h2>
-            {timeSlots &&
-              timeSlots
-                .filter((timeSlot) => timeSlot.days.thursday)
-                .map((timeSlot) => (
+            {!isFetching &&
+              data[0].timeSlot
+                .filter((timeSlot: TimeSlotType) => timeSlot.days.thursday)
+                .map((timeSlot: TimeSlotType) => (
                   <TimeSlot
                     key={timeSlot._id}
                     id={timeSlot._id}
@@ -182,7 +188,7 @@ function ScheduleBox({ timeSlots }: Props) {
                     location={timeSlot.location}
                     professor={timeSlot.professor}
                     color={timeSlot.color}
-                    days = {timeSlot.days}
+                    days={timeSlot.days}
                   />
                 ))}
           </div>
@@ -190,10 +196,10 @@ function ScheduleBox({ timeSlots }: Props) {
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               friday
             </h2>
-            {timeSlots &&
-              timeSlots
-                .filter((timeSlot) => timeSlot.days.friday)
-                .map((timeSlot) => (
+            {!isFetching &&
+              data[0].timeSlot
+                .filter((timeSlot: TimeSlotType) => timeSlot.days.friday)
+                .map((timeSlot: TimeSlotType) => (
                   <TimeSlot
                     key={timeSlot._id}
                     id={timeSlot._id}
@@ -208,7 +214,7 @@ function ScheduleBox({ timeSlots }: Props) {
                     location={timeSlot.location}
                     professor={timeSlot.professor}
                     color={timeSlot.color}
-                    days = {timeSlot.days}
+                    days={timeSlot.days}
                   />
                 ))}
           </div>

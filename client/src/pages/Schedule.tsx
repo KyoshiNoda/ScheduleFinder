@@ -25,11 +25,11 @@ function Schedule({}: Props) {
   }, [data, isFetching, schedule]);
 
   return (
-    <div className="flex h-[1110px] min-h-full flex-col gap-10 bg-slate-400 px-12 dark:bg-slate-900">
+    <div className="flex h-[1110px] min-h-full flex-col gap-10 bg-slate-400 px-8 2xl:px-12 dark:bg-slate-900">
       <div className="flex justify-end">
         <Toggle />
       </div>
-      <div className="flex gap-10">
+      <div className="flex gap-4 2xl:gap-10">
         <ScheduleBox timeSlots={timeSlots} />
         <TimeSlotInput setTimeSlots={setTimeSlots} />
       </div>
