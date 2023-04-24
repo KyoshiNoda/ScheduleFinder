@@ -2,9 +2,7 @@ import { useState, useRef } from 'react';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { TimeSlot as TimeSlotType } from '../../types';
-import * as dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc);
+import { convertTo24Hour } from '../../utils/scheduleUtils';
 type Props = {
   setTimeSlots: any;
 };
@@ -27,39 +25,6 @@ export const colors: string[] = [
 ];
 
 function TimeSlotInput({ setTimeSlots }: Props) {
-  function isSecondTimeAfterFirst(firstTime: string, secondTime: string) {
-    // Convert the input strings to 24-hour format
-    let firstTime24 = convertTo24Hour(firstTime);
-    let secondTime24 = convertTo24Hour(secondTime);
-
-    // Compare the times and return the result
-    return secondTime24 > firstTime24;
-  }
-
-  function convertTo24Hour(time12: any) {
-    // Split the input string into hours and minutes
-    let [hour, minute] = time12.split(':');
-
-    // Extract the period (AM or PM) from the end of the string
-    let period = time12.slice(-2);
-
-    // Convert the hour to a number
-    hour = parseInt(hour);
-
-    // If the period is PM and the hour is not 12, add 12 to the hour
-    if (period === 'PM' && hour !== 12) {
-      hour += 12;
-    }
-
-    // If the period is AM and the hour is 12, set the hour to 0
-    if (period === 'AM' && hour === 12) {
-      hour = 0;
-    }
-
-    // Return the time in 24-hour format as a number
-    return hour * 60 + parseInt(minute);
-  }
-
   const formRef = useRef(document.createElement('form'));
   const titleRef = useRef(document.createElement('input'));
   const mondayRef = useRef(document.createElement('input'));
@@ -134,16 +99,15 @@ function TimeSlotInput({ setTimeSlots }: Props) {
       daySelection.friday = true;
       setDaysError(false);
     }
-
+    
     if (
-      !isSecondTimeAfterFirst(
-        startTimeRef.current.value,
-        endTimeRef.current.value
-      )
+      convertTo24Hour(startTimeRef.current.value) >
+      convertTo24Hour(endTimeRef.current.value)
     ) {
       setTimeError(true);
       return;
     }
+
     if (timeSlotColor === 'border-none') {
       setColorError(true);
       return;
