@@ -49,7 +49,7 @@ function TimeSlot(props: Props) {
   const thursdayRef = useRef(document.createElement('input'));
   const fridayRef = useRef(document.createElement('input'));
 
-  // Refs
+  // Input Refs
   const titleRef = useRef(document.createElement('input'));
   const startTimeRef = useRef(document.createElement('input'));
   const endTimeRef = useRef(document.createElement('input'));
