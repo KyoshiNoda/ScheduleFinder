@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useGetScheduleQuery } from '../redux/services/schedule/scheduleService';
 import { Button } from 'flowbite-react';
+import { useAppDispatch } from '../redux/store';
+import { toggleReadOnly } from '../redux/feats/timeSlot/timeSlotSlice';
 
 type days = {
   monday: boolean;
@@ -34,6 +36,9 @@ type Schedule = {
 
 const CompareSchedule = () => {
   const { userId } = useParams();
+
+  const dispatch = useAppDispatch();
+  dispatch(toggleReadOnly(true));
 
   // This states are used to conditionallly render the titles of the schedules and the toggles.
   const [showOtherSchedule, setShowOtherSchedule] = useState<boolean>(true);
