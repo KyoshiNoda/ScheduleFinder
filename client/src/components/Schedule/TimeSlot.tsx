@@ -303,11 +303,11 @@ function TimeSlot(props: Props) {
             ) : (
               <div className="flex justify-center gap-3 text-2xl dark:text-white">
                 <div>Days:</div>
-                <div>{days?.monday && <>M</>}</div>
-                <div>{days?.tuesday && <>T</>}</div>
-                <div>{days?.wednesday && <>W</>}</div>
-                <div>{days?.thursday && <>TH</>}</div>
-                <div>{days?.friday && <>F</>}</div>
+                <div>{days?.monday && 'M'}</div>
+                <div>{days?.tuesday && 'T'}</div>
+                <div>{days?.wednesday && 'W'}</div>
+                <div>{days?.thursday && 'TH'}</div>
+                <div>{days?.friday && 'F'}</div>
               </div>
             )}
             <div className="flex justify-evenly">
@@ -326,10 +326,10 @@ function TimeSlot(props: Props) {
                     />
                   </>
                 ) : (
-                  <div className="text-2xl dark:text-white">
-                    <p>Location:</p>
-                    <span>
-                      {props.location === null ? <>null</> : props.location}
+                  <div className="text-2xl dark:text-white space-x-2">
+                    <span>Location:</span>
+                    <span className='capitalize'>
+                      {props.location ? props.location : 'N/A'}
                     </span>
                   </div>
                 )}
@@ -349,10 +349,10 @@ function TimeSlot(props: Props) {
                     />
                   </>
                 ) : (
-                  <div className="text-2xl dark:text-white">
-                    <p>Professor:</p>
-                    <span>
-                      {props.professor === null ? <>null</> : props.professor}
+                  <div className="text-2xl dark:text-white space-x-2">
+                    <span>Professor:</span>
+                    <span className='capitalize'>
+                      {props.professor ? props.professor : 'N/A'}
                     </span>
                   </div>
                 )}
