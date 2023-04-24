@@ -19,7 +19,7 @@ class UserController {
   public static async getUserInfo(req: any, res: any) {
     const userID: string = req.user.data._id;
     try {
-      const user = await User.find({ user_id: userID }).exec();
+      const user = await User.find({ _id: userID }).exec();
       if (!user) {
         return res.status(404).json({
           message: `User ${userID} not found`,
