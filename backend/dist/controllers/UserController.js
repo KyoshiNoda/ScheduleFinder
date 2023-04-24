@@ -79,24 +79,24 @@ class UserController {
             res.status(200).json(deletedUser);
         });
     }
-    // PATCH user by id
+    // PATCH user by Token
     static updateUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const id = req.params.id;
+            const userID = req.user.data._id;
             if (req.body.password) {
                 const newPassword = req.body.password;
                 const salt = yield bcrypt_1.default.genSalt();
                 const hashedPassword = yield bcrypt_1.default.hash(newPassword, salt);
-                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: id }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }), { returnOriginal: false });
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }), { returnOriginal: false });
                 res.status(200).json(updatedUser);
             }
             else {
                 try {
-                    const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: id }, Object.assign({}, req.body), { returnOriginal: false });
+                    const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, Object.assign({}, req.body), { returnOriginal: false });
                     res.status(200).json(updatedUser);
                 }
                 catch (error) {
-                    res.json(`The update attempt to user ${id} has failed`);
+                    res.json(`The update attempt to user ${userID} has failed`);
                 }
             }
         });

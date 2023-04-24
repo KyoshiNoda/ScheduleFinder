@@ -35,7 +35,6 @@ class UserController {
     }
   }
 
-
   // GET single user by id
   public static async getUserById(req: Request, res: Response): Promise<any> {
     const id = req.params.id;
@@ -50,7 +49,6 @@ class UserController {
       .catch((err) => console.log(err));
   }
 
-
   // DELETE user by id
   public static async deleteUser(req: Request, res: Response) {
     const id = req.params.id;
@@ -64,15 +62,15 @@ class UserController {
     res.status(200).json(deletedUser);
   }
 
-  // PATCH user by id
-  public static async updateUser(req: Request, res: Response) {
-    const id = req.params.id;
+  // PATCH user by Token
+  public static async updateUser(req: any, res: any) {
+    const userID: string = req.user.data._id;
     if (req.body.password) {
       const newPassword = req.body.password;
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(newPassword, salt);
       const updatedUser = await User.findOneAndUpdate(
-        { _id: id },
+        { _id: userID },
         { ...req.body, password: hashedPassword },
         { returnOriginal: false }
       );
@@ -80,13 +78,13 @@ class UserController {
     } else {
       try {
         const updatedUser = await User.findOneAndUpdate(
-          { _id: id },
+          { _id: userID },
           { ...req.body },
           { returnOriginal: false }
         );
         res.status(200).json(updatedUser);
       } catch (error) {
-        res.json(`The update attempt to user ${id} has failed`);
+        res.json(`The update attempt to user ${userID} has failed`);
       }
     }
   }
