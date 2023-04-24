@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Modal } from 'flowbite-react';
 import {
   useGetUserInfoQuery,
   useUpdateUserInfoMutation,
@@ -8,12 +9,16 @@ import ProfilePic from './ProfilePic';
 function ProfileTab() {
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
+  const [changePassword, setChangePassword] = useState<boolean>(false);
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserInfoMutation();
   const emailRef = useRef(document.createElement('input'));
+  const passwordRef = useRef(document.createElement('input'));
 
   useEffect(() => {
     if (data && !isLoading) {
-      setUserInfo(data[0]);
+      const userInfoWithoutPassword = { ...data[0] };
+      delete userInfoWithoutPassword.password;
+      setUserInfo(userInfoWithoutPassword);
     }
   }, [data, isLoading]);
 
@@ -21,9 +26,10 @@ function ProfileTab() {
     try {
       const updatedUser = await updateUser({
         ...userInfo,
-        email: emailRef.current.value,
+        email: emailRef.current?.value,
       }).unwrap();
       setUserInfo(updatedUser);
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -65,6 +71,7 @@ function ProfileTab() {
 
             <button
               type="button"
+              onClick={() => setChangePassword(true)}
               className="w-full rounded bg-blue-400 px-8 py-3 text-lg font-semibold text-white dark:bg-blue-800"
             >
               Change Password
