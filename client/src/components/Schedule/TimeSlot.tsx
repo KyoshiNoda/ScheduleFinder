@@ -157,7 +157,7 @@ function TimeSlot(props: Props) {
             <div className="flex justify-center">
               {editMode ? (
                 <div className="w-1/2">
-                  <label htmlFor="title" className="text-3xl">
+                  <label htmlFor="title" className="text-3xl dark:text-white">
                     Title
                   </label>
                   <input
@@ -189,10 +189,10 @@ function TimeSlot(props: Props) {
                   />
                 </div>
               ) : (
-                <span>{props.startTime}</span>
+                <span className='mx-3'>{props.startTime}</span>
               )}
 
-              {!editMode && <>-</>}
+              {!editMode && '-'}
 
               {editMode ? (
                 <div className="w-1/6">
@@ -208,7 +208,7 @@ function TimeSlot(props: Props) {
                   />
                 </div>
               ) : (
-                <span>{props.endTime}</span>
+                <span className='mx-3'>{props.endTime}</span>
               )}
             </div>
 
@@ -302,19 +302,19 @@ function TimeSlot(props: Props) {
               </ul>
             ) : (
               <div className="flex justify-center gap-3 text-2xl dark:text-white">
-                <div>Days:</div>
-                <div>{days?.monday && 'M'}</div>
-                <div>{days?.tuesday && 'T'}</div>
-                <div>{days?.wednesday && 'W'}</div>
-                <div>{days?.thursday && 'TH'}</div>
-                <div>{days?.friday && 'F'}</div>
+                <span className='font-semibold'>Days:</span>
+                <span>{days?.monday && 'M'}</span>
+                <span>{days?.tuesday && 'T'}</span>
+                <span>{days?.wednesday && 'W'}</span>
+                <span>{days?.thursday && 'TH'}</span>
+                <span>{days?.friday && 'F'}</span>
               </div>
             )}
             <div className="flex justify-evenly">
               <div>
                 {editMode ? (
                   <>
-                    <label htmlFor="location" className="text-sm">
+                    <label htmlFor="location" className="text-sm dark:text-white">
                       Location
                     </label>
                     <input
@@ -327,7 +327,7 @@ function TimeSlot(props: Props) {
                   </>
                 ) : (
                   <div className="text-2xl dark:text-white space-x-2">
-                    <span>Location:</span>
+                    <span className='font-semibold'>Location:</span>
                     <span className='capitalize'>
                       {props.location ? props.location : 'N/A'}
                     </span>
@@ -337,7 +337,7 @@ function TimeSlot(props: Props) {
               <div>
                 {editMode ? (
                   <>
-                    <label htmlFor="professor" className="text-sm">
+                    <label htmlFor="professor" className="text-sm dark:text-white">
                       Professor
                     </label>
                     <input
@@ -350,7 +350,7 @@ function TimeSlot(props: Props) {
                   </>
                 ) : (
                   <div className="text-2xl dark:text-white space-x-2">
-                    <span>Professor:</span>
+                    <span className='font-semibold'>Professor:</span>
                     <span className='capitalize'>
                       {props.professor ? props.professor : 'N/A'}
                     </span>
