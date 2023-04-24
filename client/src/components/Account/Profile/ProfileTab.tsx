@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Modal } from 'flowbite-react';
+import { Modal, Button, Label, TextInput } from 'flowbite-react';
 import {
   useGetUserInfoQuery,
   useUpdateUserInfoMutation,
@@ -68,14 +68,72 @@ function ProfileTab() {
             >
               Save Changes
             </button>
-
             <button
               type="button"
               onClick={() => setChangePassword(true)}
               className="w-full rounded bg-blue-400 px-8 py-3 text-lg font-semibold text-white dark:bg-blue-800"
             >
               Change Password
-            </button>
+            </button>{' '}
+            <Modal
+              show={changePassword}
+              size="md"
+              popup={true}
+              onClose={() => setChangePassword(false)}
+            >
+              <Modal.Header />
+              <Modal.Body>
+                <div className="flex flex-col">
+                  <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
+                    <h3 className="text-center text-xl font-medium text-gray-900 dark:text-white">
+                      Reset Password
+                    </h3>
+                    <div>
+                      <div className="mb-2 block">
+                        <Label
+                          htmlFor="currentPassword"
+                          value="Current Password"
+                        />
+                      </div>
+                      <TextInput
+                        id="currentPassword"
+                        placeholder="••••••••"
+                        required={true}
+                        type="password"
+                      />
+                    </div>
+                    <div>
+                      <div className="mb-2 block">
+                        <Label htmlFor="password" value="New Password" />
+                      </div>
+                      <TextInput
+                        id="NewPassword"
+                        type="password"
+                        required={true}
+                        placeholder="••••••••"
+                      />
+                    </div>
+                    <div>
+                      <div className="mb-2 block">
+                        <Label
+                          htmlFor="confirmPassword"
+                          value="Confirm Password"
+                        />
+                      </div>
+                      <TextInput
+                        id="confirmPassword"
+                        type="password"
+                        required={true}
+                        placeholder="••••••••"
+                      />
+                    </div>
+                  </div>
+                  <Button onClick={() => setChangePassword(true)} size="xl">
+                    Submit
+                  </Button>
+                </div>
+              </Modal.Body>
+            </Modal>
             <button
               type="button"
               className="w-full rounded bg-red-400 px-8 py-3 text-lg font-semibold text-white dark:bg-red-800"
@@ -94,3 +152,12 @@ function ProfileTab() {
 }
 
 export default ProfileTab;
+{
+  /* <button
+type="button"
+onClick={() => setChangePassword(true)}
+className="w-full rounded bg-blue-400 px-8 py-3 text-lg font-semibold text-white dark:bg-blue-800"
+>
+Change Password
+</button> */
+}
