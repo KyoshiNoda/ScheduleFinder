@@ -10,7 +10,7 @@ const store = configureStore({
     auth: authReducer,
     [authAPI.reducerPath]: authAPI.reducer,
     [scheduleAPI.reducerPath]: scheduleAPI.reducer,
-    [userAPI.reducerPath]: scheduleAPI.reducer,
+    [userAPI.reducerPath]: userAPI.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
