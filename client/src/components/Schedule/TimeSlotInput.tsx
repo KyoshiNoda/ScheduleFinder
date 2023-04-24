@@ -26,7 +26,7 @@ export const colors: string[] = [
   'rose',
 ];
 
-function TimeSlotInput({ setTimeSlots }: Props) {
+function TimeSlotInput({}: Props) {
   const formRef = useRef(document.createElement('form'));
   const titleRef = useRef(document.createElement('input'));
   const mondayRef = useRef(document.createElement('input'));
@@ -143,7 +143,6 @@ function TimeSlotInput({ setTimeSlots }: Props) {
       });
       if ('data' in result) {
         const { data } = result;
-        setTimeSlots((prevState: any) => [...prevState, data]);
       }
       setTimeSlotColor('border-none');
       setColorError(false);

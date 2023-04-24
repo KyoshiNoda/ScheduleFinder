@@ -120,7 +120,6 @@ function TimeSlot(props: Props) {
     }
     setEditMode(false);
     setIsTimeSlotClicked(false);
-    window.location.reload();
   };
 
   const deleteHandler = async () => {
@@ -131,11 +130,9 @@ function TimeSlot(props: Props) {
         scheduleId: scheduleID,
         timeSlot: { _id: props.id! },
       });
-      refetch();
     } catch (error) {
       console.log(error); // handle errors here
     }
-    window.location.reload();
   };
 
   return (
