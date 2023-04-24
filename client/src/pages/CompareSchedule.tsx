@@ -1,7 +1,7 @@
 import ScheduleBox from '../components/Schedule/ScheduleBox';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useGetScheduleQuery } from '../redux/services/auth/authService';
+import { useGetScheduleQuery } from '../redux/services/schedule/scheduleService';
 import { Button } from 'flowbite-react';
 
 type days = {
@@ -35,7 +35,7 @@ type Schedule = {
 const CompareSchedule = () => {
   const { userId } = useParams();
 
-  // This states are used to conditionallly render the titles of the scheduls and the toggles.
+  // This states are used to conditionallly render the titles of the schedules and the toggles.
   const [showOtherSchedule, setShowOtherSchedule] = useState<boolean>(true);
   const [showUserSchedule, setShowUserSchedule] = useState<boolean>(false);
   const [showCompareSchedule, setShowCompareSchedule] =
