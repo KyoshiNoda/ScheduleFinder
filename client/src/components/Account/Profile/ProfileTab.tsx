@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useGetUserInfoQuery } from '../../../redux/services/user/userService';
+import { User as UserType } from '../../../types';
 import ProfilePic from './ProfilePic';
 function ProfileTab() {
-  const { data, isLoading, isError } = useGetUserInfoQuery('User');
-  const [userInfo, setUserInfo] = useState<any>();
+  const { data, isLoading } = useGetUserInfoQuery('User');
+  const [userInfo, setUserInfo] = useState<UserType | undefined>();
 
   useEffect(() => {
     if (data && !isLoading) {
@@ -16,7 +17,7 @@ function ProfileTab() {
       {userInfo ? (
         <>
           <div className="flex items-center gap-3 py-4">
-            <ProfilePic picture={userInfo.photoURL} />
+            <ProfilePic picture={userInfo!.photoURL} />
             <div className="font-md text-2xl dark:text-white">
               {userInfo.firstName} {userInfo.lastName}
             </div>
