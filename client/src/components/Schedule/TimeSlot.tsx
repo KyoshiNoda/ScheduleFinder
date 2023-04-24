@@ -42,9 +42,6 @@ function TimeSlot(props: Props) {
   const [isTimeSlotClicked, setIsTimeSlotClicked] = useState<boolean>(false);
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [title, setTitle] = useState<string>(props.title);
-  const [startTime, setStartTime] = useState<string>(props.startTime);
-  const [endTime, setEndTime] = useState<string>(props.endTime);
   const [days, setDays] = useState<DaysCheckedType>(props.days);
   const mondayRef = useRef(document.createElement('input'));
   const tuesdayRef = useRef(document.createElement('input'));
@@ -52,12 +49,21 @@ function TimeSlot(props: Props) {
   const thursdayRef = useRef(document.createElement('input'));
   const fridayRef = useRef(document.createElement('input'));
 
-  const [location, setLocation] = useState<string | null>(
-    props.location ?? null
-  );
-  const [professor, setProfessor] = useState<string | null>(
-    props.professor ?? null
-  );
+  // Refs
+  const titleRef = useRef(document.createElement('input'));
+  const startTimeRef = useRef(document.createElement('input'));
+  const endTimeRef = useRef(document.createElement('input'));
+  const locationRef = useRef(document.createElement('input'));
+  const professorRef = useRef(document.createElement('input'));
+
+  useEffect(() => {
+    if (titleRef.current) titleRef.current.value = props.title;
+    if (startTimeRef.current) startTimeRef.current.value = props.startTime;
+    if (endTimeRef.current) endTimeRef.current.value = props.endTime;
+    if (locationRef.current) locationRef.current.value = props.location || '';
+    if (professorRef.current) professorRef.current.value = props.professor || '';
+  }, [editMode]);
+
   useEffect(() => {
     setTimeSlotColor(props.color);
   }, []);
@@ -65,14 +71,15 @@ function TimeSlot(props: Props) {
   const saveHandler = async () => {
     const updatedTimeSlot: TimeSlotType = {
       _id: props.id!,
-      title: title,
-      startTime: startTime,
-      endTime: endTime,
+      title: titleRef.current.value,
+      startTime: startTimeRef.current.value,
+      endTime: endTimeRef.current.value,
       color: timeSlotColor,
-      professor: professor,
-      location: location,
+      professor: professorRef.current.value,
+      location: locationRef.current.value,
       days: props.days,
     };
+
     if (
       !(
         mondayRef.current.checked ||
@@ -163,8 +170,7 @@ function TimeSlot(props: Props) {
                   <input
                     id="title"
                     type="text"
-                    placeholder={props.title}
-                    onBlur={(event) => setTitle(event.target.value)}
+                    ref={titleRef}
                     className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                   />
                 </div>
@@ -183,13 +189,12 @@ function TimeSlot(props: Props) {
                   <input
                     id="startTime"
                     type="text"
-                    placeholder={props.startTime}
-                    onBlur={(event) => setStartTime(event.target.value)}
+                    ref={startTimeRef}
                     className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                   />
                 </div>
               ) : (
-                <span className='mx-3'>{props.startTime}</span>
+                <span className="mx-3">{props.startTime}</span>
               )}
 
               {!editMode && '-'}
@@ -202,13 +207,12 @@ function TimeSlot(props: Props) {
                   <input
                     id="endTime"
                     type="text"
-                    placeholder={props.endTime}
-                    onBlur={(event) => setEndTime(event.target.value)}
+                    ref={endTimeRef}
                     className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                   />
                 </div>
               ) : (
-                <span className='mx-3'>{props.endTime}</span>
+                <span className="mx-3">{props.endTime}</span>
               )}
             </div>
 
@@ -302,7 +306,7 @@ function TimeSlot(props: Props) {
               </ul>
             ) : (
               <div className="flex justify-center gap-3 text-2xl dark:text-white">
-                <span className='font-semibold'>Days:</span>
+                <span className="font-semibold">Days:</span>
                 <span>{days?.monday && 'M'}</span>
                 <span>{days?.tuesday && 'T'}</span>
                 <span>{days?.wednesday && 'W'}</span>
@@ -314,21 +318,24 @@ function TimeSlot(props: Props) {
               <div>
                 {editMode ? (
                   <>
-                    <label htmlFor="location" className="text-sm dark:text-white">
+                    <label
+                      htmlFor="location"
+                      className="text-sm dark:text-white"
+                    >
                       Location
                     </label>
                     <input
                       id="location"
                       type="text"
-                      onBlur={(event) => setLocation(event.target.value)}
-                      placeholder={props.location!}
+                      ref={locationRef}
+                      placeholder="Enter location"
                       className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                     />
                   </>
                 ) : (
-                  <div className="text-2xl dark:text-white space-x-2">
-                    <span className='font-semibold'>Location:</span>
-                    <span className='capitalize'>
+                  <div className="space-x-2 text-2xl dark:text-white">
+                    <span className="font-semibold">Location:</span>
+                    <span className="capitalize">
                       {props.location ? props.location : 'N/A'}
                     </span>
                   </div>
@@ -337,21 +344,24 @@ function TimeSlot(props: Props) {
               <div>
                 {editMode ? (
                   <>
-                    <label htmlFor="professor" className="text-sm dark:text-white">
+                    <label
+                      htmlFor="professor"
+                      className="text-sm dark:text-white"
+                    >
                       Professor
                     </label>
                     <input
                       id="professor"
                       type="text"
-                      placeholder={props.professor!}
-                      onBlur={(event) => setProfessor(event.target.value)}
+                      placeholder="Enter professor's name"
+                      ref={professorRef}
                       className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                     />
                   </>
                 ) : (
-                  <div className="text-2xl dark:text-white space-x-2">
-                    <span className='font-semibold'>Professor:</span>
-                    <span className='capitalize'>
+                  <div className="space-x-2 text-2xl dark:text-white">
+                    <span className="font-semibold">Professor:</span>
+                    <span className="capitalize">
                       {props.professor ? props.professor : 'N/A'}
                     </span>
                   </div>
