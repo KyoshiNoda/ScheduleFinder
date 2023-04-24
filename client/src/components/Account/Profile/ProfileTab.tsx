@@ -1,11 +1,14 @@
-import { useState, useEffect,useRef } from 'react';
-import { useGetUserInfoQuery,useUpdateUserInfoMutation } from '../../../redux/services/user/userService';
+import { useState, useEffect, useRef } from 'react';
+import {
+  useGetUserInfoQuery,
+  useUpdateUserInfoMutation,
+} from '../../../redux/services/user/userService';
 import { User as UserType } from '../../../types';
 import ProfilePic from './ProfilePic';
 function ProfileTab() {
   const { data, isLoading } = useGetUserInfoQuery('User');
-  const [userInfo, setUserInfo] = useState<UserType | undefined>()
-  const [updateUser, { isLoading: isUpdating }] = useUpdateUserInfoMutation();;
+  const [userInfo, setUserInfo] = useState<UserType | undefined>();
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserInfoMutation();
   const emailRef = useRef(document.createElement('input'));
 
   useEffect(() => {
@@ -15,8 +18,15 @@ function ProfileTab() {
   }, [data, isLoading]);
 
   const emailHandler = async () => {
-    const updatedUser = await updateUser({ email: emailRef.current.value }).unwrap();
-    setUserInfo(updatedUser);
+    try {
+      const updatedUser = await updateUser({
+        ...userInfo,
+        email: emailRef.current.value,
+      }).unwrap();
+      setUserInfo(updatedUser);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -37,7 +47,7 @@ function ProfileTab() {
               Email
             </label>
             <input
-              ref = {emailRef}
+              ref={emailRef}
               type="text"
               id="default-input"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -47,6 +57,7 @@ function ProfileTab() {
           <div className="flex flex-col gap-3">
             <button
               type="button"
+              onClick={emailHandler}
               className="w-full rounded bg-green-400 px-8 py-3 text-lg font-semibold text-white dark:bg-green-800"
             >
               Save Changes

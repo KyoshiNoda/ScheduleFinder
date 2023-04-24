@@ -8,8 +8,8 @@ const UserController_1 = __importDefault(require("../controllers/UserController"
 const AuthController_1 = __importDefault(require("../controllers/AuthController"));
 const router = express_1.default.Router();
 router.get('/', AuthController_1.default.authenticateToken, UserController_1.default.getUserInfo);
+router.patch('/', AuthController_1.default.authenticateToken, UserController_1.default.updateUser);
 router.get('/allUsers', UserController_1.default.getAllUsers);
 router.get('/:id', UserController_1.default.getUserById);
 router.delete('/:id', UserController_1.default.deleteUser);
-router.patch('/:id', UserController_1.default.updateUser);
 exports.default = router;
