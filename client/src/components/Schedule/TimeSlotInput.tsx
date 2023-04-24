@@ -1,8 +1,10 @@
 import { useState, useRef } from 'react';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
-import { TimeSlot as TimeSlotType } from '../../types';
-import { convertTo24Hour } from '../../utils/scheduleUtils';
+import { DaysChecked, TimeSlot as TimeSlotType } from '../../types';
+import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
+import { Modal, Button } from 'flowbite-react';
+import { AiFillWarning } from 'react-icons/ai';
 type Props = {
   setTimeSlots: any;
 };
@@ -41,6 +43,7 @@ function TimeSlotInput({ setTimeSlots }: Props) {
   const [daysError, setDaysError] = useState<boolean>(false);
   const [timeError, setTimeError] = useState<boolean>(false);
   const [colorError, setColorError] = useState<boolean>(false);
+  const [timeSlotError, setTimeSlotError] = useState<boolean>(false);
 
   const [createTimeSlotMutation, { isError, isLoading }] =
     useCreateTimeSlotMutation();
@@ -69,7 +72,7 @@ function TimeSlotInput({ setTimeSlots }: Props) {
       return;
     }
 
-    const daySelection = {
+    const daySelection: DaysChecked = {
       monday: false,
       tuesday: false,
       wednesday: false,
@@ -99,7 +102,7 @@ function TimeSlotInput({ setTimeSlots }: Props) {
       daySelection.friday = true;
       setDaysError(false);
     }
-    
+
     if (
       convertTo24Hour(startTimeRef.current.value) >
       convertTo24Hour(endTimeRef.current.value)
@@ -110,6 +113,18 @@ function TimeSlotInput({ setTimeSlots }: Props) {
 
     if (timeSlotColor === 'border-none') {
       setColorError(true);
+      return;
+    }
+
+    if (
+      !validTimeSlot(
+        startTimeRef.current.value,
+        endTimeRef.current.value,
+        data[0].timeSlot,
+        daySelection
+      )
+    ) {
+      setTimeSlotError(true);
       return;
     }
     const currentTimeSlot: TimeSlotType = {
@@ -132,6 +147,7 @@ function TimeSlotInput({ setTimeSlots }: Props) {
       }
       setTimeSlotColor('border-none');
       setColorError(false);
+      setTimeSlotError(false);
     } catch (error) {
       console.error(error);
     }
@@ -359,6 +375,42 @@ function TimeSlotInput({ setTimeSlots }: Props) {
           Submit
         </button>
       </form>
+      {timeSlotError && (
+        <Modal
+          show={timeSlotError}
+          size="md"
+          popup={true}
+          onClose={() => {
+            setTimeSlotColor('border-none');
+            setColorError(false);
+            setTimeSlotError(false);
+            formRef.current.reset();
+          }}
+        >
+          <Modal.Header />
+          <Modal.Body>
+            <div className="text-center">
+              <AiFillWarning className="mx-auto mb-4 h-14 w-14 text-red-400 dark:text-gray-200" />
+              <h3 className="mb-5 text-lg font-normal text-red-500 dark:text-gray-400">
+                There is an existing TimeSlot!
+              </h3>
+              <div className="flex justify-center gap-4">
+                <Button
+                  color="gray"
+                  onClick={() => {
+                    setTimeSlotColor('border-none');
+                    setColorError(false);
+                    setTimeSlotError(false);
+                    formRef.current.reset();
+                  }}
+                >
+                  Ok Thank you!
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+      )}
     </div>
   );
 }
