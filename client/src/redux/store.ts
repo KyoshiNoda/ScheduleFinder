@@ -5,7 +5,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { scheduleAPI } from './services/schedule/scheduleService';
 
 const store = configureStore({
-  reducer: {
+  reducer: { 
     auth: authReducer,
     [authAPI.reducerPath]: authAPI.reducer,
     [scheduleAPI.reducerPath]: scheduleAPI.reducer,
