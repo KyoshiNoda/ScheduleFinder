@@ -16,6 +16,7 @@ function SignUpForm({}: Props) {
   const birthday = useRef(document.createElement('input'));
 
   const [emailError, setEmailError] = useState<string>('');
+  const [passwordError, setPasswordError] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -23,7 +24,7 @@ function SignUpForm({}: Props) {
     event.preventDefault();
     const birthDay = new Date(birthday.current.value);
     if (password.current.value !== confirmPassword.current.value) {
-      alert('passwords dont match!');
+      setPasswordError(true);
       return;
     }
     let newUser: RegisterUserType = {
@@ -127,10 +128,17 @@ function SignUpForm({}: Props) {
               ref={password}
               type="password"
               id="password"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className={`block w-full rounded-lg border ${
+                passwordError ? 'border-rose-500' : ' border-gray-300'
+              } bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
               placeholder="•••••••••"
               required
             />
+            {passwordError && (
+              <span className="text-xs text-red-500">
+                Password and confirm password aren't match
+              </span>
+            )}
           </div>
           <div>
             <label
@@ -143,10 +151,17 @@ function SignUpForm({}: Props) {
               ref={confirmPassword}
               type="password"
               id="confirm_password"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className={`block w-full rounded-lg border ${
+                passwordError ? 'border-rose-500' : ' border-gray-300'
+              } bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
               placeholder="•••••••••"
               required
             />
+            {passwordError && (
+              <span className="text-xs text-red-500">
+                Password and confirm password don't match
+              </span>
+            )}
           </div>
           <div>
             <label
