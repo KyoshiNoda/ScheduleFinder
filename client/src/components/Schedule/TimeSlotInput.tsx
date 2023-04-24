@@ -5,9 +5,7 @@ import { DaysChecked, TimeSlot as TimeSlotType } from '../../types';
 import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
 import { Modal, Button } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
-type Props = {
-  setTimeSlots: any;
-};
+type Props = {};
 
 export const colors: string[] = [
   'slate',

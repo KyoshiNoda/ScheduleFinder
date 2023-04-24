@@ -12,6 +12,7 @@ import {
   useUpdateTimeSlotMutation,
 } from '../../redux/services/schedule/scheduleService';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
+import { useAppSelector } from '../../redux/store';
 
 type Props = {
   id?: undefined | string;
@@ -35,6 +36,9 @@ function TimeSlot(props: Props) {
   if (!isFetching) {
     scheduleID = data[0]._id;
   }
+
+  // Check if the time slot is readonly
+  const readOnly: boolean = useAppSelector((state) => state.timeSlot.readOnly);
 
   const [deleteTimeSlotMutation] = useDeleteTimeSlotMutation();
   const [updateTimeSlotMutation] = useUpdateTimeSlotMutation();
@@ -61,7 +65,8 @@ function TimeSlot(props: Props) {
     if (startTimeRef.current) startTimeRef.current.value = props.startTime;
     if (endTimeRef.current) endTimeRef.current.value = props.endTime;
     if (locationRef.current) locationRef.current.value = props.location || '';
-    if (professorRef.current) professorRef.current.value = props.professor || '';
+    if (professorRef.current)
+      professorRef.current.value = props.professor || '';
   }, [editMode]);
 
   useEffect(() => {
@@ -406,21 +411,19 @@ function TimeSlot(props: Props) {
         </Modal.Body>
       </Modal>
       <div
-        className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${props.color}-400 w-full hover:cursor-pointer hover:brightness-50 dark:text-black`}
+        className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${props.color}-400 w-full ${!readOnly && 'hover:cursor-pointer hover:brightness-50'} dark:text-black`}
         style={{ top: `${props.top}px`, height: `${props.height}px` }}
-        onClick={() => setIsTimeSlotClicked(true)}
-        onMouseEnter={() => setIsHovering(true)}
+        onClick={() => setIsTimeSlotClicked(readOnly ? false : true)}
+        onMouseEnter={() => setIsHovering(readOnly ? false:true)}
         onMouseLeave={() => setIsHovering(false)}
       >
-        <>
-          {isHovering && <AiFillEdit size={'96'} />}
-          {parseInt(props.height) > 55 && (
-            <div className='flex flex-col items-center gap-1'>
-              <h2 className="font-bold text-center">{props.title}</h2>
-              <span>{`${props.startTime} - ${props.endTime}`}</span>
-            </div>
-          )}
-        </>
+        {isHovering && <AiFillEdit size={'96'} />}
+        {parseInt(props.height) > 55 && (
+          <div className="flex flex-col items-center gap-1">
+            <h2 className="text-center font-bold">{props.title}</h2>
+            <span>{`${props.startTime} - ${props.endTime}`}</span>
+          </div>
+        )}
       </div>
     </>
   );
