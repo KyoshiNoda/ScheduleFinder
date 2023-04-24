@@ -1,16 +1,23 @@
-import { useState, useEffect } from 'react';
-import { useGetUserInfoQuery } from '../../../redux/services/user/userService';
+import { useState, useEffect,useRef } from 'react';
+import { useGetUserInfoQuery,useUpdateUserInfoMutation } from '../../../redux/services/user/userService';
 import { User as UserType } from '../../../types';
 import ProfilePic from './ProfilePic';
 function ProfileTab() {
   const { data, isLoading } = useGetUserInfoQuery('User');
-  const [userInfo, setUserInfo] = useState<UserType | undefined>();
+  const [userInfo, setUserInfo] = useState<UserType | undefined>()
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserInfoMutation();;
+  const emailRef = useRef(document.createElement('input'));
 
   useEffect(() => {
     if (data && !isLoading) {
       setUserInfo(data[0]);
     }
   }, [data, isLoading]);
+
+  const emailHandler = async () => {
+    const updatedUser = await updateUser({ email: emailRef.current.value }).unwrap();
+    setUserInfo(updatedUser);
+  };
 
   return (
     <div>
@@ -30,6 +37,7 @@ function ProfileTab() {
               Email
             </label>
             <input
+              ref = {emailRef}
               type="text"
               id="default-input"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
