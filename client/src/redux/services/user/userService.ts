@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
-
+import { User as UserType } from '../../../types';
 export const userAPI = createApi({
   reducerPath: 'userAPI',
   baseQuery: fetchBaseQuery({
@@ -27,10 +26,15 @@ export const userAPI = createApi({
       }),
       providesTags: ['User'],
     }),
+    updateUserInfo: builder.mutation<UserType, Partial<UserType>>({
+      query: (body) => ({
+        url: 'api/users',
+        method: 'PATCH',
+        body,
+      }),
+      invalidatesTags: ['User'],
+    }),
   }),
-  
 });
 
-export const {
-  useGetUserInfoQuery
-} = userAPI;
+export const { useGetUserInfoQuery, useUpdateUserInfoMutation } = userAPI;
