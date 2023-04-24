@@ -5,9 +5,6 @@ import { DaysChecked, TimeSlot as TimeSlotType } from '../../types';
 import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
 import { Modal, Button } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
-type Props = {
-  setTimeSlots: any;
-};
 
 export const colors: string[] = [
   'slate',
@@ -26,7 +23,7 @@ export const colors: string[] = [
   'rose',
 ];
 
-function TimeSlotInput({}: Props) {
+function TimeSlotInput() {
   const formRef = useRef(document.createElement('form'));
   const titleRef = useRef(document.createElement('input'));
   const mondayRef = useRef(document.createElement('input'));

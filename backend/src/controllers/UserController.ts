@@ -15,6 +15,26 @@ class UserController {
       .clone()
       .catch((err) => console.log(err));
   }
+  // GET userInfo with Token
+  public static async getUserInfo(req: any, res: any) {
+    const userID: string = req.user.data._id;
+    try {
+      const user = await User.find({ user_id: userID }).exec();
+      if (!user) {
+        return res.status(404).json({
+          message: `User ${userID} not found`,
+        });
+      }
+      res.json(user);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: `Error while getting User ${userID}`,
+        error: err,
+      });
+    }
+  }
+
 
   // GET single user by id
   public static async getUserById(req: Request, res: Response): Promise<any> {

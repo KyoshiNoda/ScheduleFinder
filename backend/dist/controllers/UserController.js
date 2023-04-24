@@ -30,6 +30,28 @@ class UserController {
                 .catch((err) => console.log(err));
         });
     }
+    // GET userInfo with Token
+    static getUserInfo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data._id;
+            try {
+                const user = yield userModel_1.default.find({ user_id: userID }).exec();
+                if (!user) {
+                    return res.status(404).json({
+                        message: `User ${userID} not found`,
+                    });
+                }
+                res.json(user);
+            }
+            catch (err) {
+                console.error(err);
+                res.status(500).json({
+                    message: `Error while getting User ${userID}`,
+                    error: err,
+                });
+            }
+        });
+    }
     // GET single user by id
     static getUserById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
