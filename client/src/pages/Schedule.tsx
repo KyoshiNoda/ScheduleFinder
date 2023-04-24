@@ -11,7 +11,7 @@ function Schedule({}: Props) {
         <Toggle />
       </div>
       <div className="flex gap-4 2xl:gap-10">
-        <ScheduleBox />
+        <ScheduleBox timeSlots={undefined} />
         <TimeSlotInput />
       </div>
     </div>
