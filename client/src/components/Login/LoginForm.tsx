@@ -1,19 +1,48 @@
-import {FormEventHandler, useState } from 'react';
+import { FormEventHandler, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../redux/feats/auth/authActions';
 import { useAppDispatch } from '../../redux/store';
 
 type Props = {};
 function LoginForm(props: Props) {
+  const defaultError: string = 'Something went wrong!';
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [emailErrorMessage, setEmailErrorMessage] =
+    useState<string>(defaultError);
+  const [passwordErrorMessage, setPasswordErrorMessage] =
+    useState<string>(defaultError);
+  const [emailError, setEmailError] = useState<boolean>(false);
+  const [passwordError, setPasswordError] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const formHandler: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
-    await dispatch(loginUser({ email, password })).unwrap();
-    navigate('/auth/schedule');
+    try {
+      // attempts to login user if sucesss navigate to schedule
+      await dispatch(loginUser({ email, password })).unwrap();
+      navigate('/auth/schedule');
+    } catch (error: any) {
+      // if login is not successful render input error styles and display backend error message
+      if (error.response && error.response.status === 400) {
+        // gets the error from backend
+        let errorMessage: string = error.response.data.error;
+
+        // checks if response includes a user or password to dynmically render
+        if (errorMessage.includes('Email')) {
+          setEmailError(true);
+          setEmailErrorMessage(errorMessage);
+        } else {
+          setEmailError(false);
+        }
+        if (errorMessage.includes('password')) {
+          setPasswordError(true);
+          setPasswordErrorMessage(errorMessage);
+        }
+      }
+    }
   };
 
   return (
@@ -27,13 +56,18 @@ function LoginForm(props: Props) {
             Email
           </label>
           <input
-            type="text"
+            type="email"
             name="email"
             id="email"
             placeholder="Email"
             onChange={(event) => setEmail(event.target.value)}
-            className="w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
+            className={`w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400 ${
+              emailError ? 'border-rose-500' : ''
+            }`}
           />
+          {emailError && (
+            <span className="text-xs text-red-500">{emailErrorMessage}</span>
+          )}
         </div>
 
         <div className="space-y-1 text-sm">
@@ -49,8 +83,13 @@ function LoginForm(props: Props) {
             id="password"
             placeholder="••••••••"
             onChange={(event) => setPassword(event.target.value)}
-            className="w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
+            className={`w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400 ${
+              passwordError ? 'border-rose-500' : ''
+            }`}
           />
+          {passwordError && (
+            <span className="text-xs text-red-500">{passwordErrorMessage}</span>
+          )}
           <div className="flex justify-end text-xs dark:text-gray-400">
             <a rel="noopener noreferrer" href="#">
               Forgot Password?

@@ -1,13 +1,12 @@
 import { useState, useRef } from 'react';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
-import { TimeSlot as TimeSlotType } from '../../types';
-type Props = {};
-
-const formActions = {
-  CREATE: 'create',
-  UPDATE: 'update',
-  DELETE: 'delete',
+import { DaysChecked, TimeSlot as TimeSlotType } from '../../types';
+import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
+import { Modal, Button } from 'flowbite-react';
+import { AiFillWarning } from 'react-icons/ai';
+type Props = {
+  setTimeSlots: any;
 };
 
 export const colors: string[] = [
@@ -41,6 +40,10 @@ function TimeSlotInput({}: Props) {
   const professorRef = useRef(document.createElement('input'));
 
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
+  const [daysError, setDaysError] = useState<boolean>(false);
+  const [timeError, setTimeError] = useState<boolean>(false);
+  const [colorError, setColorError] = useState<boolean>(false);
+  const [timeSlotError, setTimeSlotError] = useState<boolean>(false);
 
   const [createTimeSlotMutation, { isError, isLoading }] =
     useCreateTimeSlotMutation();
@@ -53,7 +56,8 @@ function TimeSlotInput({}: Props) {
     scheduleID = data[0]._id;
   }
 
-  const addTimeSlot = async (e: React.FormEvent<HTMLFormElement>) => {
+  const addTimeSlot = async (event: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
     // If no checkboxes have been selected, the form shouldn't be submitted.
     if (
       !(
@@ -63,10 +67,12 @@ function TimeSlotInput({}: Props) {
         thursdayRef.current.checked ||
         fridayRef.current.checked
       )
-    )
+    ) {
+      setDaysError(true);
       return;
+    }
 
-    const daySelection = {
+    const daySelection: DaysChecked = {
       monday: false,
       tuesday: false,
       wednesday: false,
@@ -76,12 +82,51 @@ function TimeSlotInput({}: Props) {
       sunday: false,
     };
 
-    if (mondayRef.current.checked) daySelection.monday = true;
-    if (tuesdayRef.current.checked) daySelection.tuesday = true;
-    if (wednesdayRef.current.checked) daySelection.wednesday = true;
-    if (thursdayRef.current.checked) daySelection.thursday = true;
-    if (fridayRef.current.checked) daySelection.friday = true;
+    if (mondayRef.current.checked) {
+      daySelection.monday = true;
+      setDaysError(false);
+    }
+    if (tuesdayRef.current.checked) {
+      daySelection.tuesday = true;
+      setDaysError(false);
+    }
+    if (wednesdayRef.current.checked) {
+      daySelection.wednesday = true;
+      setDaysError(false);
+    }
+    if (thursdayRef.current.checked) {
+      daySelection.thursday = true;
+      setDaysError(false);
+    }
+    if (fridayRef.current.checked) {
+      daySelection.friday = true;
+      setDaysError(false);
+    }
 
+    if (
+      convertTo24Hour(startTimeRef.current.value) >
+      convertTo24Hour(endTimeRef.current.value)
+    ) {
+      setTimeError(true);
+      return;
+    }
+
+    if (timeSlotColor === 'border-none') {
+      setColorError(true);
+      return;
+    }
+
+    if (
+      !validTimeSlot(
+        startTimeRef.current.value,
+        endTimeRef.current.value,
+        data[0].timeSlot,
+        daySelection
+      )
+    ) {
+      setTimeSlotError(true);
+      return;
+    }
     const currentTimeSlot: TimeSlotType = {
       days: daySelection,
       title: titleRef.current.value,
@@ -91,7 +136,6 @@ function TimeSlotInput({}: Props) {
       professor: professorRef.current.value || null,
       color: timeSlotColor,
     };
-
     try {
       const result = await createTimeSlotMutation({
         scheduleId: scheduleID,
@@ -100,24 +144,18 @@ function TimeSlotInput({}: Props) {
       if ('data' in result) {
         const { data } = result;
       }
+      setTimeSlotColor('border-none');
+      setColorError(false);
+      setTimeSlotError(false);
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const handleSubmit = (
-    e: React.FormEvent<HTMLFormElement>,
-    action: string
-  ) => {
-    e.preventDefault();
-    if (action === formActions.CREATE) addTimeSlot(e);
     formRef.current.reset();
-    setTimeSlotColor('border-none');
   };
 
   return (
     <div className="mt-6 flex h-1/4 w-1/2 flex-col rounded-lg bg-slate-50 p-5 dark:bg-black sm:h-1/2">
-      <form ref={formRef} onSubmit={(e) => handleSubmit(e, formActions.CREATE)}>
+      <form ref={formRef} onSubmit={addTimeSlot}>
         <div>
           <label
             htmlFor="title"
@@ -127,11 +165,11 @@ function TimeSlotInput({}: Props) {
           </label>
           <input
             ref={titleRef}
+            required
             type="text"
             id="title"
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="BIO130"
-            required
           />
         </div>
         <div>
@@ -141,7 +179,11 @@ function TimeSlotInput({}: Props) {
           >
             Days
           </label>
-          <ul className="w-full items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex">
+          <ul
+            className={`w-full items-center rounded-lg border bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex ${
+              daysError ? ' border-rose-400 dark:border-rose-400' : ''
+            }`}
+          >
             <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
               <div className="flex items-center pl-3">
                 <input
@@ -228,6 +270,10 @@ function TimeSlotInput({}: Props) {
               </div>
             </li>
           </ul>
+          <div className="flex w-full justify-center">
+            {' '}
+            {daysError && <p className="text-rose-500">Please pick a day!</p>}
+          </div>
         </div>
         <div className="flex gap-12">
           <div className="w-1/2">
@@ -241,10 +287,13 @@ function TimeSlotInput({}: Props) {
               ref={startTimeRef}
               type="text"
               id="title"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className={`block w-full rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                timeError ? 'border-rose-500' : 'border-gray-300'
+              }`}
               placeholder="10:30 AM"
               required
-            />
+            />{' '}
+            {timeError && <p className="text-rose-500">Invalid Time</p>}
           </div>
           <div className="w-1/2">
             <label
@@ -257,10 +306,13 @@ function TimeSlotInput({}: Props) {
               ref={endTimeRef}
               type="text"
               id="title"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className={`block w-full rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                timeError ? 'border-rose-500' : 'border-gray-300'
+              }`}
               placeholder="12:30 PM"
               required
-            />
+            />{' '}
+            {timeError && <p className="text-rose-500">Invalid Time</p>}
           </div>
         </div>
         <div className="flex gap-12">
@@ -295,18 +347,25 @@ function TimeSlotInput({}: Props) {
             />
           </div>
         </div>
-        <div className="flex justify-center">
-          <div className="grid grid-cols-7 grid-rows-2 gap-2 p-2">
-            {colors.map((color) => (
-              <div
-                onClick={() => setTimeSlotColor(color)}
-                key={color}
-                className={`bg-${color}-400 h-10 w-10 cursor-pointer rounded-full border-4 p-1 ${
-                  timeSlotColor === color ? 'border-blue-700' : 'border-none'
-                }`}
-              />
-            ))}
+        <div>
+          <div className="flex justify-center">
+            <div className="grid grid-cols-7 grid-rows-2 gap-2 p-2">
+              {colors.map((color) => (
+                <div
+                  onClick={() => setTimeSlotColor(color)}
+                  key={color}
+                  className={`bg-${color}-400 h-10 w-10 cursor-pointer rounded-full border-4 p-1 ${
+                    timeSlotColor === color ? 'border-blue-700' : 'border-none'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
+          {colorError && (
+            <p className="text-center font-bold text-rose-500">
+              Please pick a color!
+            </p>
+          )}
         </div>
         <button
           type="submit"
@@ -315,6 +374,42 @@ function TimeSlotInput({}: Props) {
           Submit
         </button>
       </form>
+      {timeSlotError && (
+        <Modal
+          show={timeSlotError}
+          size="md"
+          popup={true}
+          onClose={() => {
+            setTimeSlotColor('border-none');
+            setColorError(false);
+            setTimeSlotError(false);
+            formRef.current.reset();
+          }}
+        >
+          <Modal.Header />
+          <Modal.Body>
+            <div className="text-center">
+              <AiFillWarning className="mx-auto mb-4 h-14 w-14 text-red-400 dark:text-gray-200" />
+              <h3 className="mb-5 text-lg font-normal text-red-500 dark:text-gray-400">
+                There is an existing TimeSlot!
+              </h3>
+              <div className="flex justify-center gap-4">
+                <Button
+                  color="gray"
+                  onClick={() => {
+                    setTimeSlotColor('border-none');
+                    setColorError(false);
+                    setTimeSlotError(false);
+                    formRef.current.reset();
+                  }}
+                >
+                  Ok Thank you!
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+      )}
     </div>
   );
 }

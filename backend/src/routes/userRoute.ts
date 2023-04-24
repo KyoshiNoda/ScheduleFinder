@@ -1,5 +1,6 @@
 import express from 'express';
 import UserController from '../controllers/UserController';
+import AuthController from '../controllers/AuthController';
 const router = express.Router();
 
 router.get('/', UserController.getAllUsers);

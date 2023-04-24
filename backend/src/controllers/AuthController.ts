@@ -15,7 +15,7 @@ class AuthController {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).send({ error: 'User not found.' });
+      return res.status(400).send({ error: 'Email not found.' });
     }
 
     const match = await bcrypt.compare(password, user.password);
@@ -31,14 +31,22 @@ class AuthController {
   }
 
   public static async registerUser(req: Request, res: Response) {
-    const { firstName, lastName, email, password } = req.body;
-    if (!firstName || !lastName || !email || !password) {
+    const { firstName, lastName, email, password, school, birthday } = req.body;
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !school ||
+      !birthday
+    ) {
       return res.status(400).send({ error: 'All fields are required.' });
     }
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).send({ error: 'Email already in use.' });
     }
+
 
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -52,7 +60,7 @@ class AuthController {
       password: hashedPassword,
       gender: null,
       school: req.body.school,
-      major: null
+      major: null,
     });
 
     try {
@@ -61,7 +69,7 @@ class AuthController {
         { data: savedUser },
         `${process.env.ACCESS_TOKEN_SECRET}`
       );
-      res.send({ token: accessToken, user: savedUser });
+      res.status(200).send({ token: accessToken, user: savedUser });
     } catch (err) {
       return res.status(500).send({ error: 'Unable to register user.' });
     }

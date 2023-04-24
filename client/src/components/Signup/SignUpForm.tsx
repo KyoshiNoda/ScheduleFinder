@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useAppDispatch } from '../../redux/store';
 import { RegisterUser as RegisterUserType } from '../../types';
 import { registerUser } from '../../redux/feats/auth/authActions';
@@ -15,14 +15,16 @@ function SignUpForm({}: Props) {
   const school = useRef(document.createElement('input'));
   const birthday = useRef(document.createElement('input'));
 
+  const [emailError, setEmailError] = useState<string>('');
+  const [passwordError, setPasswordError] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const formHandler = (event: React.FormEvent<HTMLFormElement>) => {
+  const formHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const birthDay = new Date(birthday.current.value);
-    if(password !== confirmPassword){
-      alert('passwords dont match!');
+    if (password.current.value !== confirmPassword.current.value) {
+      setPasswordError(true);
       return;
     }
     let newUser: RegisterUserType = {
@@ -31,11 +33,15 @@ function SignUpForm({}: Props) {
       email: email.current.value,
       password: password.current.value,
       school: school.current.value,
-      birthday: birthDay
+      birthday: birthDay,
     };
-    
-    dispatch(registerUser(newUser));
-    navigate('/auth/schedule');
+    try {
+      await dispatch(registerUser(newUser)).unwrap();
+      navigate('/auth/schedule');
+    } catch (error: any) {
+      let errorMessage: string = error.response.data.error;
+      setEmailError(errorMessage);
+    }
     form.current.reset();
   };
 
@@ -84,12 +90,17 @@ function SignUpForm({}: Props) {
             </label>
             <input
               ref={email}
-              type="text"
+              type="email"
               id="email"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className={`block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                emailError ? 'border-rose-500' : ''
+              }`}
               placeholder="johndoe@gmail.com"
               required
             />
+            {emailError && (
+              <span className="text-xs text-red-500">{emailError}</span>
+            )}
           </div>
           <div>
             <label
@@ -117,10 +128,17 @@ function SignUpForm({}: Props) {
               ref={password}
               type="password"
               id="password"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className={`block w-full rounded-lg border ${
+                passwordError ? 'border-rose-500' : ' border-gray-300'
+              } bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
               placeholder="•••••••••"
               required
             />
+            {passwordError && (
+              <span className="text-xs text-red-500">
+                Password and confirm password aren't match
+              </span>
+            )}
           </div>
           <div>
             <label
@@ -133,10 +151,17 @@ function SignUpForm({}: Props) {
               ref={confirmPassword}
               type="password"
               id="confirm_password"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              className={`block w-full rounded-lg border ${
+                passwordError ? 'border-rose-500' : ' border-gray-300'
+              } bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
               placeholder="•••••••••"
               required
             />
+            {passwordError && (
+              <span className="text-xs text-red-500">
+                Password and confirm password don't match
+              </span>
+            )}
           </div>
           <div>
             <label

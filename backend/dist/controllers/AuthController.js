@@ -27,7 +27,7 @@ class AuthController {
             }
             const user = yield userModel_1.default.findOne({ email });
             if (!user) {
-                return res.status(400).send({ error: 'User not found.' });
+                return res.status(400).send({ error: 'Email not found.' });
             }
             const match = yield bcrypt_1.default.compare(password, user.password);
             if (!match) {
@@ -39,8 +39,13 @@ class AuthController {
     }
     static registerUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { firstName, lastName, email, password } = req.body;
-            if (!firstName || !lastName || !email || !password) {
+            const { firstName, lastName, email, password, school, birthday } = req.body;
+            if (!firstName ||
+                !lastName ||
+                !email ||
+                !password ||
+                !school ||
+                !birthday) {
                 return res.status(400).send({ error: 'All fields are required.' });
             }
             const userExists = yield userModel_1.default.findOne({ email });
@@ -59,12 +64,12 @@ class AuthController {
                 password: hashedPassword,
                 gender: null,
                 school: req.body.school,
-                major: null
+                major: null,
             });
             try {
                 const savedUser = yield user.save();
                 const accessToken = jsonwebtoken_1.default.sign({ data: savedUser }, `${process.env.ACCESS_TOKEN_SECRET}`);
-                res.send({ token: accessToken, user: savedUser });
+                res.status(200).send({ token: accessToken, user: savedUser });
             }
             catch (err) {
                 return res.status(500).send({ error: 'Unable to register user.' });

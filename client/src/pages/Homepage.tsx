@@ -76,7 +76,7 @@ function Homepage({}: Props) {
           </div>
           <div className="flex p-3">
             <div className="inline-block w-1/2">
-              <p className="text-lg font-medium  dark:text-white">
+              <p className="text-2xl font-medium  dark:text-white">
                 Easily create schedules to see your friends. <br />
                 Discover new people within your free time periods.
               </p>
