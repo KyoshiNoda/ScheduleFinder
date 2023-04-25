@@ -9,6 +9,7 @@ import { User as UserType } from '../../../types';
 function PersonalTab() {
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
+  const [updateUser] = useUpdateUserInfoMutation();
 
   const firstNameRef = useRef(document.createElement('input'));
   const lastNameRef = useRef(document.createElement('input'));
@@ -17,17 +18,44 @@ function PersonalTab() {
   const birthdayRef = useRef(document.createElement('input'));
   const [gender, setGender] = useState<string | undefined>(userInfo?.gender);
 
-  const saveHandler = () => {
+  const saveHandler = async () => {
+    const updatedFields: Partial<UserType> = {};
 
-    console.table([
-      firstNameRef.current.value,
-      lastNameRef.current.value,
-      schoolRef.current.value,
-      majorRef.current.value,
-      birthdayRef.current.value,
-      gender
-    ]);
+    if (
+      firstNameRef.current.value.trim() !== '' &&
+      firstNameRef.current.value !== userInfo?.firstName
+    ) {
+      updatedFields.firstName = firstNameRef.current.value;
+    }
+    if (
+      lastNameRef.current.value.trim() !== '' &&
+      lastNameRef.current.value !== userInfo?.lastName
+    ) {
+      updatedFields.lastName = lastNameRef.current.value;
+    }
+    if (
+      schoolRef.current.value.trim() !== '' &&
+      schoolRef.current.value !== userInfo?.school
+    ) {
+      updatedFields.school = schoolRef.current.value;
+    }
+    if (
+      majorRef.current.value.trim() !== '' &&
+      majorRef.current.value !== userInfo?.major
+    ) {
+      updatedFields.major = majorRef.current.value;
+    }
+    // if (birthdayRef.current.value !== '' && new Date(birthdayRef.current.value) !== userInfo?.birthday) {
+    //   updatedFields.birthday = new Date(birthdayRef.current.value).toISOString();
+    // }
+    
 
+    try {
+      const result = await updateUser(updatedFields);
+      window.location.reload();
+    } catch (error: any) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
