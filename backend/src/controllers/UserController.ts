@@ -49,14 +49,14 @@ class UserController {
       .catch((err) => console.log(err));
   }
 
-  // DELETE user by id
-  public static async deleteUser(req: Request, res: Response) {
-    const id = req.params.id;
+  // DELETE user by by token
+  public static async deleteUser(req: any, res: any) {
+    const userID: string = req.user.data._id;
 
-    const deletedUser = await User.findOneAndDelete({ _id: id });
+    const deletedUser = await User.findOneAndDelete({ _id: userID });
 
     if (!deletedUser) {
-      return res.json({ error: `User with id ${id} was not found` });
+      return res.json({ error: `User with id ${userID} was not found` });
     }
 
     res.status(200).json(deletedUser);

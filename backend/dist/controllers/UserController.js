@@ -68,13 +68,13 @@ class UserController {
                 .catch((err) => console.log(err));
         });
     }
-    // DELETE user by id
+    // DELETE user by by token
     static deleteUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const id = req.params.id;
-            const deletedUser = yield userModel_1.default.findOneAndDelete({ _id: id });
+            const userID = req.user.data._id;
+            const deletedUser = yield userModel_1.default.findOneAndDelete({ _id: userID });
             if (!deletedUser) {
-                return res.json({ error: `User with id ${id} was not found` });
+                return res.json({ error: `User with id ${userID} was not found` });
             }
             res.status(200).json(deletedUser);
         });

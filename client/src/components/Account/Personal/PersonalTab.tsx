@@ -1,11 +1,35 @@
-import { useState, useEffect } from 'react';
-import { useGetUserInfoQuery } from '../../../redux/services/user/userService';
+import { useState, useEffect, useRef } from 'react';
+import {
+  useGetUserInfoQuery,
+  useUpdateUserInfoMutation,
+} from '../../../redux/services/user/userService';
 import { Dropdown } from 'flowbite-react';
 import { User as UserType } from '../../../types';
 
 function PersonalTab() {
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
+
+  const firstNameRef = useRef(document.createElement('input'));
+  const lastNameRef = useRef(document.createElement('input'));
+  const schoolRef = useRef(document.createElement('input'));
+  const majorRef = useRef(document.createElement('input'));
+  const birthdayRef = useRef(document.createElement('input'));
+  const [gender, setGender] = useState<string | undefined>(userInfo?.gender);
+
+  const saveHandler = () => {
+
+    console.table([
+      firstNameRef.current.value,
+      lastNameRef.current.value,
+      schoolRef.current.value,
+      majorRef.current.value,
+      birthdayRef.current.value,
+      gender
+    ]);
+
+  };
+
   useEffect(() => {
     if (data && !isLoading) {
       setUserInfo(data[0]);
@@ -25,6 +49,7 @@ function PersonalTab() {
                   First name
                 </label>
                 <input
+                  ref={firstNameRef}
                   type="text"
                   id="first_name"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -40,6 +65,7 @@ function PersonalTab() {
                   Last name
                 </label>
                 <input
+                  ref={lastNameRef}
                   type="text"
                   id="last_name"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -56,6 +82,7 @@ function PersonalTab() {
                   School
                 </label>
                 <input
+                  ref={schoolRef}
                   type="text"
                   id="school"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -71,6 +98,7 @@ function PersonalTab() {
                   Major
                 </label>
                 <input
+                  ref={majorRef}
                   type="text"
                   id="Major"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -79,14 +107,30 @@ function PersonalTab() {
                 />
               </div>
               <div className="flex items-end">
-                <Dropdown label={userInfo!.gender} size="lg">
-                  <Dropdown.Item>Male</Dropdown.Item>
-                  <Dropdown.Item>Female</Dropdown.Item>
-                  <Dropdown.Item>Binary</Dropdown.Item>
-                  <Dropdown.Item>Transgender</Dropdown.Item>
-                  <Dropdown.Item>Intersex</Dropdown.Item>
-                  <Dropdown.Item>Other</Dropdown.Item>
-                  <Dropdown.Item>I prefer not to say</Dropdown.Item>
+                <Dropdown label={userInfo.gender} size="lg">
+                  <Dropdown.Item onClick={() => setGender('Male')}>
+                    Male
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => setGender('Female')}>
+                    Female
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => setGender('Binary')}>
+                    Binary
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => setGender('Transgender')}>
+                    Transgender
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => setGender('Intersex')}>
+                    Intersex
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => setGender('Other')}>
+                    Other
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => setGender('I prefer not to say')}
+                  >
+                    I prefer not to say
+                  </Dropdown.Item>
                 </Dropdown>
               </div>
               <div>
@@ -97,6 +141,7 @@ function PersonalTab() {
                   Date of Birth
                 </label>
                 <input
+                  ref={birthdayRef}
                   type="date"
                   id="birthdate"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -106,7 +151,8 @@ function PersonalTab() {
             </div>
           </form>
           <button
-            type="submit"
+            type="button"
+            onClick={saveHandler}
             form="changes"
             className="w-full rounded-full bg-blue-600 px-8 py-3 font-semibold text-white"
           >

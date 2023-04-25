@@ -60,6 +60,7 @@ function ProfileTab() {
     }
   };
 
+
   return (
     <div>
       {userInfo ? (
@@ -162,12 +163,12 @@ function ProfileTab() {
                 </div>
               </Modal.Body>
             </Modal>
-            <button
+            {/* <button
               type="button"
               className="w-full rounded bg-red-400 px-8 py-3 text-lg font-semibold text-white dark:bg-red-800"
             >
               Delete My Account
-            </button>
+            </button> */}
           </div>
         </>
       ) : isLoading ? (
