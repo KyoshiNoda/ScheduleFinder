@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react';
 import Toggle from '../components/Toggle';
 import scheduleImg from '../assets/schedule.png';
 import { AiFillGithub } from 'react-icons/ai';
+import { Link } from 'react-router-dom';
 type Props = {};
 
-function Homepage({ }: Props) {
+function Homepage({}: Props) {
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
   const [width, setWidth] = useState<number>(window.innerWidth);
-  const [theme, setTheme] = useState<string>(mediaQuery.matches ? 'white' : 'black');
+  const [theme, setTheme] = useState<string>(
+    mediaQuery.matches ? 'white' : 'black'
+  );
   useEffect(() => {
     const handleResize = () => {
       setWidth(window.innerWidth);
@@ -29,7 +32,7 @@ function Homepage({ }: Props) {
           <div className="flex justify-center text-5xl dark:text-white">
             ScheduleFinder
           </div>
-          <p className="flex justify-center p-3 dark:text-white font-medium">
+          <p className="flex justify-center p-3 font-medium dark:text-white">
             Easily create schedules to see your friends. <br />
             Discover new people within your free time periods.
           </p>
@@ -41,7 +44,10 @@ function Homepage({ }: Props) {
             >
               Get Started
             </button>
-            <a className='cursor-pointer w-3' href={'https://github.com/KyoshiNoda/ScheduleFinder'}>
+            <a
+              className="w-3 cursor-pointer"
+              href={'https://github.com/KyoshiNoda/ScheduleFinder'}
+            >
               <AiFillGithub size={'96'} color={`${theme}`} />
             </a>
           </div>
@@ -49,29 +55,32 @@ function Homepage({ }: Props) {
         </div>
       ) : (
         <div className="flex flex-col">
-          <div className="p-7 flex items-center">
-            <div className="flex-1 mr-1 items-center w-1/2">
+          <div className="flex items-center p-7">
+            <div className="mr-1 w-1/2 flex-1 items-center">
               <img src={scheduleImg} className="inline-block w-full max-w-md" />
             </div>
-            <div className="flex-1 flex flex-col justify-center items-center text-5xl lg:text-7xl dark:text-white">
+            <div className="flex flex-1 flex-col items-center justify-center text-5xl dark:text-white lg:text-7xl">
               <div className="my-auto">ScheduleFinder</div>
             </div>
           </div>
           <div className="flex gap-28 p-3">
-            <div className='w-1/2 inline-block'>
-              <p className="dark:text-white text-lg  font-medium">
+            <div className="inline-block w-1/2">
+              <p className="text-lg font-medium  dark:text-white">
                 Easily create schedules to see your friends. <br />
                 Discover new people within your free time periods.
               </p>
             </div>
-            <a
-              className="flex justify-center w-2/5 float-right rounded-full bg-blue-600 px-8 py-3 text-xl font-semibold text-white"
-              href={'/signup'}
+            <Link
+              className="float-right flex w-2/5 justify-center rounded-full bg-blue-600 px-8 py-3 text-xl font-semibold text-white"
+              to={'/signup'}
             >
               Get Started
-            </a>
+            </Link>
           </div>
-          <a className='cursor-pointer w-3' href={'https://github.com/KyoshiNoda/ScheduleFinder'}>
+          <a
+            className="w-3 cursor-pointer"
+            href={'https://github.com/KyoshiNoda/ScheduleFinder'}
+          >
             <AiFillGithub size={'96'} color={`${theme}`} />
           </a>
         </div>
