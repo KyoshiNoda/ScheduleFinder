@@ -2,6 +2,7 @@ import { Dropdown, Avatar } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../redux/store';
 import { logout } from '../redux/feats/auth/authSlice';
+
 type User = {
   firstName: string;
   lastName: string;
@@ -13,6 +14,7 @@ type User = {
   school?: string;
   major?: string;
 };
+
 type Props = {
   user: User;
 };
@@ -21,11 +23,11 @@ const Navbar = (props: Props) => {
   const dispatch = useAppDispatch();
   return (
     <div className="flex justify-between p-4 shadow dark:bg-slate-800">
-      <a href="#" className="flex items-center">
+      <Link to="/auth/schedule" className="flex items-center">
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
           ScheduleFinder
         </span>
-      </a>
+      </Link>
       <div className="flex md:order-2">
         <Dropdown
           arrowIcon={false}
