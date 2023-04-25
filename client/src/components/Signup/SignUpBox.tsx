@@ -1,5 +1,6 @@
 import SignUpForm from './SignUpForm';
 import GoogleAuth from '../Auth/GoogleAuth';
+import { Link } from 'react-router-dom';
 type Props = {};
 
 function SignUpBox({}: Props) {
@@ -17,13 +18,13 @@ function SignUpBox({}: Props) {
       <GoogleAuth />
       <p className="text-center text-xs dark:text-gray-400 sm:px-6">
         Have an account? {}
-        <a
+        <Link
           rel="noopener noreferrer"
-          href="/login"
+          to="/login"
           className="underline dark:text-gray-100"
         >
           Login
-        </a>
+        </Link>
       </p>
     </div>
   );

@@ -35,6 +35,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const userRoute_1 = __importDefault(require("./routes/userRoute"));
 const authRoute_1 = __importDefault(require("./routes/authRoute"));
 const scheduleRoute_1 = __importDefault(require("./routes/scheduleRoute"));
+const port = process.env.PORT || 3001;
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
@@ -47,7 +48,7 @@ mongoose_1.default
     .connect(`${process.env.DB_URI}`, {})
     .then(() => console.log('connected to DB!'))
     .catch((err) => console.log(err));
-const server = app.listen(3001, () => {
+const server = app.listen(port, () => {
     console.log('listening on port 3001');
 });
 process.on('SIGTERM', () => {

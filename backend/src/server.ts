@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import userRoute from './routes/userRoute';
 import authRoute from './routes/authRoute';
 import scheduleRoute from './routes/scheduleRoute';
-
+const port = process.env.PORT || 3001;
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -24,7 +24,7 @@ mongoose
   .then(() => console.log('connected to DB!'))
   .catch((err) => console.log(err));
 
-const server = app.listen(3001, () => {
+const server = app.listen(port, () => {
   console.log('listening on port 3001');
 });
 

@@ -5,7 +5,7 @@ import { TimeSlot as TimeSlotType } from '../../../types';
 export const scheduleAPI = createApi({
   reducerPath: 'scheduleAPI',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3001/',
+    baseUrl: 'https://schedulefinder-production.up.railway.app/',
     prepareHeaders: (headers, { getState }: any) => {
       headers.set('Accept', 'application/json');
       headers.set('Cache-Control', 'no-cache');

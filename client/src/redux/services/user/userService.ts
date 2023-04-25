@@ -3,7 +3,7 @@ import { User as UserType } from '../../../types';
 export const userAPI = createApi({
   reducerPath: 'userAPI',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3001/',
+    baseUrl: 'https://schedulefinder-production.up.railway.app/',
     prepareHeaders: (headers, { getState }: any) => {
       headers.set('Accept', 'application/json');
       headers.set('Cache-Control', 'no-cache');

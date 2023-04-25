@@ -7,14 +7,17 @@ export const registerUser = createAsyncThunk(
   async (userData: RegisterUser, { rejectWithValue }) => {
     try {
       const result = await Axios.post(
-        'http://localhost:3001/api/auth/register',
+        'https://schedulefinder-production.up.railway.app/api/auth/register',
         userData
       );
       if (result.status === 200) {
         let newUserID = result.data.user._id;
-        await Axios.post('http://localhost:3001/api/schedules/', {
-          user_id: newUserID,
-        });
+        await Axios.post(
+          'https://schedulefinder-production.up.railway.app/api/schedules/',
+          {
+            user_id: newUserID,
+          }
+        );
       }
       return result;
     } catch (error) {
@@ -31,7 +34,7 @@ export const loginUser = createAsyncThunk(
   ) => {
     try {
       const data = await Axios.post(
-        'http://localhost:3001/api/auth/login',
+        'https://schedulefinder-production.up.railway.app/api/auth/login',
         userData
       );
       localStorage.setItem('userToken', data.data.token);

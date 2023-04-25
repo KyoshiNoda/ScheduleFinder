@@ -59,7 +59,7 @@ const UserContainer = ({
   };
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/users/allUsers')
+    fetch('https://schedulefinder-production.up.railway.app/api/users/allUsers')
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);

@@ -72,7 +72,9 @@ const CompareSchedule = () => {
   const [scheduleB, setScheduleB] = useState<Schedule>(defaultSchedule);
 
   useEffect(() => {
-    fetch(`http://localhost:3001/api/schedules/${userId}/user`)
+    fetch(
+      `https://schedulefinder-production.up.railway.app/api/schedules/${userId}/user`
+    )
       .then((res) => res.json())
       .then((data) => {
         setScheduleB(data[0]);
@@ -85,7 +87,9 @@ const CompareSchedule = () => {
   const [userName, setUserName] = useState<string>('');
 
   useEffect(() => {
-    fetch(`http://localhost:3001/api/users/${userId}`)
+    fetch(
+      `https://schedulefinder-production.up.railway.app/api/users/${userId}`
+    )
       .then((res) => res.json())
       .then((data) => setUserName(data[0].firstName))
       .catch((err) => console.log(err));
@@ -292,7 +296,7 @@ const CompareSchedule = () => {
 
   return (
     <div className="min-h-full bg-slate-400 p-6 dark:bg-slate-900">
-      <div className="flex flex-col items-center gap-16 mt-5">
+      <div className="mt-5 flex flex-col items-center gap-16">
         <Button.Group outline={true}>
           <Button
             onClick={() => {
@@ -338,7 +342,9 @@ const CompareSchedule = () => {
         {showOtherSchedule && (
           <h1 className="text-4xl dark:text-white">{`${userName}'s Schedule`}</h1>
         )}
-        {showUserSchedule && <h1 className="text-4xl dark:text-white">My Schedule</h1>}
+        {showUserSchedule && (
+          <h1 className="text-4xl dark:text-white">My Schedule</h1>
+        )}
 
         {showCompareSchedule && (
           <div>
