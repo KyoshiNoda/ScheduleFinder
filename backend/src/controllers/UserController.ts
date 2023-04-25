@@ -79,24 +79,36 @@ class UserController {
   }
   // change password with Token
   public static async changePassword(req: any, res: any) {
-    const userID: string = req.user.data._id;
-    const userPassword: string = req.user.data.password;
-    const passwordMatch = await bcrypt.compare(req.body.currentPassword, userPassword);
+    try {
+      const userID: string = req.user.data._id;
+      const userPassword: string = req.user.data.password;
+      const passwordMatch = await bcrypt.compare(
+        req.body.currentPassword,
+        userPassword
+      );
 
-    if (!passwordMatch) {
-      res.status(401).send('Incorrect Password!');
+      if (!passwordMatch) {
+        res.status(401).send('Incorrect Password!');
+        return;
+      }
+      if (req.body.newPassword !== req.body.confirmNewPassword) {
+        res.status(401).send("Passwords don't match!'");
+        return;
+      }
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userID },
+        { ...req.body, password: hashedPassword },
+        { returnOriginal: false }
+      );
+      if (!updatedUser) {
+        throw new Error('Error updating password');
+      }
+      res.status(200).send({ message: 'Password Changed!' });
+    } catch (error: any) {
+      res.status(500).send({ error: error.message });
     }
-    if (req.body.newPassword !== req.body.confirmNewPassword) {
-      res.status(401).send("Passwords dont match!'");
-    }
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
-    await User.findOneAndUpdate(
-      { _id: userID },
-      { ...req.body, password: hashedPassword },
-      { returnOriginal: false }
-    );
-    res.status(200).send({ message: 'Password Changed!' });
   }
 }
 export default UserController;

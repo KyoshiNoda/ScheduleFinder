@@ -56,9 +56,7 @@ function ProfileTab() {
         confirmNewPassword: newConfirmedPasswordRef.current.value,
       });
     } catch (error: any) {
-      if (error.response && error.repsonse.status === 401) {
-        console.log(error.response.data.error);
-      }
+      console.log(error);
     }
   };
 

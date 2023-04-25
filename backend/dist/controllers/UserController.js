@@ -95,19 +95,29 @@ class UserController {
     // change password with Token
     static changePassword(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
-            const userPassword = req.user.data.password;
-            const passwordMatch = yield bcrypt_1.default.compare(req.body.currentPassword, userPassword);
-            if (!passwordMatch) {
-                res.status(401).send('Incorrect Password!');
+            try {
+                const userID = req.user.data._id;
+                const userPassword = req.user.data.password;
+                const passwordMatch = yield bcrypt_1.default.compare(req.body.currentPassword, userPassword);
+                if (!passwordMatch) {
+                    res.status(401).send('Incorrect Password!');
+                    return;
+                }
+                if (req.body.newPassword !== req.body.confirmNewPassword) {
+                    res.status(401).send("Passwords don't match!'");
+                    return;
+                }
+                const salt = yield bcrypt_1.default.genSalt();
+                const hashedPassword = yield bcrypt_1.default.hash(req.body.newPassword, salt);
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }), { returnOriginal: false });
+                if (!updatedUser) {
+                    throw new Error('Error updating password');
+                }
+                res.status(200).send({ message: 'Password Changed!' });
             }
-            if (req.body.newPassword !== req.body.confirmNewPassword) {
-                res.status(401).send("Passwords dont match!'");
+            catch (error) {
+                res.status(500).send({ error: error.message });
             }
-            const salt = yield bcrypt_1.default.genSalt();
-            const hashedPassword = yield bcrypt_1.default.hash(req.body.newPassword, salt);
-            yield userModel_1.default.findOneAndUpdate({ _id: userID }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }), { returnOriginal: false });
-            res.status(200).send({ message: 'Password Changed!' });
         });
     }
 }
