@@ -1,4 +1,4 @@
-import { Label, TextInput, Button, Modal } from 'flowbite-react';
+import { Label, TextInput } from 'flowbite-react';
 import UserContainer from '../components/findUsers/UserContainer';
 import Toggle from '../components/Toggle';
 import { useState } from 'react';
@@ -7,7 +7,6 @@ const FindUser = () => {
   const [nameSearch, setNameSearch] = useState<string>('');
   const [schoolSearch, setSchoolSearch] = useState<string>('');
   const [majorSearch, setMajorSearch] = useState<string>('');
-  const [visible, setVisible] = useState<boolean>(false);
 
   return (
     <div className="flex min-h-full flex-col items-center space-y-10 bg-slate-400 p-6 dark:bg-slate-900">
@@ -66,8 +65,6 @@ const FindUser = () => {
               required={true}
             />
           </div>
-
-          
         </form>
       </div>
       <UserContainer

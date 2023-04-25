@@ -3,9 +3,11 @@ import Toggle from '../components/Toggle';
 import SignUpBox from '../components/Signup/SignUpBox';
 import pic1 from '../assets/loggingOn.png';
 import pic2 from '../assets/wavy-man-creating-a-website.png';
+
 type Props = {};
 
-function Signup({}: Props) {
+function Signup({ }: Props) {
+
   const [width, setWidth] = useState<number>(window.innerWidth);
   useEffect(() => {
     const handleResize = () => {

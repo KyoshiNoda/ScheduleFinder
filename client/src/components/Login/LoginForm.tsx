@@ -1,46 +1,110 @@
-import React from 'react'
+import { FormEventHandler, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../../redux/feats/auth/authActions';
+import { useAppDispatch } from '../../redux/store';
 
-type Props = {}
+type Props = {};
+function LoginForm(props: Props) {
+  const defaultError: string = 'Something went wrong!';
 
-function LoginForm({}: Props) {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [emailErrorMessage, setEmailErrorMessage] =
+    useState<string>(defaultError);
+  const [passwordErrorMessage, setPasswordErrorMessage] =
+    useState<string>(defaultError);
+  const [emailError, setEmailError] = useState<boolean>(false);
+  const [passwordError, setPasswordError] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const formHandler: FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+    try {
+      // attempts to login user if sucesss navigate to schedule
+      await dispatch(loginUser({ email, password })).unwrap();
+      navigate('/auth/schedule');
+    } catch (error: any) {
+      // if login is not successful render input error styles and display backend error message
+      if (error.response && error.response.status === 400) {
+        // gets the error from backend
+        let errorMessage: string = error.response.data.error;
+
+        // checks if response includes a user or password to dynmically render
+        if (errorMessage.includes('Email')) {
+          setEmailError(true);
+          setEmailErrorMessage(errorMessage);
+        } else {
+          setEmailError(false);
+        }
+        if (errorMessage.includes('password')) {
+          setPasswordError(true);
+          setPasswordErrorMessage(errorMessage);
+        }
+      }
+    }
+  };
+
   return (
-      <form action="" className="space-y-6 ng-untouched ng-pristine ng-valid">
+    <>
+      <form
+        className="ng-untouched ng-pristine ng-valid space-y-6"
+        onSubmit={formHandler}
+      >
         <div className="space-y-1 text-sm">
-          <label htmlFor="email" className="block text-sm md:text-lg font-bold">
+          <label htmlFor="email" className="block text-sm font-bold md:text-lg">
             Email
           </label>
           <input
-            type="text"
+            type="email"
             name="email"
             id="email"
             placeholder="Email"
-            className="w-full text-sm px-4 py-3 bg-gray-50 rounded-md border-gray-100  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
+            onChange={(event) => setEmail(event.target.value)}
+            className={`w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400 ${
+              emailError ? 'border-rose-500' : ''
+            }`}
           />
+          {emailError && (
+            <span className="text-xs text-red-500">{emailErrorMessage}</span>
+          )}
         </div>
 
         <div className="space-y-1 text-sm">
-          <label htmlFor="password" className="block text:sm md:text-lg font-bold">
+          <label
+            htmlFor="password"
+            className="text:sm block font-bold md:text-lg"
+          >
             Password
           </label>
           <input
             type="password"
             name="password"
             id="password"
-            placeholder="Password"
-            className="w-full px-4 py-3 text-sm rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400"
+            placeholder="••••••••"
+            onChange={(event) => setPassword(event.target.value)}
+            className={`w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400 ${
+              passwordError ? 'border-rose-500' : ''
+            }`}
           />
+          {passwordError && (
+            <span className="text-xs text-red-500">{passwordErrorMessage}</span>
+          )}
           <div className="flex justify-end text-xs dark:text-gray-400">
             <a rel="noopener noreferrer" href="#">
               Forgot Password?
             </a>
           </div>
-
         </div>
-        <button className="block w-full p-3 text-center rounded-sm bg-blue-400 text-white dark:text-gray-900 font-bold dark:bg-slate-300 ">
+        <button
+          type="submit"
+          className="block w-full rounded-sm bg-blue-400 p-3 text-center font-bold text-white dark:bg-slate-300 dark:text-gray-900"
+        >
           Sign in
         </button>
       </form>
-  )
+    </>
+  );
 }
 
-export default LoginForm
+export default LoginForm;

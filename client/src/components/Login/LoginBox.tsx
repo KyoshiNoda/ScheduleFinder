@@ -1,4 +1,3 @@
-import React from 'react';
 import LoginForm from './LoginForm';
 import GoogleAuth from '../Auth/GoogleAuth';
 type Props = {};
@@ -20,7 +19,7 @@ function LoginBox({ }: Props) {
         Don't have an account? { }
         <a
           rel="noopener noreferrer"
-          href="#"
+          href="/signup"
           className="underline dark:text-gray-100"
         >
           Sign up

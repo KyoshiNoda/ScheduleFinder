@@ -1,38 +1,85 @@
 import { NextFunction, Request, Response } from 'express';
-import { Error } from 'mongoose';
-import { IUser } from '../models/userModel';
 import User from '../models/userModel';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 class AuthController {
   public static async loginUser(req: Request, res: Response) {
-    await User.findOne(
-      { email: req.body.email },
-      async (err: Error, found: IUser | undefined) => {
-        if (!(found === undefined)) {
-          if (await bcrypt.compare(req.body.password, found?.password)) {
-            return found;
-          } else {
-            res.send('not allowed');
-          }
-        } else {
-          res.status(400).send('No user Found');
-        }
-      }
-    )
-      .clone()
-      .exec()
-      .then((docs) => {
-        const accessToken = jwt.sign(
-          { data: docs },
-          `${process.env.ACCESS_TOKEN_SECRET}`
-        );
-        res.send({ token: accessToken });
-      });
+    const email = req.body.email;
+    const password = req.body.password;
+    if (!email || !password) {
+      return res
+        .status(400)
+        .send({ error: 'Email and password are required.' });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).send({ error: 'Email not found.' });
+    }
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.status(400).send({ error: 'Incorrect password.' });
+    }
+
+    const accessToken = jwt.sign(
+      { data: user },
+      `${process.env.ACCESS_TOKEN_SECRET}`
+    );
+    res.send({ token: accessToken, user: user });
   }
 
-  public static async authToken(req: any, res: Response, next: NextFunction) {
+  public static async registerUser(req: Request, res: Response) {
+    const { firstName, lastName, email, password, school, birthday } = req.body;
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !school ||
+      !birthday
+    ) {
+      return res.status(400).send({ error: 'All fields are required.' });
+    }
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).send({ error: 'Email already in use.' });
+    }
+
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    const user = new User({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      age: req.body.age,
+      birthday: req.body.birthday,
+      photoURL: null,
+      email: req.body.email,
+      password: hashedPassword,
+      gender: null,
+      school: req.body.school,
+      major: null,
+    });
+
+    try {
+      const savedUser = await user.save();
+      const accessToken = jwt.sign(
+        { data: savedUser },
+        `${process.env.ACCESS_TOKEN_SECRET}`
+      );
+      res.status(200).send({ token: accessToken, user: savedUser });
+    } catch (err) {
+      return res.status(500).send({ error: 'Unable to register user.' });
+    }
+  }
+
+  public static async authenticateToken(
+    req: any,
+    res: Response,
+    next: NextFunction
+  ) {
     const authHeader = req.headers['authorization']!;
     const token = authHeader && authHeader.split(' ')[1];
     if (token === null) {
@@ -50,7 +97,6 @@ class AuthController {
       }
     );
   }
-  
 }
 
 export default AuthController;
