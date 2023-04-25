@@ -47,6 +47,7 @@ function Homepage({}: Props) {
             <a
               className="w-3 cursor-pointer"
               href={'https://github.com/KyoshiNoda/ScheduleFinder'}
+              target="_blank"
             >
               <AiFillGithub size={'96'} color={`${theme}`} />
             </a>
@@ -115,6 +116,7 @@ function Homepage({}: Props) {
           <a
             className="w-3 cursor-pointer"
             href={'https://github.com/KyoshiNoda/ScheduleFinder'}
+            target="_blank"
           >
             <AiFillGithub size={'96'} color={`${theme}`} />
           </a>
