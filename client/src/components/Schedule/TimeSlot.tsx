@@ -12,6 +12,7 @@ import {
   useUpdateTimeSlotMutation,
 } from '../../redux/services/schedule/scheduleService';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
+import { useAppSelector } from '../../redux/store';
 
 type Props = {
   id?: undefined | string;
@@ -36,15 +37,15 @@ function TimeSlot(props: Props) {
     scheduleID = data[0]._id;
   }
 
+  // Check if the time slot is readonly
+  const readOnly: boolean = useAppSelector((state) => state.timeSlot.readOnly);
+
   const [deleteTimeSlotMutation] = useDeleteTimeSlotMutation();
   const [updateTimeSlotMutation] = useUpdateTimeSlotMutation();
   const [isHovering, setIsHovering] = useState<boolean>(false);
   const [isTimeSlotClicked, setIsTimeSlotClicked] = useState<boolean>(false);
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [title, setTitle] = useState<string>(props.title);
-  const [startTime, setStartTime] = useState<string>(props.startTime);
-  const [endTime, setEndTime] = useState<string>(props.endTime);
   const [days, setDays] = useState<DaysCheckedType>(props.days);
   const mondayRef = useRef(document.createElement('input'));
   const tuesdayRef = useRef(document.createElement('input'));
@@ -52,12 +53,22 @@ function TimeSlot(props: Props) {
   const thursdayRef = useRef(document.createElement('input'));
   const fridayRef = useRef(document.createElement('input'));
 
-  const [location, setLocation] = useState<string | null>(
-    props.location ?? null
-  );
-  const [professor, setProfessor] = useState<string | null>(
-    props.professor ?? null
-  );
+  // Input Refs
+  const titleRef = useRef(document.createElement('input'));
+  const startTimeRef = useRef(document.createElement('input'));
+  const endTimeRef = useRef(document.createElement('input'));
+  const locationRef = useRef(document.createElement('input'));
+  const professorRef = useRef(document.createElement('input'));
+
+  useEffect(() => {
+    if (titleRef.current) titleRef.current.value = props.title;
+    if (startTimeRef.current) startTimeRef.current.value = props.startTime;
+    if (endTimeRef.current) endTimeRef.current.value = props.endTime;
+    if (locationRef.current) locationRef.current.value = props.location || '';
+    if (professorRef.current)
+      professorRef.current.value = props.professor || '';
+  }, [editMode]);
+
   useEffect(() => {
     setTimeSlotColor(props.color);
   }, []);
@@ -65,14 +76,15 @@ function TimeSlot(props: Props) {
   const saveHandler = async () => {
     const updatedTimeSlot: TimeSlotType = {
       _id: props.id!,
-      title: title,
-      startTime: startTime,
-      endTime: endTime,
+      title: titleRef.current.value,
+      startTime: startTimeRef.current.value,
+      endTime: endTimeRef.current.value,
       color: timeSlotColor,
-      professor: professor,
-      location: location,
+      professor: professorRef.current.value,
+      location: locationRef.current.value,
       days: props.days,
     };
+
     if (
       !(
         mondayRef.current.checked ||
@@ -157,14 +169,13 @@ function TimeSlot(props: Props) {
             <div className="flex justify-center">
               {editMode ? (
                 <div className="w-1/2">
-                  <label htmlFor="title" className="text-3xl">
+                  <label htmlFor="title" className="text-3xl dark:text-white">
                     Title
                   </label>
                   <input
                     id="title"
                     type="text"
-                    placeholder={props.title}
-                    onBlur={(event) => setTitle(event.target.value)}
+                    ref={titleRef}
                     className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                   />
                 </div>
@@ -183,16 +194,15 @@ function TimeSlot(props: Props) {
                   <input
                     id="startTime"
                     type="text"
-                    placeholder={props.startTime}
-                    onBlur={(event) => setStartTime(event.target.value)}
+                    ref={startTimeRef}
                     className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                   />
                 </div>
               ) : (
-                <span>{props.startTime}</span>
+                <span className="mx-3">{props.startTime}</span>
               )}
 
-              {!editMode && <>-</>}
+              {!editMode && '-'}
 
               {editMode ? (
                 <div className="w-1/6">
@@ -202,13 +212,12 @@ function TimeSlot(props: Props) {
                   <input
                     id="endTime"
                     type="text"
-                    placeholder={props.endTime}
-                    onBlur={(event) => setEndTime(event.target.value)}
+                    ref={endTimeRef}
                     className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                   />
                 </div>
               ) : (
-                <span>{props.endTime}</span>
+                <span className="mx-3">{props.endTime}</span>
               )}
             </div>
 
@@ -302,34 +311,37 @@ function TimeSlot(props: Props) {
               </ul>
             ) : (
               <div className="flex justify-center gap-3 text-2xl dark:text-white">
-                <div>Days:</div>
-                <div>{days?.monday && <>M</>}</div>
-                <div>{days?.tuesday && <>T</>}</div>
-                <div>{days?.wednesday && <>W</>}</div>
-                <div>{days?.thursday && <>TH</>}</div>
-                <div>{days?.friday && <>F</>}</div>
+                <span className="font-semibold">Days:</span>
+                <span>{days?.monday && 'M'}</span>
+                <span>{days?.tuesday && 'T'}</span>
+                <span>{days?.wednesday && 'W'}</span>
+                <span>{days?.thursday && 'TH'}</span>
+                <span>{days?.friday && 'F'}</span>
               </div>
             )}
             <div className="flex justify-evenly">
               <div>
                 {editMode ? (
                   <>
-                    <label htmlFor="location" className="text-sm">
+                    <label
+                      htmlFor="location"
+                      className="text-sm dark:text-white"
+                    >
                       Location
                     </label>
                     <input
                       id="location"
                       type="text"
-                      onBlur={(event) => setLocation(event.target.value)}
-                      placeholder={props.location!}
+                      ref={locationRef}
+                      placeholder="Enter location"
                       className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                     />
                   </>
                 ) : (
-                  <div className="text-2xl dark:text-white">
-                    <p>Location:</p>
-                    <span>
-                      {props.location === null ? <>null</> : props.location}
+                  <div className="space-x-2 text-2xl dark:text-white">
+                    <span className="font-semibold">Location:</span>
+                    <span className="capitalize">
+                      {props.location ? props.location : 'N/A'}
                     </span>
                   </div>
                 )}
@@ -337,22 +349,25 @@ function TimeSlot(props: Props) {
               <div>
                 {editMode ? (
                   <>
-                    <label htmlFor="professor" className="text-sm">
+                    <label
+                      htmlFor="professor"
+                      className="text-sm dark:text-white"
+                    >
                       Professor
                     </label>
                     <input
                       id="professor"
                       type="text"
-                      placeholder={props.professor!}
-                      onBlur={(event) => setProfessor(event.target.value)}
+                      placeholder="Enter professor's name"
+                      ref={professorRef}
                       className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                     />
                   </>
                 ) : (
-                  <div className="text-2xl dark:text-white">
-                    <p>Professor:</p>
-                    <span>
-                      {props.professor === null ? <>null</> : props.professor}
+                  <div className="space-x-2 text-2xl dark:text-white">
+                    <span className="font-semibold">Professor:</span>
+                    <span className="capitalize">
+                      {props.professor ? props.professor : 'N/A'}
                     </span>
                   </div>
                 )}
@@ -396,21 +411,19 @@ function TimeSlot(props: Props) {
         </Modal.Body>
       </Modal>
       <div
-        className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${props.color}-400 w-full hover:cursor-pointer hover:brightness-50 dark:text-black`}
+        className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${props.color}-400 w-full ${!readOnly && 'hover:cursor-pointer hover:brightness-50'} dark:text-black`}
         style={{ top: `${props.top}px`, height: `${props.height}px` }}
-        onClick={() => setIsTimeSlotClicked(true)}
-        onMouseEnter={() => setIsHovering(true)}
+        onClick={() => setIsTimeSlotClicked(readOnly ? false : true)}
+        onMouseEnter={() => setIsHovering(readOnly ? false:true)}
         onMouseLeave={() => setIsHovering(false)}
       >
-        <>
-          {isHovering && <AiFillEdit size={'96'} />}
-          {parseInt(props.height) > 55 && (
-            <div>
-              <h2 className="text-center font-bold">{props.title}</h2>
-              <span>{`${props.startTime} - ${props.endTime}`}</span>
-            </div>
-          )}
-        </>
+        {isHovering && <AiFillEdit size={'96'} />}
+        {parseInt(props.height) > 55 && (
+          <div className="flex flex-col items-center gap-1">
+            <h2 className="text-center font-bold">{props.title}</h2>
+            <span>{`${props.startTime} - ${props.endTime}`}</span>
+          </div>
+        )}
       </div>
     </>
   );

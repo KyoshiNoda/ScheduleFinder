@@ -6,6 +6,7 @@ import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
 import { Modal, Button } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
 
+
 export const colors: string[] = [
   'slate',
   'red',
