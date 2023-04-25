@@ -15,6 +15,25 @@ class UserController {
       .clone()
       .catch((err) => console.log(err));
   }
+  // GET userInfo with Token
+  public static async getUserInfo(req: any, res: any) {
+    const userID: string = req.user.data._id;
+    try {
+      const user = await User.find({ _id: userID }).exec();
+      if (!user) {
+        return res.status(404).json({
+          message: `User ${userID} not found`,
+        });
+      }
+      res.json(user);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: `Error while getting User ${userID}`,
+        error: err,
+      });
+    }
+  }
 
   // GET single user by id
   public static async getUserById(req: Request, res: Response): Promise<any> {
@@ -30,71 +49,66 @@ class UserController {
       .catch((err) => console.log(err));
   }
 
-  // POST new user
-  public static async createUser(req: Request, res: Response): Promise<any> {
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
-    const user = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      age: req.body.age,
-      photoURL: req.body.photoURL,
-      email: req.body.email,
-      password: hashedPassword,
-      gender: req.body.gender,
-      school: req.body.school,
-      major : req.body.major
-    });
+  // DELETE user by by token
+  public static async deleteUser(req: any, res: any) {
+    const userID: string = req.user.data._id;
 
-    user
-      .save()
-      .then((savedUser) => {
-        res.status(200).send(savedUser);
-      })
-      .catch((err) => {
-        res.send(err);
-      });
-  }
-
-  // DELETE user by id
-  public static async deleteUser(req: Request, res: Response) {
-    const id = req.params.id;
-
-    const deletedUser = await User.findOneAndDelete({ _id: id });
+    const deletedUser = await User.findOneAndDelete({ _id: userID });
 
     if (!deletedUser) {
-      return res.json({ error: `User with id ${id} was not found` });
+      return res.json({ error: `User with id ${userID} was not found` });
     }
 
     res.status(200).json(deletedUser);
   }
 
-  // PATCH user by id
-  public static async updateUser(req: Request, res: Response) {
-    const id = req.params.id;
-    if (req.body.password) {
-      const newPassword = req.body.password;
-      const salt = await bcrypt.genSalt();
-      const hashedPassword = await bcrypt.hash(newPassword, salt);
+  // PATCH user by Token
+  public static async updateUser(req: any, res: any) {
+    const userID: string = req.user.data._id;
+
+    try {
       const updatedUser = await User.findOneAndUpdate(
-        { _id: id },
-        { ...req.body, password: hashedPassword },
+        { _id: userID },
+        { ...req.body },
         { returnOriginal: false }
       );
       res.status(200).json(updatedUser);
-    } else {
-      try {
-        const updatedUser = await User.findOneAndUpdate(
-          { _id: id },
-          { ...req.body },
-          { returnOriginal: false }
-        );
-        res.status(200).json(updatedUser);
-      } catch (error) {
-        res.json(`The update attempt to user ${id} has failed`);
+    } catch (error) {
+      res.json(`The update attempt to user ${userID} has failed`);
+    }
+  }
+  // change password with Token
+  public static async changePassword(req: any, res: any) {
+    try {
+      const userID: string = req.user.data._id;
+      const userPassword: string = req.user.data.password;
+      const passwordMatch = await bcrypt.compare(
+        req.body.currentPassword,
+        userPassword
+      );
+
+      if (!passwordMatch) {
+        res.status(401).send('Incorrect Password!');
+        return;
       }
+      if (req.body.newPassword !== req.body.confirmNewPassword) {
+        res.status(401).send("Passwords don't match!'");
+        return;
+      }
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userID },
+        { ...req.body, password: hashedPassword },
+        { returnOriginal: false }
+      );
+      if (!updatedUser) {
+        throw new Error('Error updating password');
+      }
+      res.status(200).send({ message: 'Password Changed!' });
+    } catch (error: any) {
+      res.status(500).send({ error: error.message });
     }
   }
 }
-
 export default UserController;

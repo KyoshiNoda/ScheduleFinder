@@ -4,11 +4,12 @@ export interface IUser extends Document {
   lastName: string;
   email: string;
   password: string;
+  birthday: Date;
   gender?: string;
   photoURL?: string;
   age?: number;
   school?: string;
-  major? : string;
+  major?: string;
 }
 
 const userSchema: Schema = new mongoose.Schema({
@@ -16,11 +17,12 @@ const userSchema: Schema = new mongoose.Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  birthday: { type: Date, required: true },
   age: Number,
   photoURL: String,
   gender: String,
   school: String,
-  major : String
+  major: String,
 });
 
 const User = mongoose.model<IUser>('User', userSchema);

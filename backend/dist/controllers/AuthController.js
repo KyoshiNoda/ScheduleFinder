@@ -18,28 +18,65 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class AuthController {
     static loginUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield userModel_1.default.findOne({ email: req.body.email }, (err, found) => __awaiter(this, void 0, void 0, function* () {
-                if (!(found === undefined)) {
-                    if (yield bcrypt_1.default.compare(req.body.password, found === null || found === void 0 ? void 0 : found.password)) {
-                        return found;
-                    }
-                    else {
-                        res.send('not allowed');
-                    }
-                }
-                else {
-                    res.status(400).send('No user Found');
-                }
-            }))
-                .clone()
-                .exec()
-                .then((docs) => {
-                const accessToken = jsonwebtoken_1.default.sign({ data: docs }, `${process.env.ACCESS_TOKEN_SECRET}`);
-                res.send({ token: accessToken });
-            });
+            const email = req.body.email;
+            const password = req.body.password;
+            if (!email || !password) {
+                return res
+                    .status(400)
+                    .send({ error: 'Email and password are required.' });
+            }
+            const user = yield userModel_1.default.findOne({ email });
+            if (!user) {
+                return res.status(400).send({ error: 'Email not found.' });
+            }
+            const match = yield bcrypt_1.default.compare(password, user.password);
+            if (!match) {
+                return res.status(400).send({ error: 'Incorrect password.' });
+            }
+            const accessToken = jsonwebtoken_1.default.sign({ data: user }, `${process.env.ACCESS_TOKEN_SECRET}`);
+            res.send({ token: accessToken, user: user });
         });
     }
-    static authToken(req, res, next) {
+    static registerUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { firstName, lastName, email, password, school, birthday } = req.body;
+            if (!firstName ||
+                !lastName ||
+                !email ||
+                !password ||
+                !school ||
+                !birthday) {
+                return res.status(400).send({ error: 'All fields are required.' });
+            }
+            const userExists = yield userModel_1.default.findOne({ email });
+            if (userExists) {
+                return res.status(400).send({ error: 'Email already in use.' });
+            }
+            const salt = yield bcrypt_1.default.genSalt();
+            const hashedPassword = yield bcrypt_1.default.hash(req.body.password, salt);
+            const user = new userModel_1.default({
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                age: req.body.age,
+                birthday: req.body.birthday,
+                photoURL: null,
+                email: req.body.email,
+                password: hashedPassword,
+                gender: null,
+                school: req.body.school,
+                major: null,
+            });
+            try {
+                const savedUser = yield user.save();
+                const accessToken = jsonwebtoken_1.default.sign({ data: savedUser }, `${process.env.ACCESS_TOKEN_SECRET}`);
+                res.status(200).send({ token: accessToken, user: savedUser });
+            }
+            catch (err) {
+                return res.status(500).send({ error: 'Unable to register user.' });
+            }
+        });
+    }
+    static authenticateToken(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const authHeader = req.headers['authorization'];
             const token = authHeader && authHeader.split(' ')[1];

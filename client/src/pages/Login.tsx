@@ -2,12 +2,11 @@ import { useState, useEffect } from 'react';
 import LoginBox from '../components/Login/LoginBox';
 import hero2 from '../assets/plsWork.png';
 import Toggle from '../components/Toggle';
-
 type Props = {};
 
 function Login({}: Props) {
   const [width, setWidth] = useState<number>(window.innerWidth);
-
+  
   useEffect(() => {
     const handleResize = () => {
       setWidth(window.innerWidth);

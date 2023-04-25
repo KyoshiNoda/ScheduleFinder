@@ -52,6 +52,33 @@ function Homepage({}: Props) {
             </a>
           </div>
           <img src={scheduleImg} className="max-w-screen-sm text-center" />
+          <div className="flex justify-center gap-1">
+            <div className="self-center">
+              <a
+                className="flex h-1/2  w-full items-center justify-center rounded-full bg-blue-600  px-8 py-3 text-xl font-semibold text-white dark:bg-blue-800"
+                href={'/signup'}
+              >
+                Get Started
+              </a>
+            </div>
+
+            <div>
+              <a
+                className="w-3 cursor-pointer"
+                href={'https://github.com/KyoshiNoda/ScheduleFinder'}
+              >
+                <AiFillGithub size={'96'} color={`${theme}`} />
+              </a>
+            </div>
+            <div className="self-center">
+              <a
+                className="flex h-1/2  w-full items-center justify-center rounded-full bg-blue-600  px-8 py-3 text-xl font-semibold text-white dark:bg-blue-800"
+                href={'/login'}
+              >
+                Login
+              </a>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="flex flex-col">
@@ -59,23 +86,31 @@ function Homepage({}: Props) {
             <div className="mr-1 w-1/2 flex-1 items-center">
               <img src={scheduleImg} className="inline-block w-full max-w-md" />
             </div>
-            <div className="flex flex-1 flex-col items-center justify-center text-5xl dark:text-white lg:text-7xl">
+            <div className="ml-60 flex flex-1 flex-col items-center justify-center text-5xl dark:text-white lg:text-7xl">
               <div className="my-auto">ScheduleFinder</div>
             </div>
           </div>
-          <div className="flex gap-28 p-3">
+          <div className="flex p-3">
             <div className="inline-block w-1/2">
-              <p className="text-lg font-medium  dark:text-white">
+              <p className="text-2xl font-medium  dark:text-white">
                 Easily create schedules to see your friends. <br />
                 Discover new people within your free time periods.
               </p>
             </div>
-            <Link
-              className="float-right flex w-2/5 justify-center rounded-full bg-blue-600 px-8 py-3 text-xl font-semibold text-white"
-              to={'/signup'}
-            >
-              Get Started
-            </Link>
+            <div className="ml-56 flex w-1/2 flex-col gap-2">
+              <a
+                className="flex h-1/2 w-full items-center justify-center rounded-full bg-blue-600 px-8 py-3 text-xl font-semibold text-white dark:bg-blue-800"
+                href={'/signup'}
+              >
+                Get Started
+              </a>
+              <a
+                className="flex h-1/2  w-full items-center justify-center rounded-full bg-blue-600  px-8 py-3 text-xl font-semibold text-white dark:bg-blue-800"
+                href={'/login'}
+              >
+                Login
+              </a>
+            </div>
           </div>
           <a
             className="w-3 cursor-pointer"
