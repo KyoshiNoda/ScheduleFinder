@@ -1,29 +1,30 @@
 import LoginForm from './LoginForm';
 import GoogleAuth from '../Auth/GoogleAuth';
+import { Link } from 'react-router-dom';
 type Props = {};
 
-function LoginBox({ }: Props) {
+function LoginBox({}: Props) {
   return (
-    <div className="w-full max-w-md p-8 space-y-3 rounded-xl bg-gray-100 dark:bg-slate-800 dark:text-gray-100 ">
-      <h1 className="text-md md:text-2xl font-bold text-center">Login</h1>
-      <LoginForm/>
-      <div className="flex items-center pt-4 space-x-1">
-        <div className="flex-1 h-px sm:w-16 bg-gray-900 dark:bg-gray-700"></div>
+    <div className="w-full max-w-md space-y-3 rounded-xl bg-gray-100 p-8 dark:bg-slate-800 dark:text-gray-100 ">
+      <h1 className="text-md text-center font-bold md:text-2xl">Login</h1>
+      <LoginForm />
+      <div className="flex items-center space-x-1 pt-4">
+        <div className="h-px flex-1 bg-gray-900 dark:bg-gray-700 sm:w-16"></div>
         <p className="px-3 text-sm dark:text-gray-400">
           Login with social accounts
         </p>
-        <div className="flex-1 h-px sm:w-16 bg-gray-900 dark:bg-gray-700"></div>
+        <div className="h-px flex-1 bg-gray-900 dark:bg-gray-700 sm:w-16"></div>
       </div>
-      <GoogleAuth/>
-      <p className="text-xs text-center sm:px-6 dark:text-gray-400">
-        Don't have an account? { }
-        <a
+      <GoogleAuth />
+      <p className="text-center text-xs dark:text-gray-400 sm:px-6">
+        Don't have an account? {}
+        <Link
           rel="noopener noreferrer"
-          href="/signup"
+          to="/signup"
           className="underline dark:text-gray-100"
         >
           Sign up
-        </a>
+        </Link>
       </p>
     </div>
   );
