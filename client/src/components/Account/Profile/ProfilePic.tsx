@@ -1,5 +1,5 @@
 type Props = {
-  picture: string;
+  picture: string | undefined;
 };
 
 function ProfilePic(props: Props) {

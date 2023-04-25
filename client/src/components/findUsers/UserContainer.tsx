@@ -59,7 +59,7 @@ const UserContainer = ({
   };
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/users')
+    fetch('http://localhost:3001/api/users/allUsers')
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);
@@ -77,9 +77,7 @@ const UserContainer = ({
         </span>
       )}
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-        {isFetching && loadingUsers.map((user) => (
-          <LoadingUser />
-        ))}
+        {isFetching && loadingUsers.map((user) => <LoadingUser />)}
         {users &&
           filterUsers(users)
             .filter((user) => user._id !== loggedUserId)
