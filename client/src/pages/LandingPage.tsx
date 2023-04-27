@@ -16,25 +16,25 @@ const LandingPage = () => {
       <div className="flex justify-end">
         <Toggle getTheme={(theme) => setTheme(theme)} />
       </div>
-      <div className="slate-50 flex flex-col gap-4">
-        <h1 className="flex justify-center text-4xl dark:text-white">
+      <div className="slate-50 flex flex-col gap-4 sm:gap-8 sm:px-14 md:gap-14">
+        <h1 className="flex justify-center text-center text-4xl dark:text-white sm:text-6xl md:text-8xl">
           Schedule Finder
         </h1>
-        <p className="flex justify-center px-1 text-center text-sm font-medium dark:text-white">
+        <p className="flex justify-center px-1 text-center text-sm font-medium dark:text-white sm:text-xl md:text-3xl">
           Easily create schedules to see your friends. Discover new people
           within your free time periods.
         </p>
-        <div className="my-6 flex flex-col gap-6">
-          <img src={scheduleImg} className="max-w-screen-sm text-center" />
-          <div className="space-y-3">
+        <div className="my-6 flex flex-col gap-6 md:gap-20">
+          <img src={scheduleImg} className="w-4/5 self-center" />
+          <div className="space-y-3 sm:space-y-5">
             <Link
-              className="flex h-1/2  w-full items-center justify-center rounded-full bg-blue-600  px-8 py-3 text-xl font-semibold text-white dark:bg-blue-800"
+              className="flex h-1/2  w-full items-center justify-center rounded-full bg-blue-600 px-8  py-3 text-xl font-semibold text-white dark:bg-blue-800 md:text-2xl"
               to={'/signup'}
             >
               Get Started
             </Link>
             <Link
-              className="flex h-1/2  w-full items-center justify-center rounded-full bg-blue-600  px-8 py-3 text-xl font-semibold text-white dark:bg-blue-800"
+              className="flex h-1/2  w-full items-center justify-center rounded-full bg-blue-600 px-8  py-3 text-xl font-semibold text-white dark:bg-blue-800 md:text-2xl"
               to={'/login'}
             >
               Login
