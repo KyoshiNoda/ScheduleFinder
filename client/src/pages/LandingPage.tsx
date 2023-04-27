@@ -5,7 +5,7 @@ import { AiFillGithub } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 type Props = {};
 
-function Homepage({}: Props) {
+function LandingPage({}: Props) {
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
   const [width, setWidth] = useState<number>(window.innerWidth);
   const [theme, setTheme] = useState<string>(
@@ -126,4 +126,4 @@ function Homepage({}: Props) {
   );
 }
 
-export default Homepage;
+export default LandingPage;
