@@ -22,20 +22,21 @@ const LandingPage = () => {
             Schedule Finder
           </h1>
           <p className="flex justify-center px-1 text-center text-sm dark:text-white sm:text-xl md:text-3xl lg:px-0 lg:text-xl 2xl:text-2xl">
-            Easily create and compare your schedule with others. Discover new people within your free time periods.
+            Easily create and compare your schedule with others. Discover new
+            people within your free time periods.
           </p>
         </div>
         <div className="my-6 flex flex-col gap-6 md:gap-20 lg:my-0 lg:gap-0 lg:space-y-14">
           <img src={scheduleImg} className="w-4/5 self-center lg:w-4/6" />
           <div className="space-y-3 sm:space-y-5">
             <Link
-              className="flex h-1/2 w-full items-center justify-center rounded-full bg-blue-600 px-8 py-3  text-xl font-semibold text-white dark:bg-blue-800 md:text-2xl lg:h-1/3 lg:text-lg xl:h-2/5 xl:text-xl 2xl:h-3/6 2xl:text-2xl"
+              className="flex h-1/2 w-full items-center justify-center rounded-full bg-blue-700 px-8  py-3 text-xl  font-semibold text-white hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 md:text-2xl lg:h-1/3 lg:text-lg xl:h-2/5 xl:text-xl 2xl:h-3/6 2xl:text-2xl"
               to={'/signup'}
             >
               Get Started
             </Link>
             <Link
-              className="flex h-1/2 w-full  items-center justify-center rounded-full bg-blue-600 px-8 py-3  text-xl font-semibold text-white dark:bg-blue-800 md:text-2xl lg:h-1/3 lg:text-lg xl:h-2/5 xl:text-xl 2xl:h-3/6 2xl:text-2xl"
+              className="flex h-1/2 w-full items-center justify-center rounded-full bg-blue-700 px-8  py-3 text-xl  font-semibold text-white hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 md:text-2xl lg:h-1/3 lg:text-lg xl:h-2/5 xl:text-xl 2xl:h-3/6 2xl:text-2xl"
               to={'/login'}
             >
               Login
