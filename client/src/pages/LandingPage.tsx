@@ -22,8 +22,7 @@ const LandingPage = () => {
             Schedule Finder
           </h1>
           <p className="flex justify-center px-1 text-center text-sm dark:text-white sm:text-xl md:text-3xl lg:px-0 lg:text-xl 2xl:text-2xl">
-            Easily create schedules to see your friends. Discover new people
-            within your free time periods.
+            Easily create and compare your schedule with others. Discover new people within your free time periods.
           </p>
         </div>
         <div className="my-6 flex flex-col gap-6 md:gap-20 lg:my-0 lg:gap-0 lg:space-y-14">
