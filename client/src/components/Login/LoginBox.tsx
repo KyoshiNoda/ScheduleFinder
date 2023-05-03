@@ -15,16 +15,18 @@ function LoginBox({}: Props) {
         </p>
       </div> */}
       {/* <GoogleAuth /> */}
-      <p className="text-center text-xs dark:text-gray-400 sm:px-6">
-        Don't have an account?
+      <div className="mt-3 flex items-center justify-center gap-1 text-center text-xs dark:text-gray-400">
+        <p className="text-center text-xs dark:text-gray-400">
+          Don't have an account?
+        </p>
         <Link
           rel="noopener noreferrer"
           to="/signup"
-          className="underline dark:text-gray-100"
+          className="inline-block underline dark:text-gray-100"
         >
           Sign up
         </Link>
-      </p>
+      </div>
     </div>
   );
 }
