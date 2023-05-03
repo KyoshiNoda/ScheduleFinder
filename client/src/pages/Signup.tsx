@@ -4,10 +4,7 @@ import SignUpBox from '../components/Signup/SignUpBox';
 import pic1 from '../assets/loggingOn.png';
 import pic2 from '../assets/wavy-man-creating-a-website.png';
 
-type Props = {};
-
-function Signup({ }: Props) {
-
+const Signup = () => {
   const [width, setWidth] = useState<number>(window.innerWidth);
   useEffect(() => {
     const handleResize = () => {
@@ -19,19 +16,20 @@ function Signup({ }: Props) {
     };
   }, []);
   return (
-    <div className="flex flex-col min-h-screen w-screen gap-3 md:gap-30 bg-slate-400 dark:bg-slate-900">
-      <div className="flex justify-end">
+    <div className="md:gap-30 flex min-h-screen flex-col gap-3 bg-slate-400 py-5 dark:bg-slate-900 lg:px-4">
+      <div className="flex justify-end px-4 md:px-2">
         <Toggle />
       </div>
-      <div className="flex justify-evenly">
-        {width >= 768 && (
+      <div className="flex justify-evenly my-auto">
+        {width >= 1024 && (
           <div className="flex items-center">
             <img src={pic1} className="h-96" />
           </div>
         )}
 
         <SignUpBox />
-        {width >= 768 && (
+
+        {width >= 1024 && (
           <div className="flex items-center">
             <img src={pic2} className="h-96" />
           </div>
@@ -39,6 +37,6 @@ function Signup({ }: Props) {
       </div>
     </div>
   );
-}
+};
 
 export default Signup;
