@@ -44,9 +44,8 @@ class AuthController {
                 !lastName ||
                 !email ||
                 !password ||
-                !school
-            //  ||!birthday
-            ) {
+                !school ||
+                !birthday) {
                 return res.status(400).send({ error: 'All fields are required.' });
             }
             const userExists = yield userModel_1.default.findOne({ email });
@@ -60,7 +59,7 @@ class AuthController {
                 lastName: req.body.lastName,
                 age: req.body.age,
                 birthday: req.body.birthday,
-                photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s',
+                photoURL: req.body.photoURL,
                 email: req.body.email,
                 password: hashedPassword,
                 gender: null,

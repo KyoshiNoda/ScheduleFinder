@@ -38,8 +38,8 @@ class AuthController {
       !lastName ||
       !email ||
       !password ||
-      !school
-      //  ||!birthday
+      !school ||
+      !birthday
     ) {
       return res.status(400).send({ error: 'All fields are required.' });
     }
@@ -48,7 +48,6 @@ class AuthController {
       return res.status(400).send({ error: 'Email already in use.' });
     }
 
-
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
     const user = new User({
@@ -56,7 +55,7 @@ class AuthController {
       lastName: req.body.lastName,
       age: req.body.age,
       birthday: req.body.birthday,
-      photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s',
+      photoURL: req.body.photoURL,
       email: req.body.email,
       password: hashedPassword,
       gender: null,
