@@ -6,7 +6,7 @@ export type RegisterUser = {
   password: string;
   birthday: Date;
   school: string;
-  photoURL?: null;
+  photoURL: string;
   major?: null;
   gender?: null;
 };
@@ -16,7 +16,7 @@ export type User = {
   lastName: string;
   birthday?: Date;
   age?: number;
-  photoURL?: string | undefined;
+  photoURL : string;
   email: string;
   password: string;
   gender?: string | undefined,

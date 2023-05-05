@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 type UserProps = {
   id: string;
-  photoURL: string | undefined;
+  photoURL: string;
   firstName: string;
   lastName: string;
   school: string;

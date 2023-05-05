@@ -63,6 +63,7 @@ const UserContainer = ({
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);
+        console.log(data);
       })
       .catch((err) => console.log(err));
   }, []);

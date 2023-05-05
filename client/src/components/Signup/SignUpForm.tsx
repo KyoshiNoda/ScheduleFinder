@@ -34,6 +34,7 @@ function SignUpForm({}: Props) {
       password: password.current.value,
       school: school.current.value,
       birthday: birthDay,
+      photoURL : 'https://i.imgur.com/q0GLsDP.jpeg'
     };
     try {
       await dispatch(registerUser(newUser)).unwrap();
@@ -43,6 +44,7 @@ function SignUpForm({}: Props) {
       setEmailError(errorMessage);
     }
     form.current.reset();
+    console.log(newUser);
   };
 
   return (
