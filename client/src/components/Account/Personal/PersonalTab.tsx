@@ -17,6 +17,11 @@ function PersonalTab() {
   const majorRef = useRef(document.createElement('input'));
   const birthdayRef = useRef(document.createElement('input'));
   const [gender, setGender] = useState<string | undefined>(userInfo?.gender);
+  useEffect(() => {
+    if (data && !isLoading) {
+      setUserInfo(data[0]);
+    }
+  }, [data, isLoading]);
 
   const saveHandler = async () => {
     const updatedFields: Partial<UserType> = {};
@@ -48,7 +53,8 @@ function PersonalTab() {
     // if (birthdayRef.current.value !== '' && new Date(birthdayRef.current.value) !== userInfo?.birthday) {
     //   updatedFields.birthday = new Date(birthdayRef.current.value).toISOString();
     // }
-    
+
+    updatedFields.gender = gender;
 
     try {
       const result = await updateUser(updatedFields);
@@ -58,11 +64,6 @@ function PersonalTab() {
     }
   };
 
-  useEffect(() => {
-    if (data && !isLoading) {
-      setUserInfo(data[0]);
-    }
-  }, [data, isLoading]);
   return (
     <>
       {userInfo ? (
@@ -135,7 +136,7 @@ function PersonalTab() {
                 />
               </div>
               <div className="flex items-end">
-                <Dropdown label={userInfo.gender} size="lg">
+                <Dropdown label={gender} size="lg">
                   <Dropdown.Item onClick={() => setGender('Male')}>
                     Male
                   </Dropdown.Item>
