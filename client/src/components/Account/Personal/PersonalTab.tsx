@@ -16,7 +16,13 @@ function PersonalTab() {
   const schoolRef = useRef(document.createElement('input'));
   const majorRef = useRef(document.createElement('input'));
   const birthdayRef = useRef(document.createElement('input'));
-  const [gender, setGender] = useState<string | undefined>(userInfo?.gender);
+  const [gender, setGender] = useState<string | undefined>('Select Gender');
+  useEffect(() => {
+    if (data && !isLoading) {
+      setUserInfo(data[0]);
+      setGender(data[0].gender ?? 'Select Gender');
+    }
+  }, [data, isLoading]);
 
   const saveHandler = async () => {
     const updatedFields: Partial<UserType> = {};
@@ -45,10 +51,11 @@ function PersonalTab() {
     ) {
       updatedFields.major = majorRef.current.value;
     }
-    // if (birthdayRef.current.value !== '' && new Date(birthdayRef.current.value) !== userInfo?.birthday) {
-    //   updatedFields.birthday = new Date(birthdayRef.current.value).toISOString();
-    // }
-    
+    if (birthdayRef.current.value !== '' && new Date(birthdayRef.current.value) !== userInfo?.birthday) {
+      updatedFields.birthday = new Date(birthdayRef.current.value);
+    }
+
+    updatedFields.gender = gender;
 
     try {
       const result = await updateUser(updatedFields);
@@ -58,11 +65,6 @@ function PersonalTab() {
     }
   };
 
-  useEffect(() => {
-    if (data && !isLoading) {
-      setUserInfo(data[0]);
-    }
-  }, [data, isLoading]);
   return (
     <>
       {userInfo ? (
@@ -135,7 +137,7 @@ function PersonalTab() {
                 />
               </div>
               <div className="flex items-end">
-                <Dropdown label={userInfo.gender} size="lg">
+                <Dropdown label={gender} size="lg">
                   <Dropdown.Item onClick={() => setGender('Male')}>
                     Male
                   </Dropdown.Item>
@@ -173,7 +175,9 @@ function PersonalTab() {
                   type="date"
                   id="birthdate"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  required
+                  defaultValue={userInfo.birthday.toString().substring(0, 10)}
+                  min="1900-01-01"
+                  max={new Date().toISOString().split('T')[0]}
                 />
               </div>
             </div>

@@ -24,7 +24,7 @@ function Login({}: Props) {
       </div>
       <div className="flex items-center">
         <div className="flex w-full md:w-3/5 h-min-h-full justify-center items-center">
-          <LoginBox />
+          <LoginBox />/
         </div>
         {width >= 768 && (
           <div className='flex h-full items-center p-3'>

@@ -14,7 +14,7 @@ export type User = {
   _id: string;
   firstName: string;
   lastName: string;
-  birthday?: Date;
+  birthday: Date;
   age?: number;
   photoURL?: string | undefined;
   email: string;
