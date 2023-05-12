@@ -16,10 +16,11 @@ function PersonalTab() {
   const schoolRef = useRef(document.createElement('input'));
   const majorRef = useRef(document.createElement('input'));
   const birthdayRef = useRef(document.createElement('input'));
-  const [gender, setGender] = useState<string | undefined>(userInfo?.gender);
+  const [gender, setGender] = useState<string | undefined>('Select Gender');
   useEffect(() => {
     if (data && !isLoading) {
       setUserInfo(data[0]);
+      setGender(data[0].gender ?? 'Select Gender');
     }
   }, [data, isLoading]);
 
