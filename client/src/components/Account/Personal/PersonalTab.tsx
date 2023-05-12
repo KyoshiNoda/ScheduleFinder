@@ -51,9 +51,9 @@ function PersonalTab() {
     ) {
       updatedFields.major = majorRef.current.value;
     }
-    // if (birthdayRef.current.value !== '' && new Date(birthdayRef.current.value) !== userInfo?.birthday) {
-    //   updatedFields.birthday = new Date(birthdayRef.current.value).toISOString();
-    // }
+    if (birthdayRef.current.value !== '' && new Date(birthdayRef.current.value) !== userInfo?.birthday) {
+      updatedFields.birthday = new Date(birthdayRef.current.value);
+    }
 
     updatedFields.gender = gender;
 
