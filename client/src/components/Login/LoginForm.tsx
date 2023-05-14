@@ -2,6 +2,7 @@ import { FormEventHandler, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../redux/feats/auth/authActions';
 import { useAppDispatch } from '../../redux/store';
+import { Link } from 'react-router-dom';
 
 type Props = {};
 function LoginForm(props: Props) {
@@ -91,9 +92,9 @@ function LoginForm(props: Props) {
             <span className="text-xs text-red-500">{passwordErrorMessage}</span>
           )}
           <div className="flex justify-end text-xs dark:text-gray-400">
-            <a rel="noopener noreferrer" href="#">
+            <Link rel="noopener noreferrer" to="/forgotPassword">
               Forgot Password?
-            </a>
+            </Link>
           </div>
         </div>
         <button
