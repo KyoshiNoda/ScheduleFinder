@@ -35,6 +35,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const userRoute_1 = __importDefault(require("./routes/userRoute"));
 const authRoute_1 = __importDefault(require("./routes/authRoute"));
 const scheduleRoute_1 = __importDefault(require("./routes/scheduleRoute"));
+const mail_1 = __importDefault(require("@sendgrid/mail"));
 const port = process.env.PORT || 3001;
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
@@ -50,6 +51,22 @@ mongoose_1.default
     .catch((err) => console.log(err));
 const server = app.listen(port, () => {
     console.log('listening on port 3001');
+});
+mail_1.default.setApiKey(`${process.env.SENDGRID_API_KEY}`);
+const msg = {
+    to: "kyoshisew@gmail.com",
+    from: 'schedulefinder@gmail.com',
+    subject: 'Sending with SendGrid is Fun',
+    text: 'and easy to do anywhere, even with Node.js',
+    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+};
+mail_1.default
+    .send(msg)
+    .then(() => {
+    console.log('Email sent');
+})
+    .catch((error) => {
+    console.error(error);
 });
 process.on('SIGTERM', () => {
     console.log('Received SIGTERM, shutting down gracefully...');

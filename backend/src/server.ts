@@ -8,6 +8,9 @@ import mongoose from 'mongoose';
 import userRoute from './routes/userRoute';
 import authRoute from './routes/authRoute';
 import scheduleRoute from './routes/scheduleRoute';
+
+import sgMail from '@sendgrid/mail';
+
 const port = process.env.PORT || 3001;
 const app = express();
 app.use(cors());
@@ -28,6 +31,25 @@ const server = app.listen(port, () => {
   console.log('listening on port 3001');
 });
 
+sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
+
+const msg: sgMail.MailDataRequired = {
+  to: "kyoshisew@gmail.com",
+  from: 'schedulefinder@gmail.com',
+  subject: 'Sending with SendGrid is Fun',
+  text: 'and easy to do anywhere, even with Node.js',
+  html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+};
+
+sgMail
+  .send(msg)
+  .then(() => {
+    console.log('Email sent');
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
 process.on('SIGTERM', () => {
   console.log('Received SIGTERM, shutting down gracefully...');
   server.close(() => {
@@ -35,3 +57,4 @@ process.on('SIGTERM', () => {
     process.exit(0);
   });
 });
+
