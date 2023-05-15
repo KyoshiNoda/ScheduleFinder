@@ -286,7 +286,7 @@ function TimeSlotInput() {
               type="text"
               id="title"
               className={`block w-full rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                timeError ? 'border-rose-500' : 'border-gray-300'
+                timeError ? 'border-rose-500' : ''
               }`}
               placeholder="10:30 AM"
               required
@@ -305,7 +305,7 @@ function TimeSlotInput() {
               type="text"
               id="title"
               className={`block w-full rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                timeError ? 'border-rose-500' : 'border-gray-300'
+                timeError ? 'border-rose-500' : ''
               }`}
               placeholder="12:30 PM"
               required
