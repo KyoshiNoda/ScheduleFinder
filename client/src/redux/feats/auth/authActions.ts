@@ -44,3 +44,18 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+
+export const existUser = createAsyncThunk(
+  'api/auth',
+  async (userEmail: string, { rejectWithValue }) => {
+    try {
+      const data = await Axios.post(
+        //insert api
+        userEmail
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
