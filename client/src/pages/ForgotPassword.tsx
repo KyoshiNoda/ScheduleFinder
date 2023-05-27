@@ -2,11 +2,25 @@ import { useState } from 'react';
 import { Label } from 'flowbite-react';
 import { FaUserLock } from 'react-icons/fa';
 import Toggle from '../components/Toggle';
-
+import { useAppDispatch } from '../redux/store';
+import { emailCheck } from '../redux/feats/auth/authActions';
 function ForgotPassword() {
-  const [isValidEmail, setIsValidEmail] = useState<boolean>(false);
-  const checkEmailHandler = () => {
-    // run logic code here
+  const dispatch = useAppDispatch();
+  const [isInvalidEmail, setIsInvalidEmail] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const checkEmailHandler = async () => {
+    try {
+      await dispatch(emailCheck(email)).unwrap();
+      alert('valid email');
+    } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+        let errorMessage: string = error.response.data.error;
+        setIsInvalidEmail(true);
+        setErrorMessage(errorMessage);
+      }
+    }
   };
   return (
     <div className="flex min-h-full w-screen flex-col bg-slate-400 p-3 dark:bg-slate-900 lg:gap-40">
@@ -32,9 +46,13 @@ function ForgotPassword() {
                 id="email"
                 placeholder="johndoe@gmail.com"
                 className={`w-1/2 rounded-md border-gray-500 bg-gray-50 px-4 py-3 text-sm dark:border-gray-100 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-blue-400 ${
-                  isValidEmail ? 'border-rose-500' : ''
+                  isInvalidEmail ? 'border-rose-500' : ''
                 }`}
+                onChange={(event) => setEmail(event.target.value)}
               />
+              {isInvalidEmail && (
+                <span className="text-xs text-red-500">{errorMessage}</span>
+              )}
             </div>
             <div className="flex justify-center">
               <button

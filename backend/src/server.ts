@@ -11,7 +11,8 @@ import scheduleRoute from './routes/scheduleRoute';
 
 import sgMail from '@sendgrid/mail';
 
-const port = process.env.PORT || 3001;
+// const port = process.env.PORT || 3001;
+const port = 3001;
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -31,7 +32,7 @@ const server = app.listen(port, () => {
   console.log('listening on port 3001');
 });
 
-sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
+// sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 
 // const msg: sgMail.MailDataRequired = {
 //   to: "kyoshisew@gmail.com",

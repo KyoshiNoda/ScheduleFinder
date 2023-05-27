@@ -45,15 +45,15 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-export const existUser = createAsyncThunk(
-  'api/auth',
-  async (userEmail: string, { rejectWithValue }) => {
+export const emailCheck = createAsyncThunk(
+  '/api/auth',
+  async (email: string, { rejectWithValue }) => {
     try {
-      const data = await Axios.post(
-        //insert api
-        userEmail
+      const result = await Axios.post(
+        'http://localhost:3001/api/users/emailCheck',
+        email
       );
-      return data;
+      return result;
     } catch (error) {
       return rejectWithValue(error);
     }
