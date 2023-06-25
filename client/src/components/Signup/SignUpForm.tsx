@@ -34,8 +34,6 @@ function SignUpForm({}: Props) {
       password: password.current.value,
       school: school.current.value,
       birthday: birthDay,
-      photoURL:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s',
     };
     try {
       await dispatch(registerUser(newUser)).unwrap();

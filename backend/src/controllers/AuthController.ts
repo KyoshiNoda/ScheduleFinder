@@ -51,15 +51,14 @@ class AuthController {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
     const user = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      age: req.body.age,
-      birthday: req.body.birthday,
-      photoURL: req.body.photoURL,
-      email: req.body.email,
+      firstName: firstName,
+      lastName: lastName,
+      birthday: birthday,
+      photoURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s",
+      email: email,
       password: hashedPassword,
+      school: school,
       gender: null,
-      school: req.body.school,
       major: null,
     });
     try {
