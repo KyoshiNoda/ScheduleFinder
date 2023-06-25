@@ -1,11 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Schedule as ScheduleType } from '../../../types';
 import { TimeSlot as TimeSlotType } from '../../../types';
+import { getApiUrl } from '../../../utils/environment';
 
+let BASE_URL = getApiUrl();
 export const scheduleAPI = createApi({
   reducerPath: 'scheduleAPI',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://schedulefinder-production.up.railway.app/',
+    baseUrl: `${BASE_URL}`,
     prepareHeaders: (headers, { getState }: any) => {
       headers.set('Accept', 'application/json');
       headers.set('Cache-Control', 'no-cache');
