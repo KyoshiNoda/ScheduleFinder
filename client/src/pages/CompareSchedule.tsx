@@ -5,7 +5,9 @@ import { useGetScheduleQuery } from '../redux/services/schedule/scheduleService'
 import { Button } from 'flowbite-react';
 import { useAppDispatch } from '../redux/store';
 import { toggleReadOnly } from '../redux/feats/timeSlot/timeSlotSlice';
+import { getApiUrl } from '../utils/environment';
 
+let BASE_URL = getApiUrl();
 type days = {
   monday: boolean;
   tuesday: boolean;
@@ -72,9 +74,7 @@ const CompareSchedule = () => {
   const [scheduleB, setScheduleB] = useState<Schedule>(defaultSchedule);
 
   useEffect(() => {
-    fetch(
-      `https://schedulefinder-production.up.railway.app/api/schedules/${userId}/user`
-    )
+    fetch(`${BASE_URL}api/schedules/${userId}/user`)
       .then((res) => res.json())
       .then((data) => {
         setScheduleB(data[0]);
@@ -87,9 +87,7 @@ const CompareSchedule = () => {
   const [userName, setUserName] = useState<string>('');
 
   useEffect(() => {
-    fetch(
-      `https://schedulefinder-production.up.railway.app/api/users/${userId}`
-    )
+    fetch(`${BASE_URL}api/users/${userId}`)
       .then((res) => res.json())
       .then((data) => setUserName(data[0].firstName))
       .catch((err) => console.log(err));

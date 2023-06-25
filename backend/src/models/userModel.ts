@@ -6,7 +6,7 @@ export interface IUser extends Document {
   password: string;
   birthday: Date;
   gender?: string;
-  photoURL?: string;
+  photoURL: string;
   age?: number;
   school?: string;
   major?: string;
