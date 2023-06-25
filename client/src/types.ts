@@ -1,14 +1,15 @@
+export enum Environment {
+  Local = 'local',
+  Dev = 'dev',
+  Prod = 'prod',
+}
 export type RegisterUser = {
-  _id?: string | undefined;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
   birthday: Date;
   school: string;
-  photoURL?: null;
-  major?: null;
-  gender?: null;
 };
 export type User = {
   _id: string;
@@ -16,12 +17,12 @@ export type User = {
   lastName: string;
   birthday: Date;
   age?: number;
-  photoURL?: string | undefined;
+  photoURL: string;
   email: string;
   password: string;
-  gender?: string | undefined,
+  gender?: string | undefined;
   school: string;
-  major?: string | undefined,
+  major?: string | undefined;
 };
 
 export type DaysChecked = {
