@@ -1,3 +1,8 @@
+export enum Environment {
+  Local = 'local',
+  Dev = 'dev',
+  Prod = 'prod',
+}
 export type RegisterUser = {
   firstName: string;
   lastName: string;

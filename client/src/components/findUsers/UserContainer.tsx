@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react';
 import { Button } from 'flowbite-react';
 import { User as UserType } from '../../types';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
+import { getApiUrl } from '../../utils/environment';
 
+let BASE_URL = getApiUrl();
 type UserContainerProps = {
   schoolSearch: string;
   nameSearch: string;
@@ -59,7 +61,7 @@ const UserContainer = ({
   };
 
   useEffect(() => {
-    fetch('https://schedulefinder-production.up.railway.app/api/users/allUsers')
+    fetch(`${BASE_URL}api/users/allUsers`)
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);
