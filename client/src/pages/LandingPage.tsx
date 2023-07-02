@@ -48,7 +48,7 @@ const LandingPage = () => {
           href="https://github.com/KyoshiNoda/ScheduleFinder"
           target="_blank"
         >
-          <AiFillGithub size={'50'} color={`${theme}`} />
+          <AiFillGithub size={window.innerWidth < 700 ? '50' : '96'} color={`${theme}`} />
         </a>
       </div>
     </div>
