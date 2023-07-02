@@ -3,23 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../redux/store';
 import { logout } from '../redux/feats/auth/authSlice';
 
-type User = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  gender?: string;
-  photoURL?: string;
-  age?: number;
-  school?: string;
-  major?: string;
-};
-
-type Props = {
-  user: User;
-};
-
-const Navbar = (props: Props) => {
+const Navbar = ({ user }: any) => {
   const dispatch = useAppDispatch();
   return (
     <div className="flex justify-between p-4 shadow dark:bg-slate-800">
@@ -35,7 +19,7 @@ const Navbar = (props: Props) => {
           label={
             <Avatar
               alt="User avatar dropdown menu"
-              img={props.user.photoURL}
+              img={user.photoURL}
               rounded={true}
               size={'md'}
             />
@@ -43,10 +27,10 @@ const Navbar = (props: Props) => {
         >
           <Dropdown.Header>
             <span className="block text-sm">
-              {props.user.firstName} {props.user.lastName}
+              {user.firstName} {user.lastName}
             </span>
             <span className="block truncate text-sm font-medium">
-              {props.user.email}
+              {user.email}
             </span>
           </Dropdown.Header>
           <Link to={'/auth/schedule'}>

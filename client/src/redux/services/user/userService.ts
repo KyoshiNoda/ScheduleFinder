@@ -1,9 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { User as UserType } from '../../../types';
+import { getApiUrl } from '../../../utils/environment';
+
+let BASE_URL = getApiUrl();
 export const userAPI = createApi({
   reducerPath: 'userAPI',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://schedulefinder-production.up.railway.app/',
+    baseUrl: `${BASE_URL}`,
     prepareHeaders: (headers, { getState }: any) => {
       headers.set('Accept', 'application/json');
       headers.set('Cache-Control', 'no-cache');
