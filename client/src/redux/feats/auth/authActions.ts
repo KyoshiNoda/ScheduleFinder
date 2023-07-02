@@ -40,16 +40,21 @@ export const loginUser = createAsyncThunk(
 );
 
 export const emailCheck = createAsyncThunk(
-  '/api/auth',
+  'auth/emailCheck',
   async (email: string, { rejectWithValue }) => {
     try {
-      const result = await Axios.post(
-        'http://localhost:3001/api/users/emailCheck',
-        email
-      );
+      const result = await Axios.post(`${BASE_URL}api/auth/emailCheck`, email);
       return result;
-    } catch (error) {
-      return rejectWithValue(error);
+    } catch (error: any) {
+      if (error.response) {
+        const { status, data } = error.response;
+        return rejectWithValue({ status, message: data.message });
+      } else {
+        return rejectWithValue({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
     }
   }
 );

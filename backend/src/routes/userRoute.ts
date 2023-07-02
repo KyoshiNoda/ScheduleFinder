@@ -10,7 +10,6 @@ router.post(
   AuthController.authenticateToken,
   UserController.changePassword
 );
-router.post('/emailCheck',UserController.emailCheck);
 router.get('/allUsers', UserController.getAllUsers);
 router.get('/:id', UserController.getUserById);
 router.delete('/:id', UserController.deleteUser);

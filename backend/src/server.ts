@@ -10,8 +10,6 @@ import authRoute from './routes/authRoute';
 import scheduleRoute from './routes/scheduleRoute';
 
 import sgMail from '@sendgrid/mail';
-
-// const port = process.env.PORT || 3001;
 const port = 3001;
 const app = express();
 app.use(cors());
@@ -32,6 +30,14 @@ const server = app.listen(port, () => {
   console.log('listening on port 3001');
 });
 
+process.on('SIGTERM', () => {
+  console.log('Received SIGTERM, shutting down gracefully...');
+  server.close(() => {
+    console.log('Server shutdown complete.');
+    process.exit(0);
+  });
+});
+
 // sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 
 // const msg: sgMail.MailDataRequired = {
@@ -50,12 +56,3 @@ const server = app.listen(port, () => {
 //   .catch((error) => {
 //     console.error(error);
 //   });
-
-process.on('SIGTERM', () => {
-  console.log('Received SIGTERM, shutting down gracefully...');
-  server.close(() => {
-    console.log('Server shutdown complete.');
-    process.exit(0);
-  });
-});
-

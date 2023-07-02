@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Label } from 'flowbite-react';
 import { FaUserLock } from 'react-icons/fa';
 import Toggle from '../components/Toggle';
 import { useAppDispatch } from '../redux/store';
@@ -7,7 +6,7 @@ import { emailCheck } from '../redux/feats/auth/authActions';
 function ForgotPassword() {
   const dispatch = useAppDispatch();
   const [isInvalidEmail, setIsInvalidEmail] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>('');
+  const [email, setEmail] = useState<string>('test');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const checkEmailHandler = async () => {
@@ -28,7 +27,7 @@ function ForgotPassword() {
         <Toggle />
       </div>
       <div className="flex items-center justify-center">
-        <div className="flex w-1/3 flex-col justify-center rounded-lg bg-white p-5 dark:bg-slate-400">
+        <div className="flex w-1/3 flex-col justify-center rounded-lg bg-white p-5 dark:bg-pink-900">
           <div className="flex justify-center">
             <FaUserLock size="80" />
           </div>

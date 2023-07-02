@@ -54,7 +54,8 @@ class AuthController {
       firstName: firstName,
       lastName: lastName,
       birthday: birthday,
-      photoURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s",
+      photoURL:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s',
       email: email,
       password: hashedPassword,
       school: school,
@@ -94,6 +95,20 @@ class AuthController {
         next();
       }
     );
+  }
+  public static async emailCheck(req: any, res: any) {
+    const email: string = req.body.email;
+    console.log(email);
+    try {
+      const user = await User.findOne({ email }).exec();
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      return res.status(200).json({ message: 'User found!' });
+    } catch (error) {
+      console.error('Error while checking email:', error);
+      return res.status(500).json({ message: 'Internal Server Error' });
+    }
   }
 }
 

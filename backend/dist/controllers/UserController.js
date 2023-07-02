@@ -120,21 +120,5 @@ class UserController {
             }
         });
     }
-    static emailCheck(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { email } = req.body;
-            try {
-                const user = yield userModel_1.default.findOne({ email }).exec();
-                if (!user) {
-                    return res.status(404).json({ message: 'User not found' });
-                }
-                return res.status(200).json({ message: 'User found!' });
-            }
-            catch (error) {
-                console.error('Error while checking email:', error);
-                return res.status(500).json({ message: 'Internal Server Error' });
-            }
-        });
-    }
 }
 exports.default = UserController;
