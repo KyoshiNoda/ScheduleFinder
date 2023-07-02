@@ -180,12 +180,12 @@ function TimeSlot(props: Props) {
                   />
                 </div>
               ) : (
-                <h1 className="text-5xl font-medium text-gray-900 dark:text-white">
+                <h1 className="text-center text-5xl font-medium text-gray-900 dark:text-white">
                   {props.title}
                 </h1>
               )}
             </div>
-            <div className="flex items-center justify-center text-4xl dark:text-white">
+            <div className="flex items-center justify-center text-2xl dark:text-white sm:text-4xl">
               {editMode ? (
                 <div className="w-1/6">
                   <label htmlFor="startTime" className="text-2xl">
@@ -319,7 +319,7 @@ function TimeSlot(props: Props) {
                 <span>{days?.friday && 'F'}</span>
               </div>
             )}
-            <div className="flex justify-evenly">
+            <div className="flex flex-col items-center justify-evenly sm:flex-row">
               <div>
                 {editMode ? (
                   <>
