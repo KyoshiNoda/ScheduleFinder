@@ -168,7 +168,7 @@ function TimeSlot(props: Props) {
             />
             <div className="flex justify-center">
               {editMode ? (
-                <div className="w-1/2">
+                <div className="w-full sm:w-1/2">
                   <label htmlFor="title" className="text-3xl dark:text-white">
                     Title
                   </label>
@@ -187,7 +187,7 @@ function TimeSlot(props: Props) {
             </div>
             <div className="flex items-center justify-center text-2xl dark:text-white sm:text-4xl">
               {editMode ? (
-                <div className="w-1/6">
+                <div className="mx-1 w-full sm:w-1/6">
                   <label htmlFor="startTime" className="text-2xl">
                     Start Time
                   </label>
@@ -205,7 +205,7 @@ function TimeSlot(props: Props) {
               {!editMode && '-'}
 
               {editMode ? (
-                <div className="w-1/6">
+                <div className="mx-1 w-full sm:w-1/6">
                   <label htmlFor="endTime" className="text-2xl">
                     End Time
                   </label>
@@ -274,7 +274,7 @@ function TimeSlot(props: Props) {
                     </label>
                   </div>
                 </li>
-                <li className="w-full dark:border-gray-600">
+                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
                   <div className="flex items-center pl-3">
                     <input
                       ref={thursdayRef}
@@ -287,7 +287,7 @@ function TimeSlot(props: Props) {
                       htmlFor="thursday"
                       className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
                     >
-                      Thurs
+                      Thur
                     </label>
                   </div>
                 </li>
@@ -374,12 +374,12 @@ function TimeSlot(props: Props) {
               </div>
             </div>
             <div className="flex justify-center">
-              <div className="grid w-1/3 grid-cols-7 grid-rows-2 gap-2 p-2">
+              <div className="my-2 grid grid-cols-7 gap-2">
                 {editMode &&
                   colors.map((color) => (
                     <div
                       key={color}
-                      className={`bg-${color}-400 h-10 w-10 cursor-pointer rounded-full border-4 p-1 ${
+                      className={`bg-${color}-400 h-7 w-7 cursor-pointer rounded-full border-4 p-1 sm:h-10 sm:w-10 ${
                         timeSlotColor === color
                           ? 'border-blue-700'
                           : 'border-none'

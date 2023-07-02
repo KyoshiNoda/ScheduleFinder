@@ -351,7 +351,7 @@ function TimeSlotInput() {
                 <div
                   onClick={() => setTimeSlotColor(color)}
                   key={color}
-                  className={`bg-${color}-400 p- h-8 w-8 cursor-pointer rounded-full border-4 lg:h-10 lg:w-10 ${
+                  className={`bg-${color}-400 h-8 w-8 cursor-pointer rounded-full border-4 lg:h-10 lg:w-10 ${
                     timeSlotColor === color ? 'border-blue-700' : 'border-none'
                   }`}
                 />
