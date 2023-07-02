@@ -6,7 +6,6 @@ import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
 import { Modal, Button } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
 
-
 export const colors: string[] = [
   'slate',
   'red',
@@ -152,7 +151,6 @@ function TimeSlotInput() {
   };
 
   return (
-    // <div className="mt-6 flex h-1/4 w-1/2 flex-col rounded-lg bg-slate-50 p-5 dark:bg-black sm:h-1/2">
     <div className="mt-6 flex  flex-col rounded-lg bg-slate-50 p-5 dark:bg-black sm:h-1/2">
       <form ref={formRef} onSubmit={addTimeSlot} className="space-y-2">
         <div>
@@ -234,7 +232,7 @@ function TimeSlotInput() {
                 </label>
               </div>
             </li>
-            <li className="w-full border-b dark:border-gray-600">
+            <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
               <div className="flex items-center pl-3">
                 <input
                   ref={thursdayRef}
@@ -348,14 +346,12 @@ function TimeSlotInput() {
         </div>
         <div>
           <div className="flex justify-center">
-            {/* <div className="grid grid-cols-7 gap-2 p-2"> */}
-            <div className="grid grid-cols-7 gap-2 my-2">
+            <div className="my-2 grid grid-cols-7 gap-2">
               {colors.map((color) => (
                 <div
                   onClick={() => setTimeSlotColor(color)}
                   key={color}
-                  // className={`bg-${color}-400 h-10 w-10 cursor-pointer rounded-full border-4 p-1 ${
-                  className={`bg-${color}-400 h-8 w-8 cursor-pointer rounded-full border-4 p- ${
+                  className={`bg-${color}-400 p- h-8 w-8 cursor-pointer rounded-full border-4 lg:h-10 lg:w-10 ${
                     timeSlotColor === color ? 'border-blue-700' : 'border-none'
                   }`}
                 />
