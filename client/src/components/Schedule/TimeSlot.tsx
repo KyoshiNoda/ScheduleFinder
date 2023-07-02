@@ -411,10 +411,14 @@ function TimeSlot(props: Props) {
         </Modal.Body>
       </Modal>
       <div
-        className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${props.color}-400 w-full ${!readOnly && 'hover:cursor-pointer hover:brightness-50'} dark:text-black`}
+        className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${
+          props.color
+        }-400 w-full ${
+          !readOnly && 'hover:cursor-pointer hover:brightness-50'
+        } dark:text-black`}
         style={{ top: `${props.top}px`, height: `${props.height}px` }}
         onClick={() => setIsTimeSlotClicked(readOnly ? false : true)}
-        onMouseEnter={() => setIsHovering(readOnly ? false:true)}
+        onMouseEnter={() => setIsHovering(readOnly ? false : true)}
         onMouseLeave={() => setIsHovering(false)}
       >
         {isHovering && <AiFillEdit size={'96'} />}
