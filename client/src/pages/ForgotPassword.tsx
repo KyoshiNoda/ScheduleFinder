@@ -27,14 +27,16 @@ function ForgotPassword() {
         <Toggle />
       </div>
       <div className="flex items-center justify-center">
-        <div className="flex w-1/3 flex-col justify-center rounded-lg bg-white p-5 dark:bg-slate-700">
+        <div className="flex w-5/6 flex-col justify-center rounded-lg bg-white p-5 dark:bg-slate-700 lg:w-1/3">
           <div className="flex justify-center">
             <FaUserLock size="80" />
           </div>
-          <div className="flex justify-center text-4xl">Forgot Password?</div>
+          <div className="flex justify-center text-2xl dark:text-white lg:text-4xl">
+            Forgot Password?
+          </div>
           <div className="flex justify-center space-y-10">
-            <p className="text-md mb-2 block text-gray-900 dark:text-white">
-              Don't stress! Check your email for a 5 digit code!
+            <p className="md:text-md mb-2 block text-gray-900 dark:text-gray-300">
+              Check your email for a 5 digit code!
             </p>
           </div>
           <div className="flex flex-col gap-3">
