@@ -41,7 +41,8 @@ export const loginUser = createAsyncThunk(
 
 export const emailCheck = createAsyncThunk(
   'auth/emailCheck',
-  async (email: string, { rejectWithValue }) => {
+  async (email : {email : string}, { rejectWithValue }) => {
+    console.log('action:',email);
     try {
       const result = await Axios.post(`${BASE_URL}api/auth/emailCheck`, email);
       return result;

@@ -97,8 +97,7 @@ class AuthController {
     );
   }
   public static async emailCheck(req: any, res: any) {
-    const email: string = req.body.email;
-    console.log(email);
+    let email: string = req.body.email;
     try {
       const user = await User.findOne({ email }).exec();
       if (!user) {

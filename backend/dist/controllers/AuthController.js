@@ -93,8 +93,7 @@ class AuthController {
     }
     static emailCheck(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const email = req.body.email;
-            console.log(email);
+            let email = req.body.email;
             try {
                 const user = yield userModel_1.default.findOne({ email }).exec();
                 if (!user) {

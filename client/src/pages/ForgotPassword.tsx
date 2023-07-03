@@ -6,12 +6,12 @@ import { emailCheck } from '../redux/feats/auth/authActions';
 function ForgotPassword() {
   const dispatch = useAppDispatch();
   const [isInvalidEmail, setIsInvalidEmail] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>('test');
+  const [email, setEmail] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const checkEmailHandler = async () => {
     try {
-      await dispatch(emailCheck(email)).unwrap();
+      await dispatch(emailCheck({email : email})).unwrap();
       alert('valid email');
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
@@ -21,6 +21,7 @@ function ForgotPassword() {
       }
     }
   };
+  
   return (
     <div className="flex min-h-full w-screen flex-col bg-slate-400 p-3 dark:bg-slate-900 lg:gap-40">
       <div className="flex justify-end">
