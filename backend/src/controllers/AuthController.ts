@@ -101,7 +101,7 @@ class AuthController {
     try {
       const user = await User.findOne({ email }).exec();
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: 'Invalid Email' });
       }
       return res.status(200).json({ message: 'User found!' });
     } catch (error) {

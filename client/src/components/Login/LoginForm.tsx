@@ -56,6 +56,9 @@ function LoginForm(props: Props) {
           <label htmlFor="email" className="block text-sm font-bold md:text-lg">
             Email
           </label>
+          <div>
+            
+          </div>
           <input
             type="email"
             name="email"
