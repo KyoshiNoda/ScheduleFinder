@@ -112,51 +112,33 @@ class UserController {
   }
   public static async changePasswordWithoutToken(req: Request, res: Response) {
     try {
-      let user = await User.findOne({ email: req.body.email }).exec();
-      if (user) {
-        const passwordMatch = await bcrypt.compare(
-          req.body.currentPassword,
-          user.password
-        );
-
-        if (!passwordMatch) {
-          res.status(401).send('Incorrect Password!');
-          return;
-        }
-        if (req.body.newPassword !== req.body.confirmNewPassword) {
-          res.status(401).send("Passwords don't match!'");
-          return;
-        }
-        const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
-        const updatedUser = await User.findOneAndUpdate(
-          { email: req.body.email },
-          { ...req.body, password: hashedPassword },
-          { returnOriginal: false }
-        );
-        if (!updatedUser) {
-          throw new Error('Error updating password');
-        }
-        return res.status(200).send({ message: 'Password Changed!' });
-      } else {
+      const user = await User.findOne({ email: req.body.email }).exec();
+      if (!user) {
         return res.status(404).send({ error: 'User not found' });
       }
+
+      if (req.body.newPassword !== req.body.confirmNewPassword) {
+        return res.status(401).send({ message: "Passwords don't match!" });
+      }
+
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
+      const updatedUser = await User.findOneAndUpdate(
+        { email: req.body.email },
+        { ...req.body, password: hashedPassword },
+        { returnOriginal: false }
+      );
+
+      if (!updatedUser) {
+        throw new Error('Error updating password');
+      }
+
+      return res
+        .status(200)
+        .send({ message: 'Password Changed!', updatedUser });
     } catch (error: any) {
       return res.status(500).send({ error: 'Error occurred' });
     }
   }
-  // try {
-  //   let user: any;
-  //   User.findOne({ email: req.body.email }, (err: any, found: any) => {
-  //     if (!err) {
-  //       user = found;
-  //     } else {
-  //       res.status(404).send({ error: err });
-  //     }
-  //   });
-
-  // } catch (error: any) {
-  //   res.status(500).send({ error: error.message });
-  // }
 }
 export default UserController;

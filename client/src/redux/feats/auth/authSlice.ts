@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginUser, registerUser, resetPasswordRequest } from './authActions';
+import {
+  changePassword,
+  loginUser,
+  registerUser,
+  resetPasswordRequest,
+} from './authActions';
 
 const userInfoFromStorage = localStorage.getItem('userInfo');
 const userTokenFromStorage = localStorage.getItem('userToken');
@@ -11,6 +16,8 @@ const initialState = {
   error: null,
   success: false,
   email: localStorage.getItem('tempEmail') || null,
+  errorStatus: 0,
+  errorMessage: '',
 };
 
 const authSlice = createSlice({
