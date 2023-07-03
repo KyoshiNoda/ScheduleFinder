@@ -137,32 +137,37 @@ class AuthController {
   }
 
   public static async verifyResetPasswordCode(req: Request, res: Response) {
-    const email = req.body.email;
-    const code = req.body.code;
-    if (code === AuthController.randomCode) {
-      res.status(200).send({ message: 'User can reset password' });
-    }
-    AuthController.randomCode = (
-      Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
-    ).toString();
-    let message: string = `Here is your five digit code: ${AuthController.randomCode}`;
-    const msg: sgMail.MailDataRequired = {
-      to: email,
-      from: 'schedulefinder@gmail.com',
-      subject: 'ScheduleFinder - Password Reset',
-      text: message,
-      html: `<strong>${message}</strong>`,
-    };
-    sgMail
-      .send(msg)
-      .then(() => {
-        res.status(400).send({
-          message: 'Incorrect code! Sending another email with new code',
-        });
-      })
-      .catch((error) => {
-        res.status(500).send({ message: 'Error found try again!' });
+    try {
+      const email = req.body.email;
+      const code = req.body.code;
+
+      if (code === AuthController.randomCode) {
+        return res.status(200).send({ message: 'User can reset password' });
+      }
+
+      AuthController.randomCode = (
+        Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
+      ).toString();
+
+      let message: string = `Here is your five-digit code: ${AuthController.randomCode}`;
+      const msg: sgMail.MailDataRequired = {
+        to: email,
+        from: 'schedulefinder@gmail.com',
+        subject: 'ScheduleFinder - Password Reset',
+        text: message,
+        html: `<strong>${message}</strong>`,
+      };
+
+      await sgMail.send(msg);
+
+      return res.status(400).send({
+        message: 'Incorrect code! Sending another email with a new code',
       });
+    } catch (error) {
+      return res
+        .status(500)
+        .send({ message: 'Error found. Please try again!' });
+    }
   }
 }
 

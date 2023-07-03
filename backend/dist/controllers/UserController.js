@@ -122,19 +122,33 @@ class UserController {
     }
     static changePasswordWithoutToken(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const email = req.body.email;
-            const newPassword = req.body.newPassword;
-            const confirmPassword = req.body.confirmPassword;
-            let user;
-            userModel_1.default.findOne({ email: email }, (err, found) => {
-                if (!err) {
-                    user = found;
+            try {
+                let user = yield userModel_1.default.findOne({ email: req.body.email }).exec();
+                if (user) {
+                    const passwordMatch = yield bcrypt_1.default.compare(req.body.currentPassword, user.password);
+                    if (!passwordMatch) {
+                        res.status(401).send('Incorrect Password!');
+                        return;
+                    }
+                    if (req.body.newPassword !== req.body.confirmNewPassword) {
+                        res.status(401).send("Passwords don't match!'");
+                        return;
+                    }
+                    const salt = yield bcrypt_1.default.genSalt();
+                    const hashedPassword = yield bcrypt_1.default.hash(req.body.newPassword, salt);
+                    const updatedUser = yield userModel_1.default.findOneAndUpdate({ email: req.body.email }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }), { returnOriginal: false });
+                    if (!updatedUser) {
+                        throw new Error('Error updating password');
+                    }
+                    return res.status(200).send({ message: 'Password Changed!' });
                 }
                 else {
-                    throw err;
+                    return res.status(404).send({ error: 'User not found' });
                 }
-            });
-            const oldPassword = user.password;
+            }
+            catch (error) {
+                return res.status(500).send({ error: 'Error occurred' });
+            }
         });
     }
 }

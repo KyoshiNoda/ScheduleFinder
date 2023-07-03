@@ -75,11 +75,42 @@ export const resetPasswordRequest = createAsyncThunk(
 );
 
 export const verifyPasswordRequest = createAsyncThunk(
-  '/auth/resetPasswordRequest',
+  '/auth/verifyPasswordRequest',
   async (data: { email: string | null; code: string }, { rejectWithValue }) => {
     try {
       const result = await Axios.post(
         `${BASE_URL}api/auth/verifyResetPasswordCode`,
+        data
+      );
+      return result;
+    } catch (error: any) {
+      if (error.response) {
+        const { status, data } = error.response;
+        return rejectWithValue({ status, message: data.message });
+      } else {
+        return rejectWithValue({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    }
+  }
+);
+
+export const changePassword = createAsyncThunk(
+  '/auth/changePassword',
+  async (
+    data: {
+      email: string | null;
+      currentPassword: string;
+      newPassword: string;
+      confirmNewPassword: string;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const result = await Axios.post(
+        `${BASE_URL}api/users/changePassword`,
         data
       );
       return result;

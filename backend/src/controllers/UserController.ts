@@ -111,19 +111,52 @@ class UserController {
     }
   }
   public static async changePasswordWithoutToken(req: Request, res: Response) {
-    const email = req.body.email;
-    const newPassword = req.body.newPassword;
-    const confirmPassword = req.body.confirmPassword;
+    try {
+      let user = await User.findOne({ email: req.body.email }).exec();
+      if (user) {
+        const passwordMatch = await bcrypt.compare(
+          req.body.currentPassword,
+          user.password
+        );
 
-    let user: any;
-    User.findOne({ email: email }, (err: any, found: any) => {
-      if (!err) {
-        user = found;
+        if (!passwordMatch) {
+          res.status(401).send('Incorrect Password!');
+          return;
+        }
+        if (req.body.newPassword !== req.body.confirmNewPassword) {
+          res.status(401).send("Passwords don't match!'");
+          return;
+        }
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
+        const updatedUser = await User.findOneAndUpdate(
+          { email: req.body.email },
+          { ...req.body, password: hashedPassword },
+          { returnOriginal: false }
+        );
+        if (!updatedUser) {
+          throw new Error('Error updating password');
+        }
+        return res.status(200).send({ message: 'Password Changed!' });
       } else {
-        throw err;
+        return res.status(404).send({ error: 'User not found' });
       }
-    });
-    const oldPassword = user.password;
+    } catch (error: any) {
+      return res.status(500).send({ error: 'Error occurred' });
+    }
   }
+  // try {
+  //   let user: any;
+  //   User.findOne({ email: req.body.email }, (err: any, found: any) => {
+  //     if (!err) {
+  //       user = found;
+  //     } else {
+  //       res.status(404).send({ error: err });
+  //     }
+  //   });
+
+  // } catch (error: any) {
+  //   res.status(500).send({ error: error.message });
+  // }
 }
 export default UserController;
