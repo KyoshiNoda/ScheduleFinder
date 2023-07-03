@@ -93,7 +93,7 @@ class UserController {
         });
     }
     // change password with Token
-    static changePassword(req, res) {
+    static changePasswordWithToken(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const userID = req.user.data._id;
@@ -118,6 +118,23 @@ class UserController {
             catch (error) {
                 res.status(500).send({ error: error.message });
             }
+        });
+    }
+    static changePasswordWithoutToken(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const email = req.body.email;
+            const newPassword = req.body.newPassword;
+            const confirmPassword = req.body.confirmPassword;
+            let user;
+            userModel_1.default.findOne({ email: email }, (err, found) => {
+                if (!err) {
+                    user = found;
+                }
+                else {
+                    throw err;
+                }
+            });
+            const oldPassword = user.password;
         });
     }
 }

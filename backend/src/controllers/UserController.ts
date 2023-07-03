@@ -78,7 +78,7 @@ class UserController {
     }
   }
   // change password with Token
-  public static async changePassword(req: any, res: any) {
+  public static async changePasswordWithToken(req: any, res: any) {
     try {
       const userID: string = req.user.data._id;
       const userPassword: string = req.user.data.password;
@@ -109,6 +109,21 @@ class UserController {
     } catch (error: any) {
       res.status(500).send({ error: error.message });
     }
+  }
+  public static async changePasswordWithoutToken(req: Request, res: Response) {
+    const email = req.body.email;
+    const newPassword = req.body.newPassword;
+    const confirmPassword = req.body.confirmPassword;
+
+    let user: any;
+    User.findOne({ email: email }, (err: any, found: any) => {
+      if (!err) {
+        user = found;
+      } else {
+        throw err;
+      }
+    });
+    const oldPassword = user.password;
   }
 }
 export default UserController;
