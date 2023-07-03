@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken';
 import sgMail from '@sendgrid/mail';
 sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class AuthController {
+  private static randomCode: string;
+
   public static async loginUser(req: Request, res: Response) {
     const email = req.body.email;
     const password = req.body.password;
@@ -110,15 +112,13 @@ class AuthController {
       return res.status(500).json({ message: 'Internal Server Error' });
     }
   }
-
   public static async resetPasswordRequest(req: Request, res: Response) {
     let email: string = req.body.email;
-    const min = 10000;
-    const max = 99999;
-    const randomCode = (
-      Math.floor(Math.random() * (max - min + 1)) + min
+    let randomCode = (
+      Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
     ).toString();
-    let message: string = `Here is your five digit code: ${randomCode}`;
+    AuthController.randomCode = randomCode;
+    let message: string = `Here is your five digit code: ${AuthController.randomCode}`;
     const msg: sgMail.MailDataRequired = {
       to: email,
       from: 'schedulefinder@gmail.com',
@@ -129,10 +129,39 @@ class AuthController {
     sgMail
       .send(msg)
       .then(() => {
-        console.log('Email sent');
+        res.status(200).send({ message: 'email sent!', email: email });
       })
       .catch((error) => {
-        console.error(error);
+        res.status(400).send({ error: 'error found try again!' });
+      });
+  }
+
+  public static async verifyResetPasswordCode(req: Request, res: Response) {
+    const email = req.body.email;
+    const code = req.body.code;
+    if (code === AuthController.randomCode) {
+      res.status(200).send({ message: 'User can reset password' });
+    }
+    AuthController.randomCode = (
+      Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
+    ).toString();
+    let message: string = `Here is your five digit code: ${AuthController.randomCode}`;
+    const msg: sgMail.MailDataRequired = {
+      to: email,
+      from: 'schedulefinder@gmail.com',
+      subject: 'ScheduleFinder - Password Reset',
+      text: message,
+      html: `<strong>${message}</strong>`,
+    };
+    sgMail
+      .send(msg)
+      .then(() => {
+        res.status(400).send({
+          message: 'Incorrect code! Sending another email with new code',
+        });
+      })
+      .catch((error) => {
+        res.status(500).send({ message: 'Error found try again!' });
       });
   }
 }

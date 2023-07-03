@@ -17,9 +17,8 @@ function ForgotPassword() {
   const checkEmailHandler = async () => {
     try {
       await dispatch(emailCheck({ email: email })).unwrap();
-      setIsInvalidEmail(false);
+      await dispatch(resetPasswordRequest({ email: email })).unwrap();
       navigate('/resetPassword');
-      // await dispatch(resetPasswordRequest({ email: email })).unwrap();
     } catch (error: any) {
       if (error.status === 404) {
         setIsInvalidEmail(true);
@@ -64,12 +63,8 @@ function ForgotPassword() {
                   />
                 </div>
                 <div>
-                  {isInvalidEmail ? (
+                  {isInvalidEmail && (
                     <span className="text-xs text-red-500">
-                      {responseMessage}
-                    </span>
-                  ) : (
-                    <span className="text-xs text-green-500">
                       {responseMessage}
                     </span>
                   )}

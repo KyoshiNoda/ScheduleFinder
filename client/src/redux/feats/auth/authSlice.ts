@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginUser, registerUser } from './authActions';
+import { loginUser, registerUser, resetPasswordRequest } from './authActions';
 
 const userInfoFromStorage = localStorage.getItem('userInfo');
 const userTokenFromStorage = localStorage.getItem('userToken');
@@ -10,6 +10,7 @@ const initialState = {
   userToken: userTokenFromStorage || '',
   error: null,
   success: false,
+  email: localStorage.getItem('tempEmail') || null,
 };
 
 const authSlice = createSlice({
@@ -23,6 +24,9 @@ const authSlice = createSlice({
       state.userInfo = null;
       state.userToken = '';
       state.error = null;
+    },
+    setEmail: (state, action) => {
+      state.email = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -59,6 +63,13 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, { payload }: any) => {
         state.loading = false;
         state.error = payload;
+      })
+      .addCase(resetPasswordRequest.fulfilled, (state, { payload }) => {
+        state.email = payload.data.email;
+        localStorage.setItem('tempEmail', state.email!);
+      })
+      .addCase(resetPasswordRequest.rejected, (state, { payload }) => {
+        state.email = null;
       });
   },
 });

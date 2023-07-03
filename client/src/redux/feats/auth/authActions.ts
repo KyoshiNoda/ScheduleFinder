@@ -73,3 +73,18 @@ export const resetPasswordRequest = createAsyncThunk(
     }
   }
 );
+
+export const verifyPasswordRequest = createAsyncThunk(
+  '/auth/resetPasswordRequest',
+  async (data: { email: string | null; code: string }, { rejectWithValue }) => {
+    try {
+      const result = await Axios.post(
+        `${BASE_URL}api/auth/verifyResetPasswordCode`,
+        data
+      );
+      return result;
+    } catch (error: any) {
+      return rejectWithValue(error);
+    }
+  }
+);
