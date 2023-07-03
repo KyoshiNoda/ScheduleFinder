@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const mail_1 = __importDefault(require("@sendgrid/mail"));
+mail_1.default.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class AuthController {
     static loginUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -105,6 +107,30 @@ class AuthController {
                 console.error('Error while checking email:', error);
                 return res.status(500).json({ message: 'Internal Server Error' });
             }
+        });
+    }
+    static forgotPassword(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let email = req.body.email;
+            const min = 10000; // Minimum 5-digit number (inclusive)
+            const max = 99999; // Maximum 5-digit number (inclusive)
+            const randomCode = (Math.floor(Math.random() * (max - min + 1)) + min).toString();
+            let message = `Here is your five digit code: ${randomCode}`;
+            const msg = {
+                to: email,
+                from: 'schedulefinder@gmail.com',
+                subject: 'ScheduleFinder - Password Reset',
+                text: message,
+                html: `<strong>${message}</strong>`,
+            };
+            mail_1.default
+                .send(msg)
+                .then(() => {
+                console.log('Email sent');
+            })
+                .catch((error) => {
+                console.error(error);
+            });
         });
     }
 }

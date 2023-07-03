@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import User from '../models/userModel';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
+import sgMail from '@sendgrid/mail';
+sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class AuthController {
   public static async loginUser(req: Request, res: Response) {
     const email = req.body.email;
@@ -96,7 +97,7 @@ class AuthController {
       }
     );
   }
-  public static async emailCheck(req: any, res: any) {
+  public static async emailCheck(req: Request, res: Response) {
     let email: string = req.body.email;
     try {
       const user = await User.findOne({ email }).exec();
@@ -108,6 +109,31 @@ class AuthController {
       console.error('Error while checking email:', error);
       return res.status(500).json({ message: 'Internal Server Error' });
     }
+  }
+
+  public static async forgotPassword(req: Request, res: Response) {
+    let email: string = req.body.email;
+    const min = 10000; // Minimum 5-digit number (inclusive)
+    const max = 99999; // Maximum 5-digit number (inclusive)
+    const randomCode = (
+      Math.floor(Math.random() * (max - min + 1)) + min
+    ).toString();
+    let message: string = `Here is your five digit code: ${randomCode}`;
+    const msg: sgMail.MailDataRequired = {
+      to: email,
+      from: 'schedulefinder@gmail.com',
+      subject: 'ScheduleFinder - Password Reset',
+      text: message,
+      html: `<strong>${message}</strong>`,
+    };
+    sgMail
+      .send(msg)
+      .then(() => {
+        console.log('Email sent');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 }
 

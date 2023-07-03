@@ -7,16 +7,17 @@ function ForgotPassword() {
   const dispatch = useAppDispatch();
   const [isInvalidEmail, setIsInvalidEmail] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [responseMessage, setResponseMessage] = useState<string>('');
 
   const checkEmailHandler = async () => {
     try {
       await dispatch(emailCheck({ email: email })).unwrap();
       setIsInvalidEmail(false);
+      setResponseMessage('Please check your email!');
     } catch (error: any) {
       if (error.status === 404) {
         setIsInvalidEmail(true);
-        setErrorMessage(error.message);
+        setResponseMessage(error.message);
       }
     }
   };
@@ -57,8 +58,14 @@ function ForgotPassword() {
                   />
                 </div>
                 <div>
-                  {isInvalidEmail && (
-                    <span className="text-xs text-red-500">{errorMessage}</span>
+                  {isInvalidEmail ? (
+                    <span className="text-xs text-red-500">
+                      {responseMessage}
+                    </span>
+                  ) : (
+                    <span className="text-xs text-green-500">
+                      {responseMessage}
+                    </span>
                   )}
                 </div>
               </div>
