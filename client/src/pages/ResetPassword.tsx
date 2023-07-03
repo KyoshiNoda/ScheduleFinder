@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Toggle from '../components/Toggle';
 import { MdOutlineLockReset } from 'react-icons/md';
 import { useAppDispatch } from '../redux/store';
@@ -9,24 +9,29 @@ function ResetPassword() {
   const dispatch = useAppDispatch();
   const email = useAppSelector((state) => state.auth.email);
 
-  const digit1 = useRef(document.createElement('input'));
-  const digit2 = useRef(document.createElement('input'));
-  const digit3 = useRef(document.createElement('input'));
-  const digit4 = useRef(document.createElement('input'));
-  const digit5 = useRef(document.createElement('input'));
+  const digit1 = useRef<HTMLInputElement | null>(null);
+  const digit2 = useRef<HTMLInputElement | null>(null);
+  const digit3 = useRef<HTMLInputElement | null>(null);
+  const digit4 = useRef<HTMLInputElement | null>(null);
+  const digit5 = useRef<HTMLInputElement | null>(null);
 
   const [isInvalidCode, setIsInvalidCode] = useState<boolean>(false);
   const [canResetPassword, setCanResetPassword] = useState<boolean>(false);
   const [responseMessage, setResponseMessage] = useState<string>('');
+  useEffect(() => {
+    if (digit1.current) {
+      digit1.current.focus();
+    }
+  }, []);
 
   const formHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     let code: string =
-      digit1.current.value.toString() +
-      digit2.current.value.toString() +
-      digit3.current.value.toString() +
-      digit4.current.value.toString() +
-      digit5.current.value.toString();
+      digit1.current!.value.toString() +
+      digit2.current!.value.toString() +
+      digit3.current!.value.toString() +
+      digit4.current!.value.toString() +
+      digit5.current!.value.toString();
     const data = {
       email: email,
       code: code,
@@ -39,6 +44,14 @@ function ResetPassword() {
         setIsInvalidCode(true);
         setResponseMessage(error.message);
       }
+    }
+  };
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input = event.target;
+    const nextInput = input.nextElementSibling as HTMLInputElement;
+    input.value = input.value.replace(/\D/g, '');
+    if (input.value.length === input.maxLength && nextInput) {
+      nextInput.focus();
     }
   };
 
@@ -62,7 +75,7 @@ function ResetPassword() {
                 <MdOutlineLockReset size="50" />
               </div>
             </div>
-            <span className="text-bold text-center text-lg">
+            <span className="text-bold text-center text-lg dark:text-gray-400">
               Enter the verification code send to your email!
             </span>
             <form onSubmit={formHandler}>
@@ -73,6 +86,7 @@ function ResetPassword() {
                   id="first"
                   maxLength={1}
                   ref={digit1}
+                  onInput={handleInput}
                 />
                 <input
                   className="m-2 h-10 w-10 rounded border text-center"
@@ -80,6 +94,7 @@ function ResetPassword() {
                   id="second"
                   maxLength={1}
                   ref={digit2}
+                  onInput={handleInput}
                 />
                 <input
                   className="m-2 h-10 w-10 rounded border text-center"
@@ -87,6 +102,7 @@ function ResetPassword() {
                   id="third"
                   maxLength={1}
                   ref={digit3}
+                  onInput={handleInput}
                 />
                 <input
                   className="m-2 h-10 w-10 rounded border text-center"
@@ -94,6 +110,7 @@ function ResetPassword() {
                   id="fourth"
                   maxLength={1}
                   ref={digit4}
+                  onInput={handleInput}
                 />
                 <input
                   className="m-2 h-10 w-10 rounded border text-center"
@@ -101,6 +118,7 @@ function ResetPassword() {
                   id="fifth"
                   maxLength={1}
                   ref={digit5}
+                  onInput={handleInput}
                 />
               </div>
               {isInvalidCode && (

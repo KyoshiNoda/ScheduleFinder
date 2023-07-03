@@ -31,6 +31,7 @@ const authSlice = createSlice({
       state.userInfo = null;
       state.userToken = '';
       state.error = null;
+      state.email = null;
     },
     setEmail: (state, action) => {
       state.email = action.payload;
@@ -64,6 +65,7 @@ const authSlice = createSlice({
         state.userInfo = payload.data.user;
         state.userToken = payload.data.token;
         state.success = true;
+        state.email = null;
         localStorage.setItem('userInfo', JSON.stringify(payload.data.user));
         localStorage.setItem('userToken', payload.data.token);
       })
@@ -75,7 +77,7 @@ const authSlice = createSlice({
         state.email = payload.data.email;
         localStorage.setItem('tempEmail', state.email!);
       })
-      .addCase(resetPasswordRequest.rejected, (state, { payload }) => {
+      .addCase(resetPasswordRequest.rejected, (state) => {
         state.email = null;
       });
   },
