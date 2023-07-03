@@ -62,13 +62,11 @@ function ForgotPassword() {
                     onChange={(event) => setEmail(event.target.value)}
                   />
                 </div>
-                <div>
-                  {isInvalidEmail && (
-                    <span className="text-xs text-red-500">
-                      {responseMessage}
-                    </span>
-                  )}
-                </div>
+                {isInvalidEmail && (
+                  <span className="text-xs text-red-500">
+                    {responseMessage}
+                  </span>
+                )}
               </div>
             </div>
             <div className="flex justify-center">

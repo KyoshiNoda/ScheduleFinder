@@ -84,7 +84,15 @@ export const verifyPasswordRequest = createAsyncThunk(
       );
       return result;
     } catch (error: any) {
-      return rejectWithValue(error);
+      if (error.response) {
+        const { status, data } = error.response;
+        return rejectWithValue({ status, message: data.message });
+      } else {
+        return rejectWithValue({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
     }
   }
 );

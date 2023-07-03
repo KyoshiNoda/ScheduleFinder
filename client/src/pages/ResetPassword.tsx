@@ -30,7 +30,7 @@ function ResetPassword() {
       code: code,
     };
     try {
-      await dispatch(verifyPasswordRequest(data));
+      await dispatch(verifyPasswordRequest(data)).unwrap();
       setIsInvalidCode(false);
     } catch (error: any) {
       if (error.status === 400) {
@@ -46,8 +46,14 @@ function ResetPassword() {
         <Toggle />
       </div>
       <div className="flex items-center justify-center">
-        <div className="flex w-5/6 flex-col justify-center rounded-lg bg-white p-5 dark:bg-slate-700 lg:w-1/3">
-          <div className="flex justify-center text-2xl dark:text-white lg:text-4xl">
+        <div
+          className={`flex w-5/6 flex-col justify-center rounded-lg border bg-white p-5 dark:bg-slate-700 lg:w-1/3 ${
+            isInvalidCode ? 'border-rose-500 dark:border-rose-500' : ''
+          }`}
+        >
+          <div
+            className={`flex justify-center  text-2xl dark:text-white lg:text-4xl `}
+          >
             <div className="flex items-center">Verification</div>
             <div className="iems-center flex">
               <MdOutlineLockReset size="50" />
@@ -57,7 +63,9 @@ function ResetPassword() {
             Enter the verification code send to your email!
           </span>
           <form onSubmit={formHandler}>
-            <div className="mt-5 flex flex-row justify-center px-2 text-center">
+            <div
+              className={`mt-5 flex flex-row justify-center px-2 text-center `}
+            >
               <input
                 className="m-2 h-10 w-10 rounded border text-center"
                 type="text"
@@ -95,9 +103,11 @@ function ResetPassword() {
               />
             </div>
             {isInvalidCode && (
-              <span className="text-xs text-red-500 lg:text-lg">
-                {responseMessage}
-              </span>
+              <div className="flex justify-center">
+                <span className="text-xs text-red-500 lg:text-lg">
+                  {responseMessage}
+                </span>
+              </div>
             )}
             <div className="flex justify-center">
               <button
