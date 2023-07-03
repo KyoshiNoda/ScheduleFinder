@@ -338,14 +338,14 @@ const CompareSchedule = () => {
         </Button.Group>
 
         {showOtherSchedule && (
-          <h1 className="text-4xl dark:text-white">{`${userName}'s Schedule`}</h1>
+          <h1 className="text-center text-4xl dark:text-white">{`${userName}'s Schedule`}</h1>
         )}
         {showUserSchedule && (
           <h1 className="text-4xl dark:text-white">My Schedule</h1>
         )}
 
         {showCompareSchedule && (
-          <div>
+          <div className="flex flex-col gap-3 sm:block sm:gap-0">
             <label className="relative mr-5 inline-flex cursor-pointer items-center">
               <input
                 checked={displayUserSlots}
@@ -413,8 +413,7 @@ const CompareSchedule = () => {
             </label>
           </div>
         )}
-
-        <div className="w-4/6">
+        <div className="w-full px-1 sm:w-5/6 lg:w-4/6">
           <ScheduleBox timeSlots={timeSlots} />
         </div>
       </div>

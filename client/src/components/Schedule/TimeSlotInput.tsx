@@ -6,7 +6,6 @@ import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
 import { Modal, Button } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
 
-
 export const colors: string[] = [
   'slate',
   'red',
@@ -152,8 +151,8 @@ function TimeSlotInput() {
   };
 
   return (
-    <div className="mt-6 flex h-1/4 w-1/2 flex-col rounded-lg bg-slate-50 p-5 dark:bg-black sm:h-1/2">
-      <form ref={formRef} onSubmit={addTimeSlot}>
+    <div className="mt-6 flex  flex-col rounded-lg bg-slate-50 p-5 dark:bg-black sm:h-1/2">
+      <form ref={formRef} onSubmit={addTimeSlot} className="space-y-2">
         <div>
           <label
             htmlFor="title"
@@ -167,10 +166,10 @@ function TimeSlotInput() {
             type="text"
             id="title"
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            placeholder="BIO130"
+            placeholder="BIO 130"
           />
         </div>
-        <div>
+        <div className="mt-2">
           <label
             htmlFor="days"
             className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
@@ -233,7 +232,7 @@ function TimeSlotInput() {
                 </label>
               </div>
             </li>
-            <li className="w-full dark:border-gray-600">
+            <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
               <div className="flex items-center pl-3">
                 <input
                   ref={thursdayRef}
@@ -285,12 +284,12 @@ function TimeSlotInput() {
               ref={startTimeRef}
               type="text"
               id="title"
-              className={`block w-full rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                timeError ? 'border-rose-500' : 'border-gray-300'
+              className={`block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                timeError && 'border-rose-500'
               }`}
               placeholder="10:30 AM"
               required
-            />{' '}
+            />
             {timeError && <p className="text-rose-500">Invalid Time</p>}
           </div>
           <div className="w-1/2">
@@ -304,12 +303,12 @@ function TimeSlotInput() {
               ref={endTimeRef}
               type="text"
               id="title"
-              className={`block w-full rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                timeError ? 'border-rose-500' : 'border-gray-300'
+              className={`block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                timeError && 'border-rose-500'
               }`}
               placeholder="12:30 PM"
               required
-            />{' '}
+            />
             {timeError && <p className="text-rose-500">Invalid Time</p>}
           </div>
         </div>
@@ -347,12 +346,12 @@ function TimeSlotInput() {
         </div>
         <div>
           <div className="flex justify-center">
-            <div className="grid grid-cols-7 grid-rows-2 gap-2 p-2">
+            <div className="my-2 grid grid-cols-7 gap-2">
               {colors.map((color) => (
                 <div
                   onClick={() => setTimeSlotColor(color)}
                   key={color}
-                  className={`bg-${color}-400 h-10 w-10 cursor-pointer rounded-full border-4 p-1 ${
+                  className={`bg-${color}-400 h-8 w-8 cursor-pointer rounded-full border-4 lg:h-10 lg:w-10 ${
                     timeSlotColor === color ? 'border-blue-700' : 'border-none'
                   }`}
                 />
