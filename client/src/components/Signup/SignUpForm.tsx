@@ -3,9 +3,8 @@ import { useAppDispatch } from '../../redux/store';
 import { RegisterUser as RegisterUserType } from '../../types';
 import { registerUser } from '../../redux/feats/auth/authActions';
 import { useNavigate } from 'react-router-dom';
-type Props = {};
 
-function SignUpForm({}: Props) {
+const SignUpForm = () => {
   const form = useRef(document.createElement('form'));
   const firstName = useRef(document.createElement('input'));
   const lastName = useRef(document.createElement('input'));
@@ -48,7 +47,7 @@ function SignUpForm({}: Props) {
   return (
     <form onSubmit={formHandler}>
       <div className="flex flex-col">
-        <div className="mb-6 grid gap-6 md:grid-cols-2">
+        <div className="mb-6 grid gap-6 sm:grid-cols-2">
           <div>
             <label
               htmlFor="first_name"
@@ -199,7 +198,7 @@ function SignUpForm({}: Props) {
       </div>
       <button
         type="submit"
-        className="w-full rounded-full bg-blue-400 px-8 py-3 text-lg font-semibold text-white dark:bg-slate-300 dark:text-black"
+        className="w-full rounded-full bg-blue-700 px-8 py-3 text-lg font-semibold text-white hover:bg-blue-800 dark:bg-slate-200 dark:text-black dark:hover:bg-slate-400"
       >
         Submit
       </button>
