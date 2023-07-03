@@ -109,11 +109,11 @@ class AuthController {
             }
         });
     }
-    static forgotPassword(req, res) {
+    static resetPasswordRequest(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let email = req.body.email;
-            const min = 10000; // Minimum 5-digit number (inclusive)
-            const max = 99999; // Maximum 5-digit number (inclusive)
+            const min = 10000;
+            const max = 99999;
             const randomCode = (Math.floor(Math.random() * (max - min + 1)) + min).toString();
             let message = `Here is your five digit code: ${randomCode}`;
             const msg = {

@@ -41,7 +41,7 @@ export const loginUser = createAsyncThunk(
 
 export const emailCheck = createAsyncThunk(
   'auth/emailCheck',
-  async (email : {email : string}, { rejectWithValue }) => {
+  async (email: { email: string }, { rejectWithValue }) => {
     try {
       const result = await Axios.post(`${BASE_URL}api/auth/emailCheck`, email);
       return result;
@@ -55,6 +55,21 @@ export const emailCheck = createAsyncThunk(
           message: 'Internal Server Error',
         });
       }
+    }
+  }
+);
+
+export const resetPasswordRequest = createAsyncThunk(
+  '/auth/resetPasswordRequest',
+  async (email: { email: string }, { rejectWithValue }) => {
+    try {
+      const result = await Axios.post(
+        `${BASE_URL}api/auth/resetPasswordRequest`,
+        email
+      );
+      return result;
+    } catch (error: any) {
+      return rejectWithValue(error);
     }
   }
 );

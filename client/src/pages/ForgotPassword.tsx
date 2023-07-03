@@ -2,18 +2,24 @@ import { useState } from 'react';
 import { FaUserLock } from 'react-icons/fa';
 import Toggle from '../components/Toggle';
 import { useAppDispatch } from '../redux/store';
-import { emailCheck } from '../redux/feats/auth/authActions';
+import { useNavigate } from 'react-router-dom';
+import {
+  emailCheck,
+  resetPasswordRequest,
+} from '../redux/feats/auth/authActions';
 function ForgotPassword() {
   const dispatch = useAppDispatch();
   const [isInvalidEmail, setIsInvalidEmail] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [responseMessage, setResponseMessage] = useState<string>('');
+  const navigate = useNavigate();
 
   const checkEmailHandler = async () => {
     try {
       await dispatch(emailCheck({ email: email })).unwrap();
       setIsInvalidEmail(false);
-      setResponseMessage('Please check your email!');
+      navigate('/resetPassword');
+      // await dispatch(resetPasswordRequest({ email: email })).unwrap();
     } catch (error: any) {
       if (error.status === 404) {
         setIsInvalidEmail(true);
