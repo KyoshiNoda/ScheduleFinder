@@ -7,7 +7,8 @@ import Schedule from './pages/Schedule';
 import FindUser from './pages/FindUser';
 import CompareSchedule from './pages/CompareSchedule';
 import PageLayout from './components/PageLayout';
-
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 function App() {
   return (
     <>
@@ -15,6 +16,8 @@ function App() {
         <Route path="/" element={<Homepage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgotPassword" element={<ForgotPassword />} />
+        <Route path="/resetPassword" element={<ResetPassword />} />
         <Route path="/auth" element={<PageLayout />}>
           <Route path="account" element={<Account />} />
           <Route path="schedule" element={<Schedule />} />

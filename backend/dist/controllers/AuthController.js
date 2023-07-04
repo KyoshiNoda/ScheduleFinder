@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const mail_1 = __importDefault(require("@sendgrid/mail"));
+mail_1.default.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class AuthController {
     static loginUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -58,7 +60,7 @@ class AuthController {
                 firstName: firstName,
                 lastName: lastName,
                 birthday: birthday,
-                photoURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s",
+                photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s',
                 email: email,
                 password: hashedPassword,
                 school: school,
@@ -89,6 +91,74 @@ class AuthController {
                 req.user = user;
                 next();
             });
+        });
+    }
+    static emailCheck(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let email = req.body.email;
+            try {
+                const user = yield userModel_1.default.findOne({ email }).exec();
+                if (!user) {
+                    return res.status(404).json({ message: 'Invalid Email' });
+                }
+                return res.status(200).json({ message: 'User found!' });
+            }
+            catch (error) {
+                console.error('Error while checking email:', error);
+                return res.status(500).json({ message: 'Internal Server Error' });
+            }
+        });
+    }
+    static resetPasswordRequest(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let email = req.body.email;
+            let randomCode = (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000).toString();
+            AuthController.randomCode = randomCode;
+            let message = `Here is your five digit code: ${AuthController.randomCode}`;
+            const msg = {
+                to: email,
+                from: 'schedulefinder@gmail.com',
+                subject: 'ScheduleFinder - Password Reset',
+                text: message,
+                html: `<strong>${message}</strong>`,
+            };
+            mail_1.default
+                .send(msg)
+                .then(() => {
+                res.status(200).send({ message: 'email sent!', email: email });
+            })
+                .catch((error) => {
+                res.status(400).send({ error: 'error found try again!' });
+            });
+        });
+    }
+    static verifyResetPasswordCode(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const email = req.body.email;
+                const code = req.body.code;
+                if (code === AuthController.randomCode) {
+                    return res.status(200).send({ message: 'User can reset password' });
+                }
+                AuthController.randomCode = (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000).toString();
+                let message = `Here is your five-digit code: ${AuthController.randomCode}`;
+                const msg = {
+                    to: email,
+                    from: 'schedulefinder@gmail.com',
+                    subject: 'ScheduleFinder - Password Reset',
+                    text: message,
+                    html: `<strong>${message}</strong>`,
+                };
+                yield mail_1.default.send(msg);
+                return res.status(400).send({
+                    message: 'Incorrect code! Sending another email with a new code',
+                });
+            }
+            catch (error) {
+                return res
+                    .status(500)
+                    .send({ message: 'Error found. Please try again!' });
+            }
         });
     }
 }

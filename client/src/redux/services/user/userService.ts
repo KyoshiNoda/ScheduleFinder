@@ -46,7 +46,7 @@ export const userAPI = createApi({
       }
     >({
       query: (body) => ({
-        url: 'api/users/changePassword',
+        url: 'api/users/changePassword/token',
         method: 'POST',
         body,
       }),
