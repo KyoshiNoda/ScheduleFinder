@@ -9,7 +9,7 @@ import userRoute from './routes/userRoute';
 import authRoute from './routes/authRoute';
 import scheduleRoute from './routes/scheduleRoute';
 
-const port = 3001;
+const port = process.env.PORT || 3001;
 const app = express();
 app.use(cors());
 app.use(express.json());
