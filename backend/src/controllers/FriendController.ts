@@ -12,7 +12,7 @@ class FriendController {
       res.send(user.friends);
     } catch (err) {
       console.error(err);
-      res.status(500).ssend({
+      res.status(500).send({
         message: `Error while getting User ${userID}`,
         error: err,
       });
@@ -47,7 +47,7 @@ class FriendController {
       });
     } catch (err) {
       console.error(err);
-      res.status(500).ssend({
+      res.status(500).send({
         message: `Error while getting User ${userID}`,
         error: err,
       });
@@ -57,7 +57,7 @@ class FriendController {
   public static async sendFriendRequest(req: any, res: any) {
     const userID: string = req.user.data._id;
     const friendID: string = req.params.friendID;
-    try{
+    try {
       const user = await User.findOne({ _id: userID }).exec();
       const friend = await User.findOne({ _id: friendID }).exec();
       if (!user || !friend) {
@@ -81,7 +81,7 @@ class FriendController {
       });
     } catch (err) {
       console.error(err);
-      res.status(500).ssend({
+      res.status(500).send({
         message: `Error while getting User ${userID}`,
         error: err,
       });
@@ -91,7 +91,7 @@ class FriendController {
   public static async removeFriendRequest(req: any, res: any) {
     const userID: string = req.user.data._id;
     const friendID: string = req.params.friendID;
-    try{
+    try {
       const user = await User.findOne({ _id: userID }).exec();
       const friend = await User.findOne({ _id: friendID }).exec();
       if (!user || !friend) {
@@ -101,12 +101,16 @@ class FriendController {
       }
 
       if (user.friendRequests.includes(friendID)) {
-        user.friendRequests = user.friendRequests.filter((id) => id !== friendID);
+        user.friendRequests = user.friendRequests.filter(
+          (id) => id !== friendID
+        );
         await user.save();
       }
 
       if (friend.friendRequests.includes(userID)) {
-        friend.friendRequests = friend.friendRequests.filter((id) => id !== userID);
+        friend.friendRequests = friend.friendRequests.filter(
+          (id) => id !== userID
+        );
         await friend.save();
       }
 
@@ -115,7 +119,79 @@ class FriendController {
       });
     } catch (err) {
       console.error(err);
-      res.status(500).ssend({
+      res.status(500).send({
+        message: `Error while getting User ${userID}`,
+        error: err,
+      });
+    }
+  }
+
+  public static async acceptFriendRequest(req: any, res: any) {
+    const userID: string = req.user.data._id;
+    const friendID: string = req.params.friendID;
+    try {
+      const user = await User.findOne({ _id: userID }).exec();
+      const friend = await User.findOne({ _id: friendID }).exec();
+      if (!user || !friend) {
+        return res.status(404).send({
+          message: "One of the users doesn't exist!",
+        });
+      }
+      if (
+        !user.friendRequests.includes(friendID) &&
+        !friend.friendRequests.includes(userID)
+      ) {
+        return res.status(404).send({
+          message: 'Missing Friend Request',
+        });
+      }
+
+      user.friends.push(friendID);
+      user.friendRequests = user.friendRequests.filter((id) => id !== friendID);
+      await user.save();
+
+      friend.friends.push(userID);
+      friend.friendRequests = friend.friendRequests.filter(
+        (id) => id !== userID
+      );
+      await friend.save();
+
+      res.status(200).send({
+        message: 'Added friend successfully!',
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({
+        message: `Error while getting User ${userID}`,
+        error: err,
+      });
+    }
+  }
+  public static async rejectFriendRequest(req: any, res: any) {
+    const userID: string = req.user.data._id;
+    const friendID: string = req.params.friendID;
+    try {
+      const user = await User.findOne({ _id: userID }).exec();
+      const friend = await User.findOne({ _id: friendID }).exec();
+      if (!user || !friend) {
+        return res.status(404).send({
+          message: "One of the users doesn't exist!",
+        });
+      }
+      user.friendRequests = user.friendRequests.filter((id) => id !== friendID);
+      await user.save();
+
+      friend.friendRequests = friend.friendRequests.filter(
+        (id) => id !== userID
+      );
+      await friend.save();
+
+      res.status(200).send({
+        message: 'Friend Request was ignored!',
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({
         message: `Error while getting User ${userID}`,
         error: err,
       });

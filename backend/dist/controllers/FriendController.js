@@ -28,7 +28,7 @@ class FriendController {
             }
             catch (err) {
                 console.error(err);
-                res.status(500).ssend({
+                res.status(500).send({
                     message: `Error while getting User ${userID}`,
                     error: err,
                 });
@@ -62,7 +62,7 @@ class FriendController {
             }
             catch (err) {
                 console.error(err);
-                res.status(500).ssend({
+                res.status(500).send({
                     message: `Error while getting User ${userID}`,
                     error: err,
                 });
@@ -95,7 +95,7 @@ class FriendController {
             }
             catch (err) {
                 console.error(err);
-                res.status(500).ssend({
+                res.status(500).send({
                     message: `Error while getting User ${userID}`,
                     error: err,
                 });
@@ -128,7 +128,73 @@ class FriendController {
             }
             catch (err) {
                 console.error(err);
-                res.status(500).ssend({
+                res.status(500).send({
+                    message: `Error while getting User ${userID}`,
+                    error: err,
+                });
+            }
+        });
+    }
+    static acceptFriendRequest(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data._id;
+            const friendID = req.params.friendID;
+            try {
+                const user = yield userModel_1.default.findOne({ _id: userID }).exec();
+                const friend = yield userModel_1.default.findOne({ _id: friendID }).exec();
+                if (!user || !friend) {
+                    return res.status(404).send({
+                        message: "One of the users doesn't exist!",
+                    });
+                }
+                if (!user.friendRequests.includes(friendID) &&
+                    !friend.friendRequests.includes(userID)) {
+                    return res.status(404).send({
+                        message: 'Missing Friend Request',
+                    });
+                }
+                user.friends.push(friendID);
+                user.friendRequests = user.friendRequests.filter((id) => id !== friendID);
+                yield user.save();
+                friend.friends.push(userID);
+                friend.friendRequests = friend.friendRequests.filter((id) => id !== userID);
+                yield friend.save();
+                res.status(200).send({
+                    message: 'Added friend successfully!',
+                });
+            }
+            catch (err) {
+                console.error(err);
+                res.status(500).send({
+                    message: `Error while getting User ${userID}`,
+                    error: err,
+                });
+            }
+        });
+    }
+    static rejectFriendRequest(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data._id;
+            const friendID = req.params.friendID;
+            try {
+                const user = yield userModel_1.default.findOne({ _id: userID }).exec();
+                const friend = yield userModel_1.default.findOne({ _id: friendID }).exec();
+                if (!user || !friend) {
+                    return res.status(404).send({
+                        message: "One of the users doesn't exist!",
+                    });
+                }
+                user.friendRequests = user.friendRequests.filter((id) => id !== friendID);
+                yield user.save();
+                friend.friendRequests = friend.friendRequests.filter((id) => id !== userID);
+                yield friend.save();
+                res.status(200).send({
+                    message: 'Friend Request was ignored!',
+                });
+            }
+            catch (err) {
+                console.error(err);
+                res.status(500).send({
                     message: `Error while getting User ${userID}`,
                     error: err,
                 });

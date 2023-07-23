@@ -13,4 +13,14 @@ router.delete(
   AuthController.authenticateToken,
   FriendController.deleteFriend
 );
+
+router.post('/accept/:friendID',
+  AuthController.authenticateToken,
+  FriendController.acceptFriendRequest
+)
+
+router.post('/reject/:friendID',
+  AuthController.authenticateToken,
+  FriendController.rejectFriendRequest
+)
 export default router;
