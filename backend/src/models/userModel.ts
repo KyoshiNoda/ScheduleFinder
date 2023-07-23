@@ -10,8 +10,8 @@ export interface IUser extends Document {
   age?: number;
   school?: string;
   major?: string;
-  friends: [string],
-  friendRequests: [string]
+  friends: string[]
+  friendRequests: string[]
 }
 
 const userSchema: Schema = new mongoose.Schema({

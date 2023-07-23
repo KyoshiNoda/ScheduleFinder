@@ -35,5 +35,39 @@ class FriendController {
             }
         });
     }
+    static deleteFriend(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data._id;
+            const friendID = req.params.friendID;
+            try {
+                const user = yield userModel_1.default.findOne({ _id: userID }).exec();
+                const friend = yield userModel_1.default.findOne({ _id: friendID }).exec();
+                if (!user || !friend) {
+                    return res.status(404).send({
+                        message: 'One of the users is missing!',
+                    });
+                }
+                if (!user.friends.includes(friendID)) {
+                    return res.status(404).send({
+                        message: `User is not friends with ${(friend.firstName, +' ' + friend.lastName)}`,
+                    });
+                }
+                user.friends = user.friends.filter((id) => id !== friendID);
+                yield user.save();
+                friend.friends = friend.friends.filter((id) => id !== userID);
+                yield friend.save();
+                return res.status(200).send({
+                    message: 'Friend removed successfully!',
+                });
+            }
+            catch (err) {
+                console.error(err);
+                res.status(500).ssend({
+                    message: `Error while getting User ${userID}`,
+                    error: err,
+                });
+            }
+        });
+    }
 }
 exports.default = FriendController;

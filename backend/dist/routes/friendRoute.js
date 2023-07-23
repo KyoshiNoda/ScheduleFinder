@@ -8,4 +8,5 @@ const FriendController_1 = __importDefault(require("../controllers/FriendControl
 const AuthController_1 = __importDefault(require("../controllers/AuthController"));
 const router = express_1.default.Router();
 router.get('/', AuthController_1.default.authenticateToken, FriendController_1.default.getFriends);
+router.delete('/:friendID', AuthController_1.default.authenticateToken, FriendController_1.default.deleteFriend);
 exports.default = router;
