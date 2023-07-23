@@ -69,5 +69,71 @@ class FriendController {
             }
         });
     }
+    static sendFriendRequest(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data._id;
+            const friendID = req.params.friendID;
+            try {
+                const user = yield userModel_1.default.findOne({ _id: userID }).exec();
+                const friend = yield userModel_1.default.findOne({ _id: friendID }).exec();
+                if (!user || !friend) {
+                    return res.status(404).send({
+                        message: "One of the users doesn't exist!",
+                    });
+                }
+                if (!user.friendRequests.includes(friendID)) {
+                    user.friendRequests.push(friendID);
+                    yield user.save();
+                }
+                if (!friend.friendRequests.includes(userID)) {
+                    friend.friendRequests.push(userID);
+                    yield friend.save();
+                }
+                return res.status(200).send({
+                    message: 'Friend request sent successfully!',
+                });
+            }
+            catch (err) {
+                console.error(err);
+                res.status(500).ssend({
+                    message: `Error while getting User ${userID}`,
+                    error: err,
+                });
+            }
+        });
+    }
+    static removeFriendRequest(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data._id;
+            const friendID = req.params.friendID;
+            try {
+                const user = yield userModel_1.default.findOne({ _id: userID }).exec();
+                const friend = yield userModel_1.default.findOne({ _id: friendID }).exec();
+                if (!user || !friend) {
+                    return res.status(404).send({
+                        message: "One of the users doesn't exist!",
+                    });
+                }
+                if (user.friendRequests.includes(friendID)) {
+                    user.friendRequests = user.friendRequests.filter((id) => id !== friendID);
+                    yield user.save();
+                }
+                if (friend.friendRequests.includes(userID)) {
+                    friend.friendRequests = friend.friendRequests.filter((id) => id !== userID);
+                    yield friend.save();
+                }
+                return res.status(200).send({
+                    message: 'Removed friend request successfully!',
+                });
+            }
+            catch (err) {
+                console.error(err);
+                res.status(500).ssend({
+                    message: `Error while getting User ${userID}`,
+                    error: err,
+                });
+            }
+        });
+    }
 }
 exports.default = FriendController;
