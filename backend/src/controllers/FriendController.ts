@@ -33,7 +33,7 @@ class FriendController {
       if (!user.friends.includes(friendID)) {
         return res.status(404).send({
           message: `User is not friends with ${
-            (friend.firstName, +' ' + friend.lastName)
+            (friend.firstName, + ' ' + friend.lastName)
           }`,
         });
       }
@@ -138,7 +138,7 @@ class FriendController {
         });
       }
       if (
-        !user.friendRequests.includes(friendID) &&
+        !user.friendRequests.includes(friendID) ||
         !friend.friendRequests.includes(userID)
       ) {
         return res.status(404).send({
