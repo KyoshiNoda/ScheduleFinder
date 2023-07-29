@@ -1,7 +1,9 @@
 import User from '../models/userModel';
+import { IUser } from '../models/userModel';
 class FriendController {
   public static async getFriends(req: any, res: any) {
     const userID: string = req.user.data._id;
+    let userFriends: IUser[] = [];
     try {
       const user = await User.findOne({ _id: userID }).exec();
       if (!user) {
@@ -9,7 +11,13 @@ class FriendController {
           message: `User ${userID} not found`,
         });
       }
-      res.send(user.friends);
+      for (const friendID of user.friends) {
+        let friend = await User.findOne({ _id: friendID }).exec();
+        if (friend) {
+          userFriends.push(friend);
+        }
+      }
+      res.send(userFriends);
     } catch (err) {
       console.error(err);
       res.status(500).send({
@@ -33,7 +41,7 @@ class FriendController {
       if (!user.friends.includes(friendID)) {
         return res.status(404).send({
           message: `User is not friends with ${
-            (friend.firstName, + ' ' + friend.lastName)
+            (friend.firstName, +' ' + friend.lastName)
           }`,
         });
       }
@@ -41,9 +49,16 @@ class FriendController {
       await user.save();
       friend.friends = friend.friends.filter((id) => id !== userID);
       await friend.save();
+      const updatedUser = await User.findOne({ _id: userID }).exec();
+
+      // Query for all the friends in the updated friend list
+      const updatedUserFriends = await User.find({
+        _id: { $in: updatedUser?.friends },
+      }).exec();
 
       return res.status(200).send({
         message: 'Friend removed successfully!',
+        friends: updatedUserFriends,
       });
     } catch (err) {
       console.error(err);

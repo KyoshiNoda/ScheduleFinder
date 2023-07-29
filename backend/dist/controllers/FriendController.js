@@ -17,6 +17,7 @@ class FriendController {
     static getFriends(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.user.data._id;
+            let userFriends = [];
             try {
                 const user = yield userModel_1.default.findOne({ _id: userID }).exec();
                 if (!user) {
@@ -24,7 +25,13 @@ class FriendController {
                         message: `User ${userID} not found`,
                     });
                 }
-                res.send(user.friends);
+                for (const friendID of user.friends) {
+                    let friend = yield userModel_1.default.findOne({ _id: friendID }).exec();
+                    if (friend) {
+                        userFriends.push(friend);
+                    }
+                }
+                res.send(userFriends);
             }
             catch (err) {
                 console.error(err);
@@ -56,8 +63,14 @@ class FriendController {
                 yield user.save();
                 friend.friends = friend.friends.filter((id) => id !== userID);
                 yield friend.save();
+                const updatedUser = yield userModel_1.default.findOne({ _id: userID }).exec();
+                // Query for all the friends in the updated friend list
+                const updatedUserFriends = yield userModel_1.default.find({
+                    _id: { $in: updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.friends },
+                }).exec();
                 return res.status(200).send({
                     message: 'Friend removed successfully!',
+                    friends: updatedUserFriends,
                 });
             }
             catch (err) {
@@ -147,7 +160,7 @@ class FriendController {
                         message: "One of the users doesn't exist!",
                     });
                 }
-                if (!user.friendRequests.includes(friendID) &&
+                if (!user.friendRequests.includes(friendID) ||
                     !friend.friendRequests.includes(userID)) {
                     return res.status(404).send({
                         message: 'Missing Friend Request',
