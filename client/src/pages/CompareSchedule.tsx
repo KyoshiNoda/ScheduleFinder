@@ -6,35 +6,9 @@ import { Button } from 'flowbite-react';
 import { useAppDispatch } from '../redux/store';
 import { toggleReadOnly } from '../redux/feats/timeSlot/timeSlotSlice';
 import { getApiUrl } from '../utils/environment';
+import { TimeSlot as TimeSlotType, Schedule as ScheduleType } from '../types';
 
 let BASE_URL = getApiUrl();
-type days = {
-  monday: boolean;
-  tuesday: boolean;
-  wednesday: boolean;
-  thursday: boolean;
-  friday: boolean;
-  saturday: boolean;
-  sunday: boolean;
-};
-
-type TimeSlot = {
-  _id: string;
-  days: days;
-  title: string;
-  startTime: string;
-  endTime: string;
-  location: string | null;
-  professor: string | null;
-  color: string;
-};
-
-type Schedule = {
-  _id: string;
-  user_id: string;
-  visibility: string;
-  timeSlot: TimeSlot[];
-};
 
 const CompareSchedule = () => {
   const { userId } = useParams();
@@ -54,7 +28,7 @@ const CompareSchedule = () => {
   const [displayFreeSlots, setDisplayFreeSlots] = useState<boolean>(true);
 
   // This state represents the current time slots that are being displayed in the schedule box.
-  const [timeSlots, setTimeSlots] = useState<TimeSlot[] | undefined>([]);
+  const [timeSlots, setTimeSlots] = useState<TimeSlotType[] | undefined>([]);
 
   // The first index of data represents scheduleA (the schedule of the user that is logged in).
   const { data, isFetching } = useGetScheduleQuery('schedule', {
@@ -71,7 +45,7 @@ const CompareSchedule = () => {
   };
 
   // Schedule B is the schedule to compare against.
-  const [scheduleB, setScheduleB] = useState<Schedule>(defaultSchedule);
+  const [scheduleB, setScheduleB] = useState<ScheduleType>(defaultSchedule);
 
   useEffect(() => {
     fetch(`${BASE_URL}api/schedules/${userId}/user`)
@@ -94,20 +68,20 @@ const CompareSchedule = () => {
   }, []);
 
   const mergeTimeSlots = () => {
-    const timeSlotsA = data[0].timeSlot.map((timeSlot: TimeSlot) => {
+    const timeSlotsA = data[0].timeSlot.map((timeSlot: TimeSlotType) => {
       return { ...timeSlot, color: 'red', _id: crypto.randomUUID() };
     });
 
-    const timeSlotsB = scheduleB.timeSlot.map((timeSlot: TimeSlot) => {
+    const timeSlotsB = scheduleB.timeSlot.map((timeSlot: TimeSlotType) => {
       return { ...timeSlot, color: 'blue', _id: crypto.randomUUID() };
     });
 
-    const mergedTimeSlots: TimeSlot[] = [...timeSlotsA, ...timeSlotsB];
+    const mergedTimeSlots: TimeSlotType[] = [...timeSlotsA, ...timeSlotsB];
     return mergedTimeSlots;
   };
 
   // This function is used to sort the time slots by their startTime.
-  const compareTimeSlots = (a: TimeSlot, b: TimeSlot) => {
+  const compareTimeSlots = (a: TimeSlotType, b: TimeSlotType) => {
     if (
       new Date(`January 1, 1970 ${a.startTime}`) <
       new Date(`January 1, 1970 ${b.startTime}`)
@@ -123,12 +97,12 @@ const CompareSchedule = () => {
     return 0;
   };
 
-  const findFreeIntervals = (timeSlots: TimeSlot[], day: string) => {
+  const findFreeIntervals = (timeSlots: TimeSlotType[], day: string) => {
     timeSlots.sort(compareTimeSlots);
     if (timeSlots.length < 2) return timeSlots;
 
-    const free: TimeSlot[] = [];
-    let combined: TimeSlot[] = [...timeSlots];
+    const free: TimeSlotType[] = [];
+    let combined: TimeSlotType[] = [...timeSlots];
     for (let i = 0; i < timeSlots.length; i++) {
       const newCombined = [];
       for (let j = 0; j + 1 < combined.length; j++) {
@@ -235,7 +209,7 @@ const CompareSchedule = () => {
   };
 
   const getFreeTimeSlots = () => {
-    const mergedTimeSlots: TimeSlot[] = mergeTimeSlots();
+    const mergedTimeSlots: TimeSlotType[] = mergeTimeSlots();
 
     const mondayFreeTimes = findFreeIntervals(
       mergedTimeSlots.filter((timeSlot) => timeSlot.days.monday),

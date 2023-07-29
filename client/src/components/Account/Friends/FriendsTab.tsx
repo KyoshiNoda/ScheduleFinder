@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useGetUserFriendQuery } from '../../../redux/services/user/userService';
+import {
+  useGetUserFriendQuery,
+  useDeleteFriendMutation,
+} from '../../../redux/services/user/userService';
 import { User as UserType } from '../../../types';
+import { useNavigate } from 'react-router-dom';
 function FriendsTab() {
   const { data, isLoading } = useGetUserFriendQuery('User');
   const [friends, setFriends] = useState<UserType[]>();
+  const [deleteFriend] = useDeleteFriendMutation();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (data && !isLoading) {
@@ -12,7 +19,14 @@ function FriendsTab() {
   }, [data, isLoading]);
 
   const onFriendClicked = (id: string) => {
-    console.log(id);
+    navigate(`/auth/compareSchedule/${id}`);
+  };
+  const onDeleteFriend = async (id: string) => {
+    try {
+      await deleteFriend({ friendID: id });
+    } catch (error: any) {
+      console.log(error);
+    }
   };
   return (
     <div className="flex flex-col items-center justify-center gap-6 rounded dark:text-white">
@@ -42,6 +56,7 @@ function FriendsTab() {
                 <button
                   type="button"
                   className="rounded-lg bg-red-600 px-3 py-3 font-semibold text-white"
+                  onClick={() => onDeleteFriend(friend._id)}
                 >
                   Remove
                 </button>
