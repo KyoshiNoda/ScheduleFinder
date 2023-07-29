@@ -60,7 +60,6 @@ function ProfileTab() {
     }
   };
 
-
   return (
     <div>
       {userInfo ? (

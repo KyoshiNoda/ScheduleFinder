@@ -20,7 +20,7 @@ const Signup = () => {
       <div className="flex justify-end px-4 md:px-2">
         <Toggle />
       </div>
-      <div className="flex justify-evenly my-auto">
+      <div className="my-auto flex justify-evenly">
         {width >= 1024 && (
           <div className="flex items-center">
             <img src={pic1} className="h-96" />

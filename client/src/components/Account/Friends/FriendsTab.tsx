@@ -1,9 +1,7 @@
-type Props = {}
+type Props = {};
 
 function FriendsTab({}: Props) {
-  return (
-    <div>FriendsTab</div>
-  )
+  return <div>FriendsTab</div>;
 }
 
-export default FriendsTab
+export default FriendsTab;
