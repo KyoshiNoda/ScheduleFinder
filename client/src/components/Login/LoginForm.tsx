@@ -65,7 +65,7 @@ function LoginForm(props: Props) {
             id="email"
             placeholder="Email"
             onChange={(event) => setEmail(event.target.value)}
-            className={`w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400 ${
+            className={`w-full rounded-md border-gray-300 bg-gray-50 px-4 py-3 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-blue-400 ${
               emailError ? 'border-rose-500' : ''
             }`}
           />
@@ -87,7 +87,7 @@ function LoginForm(props: Props) {
             id="password"
             placeholder="••••••••"
             onChange={(event) => setPassword(event.target.value)}
-            className={`w-full rounded-md border-gray-100 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-violet-400 ${
+            className={`w-full rounded-md border-gray-300 bg-gray-50 px-4 py-3 text-sm  dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:dark:border-blue-400 ${
               passwordError ? 'border-rose-500' : ''
             }`}
           />

@@ -22,7 +22,7 @@ function Login({}: Props) {
       <div className="flex justify-end">
         <Toggle />
       </div>
-      <div className="flex items-center justify-center gap-32 lg:my-auto 2xl:justify-center">
+      <div className="flex items-center justify-center 2xl:justify-center">
         <div className="h-min-h-full flex w-full items-center justify-center md:w-3/5">
           <LoginBox />
         </div>
