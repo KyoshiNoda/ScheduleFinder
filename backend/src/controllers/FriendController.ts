@@ -69,6 +69,32 @@ class FriendController {
     }
   }
 
+  public static async getFriendRequests(req: any, res: any) {
+    const userID: string = req.user.data._id;
+    let userFriendRequests: IUser[] = [];
+    try {
+      const user = await User.findOne({ _id: userID }).exec();
+      if (!user) {
+        return res.status(404).send({
+          message: `User ${userID} not found`,
+        });
+      }
+      for (const friendID of user.friendRequests) {
+        let friend = await User.findOne({ _id: friendID }).exec();
+        if (friend) {
+          userFriendRequests.push(friend);
+        }
+      }
+      res.send(userFriendRequests);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({
+        message: `Error while getting User ${userID}`,
+        error: err,
+      });
+    }
+  }
+
   public static async sendFriendRequest(req: any, res: any) {
     const userID: string = req.user.data._id;
     const friendID: string = req.params.friendID;
