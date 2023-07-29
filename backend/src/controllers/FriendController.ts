@@ -3,21 +3,21 @@ import { IUser } from '../models/userModel';
 class FriendController {
   public static async getFriends(req: any, res: any) {
     const userID: string = req.user.data._id;
-    let userFriends: IUser[] = [];
     try {
       const user = await User.findOne({ _id: userID }).exec();
+
       if (!user) {
         return res.status(404).send({
           message: `User ${userID} not found`,
         });
       }
-      for (const friendID of user.friends) {
-        let friend = await User.findOne({ _id: friendID }).exec();
-        if (friend) {
-          userFriends.push(friend);
-        }
-      }
-      res.send(userFriends);
+
+      // Populate the 'friends' field with user objects
+      const userFriends = await User.find({
+        _id: { $in: user.friends },
+      }).exec();
+
+      res.json(userFriends); // Return the array of friend objects
     } catch (err) {
       console.error(err);
       res.status(500).send({

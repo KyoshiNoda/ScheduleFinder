@@ -52,11 +52,19 @@ export const userAPI = createApi({
       }),
       invalidatesTags: ['User'],
     }),
+    getUserFriend: builder.query({
+      query: () => ({
+        url: '/api/users/friends',
+        method: 'GET',
+      }),
+      providesTags: ['User'],
+    }),
   }),
 });
 
 export const {
   useGetUserInfoQuery,
+  useGetUserFriendQuery,
   useUpdateUserInfoMutation,
   useChangePasswordMutation,
 } = userAPI;

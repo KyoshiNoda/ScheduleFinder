@@ -6,7 +6,7 @@ import FriendsTab from './Friends/FriendsTab';
 
 type Props = {};
 
-function AccountBox({}: Props) {
+function AccountBox() {
   const [currentTab, setCurrentTab] = useState<string | null>('Profile');
 
   const tabHandler = (tab: string | null) => {
