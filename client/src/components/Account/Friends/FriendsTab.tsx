@@ -5,10 +5,14 @@ import {
 } from '../../../redux/services/user/userService';
 import { User as UserType } from '../../../types';
 import { useNavigate } from 'react-router-dom';
+import { Button, Modal } from 'flowbite-react';
+import { HiOutlineExclamationCircle } from 'react-icons/hi';
 function FriendsTab() {
   const { data, isLoading } = useGetUserFriendQuery('User');
   const [friends, setFriends] = useState<UserType[]>();
   const [deleteFriend] = useDeleteFriendMutation();
+  const [openModal, setOpenModal] = useState<string | undefined>();
+  const [tempFriend, setTempFriend] = useState<string>('');
 
   const navigate = useNavigate();
 
@@ -17,19 +21,54 @@ function FriendsTab() {
       setFriends(data);
     }
   }, [data, isLoading]);
-
+  // let tempFriend : string | undefined = undefined;
   const onFriendClicked = (id: string) => {
     navigate(`/auth/compareSchedule/${id}`);
   };
-  const onDeleteFriend = async (id: string) => {
+  const onConfirmFriendDeleted = async () => {
     try {
-      await deleteFriend({ friendID: id });
+      await deleteFriend({ friendID: tempFriend });
+      setOpenModal(undefined);
     } catch (error: any) {
       console.log(error);
     }
   };
+  const tempFriendHandler = (id: string) => {
+    setTempFriend(id);
+    setOpenModal('pop-up');
+  };
   return (
     <div className="flex flex-col items-center justify-center gap-6 rounded dark:text-white">
+      <>
+        <Modal
+          show={openModal === 'pop-up'}
+          size="md"
+          popup
+          onClose={() => setOpenModal(undefined)}
+        >
+          <Modal.Header />
+          <Modal.Body>
+            <div className="text-center">
+              <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+              <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                Are you sure you want to remove this person?
+              </h3>
+              <div className="flex justify-center gap-4">
+                <Button
+                  color="failure"
+                  onClick={() => onConfirmFriendDeleted()}
+                >
+                  Yes, I'm sure
+                </Button>
+                <Button color="gray" onClick={() => setOpenModal(undefined)}>
+                  No, cancel
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+      </>
+
       {friends ? (
         friends.map((friend) => {
           return (
@@ -56,7 +95,7 @@ function FriendsTab() {
                 <button
                   type="button"
                   className="rounded-lg bg-red-600 px-3 py-3 font-semibold text-white"
-                  onClick={() => onDeleteFriend(friend._id)}
+                  onClick={() => tempFriendHandler(friend._id)}
                 >
                   Remove
                 </button>
