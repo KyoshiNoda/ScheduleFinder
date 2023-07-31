@@ -9,6 +9,7 @@ router.get(
   FriendController.getFriendRequests
 );
 
+
 router.post(
   '/:friendID',
   AuthController.authenticateToken,

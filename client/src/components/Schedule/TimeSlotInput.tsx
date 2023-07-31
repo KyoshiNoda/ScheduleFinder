@@ -182,7 +182,7 @@ function TimeSlotInput() {
             }`}
           >
             <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-              <div className="flex items-center pl-3">
+              <div className="flex items-center p-3">
                 <input
                   ref={mondayRef}
                   id="monday"
@@ -199,7 +199,7 @@ function TimeSlotInput() {
               </div>
             </li>
             <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-              <div className="flex items-center pl-3">
+              <div className="flex items-center p-3">
                 <input
                   ref={tuesdayRef}
                   id="tuesday"
@@ -216,7 +216,7 @@ function TimeSlotInput() {
               </div>
             </li>
             <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-              <div className="flex items-center pl-3">
+              <div className="flex items-center p-3">
                 <input
                   ref={wednesdayRef}
                   id="wednesday"
@@ -233,7 +233,7 @@ function TimeSlotInput() {
               </div>
             </li>
             <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-              <div className="flex items-center pl-3">
+              <div className="flex items-center p-3">
                 <input
                   ref={thursdayRef}
                   id="thursday"
@@ -250,7 +250,7 @@ function TimeSlotInput() {
               </div>
             </li>
             <li className="w-full dark:border-gray-600">
-              <div className="flex items-center pl-3">
+              <div className="flex items-center p-3">
                 <input
                   ref={fridayRef}
                   id="friday"
