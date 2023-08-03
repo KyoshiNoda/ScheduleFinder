@@ -21,7 +21,6 @@ function FriendsTab() {
       setFriends(data);
     }
   }, [data, isLoading]);
-  // let tempFriend : string | undefined = undefined;
   const onFriendClicked = (id: string) => {
     navigate(`/auth/compareSchedule/${id}`);
   };
