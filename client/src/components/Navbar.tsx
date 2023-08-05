@@ -2,6 +2,7 @@ import { Dropdown, Avatar } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../redux/store';
 import { logout } from '../redux/feats/auth/authSlice';
+import NotificationBell from './NotificationBell';
 
 const Navbar = ({ user }: any) => {
   const dispatch = useAppDispatch();
@@ -12,7 +13,11 @@ const Navbar = ({ user }: any) => {
           ScheduleFinder
         </span>
       </Link>
-      <div className="flex md:order-2">
+
+      <div className="flex gap-6 md:order-2">
+        <div className="flex items-center">
+          <NotificationBell />
+        </div>
         <Dropdown
           arrowIcon={false}
           inline={true}
