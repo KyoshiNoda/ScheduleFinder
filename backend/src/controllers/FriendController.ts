@@ -1,15 +1,23 @@
 import User from '../models/userModel';
+import { IUser } from '../models/userModel';
 class FriendController {
   public static async getFriends(req: any, res: any) {
     const userID: string = req.user.data._id;
     try {
       const user = await User.findOne({ _id: userID }).exec();
+
       if (!user) {
         return res.status(404).send({
           message: `User ${userID} not found`,
         });
       }
-      res.send(user.friends);
+
+      // Populate the 'friends' field with user objects
+      const userFriends = await User.find({
+        _id: { $in: user.friends },
+      }).exec();
+
+      res.json(userFriends); // Return the array of friend objects
     } catch (err) {
       console.error(err);
       res.status(500).send({
@@ -33,7 +41,7 @@ class FriendController {
       if (!user.friends.includes(friendID)) {
         return res.status(404).send({
           message: `User is not friends with ${
-            (friend.firstName, + ' ' + friend.lastName)
+            (friend.firstName, +' ' + friend.lastName)
           }`,
         });
       }
@@ -41,10 +49,43 @@ class FriendController {
       await user.save();
       friend.friends = friend.friends.filter((id) => id !== userID);
       await friend.save();
+      const updatedUser = await User.findOne({ _id: userID }).exec();
+
+      // Query for all the friends in the updated friend list
+      const updatedUserFriends = await User.find({
+        _id: { $in: updatedUser?.friends },
+      }).exec();
 
       return res.status(200).send({
         message: 'Friend removed successfully!',
+        friends: updatedUserFriends,
       });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({
+        message: `Error while getting User ${userID}`,
+        error: err,
+      });
+    }
+  }
+
+  public static async getFriendRequests(req: any, res: any) {
+    const userID: string = req.user.data._id;
+    let userFriendRequests: IUser[] = [];
+    try {
+      const user = await User.findOne({ _id: userID }).exec();
+      if (!user) {
+        return res.status(404).send({
+          message: `User ${userID} not found`,
+        });
+      }
+      for (const friendID of user.friendRequests) {
+        let friend = await User.findOne({ _id: friendID }).exec();
+        if (friend) {
+          userFriendRequests.push(friend);
+        }
+      }
+      res.send(userFriendRequests);
     } catch (err) {
       console.error(err);
       res.status(500).send({

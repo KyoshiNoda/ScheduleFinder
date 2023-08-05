@@ -52,11 +52,30 @@ export const userAPI = createApi({
       }),
       invalidatesTags: ['User'],
     }),
+    getUserFriend: builder.query({
+      query: () => ({
+        url: '/api/users/friends',
+        method: 'GET',
+      }),
+      providesTags: ['User'],
+    }),
+    deleteFriend: builder.mutation<
+      { message: string; friends: UserType[] },
+      { friendID: string }
+    >({
+      query: ({ friendID }) => ({
+        url: `api/users/friends/${friendID}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['User'],
+    }),
   }),
 });
 
 export const {
   useGetUserInfoQuery,
+  useGetUserFriendQuery,
   useUpdateUserInfoMutation,
   useChangePasswordMutation,
+  useDeleteFriendMutation
 } = userAPI;
