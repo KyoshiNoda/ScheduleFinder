@@ -5,7 +5,7 @@ import {
 } from '../../../redux/services/user/userService';
 import { User as UserType } from '../../../types';
 import { useNavigate } from 'react-router-dom';
-import { Button, Modal } from 'flowbite-react';
+import { Button, Modal, Spinner } from 'flowbite-react';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 function FriendsTab() {
   const { data, isLoading } = useGetUserFriendQuery('User');
@@ -103,7 +103,7 @@ function FriendsTab() {
           );
         })
       ) : (
-        <div>still rendering</div>
+        <Spinner aria-label="Extra small spinner example" size="xl" />
       )}
     </div>
   );

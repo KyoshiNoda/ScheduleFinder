@@ -2,6 +2,11 @@ import { Dropdown, Avatar } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../redux/store';
 import { logout } from '../redux/feats/auth/authSlice';
+import { HiLogout } from 'react-icons/hi';
+import { FcCalendar } from 'react-icons/fc';
+import { FaUserFriends } from 'react-icons/fa';
+import { MdSettings } from 'react-icons/md';
+import { BsSearchHeart } from 'react-icons/bs';
 import NotificationBell from './NotificationBell';
 
 const Navbar = ({ user }: any) => {
@@ -39,13 +44,28 @@ const Navbar = ({ user }: any) => {
             </span>
           </Dropdown.Header>
           <Link to={'/auth/schedule'}>
-            <Dropdown.Item>My Schedule</Dropdown.Item>
+            <Dropdown.Item>
+              <FcCalendar size="20" className="mr-2" />
+              My Schedule
+            </Dropdown.Item>
           </Link>
           <Link to={'/auth/findUsers'}>
-            <Dropdown.Item>Find Users</Dropdown.Item>
+            <Dropdown.Item>
+              <BsSearchHeart size="20" className="mr-2" />
+              Find Users
+            </Dropdown.Item>
+          </Link>
+          <Link to={'/auth/findUsers'}>
+            <Dropdown.Item>
+              <FaUserFriends size="20" className="mr-2" />
+              Friend Requests
+            </Dropdown.Item>
           </Link>
           <Link to={'/auth/account'}>
-            <Dropdown.Item>Account Settings</Dropdown.Item>
+            <Dropdown.Item>
+              <MdSettings size="22" className="mr-2" />
+              Settings
+            </Dropdown.Item>
           </Link>
           <Dropdown.Divider />
           <Link
@@ -54,7 +74,10 @@ const Navbar = ({ user }: any) => {
               dispatch(logout());
             }}
           >
-            <Dropdown.Item>Sign out</Dropdown.Item>
+            <Dropdown.Item>
+              <HiLogout size="20" className="mr-2" />
+              Sign out
+            </Dropdown.Item>
           </Link>
         </Dropdown>
       </div>

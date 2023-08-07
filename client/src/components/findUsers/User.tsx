@@ -1,5 +1,8 @@
 import { Card } from 'flowbite-react';
 import { Link } from 'react-router-dom';
+import { Toast } from 'flowbite-react';
+import { HiCheck } from 'react-icons/hi';
+import { useState } from 'react';
 
 type UserProps = {
   id: string;
@@ -18,6 +21,7 @@ const User = ({
   school,
   major,
 }: UserProps) => {
+  const [isAdded, setIsAdded] = useState<boolean>(false);
   const fullName = `${firstName} ${lastName}`;
 
   return (
@@ -39,12 +43,12 @@ const User = ({
             {school}
           </span>
           <div className="mt-4 flex space-x-3 lg:mt-6">
-            <a
-              href="#"
+            <button
+              onClick={() => setIsAdded(false)}
               className="inline-flex items-center rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Add friend
-            </a>
+            </button>
             <Link
               to={`/auth/compareSchedule/${id}`}
               className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700"

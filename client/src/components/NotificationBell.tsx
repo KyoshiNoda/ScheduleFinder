@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 function NotificationBell() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleBellClick = () => {
     setIsDropdownOpen((prevState) => !prevState);
@@ -46,121 +46,6 @@ function NotificationBell() {
             Notifications
           </div>
           <div className="divide-y divide-gray-100 dark:divide-gray-700">
-            <a
-              href="#"
-              className="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              <div className="flex-shrink-0">
-                <img
-                  className="h-11 w-11 rounded-full"
-                  src="https://media.licdn.com/dms/image/C4D03AQE44r2JRBOBwg/profile-displayphoto-shrink_400_400/0/1647455149664?e=1696464000&v=beta&t=J_WH7oos20NLGt8ZTu7WD-ih7DUmvZKfoC5DxtLRh4s"
-                  alt="Jese image"
-                />
-              </div>
-              <div className="w-full pl-3">
-                <div className="mb-1.5 text-sm text-gray-500 dark:text-gray-400">
-                  New Friend Request from{' '}
-                  <span className="font-semibold text-gray-900 dark:text-white">
-                    Carlos Duque
-                  </span>
-                </div>
-                <div className="text-xs text-blue-600 dark:text-blue-500">
-                  a few moments ago
-                </div>
-              </div>
-            </a>
-            <a
-              href="#"
-              className="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              <div className="flex-shrink-0">
-                <img
-                  className="h-11 w-11 rounded-full"
-                  src="https://media.licdn.com/dms/image/C4D03AQE44r2JRBOBwg/profile-displayphoto-shrink_400_400/0/1647455149664?e=1696464000&v=beta&t=J_WH7oos20NLGt8ZTu7WD-ih7DUmvZKfoC5DxtLRh4s"
-                  alt="Jese image"
-                />
-              </div>
-              <div className="w-full pl-3">
-                <div className="mb-1.5 text-sm text-gray-500 dark:text-gray-400">
-                  New Friend Request from{' '}
-                  <span className="font-semibold text-gray-900 dark:text-white">
-                    Carlos Duque
-                  </span>
-                </div>
-                <div className="text-xs text-blue-600 dark:text-blue-500">
-                  a few moments ago
-                </div>
-              </div>
-            </a>
-            <a
-              href="#"
-              className="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              <div className="flex-shrink-0">
-                <img
-                  className="h-11 w-11 rounded-full"
-                  src="https://media.licdn.com/dms/image/C4D03AQE44r2JRBOBwg/profile-displayphoto-shrink_400_400/0/1647455149664?e=1696464000&v=beta&t=J_WH7oos20NLGt8ZTu7WD-ih7DUmvZKfoC5DxtLRh4s"
-                  alt="Jese image"
-                />
-              </div>
-              <div className="w-full pl-3">
-                <div className="mb-1.5 text-sm text-gray-500 dark:text-gray-400">
-                  New Friend Request from{' '}
-                  <span className="font-semibold text-gray-900 dark:text-white">
-                    Carlos Duque
-                  </span>
-                </div>
-                <div className="text-xs text-blue-600 dark:text-blue-500">
-                  a few moments ago
-                </div>
-              </div>
-            </a>
-            <a
-              href="#"
-              className="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              <div className="flex-shrink-0">
-                <img
-                  className="h-11 w-11 rounded-full"
-                  src="https://media.licdn.com/dms/image/C4D03AQE44r2JRBOBwg/profile-displayphoto-shrink_400_400/0/1647455149664?e=1696464000&v=beta&t=J_WH7oos20NLGt8ZTu7WD-ih7DUmvZKfoC5DxtLRh4s"
-                  alt="Jese image"
-                />
-              </div>
-              <div className="w-full pl-3">
-                <div className="mb-1.5 text-sm text-gray-500 dark:text-gray-400">
-                  New Friend Request from{' '}
-                  <span className="font-semibold text-gray-900 dark:text-white">
-                    Carlos Duque
-                  </span>
-                </div>
-                <div className="text-xs text-blue-600 dark:text-blue-500">
-                  a few moments ago
-                </div>
-              </div>
-            </a>
-            <a
-              href="#"
-              className="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              <div className="flex-shrink-0">
-                <img
-                  className="h-11 w-11 rounded-full"
-                  src="https://media.licdn.com/dms/image/C4D03AQE44r2JRBOBwg/profile-displayphoto-shrink_400_400/0/1647455149664?e=1696464000&v=beta&t=J_WH7oos20NLGt8ZTu7WD-ih7DUmvZKfoC5DxtLRh4s"
-                  alt="Jese image"
-                />
-              </div>
-              <div className="w-full pl-3">
-                <div className="mb-1.5 text-sm text-gray-500 dark:text-gray-400">
-                  New Friend Request from{' '}
-                  <span className="font-semibold text-gray-900 dark:text-white">
-                    Carlos Duque
-                  </span>
-                </div>
-                <div className="text-xs text-blue-600 dark:text-blue-500">
-                  a few moments ago
-                </div>
-              </div>
-            </a>
             <a
               href="#"
               className="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
