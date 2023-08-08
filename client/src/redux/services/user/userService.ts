@@ -52,7 +52,7 @@ export const userAPI = createApi({
       }),
       invalidatesTags: ['User'],
     }),
-    getUserFriend: builder.query({
+    getUserFriends: builder.query({
       query: () => ({
         url: '/api/users/friends',
         method: 'GET',
@@ -69,13 +69,21 @@ export const userAPI = createApi({
       }),
       invalidatesTags: ['User'],
     }),
+    getUserFriendRequests: builder.query({
+      query: () => ({
+        url: '/api/users/friendRequest',
+        method: 'GET',
+      }),
+      providesTags: ['User'],
+    }),
   }),
 });
 
 export const {
   useGetUserInfoQuery,
-  useGetUserFriendQuery,
+  useGetUserFriendsQuery,
   useUpdateUserInfoMutation,
   useChangePasswordMutation,
-  useDeleteFriendMutation
+  useDeleteFriendMutation,
+  useGetUserFriendRequestsQuery,
 } = userAPI;

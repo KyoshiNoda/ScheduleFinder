@@ -1,9 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaUserFriends } from 'react-icons/fa';
 import { AiOutlineCheck } from 'react-icons/ai';
-import { GiCancel } from 'react-icons/gi';
+import { useGetUserFriendRequestsQuery } from '../redux/services/user/userService';
+import { User as UserType } from '../types';
+import { Spinner } from 'flowbite-react';
 function FriendRequest() {
+  const { data, isLoading } = useGetUserFriendRequestsQuery('User');
+  const [friendRequests, setFriendRequests] = useState<UserType[]>();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  useEffect(() => {
+    if (data && !isLoading) {
+      setFriendRequests(data);
+    }
+  }, [data, isLoading]);
 
   const handleBellClick = () => {
     setIsDropdownOpen((prevState) => !prevState);
@@ -30,39 +39,47 @@ function FriendRequest() {
           <div className="block rounded-t-lg bg-gray-50 px-4 py-2 text-center font-medium text-gray-700 dark:bg-gray-800 dark:text-white">
             Friend Requests
           </div>
-          <div className="flex-col items-center p-3">
-            <div className="flex gap-4">
-              <img
-                className="h-11 w-11 rounded-full"
-                src="https://media.licdn.com/dms/image/C4D03AQE44r2JRBOBwg/profile-displayphoto-shrink_400_400/0/1647455149664?e=1696464000&v=beta&t=J_WH7oos20NLGt8ZTu7WD-ih7DUmvZKfoC5DxtLRh4s"
-                alt="Jese image"
-              />
-              <div>
-                <span className="font-semibold text-gray-900 dark:text-white">
-                  Carlos Duque
-                </span>
-                <div className=" text-xs text-blue-600 dark:text-blue-500">
-                  Farmingdale State College
-                </div>
-              </div>
-              <div className="flex-grow" />
-              <div className="m-auto flex items-center gap-1">
-                <button
-                  type="button"
-                  className="rounded-lg bg-green-600 px-1 py-1 font-semibold text-white hover:bg-green-500"
-                  onClick={() => console.log('confirm')}
-                >
-                  <AiOutlineCheck />
-                </button>
-                <button
-                  type="button"
-                  className="rounded-lg bg-red-600 px-2 text-white hover:bg-rose-500"
-                  onClick={() => console.log('cancel')}
-                >
-                  X
-                </button>
-              </div>
-            </div>
+          <div className="mx-4 flex-col items-center">
+            {friendRequests ? (
+              friendRequests.map((user) => {
+                return (
+                  <div className="mb-3 flex gap-4 ">
+                    <img
+                      className="h-11 w-11 rounded-full border shadow-lg dark:border-gray-700 dark:bg-gray-500"
+                      src={user.photoURL}
+                      alt="user image"
+                    />
+                    <div>
+                      <span className="font-semibold text-gray-900 dark:text-white">
+                        {user.firstName} {user.lastName}
+                      </span>
+                      <div className=" text-sm text-blue-600 dark:text-blue-500">
+                        {user.school}
+                      </div>
+                    </div>
+                    <div className="flex-grow" />
+                    <div className="m-auto flex items-center gap-1">
+                      <button
+                        type="button"
+                        className="rounded-lg bg-green-600 px-1 py-1 font-semibold text-white hover:bg-green-500"
+                        onClick={() => console.log('accept ' + user._id)}
+                      >
+                        <AiOutlineCheck />
+                      </button>
+                      <button
+                        type="button"
+                        className="rounded-lg bg-red-600 px-2 text-white hover:bg-rose-500"
+                        onClick={() => console.log('cancel ' + user._id)}
+                      >
+                        X
+                      </button>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <Spinner aria-label="Extra small spinner example" size="xl" />
+            )}
           </div>
           <a
             href="#"
