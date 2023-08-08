@@ -1,13 +1,20 @@
 import { useEffect, useState } from 'react';
 import { FaUserFriends } from 'react-icons/fa';
 import { AiOutlineCheck } from 'react-icons/ai';
-import { useGetUserFriendRequestsQuery } from '../redux/services/user/userService';
+import {
+  useGetUserFriendRequestsQuery,
+  useAcceptFriendRequestMutation,
+  useRejectFriendRequestMutation,
+} from '../redux/services/user/userService';
 import { User as UserType } from '../types';
 import { Spinner } from 'flowbite-react';
 function FriendRequest() {
   const { data, isLoading } = useGetUserFriendRequestsQuery('User');
   const [friendRequests, setFriendRequests] = useState<UserType[]>();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [acceptFriendRequest] = useAcceptFriendRequestMutation();
+  const [rejectFriendRequest] = useRejectFriendRequestMutation();
+  const [tempFriend, setTempFriend] = useState<string>('');
   useEffect(() => {
     if (data && !isLoading) {
       setFriendRequests(data);
@@ -21,6 +28,22 @@ function FriendRequest() {
   const handleIconClick = (event: any) => {
     event.stopPropagation();
     setIsDropdownOpen((prevState) => !prevState);
+  };
+
+  const acceptFriendRequestHandler = async (id: string) => {
+    try {
+      await acceptFriendRequest({ friendID: id });
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  const rejectFriendRequestHandler = async (id: string) => {
+    try {
+      await rejectFriendRequest({ friendID: id });
+    } catch (error: any) {
+      console.log(error);
+    }
   };
 
   return (
@@ -62,14 +85,14 @@ function FriendRequest() {
                       <button
                         type="button"
                         className="rounded-lg bg-green-600 px-1 py-1 font-semibold text-white hover:bg-green-500"
-                        onClick={() => console.log('accept ' + user._id)}
+                        onClick={() => acceptFriendRequestHandler(user._id)}
                       >
                         <AiOutlineCheck />
                       </button>
                       <button
                         type="button"
                         className="rounded-lg bg-red-600 px-2 text-white hover:bg-rose-500"
-                        onClick={() => console.log('cancel ' + user._id)}
+                        onClick={() => rejectFriendRequestHandler(user._id)}
                       >
                         X
                       </button>

@@ -197,8 +197,13 @@ class FriendController {
                 friend.friends.push(userID);
                 friend.friendRequests = friend.friendRequests.filter((id) => id !== userID);
                 yield friend.save();
+                const updatedUser = yield userModel_1.default.findOne({ _id: userID }).exec();
+                const updatedUserFriendRequests = yield userModel_1.default.find({
+                    _id: { $in: updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.friendRequests },
+                }).exec();
                 res.status(200).send({
                     message: 'Added friend successfully!',
+                    updatedFriendRequests: updatedUserFriendRequests,
                 });
             }
             catch (err) {
@@ -226,8 +231,13 @@ class FriendController {
                 yield user.save();
                 friend.friendRequests = friend.friendRequests.filter((id) => id !== userID);
                 yield friend.save();
+                const updatedUser = yield userModel_1.default.findOne({ _id: userID }).exec();
+                const updatedUserFriendRequests = yield userModel_1.default.find({
+                    _id: { $in: updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.friendRequests },
+                }).exec();
                 res.status(200).send({
                     message: 'Friend Request was ignored!',
+                    updatedFriendRequests: updatedUserFriendRequests,
                 });
             }
             catch (err) {

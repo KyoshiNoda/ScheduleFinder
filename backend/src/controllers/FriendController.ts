@@ -197,8 +197,14 @@ class FriendController {
       );
       await friend.save();
 
+      const updatedUser = await User.findOne({ _id: userID }).exec();
+      const updatedUserFriendRequests = await User.find({
+        _id: { $in: updatedUser?.friendRequests },
+      }).exec();
+
       res.status(200).send({
         message: 'Added friend successfully!',
+        updatedFriendRequests: updatedUserFriendRequests,
       });
     } catch (err) {
       console.error(err);
@@ -227,8 +233,14 @@ class FriendController {
       );
       await friend.save();
 
+      const updatedUser = await User.findOne({ _id: userID }).exec();
+      const updatedUserFriendRequests = await User.find({
+        _id: { $in: updatedUser?.friendRequests },
+      }).exec();
+
       res.status(200).send({
         message: 'Friend Request was ignored!',
+        updatedFriendRequests: updatedUserFriendRequests,
       });
     } catch (err) {
       console.error(err);

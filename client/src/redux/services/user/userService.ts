@@ -54,7 +54,7 @@ export const userAPI = createApi({
     }),
     getUserFriends: builder.query({
       query: () => ({
-        url: '/api/users/friends',
+        url: 'api/users/friends',
         method: 'GET',
       }),
       providesTags: ['User'],
@@ -71,10 +71,31 @@ export const userAPI = createApi({
     }),
     getUserFriendRequests: builder.query({
       query: () => ({
-        url: '/api/users/friendRequest',
+        url: 'api/users/friendRequest',
         method: 'GET',
       }),
       providesTags: ['User'],
+    }),
+    acceptFriendRequest: builder.mutation<
+      { message: string; updatedFriendRequests: UserType[] },
+      { friendID: string }
+    >({
+      query: ({ friendID }) => ({
+        url: `api/users/friends/accept/${friendID}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['User'],
+    }),
+
+    rejectFriendRequest: builder.mutation<
+      { message: string; updatedFriendRequests: UserType[] },
+      { friendID: string }
+    >({
+      query: ({ friendID }) => ({
+        url: `api/users/friends/reject/${friendID}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['User'],
     }),
   }),
 });
@@ -86,4 +107,6 @@ export const {
   useChangePasswordMutation,
   useDeleteFriendMutation,
   useGetUserFriendRequestsQuery,
+  useAcceptFriendRequestMutation,
+  useRejectFriendRequestMutation,
 } = userAPI;
