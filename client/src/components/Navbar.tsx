@@ -4,10 +4,9 @@ import { useAppDispatch } from '../redux/store';
 import { logout } from '../redux/feats/auth/authSlice';
 import { HiLogout } from 'react-icons/hi';
 import { FcCalendar } from 'react-icons/fc';
-import { FaUserFriends } from 'react-icons/fa';
 import { MdSettings } from 'react-icons/md';
 import { BsSearchHeart } from 'react-icons/bs';
-import NotificationBell from './NotificationBell';
+import FriendRequest from './FriendRequest';
 
 const Navbar = ({ user }: any) => {
   const dispatch = useAppDispatch();
@@ -19,9 +18,9 @@ const Navbar = ({ user }: any) => {
         </span>
       </Link>
 
-      <div className="flex gap-6 md:order-2">
+      <div className="flex gap-10 md:order-2">
         <div className="flex items-center">
-          <NotificationBell />
+          <FriendRequest />
         </div>
         <Dropdown
           arrowIcon={false}
@@ -53,12 +52,6 @@ const Navbar = ({ user }: any) => {
             <Dropdown.Item>
               <BsSearchHeart size="20" className="mr-2" />
               Find Users
-            </Dropdown.Item>
-          </Link>
-          <Link to={'/auth/findUsers'}>
-            <Dropdown.Item>
-              <FaUserFriends size="20" className="mr-2" />
-              Friend Requests
             </Dropdown.Item>
           </Link>
           <Link to={'/auth/account'}>
