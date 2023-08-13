@@ -2,8 +2,7 @@ import { Label, TextInput } from 'flowbite-react';
 import UserContainer from '../components/findUsers/UserContainer';
 import Toggle from '../components/Toggle';
 import { useState } from 'react';
-import { Toast } from 'flowbite-react';
-import { HiCheck } from 'react-icons/hi';
+import { ToastContainer, toast } from 'react-toastify';
 
 const FindUser = () => {
   const [nameSearch, setNameSearch] = useState<string>('');
@@ -11,7 +10,7 @@ const FindUser = () => {
   const [majorSearch, setMajorSearch] = useState<string>('');
 
   return (
-    <div className="flex min-h-full flex-col space-y-10 bg-slate-400 p-6 dark:bg-slate-900">
+    <div className="flex min-h-full flex-col items-center space-y-10 bg-slate-400 p-6 dark:bg-slate-900">
       <div className="self-end">
         <Toggle />
       </div>
@@ -74,17 +73,6 @@ const FindUser = () => {
         nameSearch={nameSearch}
         majorSearch={majorSearch}
       />
-      <div className="fixed bottom-4 left-4 z-50">
-        <Toast className="shadow-lg">
-          <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-500 text-white shadow-md dark:bg-green-800 dark:text-green-200">
-            <HiCheck className="h-5 w-5" />
-          </div>
-          <div className="ml-3 text-sm font-semibold text-gray-800 dark:text-gray-300">
-            Item moved successfully.
-          </div>
-          <Toast.Toggle />
-        </Toast>
-      </div>
     </div>
   );
 };

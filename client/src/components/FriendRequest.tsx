@@ -52,12 +52,10 @@ function FriendRequest() {
         type="button"
         onClick={handleBellClick}
       >
-        <button type="button" className="h-5 w-5" onClick={handleIconClick}>
-          <FaUserFriends size="32" onClick={handleIconClick} />
-        </button>
+        <FaUserFriends onClick={handleIconClick} className="h-9 w-9" />
       </button>
       {isDropdownOpen && (
-        <div className="absolute right-16 z-20 w-3/4 divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-700 dark:bg-gray-800 lg:right-1 lg:w-1/4">
+        <div className="absolute right-4 z-20 w-3/4 divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-700 dark:bg-gray-800 lg:right-1 lg:w-1/4">
           <div className="block rounded-t-lg bg-gray-50 px-4 py-2 text-center font-medium text-gray-700 dark:bg-gray-800 dark:text-white">
             Friend Requests
           </div>
@@ -65,7 +63,7 @@ function FriendRequest() {
             {friendRequests ? (
               friendRequests.map((user) => {
                 return (
-                  <div className="mb-3 flex gap-4 ">
+                  <div className="mb-3 flex gap-4 " key={user._id}>
                     <img
                       className="h-11 w-11 rounded-full border shadow-lg dark:border-gray-700 dark:bg-gray-500"
                       src={user.photoURL}
