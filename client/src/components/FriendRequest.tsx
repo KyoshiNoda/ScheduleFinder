@@ -14,7 +14,6 @@ function FriendRequest() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
   const [rejectFriendRequest] = useRejectFriendRequestMutation();
-  const [tempFriend, setTempFriend] = useState<string>('');
   useEffect(() => {
     if (data && !isLoading) {
       setFriendRequests(data);
