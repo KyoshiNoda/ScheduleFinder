@@ -1,9 +1,8 @@
 import { Card } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 import { Toast } from 'flowbite-react';
-import { HiCheck } from 'react-icons/hi';
-import { useState } from 'react';
-
+import { useAppDispatch } from '../../redux/store';
+import { addFriendRequestToast } from '../../redux/feats/globalSlice/globalSlice';
 type UserProps = {
   id: string;
   photoURL: string;
@@ -21,8 +20,14 @@ const User = ({
   school,
   major,
 }: UserProps) => {
-  const [isAdded, setIsAdded] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
   const fullName = `${firstName} ${lastName}`;
+  const friendHandler = () => {
+    dispatch(addFriendRequestToast(true));
+    setTimeout(() => {
+      dispatch(addFriendRequestToast(false));
+    }, 5000);
+  };
 
   return (
     <div className="max-w-sm">
@@ -44,7 +49,7 @@ const User = ({
           </span>
           <div className="mt-4 flex space-x-3 lg:mt-6">
             <button
-              onClick={() => setIsAdded(false)}
+              onClick={friendHandler}
               className="inline-flex items-center rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Add friend
