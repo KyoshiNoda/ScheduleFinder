@@ -1,8 +1,8 @@
 import { Card } from 'flowbite-react';
 import { Link } from 'react-router-dom';
-import { Toast } from 'flowbite-react';
 import { useAppDispatch } from '../../redux/store';
 import { addFriendRequestToast } from '../../redux/feats/globalSlice/globalSlice';
+import { useSendFriendRequestMutation } from '../../redux/services/user/userService';
 type UserProps = {
   id: string;
   photoURL: string;
@@ -21,12 +21,15 @@ const User = ({
   major,
 }: UserProps) => {
   const dispatch = useAppDispatch();
+  const [sendFriendRequest] = useSendFriendRequestMutation();
   const fullName = `${firstName} ${lastName}`;
-  const friendHandler = () => {
+
+  const friendHandler = async (id: string) => {
     dispatch(addFriendRequestToast(true));
     setTimeout(() => {
       dispatch(addFriendRequestToast(false));
     }, 5000);
+    await sendFriendRequest({ friendID: id });
   };
 
   return (
@@ -49,7 +52,7 @@ const User = ({
           </span>
           <div className="mt-4 flex space-x-3 lg:mt-6">
             <button
-              onClick={friendHandler}
+              onClick={() => friendHandler(id)}
               className="inline-flex items-center rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Add friend

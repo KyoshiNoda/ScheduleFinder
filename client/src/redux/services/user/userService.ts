@@ -86,13 +86,22 @@ export const userAPI = createApi({
       }),
       invalidatesTags: ['User'],
     }),
-
     rejectFriendRequest: builder.mutation<
       { message: string; updatedFriendRequests: UserType[] },
       { friendID: string }
     >({
       query: ({ friendID }) => ({
         url: `api/users/friends/reject/${friendID}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['User'],
+    }),
+    sendFriendRequest: builder.mutation<
+      { message: string },
+      { friendID: string }
+    >({
+      query: ({ friendID }) => ({
+        url: `/api/users/friendRequest/${friendID}`,
         method: 'POST',
       }),
       invalidatesTags: ['User'],
@@ -109,4 +118,5 @@ export const {
   useGetUserFriendRequestsQuery,
   useAcceptFriendRequestMutation,
   useRejectFriendRequestMutation,
+  useSendFriendRequestMutation,
 } = userAPI;
