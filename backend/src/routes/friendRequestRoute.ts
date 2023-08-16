@@ -8,7 +8,11 @@ router.get(
   AuthController.authenticateToken,
   FriendController.getFriendRequests
 );
-
+router.get(
+  '/sent',
+  AuthController.authenticateToken,
+  FriendController.getPendingFriendRequests
+);
 
 router.post(
   '/:friendID',

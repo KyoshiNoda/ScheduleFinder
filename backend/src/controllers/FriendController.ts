@@ -94,6 +94,31 @@ class FriendController {
       });
     }
   }
+  public static async getPendingFriendRequests(req: any, res: any) {
+    const userID: string = req.user.data._id;
+    let pendingFriendRequests: IUser[] = [];
+    try {
+      const user = await User.findOne({ _id: userID }).exec();
+      if (!user) {
+        return res.status(404).send({
+          message: `User ${userID} not found`,
+        });
+      }
+      for (const friendID of user.pendingFriendRequests) {
+        let friend = await User.findOne({ _id: friendID }).exec();
+        if (friend) {
+          pendingFriendRequests.push(friend);
+        }
+      }
+      res.send(pendingFriendRequests);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({
+        message: `Error while getting User ${userID}`,
+        error: err,
+      });
+    }
+  }
 
   public static async sendFriendRequest(req: any, res: any) {
     const userID: string = req.user.data._id;
@@ -107,14 +132,22 @@ class FriendController {
         });
       }
 
-      if (!user.friendRequests.includes(friendID)) {
-        user.friendRequests.push(friendID);
+      if (!user.pendingFriendRequests.includes(friendID)) {
+        user.pendingFriendRequests.push(friendID);
         await user.save();
+      } else {
+        return res.status(404).send({
+          message: 'Friend Request Already Send!',
+        });
       }
 
       if (!friend.friendRequests.includes(userID)) {
         friend.friendRequests.push(userID);
         await friend.save();
+      } else {
+        return res.status(404).send({
+          message: 'Friend Request Already Send!',
+        });
       }
 
       return res.status(200).send({
@@ -148,8 +181,8 @@ class FriendController {
         await user.save();
       }
 
-      if (friend.friendRequests.includes(userID)) {
-        friend.friendRequests = friend.friendRequests.filter(
+      if (friend.pendingFriendRequests.includes(userID)) {
+        friend.pendingFriendRequests = friend.pendingFriendRequests.filter(
           (id) => id !== userID
         );
         await friend.save();
@@ -192,7 +225,7 @@ class FriendController {
       await user.save();
 
       friend.friends.push(userID);
-      friend.friendRequests = friend.friendRequests.filter(
+      friend.pendingFriendRequests = friend.pendingFriendRequests.filter(
         (id) => id !== userID
       );
       await friend.save();

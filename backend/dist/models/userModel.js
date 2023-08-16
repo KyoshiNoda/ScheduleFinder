@@ -12,6 +12,7 @@ const userSchema = new mongoose_1.default.Schema({
     birthday: { type: Date, required: true },
     friends: [{ type: String }],
     friendRequests: [{ type: String }],
+    pendingFriendRequests: [{ type: String }],
     age: Number,
     photoURL: String,
     gender: String,
