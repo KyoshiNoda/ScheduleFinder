@@ -79,27 +79,43 @@ class ScheduleController {
             }
         });
     }
-    // DELETE an existing schedule using JWT
+    // DELETE all time slots in a schedule using JWT
     static deleteScheduleByID(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.user.data._id;
             const scheduleID = req.params.id;
+            // try {
+            //   const schedule = await Schedule.findOneAndDelete({
+            //     _id: scheduleID,
+            //     user_id: userID,
+            //   });
+            //   if (!schedule) {
+            //     return res
+            //       .status(404)
+            //       .json(`No schedule found with ID ${scheduleID} for user ${userID}`);
+            //   }
+            //   res.status(200).send(schedule);
+            // } catch (error) {
+            //   res
+            //     .status(400)
+            //     .json(
+            //       `Failed to delete schedule with ID ${scheduleID} for user ${userID}`
+            //     );
+            // }
             try {
-                const schedule = yield scheduleModel_1.default.findOneAndDelete({
+                const schedule = yield scheduleModel_1.default.findOneAndUpdate({
                     _id: scheduleID,
                     user_id: userID,
-                });
+                }, {
+                    $set: { timeSlot: [] },
+                }, { new: true });
                 if (!schedule) {
-                    return res
-                        .status(404)
-                        .json(`No schedule found with ID ${scheduleID} for user ${userID}`);
+                    return res.status(404).json(`No schedule found with ID ${scheduleID} for user ${userID}`);
                 }
                 res.status(200).send(schedule);
             }
             catch (error) {
-                res
-                    .status(400)
-                    .json(`Failed to delete schedule with ID ${scheduleID} for user ${userID}`);
+                res.status(400).json(`Failed to update schedule with ID ${scheduleID} for user ${userID}`);
             }
         });
     }
