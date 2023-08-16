@@ -46,7 +46,7 @@ class ScheduleController {
   }
 
   // DELETE all time slots in a schedule using JWT
-  public static async deleteScheduleByID(req: any, res: any) {
+  public static async clearScheduleById(req: any, res: any) {
     const userID: string = req.user.data._id;
     const scheduleID: string = req.params.id;
     

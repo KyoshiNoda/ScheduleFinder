@@ -26,7 +26,7 @@ router.patch(
 router.delete(
   '/:id',
   AuthController.authenticateToken,
-  ScheduleController.deleteScheduleByID
+  ScheduleController.clearScheduleById
 );
 router.delete(
   '/:id/timeSlot',
