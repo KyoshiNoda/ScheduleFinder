@@ -8,6 +8,7 @@ import {
 } from '../redux/services/user/userService';
 import { User as UserType } from '../types';
 import { Spinner } from 'flowbite-react';
+import { Link } from 'react-router-dom';
 function FriendRequest() {
   const { data, isLoading } = useGetUserFriendRequestsQuery('User');
   const [friendRequests, setFriendRequests] = useState<UserType[]>();
@@ -101,9 +102,10 @@ function FriendRequest() {
               <Spinner aria-label="Extra small spinner example" size="xl" />
             )}
           </div>
-          <a
-            href="#"
+          <Link
+            to="/auth/notifications"
             className="block rounded-b-lg bg-gray-50 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
+            onClick={() => setIsDropdownOpen(false)}
           >
             <div className="inline-flex items-center ">
               <svg
@@ -117,7 +119,7 @@ function FriendRequest() {
               </svg>
               View all
             </div>
-          </a>
+          </Link>
         </div>
       )}
     </div>
