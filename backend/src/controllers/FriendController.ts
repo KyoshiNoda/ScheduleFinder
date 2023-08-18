@@ -213,7 +213,7 @@ class FriendController {
       }
       if (
         !user.friendRequests.includes(friendID) ||
-        !friend.friendRequests.includes(userID)
+        !friend.pendingFriendRequests.includes(userID)
       ) {
         return res.status(404).send({
           message: 'Missing Friend Request',
@@ -261,7 +261,7 @@ class FriendController {
       user.friendRequests = user.friendRequests.filter((id) => id !== friendID);
       await user.save();
 
-      friend.friendRequests = friend.friendRequests.filter(
+      friend.pendingFriendRequests = friend.pendingFriendRequests.filter(
         (id) => id !== userID
       );
       await friend.save();

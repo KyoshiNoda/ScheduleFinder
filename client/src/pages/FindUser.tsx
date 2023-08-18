@@ -5,18 +5,16 @@ import Toggle from '../components/Toggle';
 import { useState } from 'react';
 import { useAppSelector } from '../redux/store';
 import { useAppDispatch } from '../redux/store';
-import { addFriendRequestToast } from '../redux/feats/globalSlice/globalSlice';
+import { toast } from '../redux/feats/globalSlice/globalSlice';
 const FindUser = () => {
   const [nameSearch, setNameSearch] = useState<string>('');
   const [schoolSearch, setSchoolSearch] = useState<string>('');
   const [majorSearch, setMajorSearch] = useState<string>('');
 
   const dispatch = useAppDispatch();
-  const isDismissed: boolean = useAppSelector(
-    (state: any) => state.globalSlice.addFriendRequestToast
-  );
+  const friendToast = useAppSelector((state: any) => state.globalSlice.toast);
   const addFriendHandler = () => {
-    dispatch(addFriendRequestToast(false));
+    dispatch(toast(false));
   };
   return (
     <div className="flex min-h-full flex-col items-center space-y-10 bg-slate-400 p-6 dark:bg-slate-900">
@@ -82,14 +80,14 @@ const FindUser = () => {
         nameSearch={nameSearch}
         majorSearch={majorSearch}
       />
-      {isDismissed && (
+      {friendToast.state && (
         <div className="fixed bottom-4 left-4 z-50">
           <Toast className="border shadow-lg">
             <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-500 text-white shadow-md dark:bg-green-800 dark:text-green-200">
               <HiCheck className="h-5 w-5" />
             </div>
             <div className="ml-3 text-sm font-semibold text-gray-800 dark:text-gray-300">
-              Friend Request Sent!
+              {friendToast.message}
             </div>
             <Toast.Toggle onClick={addFriendHandler} />
           </Toast>

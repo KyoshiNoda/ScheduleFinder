@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   readOnly: false,
-  addFriendRequestToast: false,
+  toast: {},
 };
 
 const globalSlice = createSlice({
@@ -12,11 +12,11 @@ const globalSlice = createSlice({
     toggleReadOnly: (state, action) => {
       state.readOnly = action.payload;
     },
-    addFriendRequestToast: (state, action) => {
-      state.addFriendRequestToast = action.payload;
+    toast: (state, action) => {
+      state.toast = action.payload;
     },
   },
 });
 
 export default globalSlice.reducer;
-export const { toggleReadOnly, addFriendRequestToast } = globalSlice.actions;
+export const { toggleReadOnly, toast } = globalSlice.actions;

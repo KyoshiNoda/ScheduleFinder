@@ -224,7 +224,7 @@ class FriendController {
                     });
                 }
                 if (!user.friendRequests.includes(friendID) ||
-                    !friend.friendRequests.includes(userID)) {
+                    !friend.pendingFriendRequests.includes(userID)) {
                     return res.status(404).send({
                         message: 'Missing Friend Request',
                     });
@@ -267,7 +267,7 @@ class FriendController {
                 }
                 user.friendRequests = user.friendRequests.filter((id) => id !== friendID);
                 yield user.save();
-                friend.friendRequests = friend.friendRequests.filter((id) => id !== userID);
+                friend.pendingFriendRequests = friend.pendingFriendRequests.filter((id) => id !== userID);
                 yield friend.save();
                 const updatedUser = yield userModel_1.default.findOne({ _id: userID }).exec();
                 const updatedUserFriendRequests = yield userModel_1.default.find({

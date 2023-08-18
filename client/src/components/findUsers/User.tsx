@@ -1,8 +1,11 @@
 import { Card } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../redux/store';
-import { addFriendRequestToast } from '../../redux/feats/globalSlice/globalSlice';
-import { useSendFriendRequestMutation } from '../../redux/services/user/userService';
+import { toast } from '../../redux/feats/globalSlice/globalSlice';
+import {
+  useSendFriendRequestMutation,
+  useAcceptFriendRequestMutation,
+} from '../../redux/services/user/userService';
 import { BiTime } from 'react-icons/bi';
 type UserProps = {
   id: string;
@@ -29,14 +32,33 @@ const User = ({
 }: UserProps) => {
   const dispatch = useAppDispatch();
   const [sendFriendRequest] = useSendFriendRequestMutation();
+  const [acceptFriendRequest] = useAcceptFriendRequestMutation();
   const fullName = `${firstName} ${lastName}`;
 
-  const friendHandler = async (id: string) => {
-    dispatch(addFriendRequestToast(true));
+  const sendFriendRequestHandler = async (id: string) => {
+    dispatch(
+      toast({
+        state: true,
+        message: 'Friend Request Sent!',
+      })
+    );
     setTimeout(() => {
-      dispatch(addFriendRequestToast(false));
+      dispatch(toast({ state: false, message: null }));
     }, 5000);
     await sendFriendRequest({ friendID: id });
+  };
+
+  const acceptFriendRequestHandler = async (id: string) => {
+    dispatch(
+      toast({
+        state: true,
+        message: 'Accepted Friend Request!',
+      })
+    );
+    setTimeout(() => {
+      dispatch(toast({ state: false, message: null }));
+    }, 5000);
+    await acceptFriendRequest({ friendID: id });
   };
 
   return (
@@ -61,18 +83,22 @@ const User = ({
             {!isPending ? (
               isFriendRequest ? (
                 <button
-                  onClick={() => friendHandler(id)}
-                  className="inline-flex items-center rounded-lg bg-green-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  onClick={() => acceptFriendRequestHandler(id)}
+                  className="inline-flex items-center rounded-lg bg-green-600 px-4 py-2 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
                 >
                   Accept Friend Request
                 </button>
               ) : (
-                <button
-                  onClick={() => friendHandler(id)}
-                  className="inline-flex items-center rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Add Friend
-                </button>
+                <>
+                  {!isFriends && (
+                    <button
+                      onClick={() => sendFriendRequestHandler(id)}
+                      className="inline-flex items-center rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                      Add Friend
+                    </button>
+                  )}
+                </>
               )
             ) : (
               <span className="flex items-center gap-1 rounded border px-4 py-2 dark:text-white">
