@@ -27,12 +27,13 @@ function Notifications() {
     }
   };
   return (
-    <div className="flex min-h-full w-screen flex-col gap-10 bg-slate-400 p-3 dark:bg-slate-900 lg:gap-40">
+    <div className="flex min-h-full w-screen flex-col bg-slate-400 p-3 dark:bg-slate-900 lg:gap-40">
       <div className="flex justify-end">
         <Toggle />
       </div>
-      <div className="flex justify-evenly">
-        <div className="flex h-1/2 w-1/2 flex-col items-center rounded bg-slate-800">
+      <div className='flex justify-center text-3xl dark:text-white text-bold'>Friend Requests</div>
+      <div className="flex justify-center">
+        <div className="flex w-full lg:h-1/2 lg:w-1/2 flex-col items-center rounded-lg bg-white dark:bg-slate-800 pt-3">
           {!isFetching ? (
             data.map((user: any) => {
               return (
