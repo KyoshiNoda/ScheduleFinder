@@ -23,6 +23,8 @@ export type User = {
   gender?: string | undefined;
   school: string;
   major?: string | undefined;
+  friends: User[];
+  friendRequests: User[];
 };
 
 export type DaysChecked = {

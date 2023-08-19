@@ -10,6 +10,8 @@ export interface IUser extends Document {
   age?: number;
   school?: string;
   major?: string;
+  friends: string[]
+  friendRequests: string[]
 }
 
 const userSchema: Schema = new mongoose.Schema({
@@ -18,6 +20,8 @@ const userSchema: Schema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   birthday: { type: Date, required: true },
+  friends: [{ type: String }], // Array of strings for storing user IDs
+  friendRequests: [{ type: String }], // Array of strings for storing user IDs
   age: Number,
   photoURL: String,
   gender: String,
