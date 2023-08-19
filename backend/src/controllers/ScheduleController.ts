@@ -45,27 +45,30 @@ class ScheduleController {
     }
   }
 
-  // DELETE an existing schedule using JWT
-  public static async deleteScheduleByID(req: any, res: any) {
+  // DELETE all time slots in a schedule using JWT
+  public static async clearScheduleById(req: any, res: any) {
     const userID: string = req.user.data._id;
     const scheduleID: string = req.params.id;
+    
     try {
-      const schedule = await Schedule.findOneAndDelete({
-        _id: scheduleID,
-        user_id: userID,
-      });
+      const schedule = await Schedule.findOneAndUpdate(
+        {
+          _id: scheduleID,
+          user_id: userID,
+        },
+        {
+          $set: { timeSlot: [] },
+        },
+        { new: true }
+      );
+
       if (!schedule) {
-        return res
-          .status(404)
-          .json(`No schedule found with ID ${scheduleID} for user ${userID}`);
+        return res.status(404).json(`No schedule found with ID ${scheduleID} for user ${userID}`);
       }
+
       res.status(200).send(schedule);
     } catch (error) {
-      res
-        .status(400)
-        .json(
-          `Failed to delete schedule with ID ${scheduleID} for user ${userID}`
-        );
+      res.status(400).json(`Failed to update schedule with ID ${scheduleID} for user ${userID}`);
     }
   }
 
