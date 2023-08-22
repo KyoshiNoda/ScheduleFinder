@@ -25,7 +25,7 @@ function FriendRequest() {
     setIsDropdownOpen((prevState) => !prevState);
   };
 
-  const handleIconClick = (event: any) => {
+  const handleIconClick = (event: React.MouseEvent<SVGElement>) => {
     event.stopPropagation();
     setIsDropdownOpen((prevState) => !prevState);
   };

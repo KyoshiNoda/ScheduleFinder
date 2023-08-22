@@ -172,7 +172,7 @@ function ProfileTab() {
         </>
       ) : isLoading ? (
         <div className = 'flex justify-center'>
-          <Spinner aria-label="Extra small spinner example" size="xl" />
+          <Spinner aria-label="Profile loading spinner" size="xl" />
         </div>
       ) : (
         <div>User information not available.</div>

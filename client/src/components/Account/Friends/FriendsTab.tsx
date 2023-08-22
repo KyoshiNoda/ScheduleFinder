@@ -103,7 +103,7 @@ function FriendsTab() {
           );
         })
       ) : (
-        <Spinner aria-label="Extra small spinner example" size="xl" />
+        <Spinner aria-label="Friends loading spinner" size="xl" />
       )}
     </div>
   );
