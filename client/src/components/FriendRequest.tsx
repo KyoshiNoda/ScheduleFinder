@@ -11,13 +11,13 @@ import { Spinner } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 function FriendRequest() {
   const { data, isLoading } = useGetUserFriendRequestsQuery('User');
-  const [friendRequests, setFriendRequests] = useState<UserType[]>();
+  const [receivedFriendRequests , setReceivedFriendRequests] = useState<UserType[]>();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
   const [rejectFriendRequest] = useRejectFriendRequestMutation();
   useEffect(() => {
     if (data && !isLoading) {
-      setFriendRequests(data);
+      setReceivedFriendRequests(data);
     }
   }, [data, isLoading]);
 
@@ -61,8 +61,8 @@ function FriendRequest() {
             Friend Requests
           </div>
           <div className="mx-4 flex-col items-center">
-            {friendRequests ? (
-              friendRequests.map((user) => {
+            {receivedFriendRequests ? (
+              receivedFriendRequests.map((user) => {
                 return (
                   <div className="mb-3 flex gap-4 " key={user._id}>
                     <img

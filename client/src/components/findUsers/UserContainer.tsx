@@ -25,10 +25,10 @@ const UserContainer = ({
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
-  const { data: pendingFriendRequests, isFetching: dataFetching } =
+  const { data: sentFriendRequests, isFetching: dataFetching } =
     useGetPendingFriendRequestsQuery('User');
 
-  const { data: friendRequests, isFetching: dataFetching1 } =
+  const { data: receivedFriendRequests, isFetching: dataFetching1 } =
     useGetUserFriendRequestsQuery('User');
 
   const { data: friends } = useGetUserFriendsQuery('User');
@@ -86,7 +86,7 @@ const UserContainer = ({
     <section>
       {isFetching &&
         dataFetching &&
-        (pendingFriendRequests?.length === 0 || filterUsers?.length === 0) && (
+        (sentFriendRequests?.length === 0 || filterUsers?.length === 0) && (
           <span className="block text-center text-3xl dark:text-white">
             No users found
           </span>
@@ -107,14 +107,14 @@ const UserContainer = ({
                 school={user.school}
                 major={user.major}
                 isPending={
-                  pendingFriendRequests &&
-                  pendingFriendRequests.some(
+                  sentFriendRequests &&
+                  sentFriendRequests.some(
                     (request: any) => request._id === user._id
                   )
                 }
                 isFriendRequest={
-                  friendRequests &&
-                  friendRequests.some(
+                  receivedFriendRequests &&
+                  receivedFriendRequests.some(
                     (request: any) => request._id === user._id
                   )
                 }

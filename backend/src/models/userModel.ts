@@ -11,8 +11,8 @@ export interface IUser extends Document {
   school?: string;
   major?: string;
   friends: string[];
-  friendRequests: string[];
-  pendingFriendRequests: string[];
+  receivedFriendRequests: string[];
+  sentFriendRequests: string[];
 }
 
 const userSchema: Schema = new mongoose.Schema({
@@ -22,8 +22,8 @@ const userSchema: Schema = new mongoose.Schema({
   password: { type: String, required: true },
   birthday: { type: Date, required: true },
   friends: [{ type: String }],
-  friendRequests: [{ type: String }],
-  pendingFriendRequests: [{ type: String }],
+  receivedFriendRequests: [{ type: String }],
+  sentFriendRequests: [{ type: String }],
   age: Number,
   photoURL: String,
   gender: String,
