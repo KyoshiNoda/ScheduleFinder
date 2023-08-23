@@ -99,7 +99,7 @@ function FriendRequest() {
                 );
               })
             ) : (
-              <Spinner aria-label="Extra small spinner example" size="xl" />
+              <Spinner aria-label="Friend Request Spinner" size="xl" />
             )}
           </div>
           <Link
