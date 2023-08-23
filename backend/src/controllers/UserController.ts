@@ -78,7 +78,7 @@ class UserController {
     }
   }
   // change password with Token
-  public static async changePassword(req: any, res: any) {
+  public static async changePasswordWithToken(req: any, res: any) {
     try {
       const userID: string = req.user.data._id;
       const userPassword: string = req.user.data.password;
@@ -108,6 +108,36 @@ class UserController {
       res.status(200).send({ message: 'Password Changed!' });
     } catch (error: any) {
       res.status(500).send({ error: error.message });
+    }
+  }
+  public static async changePasswordWithoutToken(req: Request, res: Response) {
+    try {
+      const user = await User.findOne({ email: req.body.email }).exec();
+      if (!user) {
+        return res.status(404).send({ error: 'User not found' });
+      }
+
+      if (req.body.newPassword !== req.body.confirmNewPassword) {
+        return res.status(401).send({ message: "Passwords don't match!" });
+      }
+
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
+      const updatedUser = await User.findOneAndUpdate(
+        { email: req.body.email },
+        { ...req.body, password: hashedPassword },
+        { returnOriginal: false }
+      );
+
+      if (!updatedUser) {
+        throw new Error('Error updating password');
+      }
+
+      return res
+        .status(200)
+        .send({ message: 'Password Changed!', updatedUser });
+    } catch (error: any) {
+      return res.status(500).send({ error: 'Error occurred' });
     }
   }
 }

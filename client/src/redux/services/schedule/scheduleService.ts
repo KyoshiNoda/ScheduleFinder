@@ -30,6 +30,13 @@ export const scheduleAPI = createApi({
       }),
       providesTags: ['Schedule'],
     }),
+    clearSchedule: builder.mutation<ScheduleType, { scheduleId: string }>({
+      query: ({ scheduleId }) => ({
+        url: `api/schedules/${scheduleId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Schedule'],
+    }),
     createTimeSlot: builder.mutation<
       ScheduleType,
       { scheduleId: string; timeSlot: TimeSlotType }
@@ -68,6 +75,7 @@ export const scheduleAPI = createApi({
 
 export const {
   useGetScheduleQuery,
+  useClearScheduleMutation,
   useCreateTimeSlotMutation,
   useDeleteTimeSlotMutation,
   useUpdateTimeSlotMutation,

@@ -38,3 +38,92 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+
+export const emailCheck = createAsyncThunk(
+  'auth/emailCheck',
+  async (email: { email: string }, { rejectWithValue }) => {
+    try {
+      const result = await Axios.post(`${BASE_URL}api/auth/emailCheck`, email);
+      return result;
+    } catch (error: any) {
+      if (error.response) {
+        const { status, data } = error.response;
+        return rejectWithValue({ status, message: data.message });
+      } else {
+        return rejectWithValue({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    }
+  }
+);
+
+export const resetPasswordRequest = createAsyncThunk(
+  '/auth/resetPasswordRequest',
+  async (email: { email: string }, { rejectWithValue }) => {
+    try {
+      const result = await Axios.post(
+        `${BASE_URL}api/auth/resetPasswordRequest`,
+        email
+      );
+      return result;
+    } catch (error: any) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const verifyPasswordRequest = createAsyncThunk(
+  '/auth/verifyPasswordRequest',
+  async (data: { email: string | null; code: string }, { rejectWithValue }) => {
+    try {
+      const result = await Axios.post(
+        `${BASE_URL}api/auth/verifyResetPasswordCode`,
+        data
+      );
+      return result;
+    } catch (error: any) {
+      if (error.response) {
+        const { status, data } = error.response;
+        return rejectWithValue({ status, message: data.message });
+      } else {
+        return rejectWithValue({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    }
+  }
+);
+
+export const changePassword = createAsyncThunk(
+  '/auth/changePassword',
+  async (
+    data: {
+      email: string | null;
+      newPassword: string;
+      confirmNewPassword: string;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const result = await Axios.post(
+        `${BASE_URL}api/users/changePassword`,
+        data
+      );
+      return result;
+    } catch (error: any) {
+      if (error.response) {
+        const { status, data } = error.response;
+        console.log(status, data);
+        return rejectWithValue({ status, message: data.message });
+      } else {
+        return rejectWithValue({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    }
+  }
+);

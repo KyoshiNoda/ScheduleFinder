@@ -46,17 +46,85 @@ export const userAPI = createApi({
       }
     >({
       query: (body) => ({
-        url: 'api/users/changePassword',
+        url: 'api/users/changePassword/token',
         method: 'POST',
         body,
       }),
       invalidatesTags: ['User'],
+    }),
+    getUserFriends: builder.query({
+      query: () => ({
+        url: 'api/users/friends',
+        method: 'GET',
+      }),
+      providesTags: ['User'],
+    }),
+    deleteFriend: builder.mutation<
+      { message: string; friends: UserType[] },
+      { friendID: string }
+    >({
+      query: ({ friendID }) => ({
+        url: `api/users/friends/${friendID}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['User'],
+    }),
+    getUserFriendRequests: builder.query({
+      query: () => ({
+        url: 'api/users/friendRequest',
+        method: 'GET',
+      }),
+      providesTags: ['User'],
+    }),
+    acceptFriendRequest: builder.mutation<
+      { message: string; updatedFriendRequests: UserType[] },
+      { friendID: string }
+    >({
+      query: ({ friendID }) => ({
+        url: `api/users/friends/accept/${friendID}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['User'],
+    }),
+    rejectFriendRequest: builder.mutation<
+      { message: string; updatedFriendRequests: UserType[] },
+      { friendID: string }
+    >({
+      query: ({ friendID }) => ({
+        url: `api/users/friends/reject/${friendID}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['User'],
+    }),
+    sendFriendRequest: builder.mutation<
+      { message: string },
+      { friendID: string }
+    >({
+      query: ({ friendID }) => ({
+        url: `api/users/friendRequest/${friendID}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['User'],
+    }),
+    getPendingFriendRequests: builder.query({
+      query: () => ({
+        url: 'api/users/friendRequest/sent',
+        method: 'GET',
+      }),
+      providesTags: ['User'],
     }),
   }),
 });
 
 export const {
   useGetUserInfoQuery,
+  useGetUserFriendsQuery,
   useUpdateUserInfoMutation,
   useChangePasswordMutation,
+  useDeleteFriendMutation,
+  useGetUserFriendRequestsQuery,
+  useAcceptFriendRequestMutation,
+  useRejectFriendRequestMutation,
+  useSendFriendRequestMutation,
+  useGetPendingFriendRequestsQuery,
 } = userAPI;
