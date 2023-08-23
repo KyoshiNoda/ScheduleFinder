@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useGetScheduleQuery } from '../redux/services/schedule/scheduleService';
 import { Button } from 'flowbite-react';
 import { useAppDispatch } from '../redux/store';
-import { toggleReadOnly } from '../redux/feats/timeSlot/timeSlotSlice';
+import { toggleReadOnly } from '../redux/feats/globalSlice/globalSlice';
 import { getApiUrl } from '../utils/environment';
 import { TimeSlot as TimeSlotType, Schedule as ScheduleType } from '../types';
 
