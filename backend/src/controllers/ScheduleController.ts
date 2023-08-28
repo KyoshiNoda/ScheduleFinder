@@ -18,7 +18,7 @@ class ScheduleController {
     } catch (err) {
       console.error(err);
       res.status(500).json({
-        message: `Error while getting schedule for user ${userID}`,
+        message: `Error while getting schedule for user ${userID}`, 
         error: err,
       });
     }
