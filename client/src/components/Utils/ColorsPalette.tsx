@@ -1,4 +1,4 @@
-function ColorsPalette() {
+const ColorsPalette = () => {
   return (
     <div className="hidden">
       <div className="bg-red-400"></div>
@@ -16,6 +16,6 @@ function ColorsPalette() {
       <div className="bg-rose-400"></div>
     </div>
   );
-}
+};
 
 export default ColorsPalette;

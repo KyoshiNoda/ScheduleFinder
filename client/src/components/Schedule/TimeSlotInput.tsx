@@ -24,7 +24,7 @@ export const colors: string[] = [
   'rose',
 ];
 
-function TimeSlotInput() {
+const TimeSlotInput = () => {
   const formRef = useRef(document.createElement('form'));
   const titleRef = useRef(document.createElement('input'));
   const mondayRef = useRef(document.createElement('input'));

@@ -9,7 +9,7 @@ import CompareSchedule from './pages/CompareSchedule';
 import PageLayout from './components/PageLayout';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-function App() {
+const App = () => {
   return (
     <>
       <Routes>

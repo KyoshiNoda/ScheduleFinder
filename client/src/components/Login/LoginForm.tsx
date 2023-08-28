@@ -4,8 +4,7 @@ import { loginUser } from '../../redux/feats/auth/authActions';
 import { useAppDispatch } from '../../redux/store';
 import { Link } from 'react-router-dom';
 
-type Props = {};
-function LoginForm(props: Props) {
+const LoginForm = () => {
   const defaultError: string = 'Something went wrong!';
 
   const [email, setEmail] = useState<string>('');
@@ -107,6 +106,6 @@ function LoginForm(props: Props) {
       </form>
     </>
   );
-}
+};
 
 export default LoginForm;

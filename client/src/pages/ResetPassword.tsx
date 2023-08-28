@@ -5,9 +5,9 @@ import { useAppDispatch } from '../redux/store';
 import { useAppSelector } from '../redux/store';
 import { verifyPasswordRequest } from '../redux/feats/auth/authActions';
 import ChangePassword from '../components/Auth/ChangePassword';
-function ResetPassword() {
+const ResetPassword = () => {
   const dispatch = useAppDispatch();
-  const email = useAppSelector((state) => state.auth.email);
+  const email = useAppSelector((state: any) => state.auth.email);
 
   const digit1 = useRef<HTMLInputElement | null>(null);
   const digit2 = useRef<HTMLInputElement | null>(null);
@@ -142,6 +142,6 @@ function ResetPassword() {
       </div>
     </div>
   );
-}
+};
 
 export default ResetPassword;
