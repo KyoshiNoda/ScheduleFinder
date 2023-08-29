@@ -38,7 +38,7 @@ const TimeSlot: any = (props: Props) => {
   }
 
   // Check if the time slot is readonly
-  const readOnly: boolean = useAppSelector((state: any) => state.timeSlot.readOnly);
+  const readOnly: boolean = useAppSelector((state: any) => state.globalSlice.readOnly);
 
   const [deleteTimeSlotMutation] = useDeleteTimeSlotMutation();
   const [updateTimeSlotMutation] = useUpdateTimeSlotMutation();

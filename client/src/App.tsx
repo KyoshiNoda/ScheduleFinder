@@ -9,6 +9,7 @@ import CompareSchedule from './pages/CompareSchedule';
 import PageLayout from './components/PageLayout';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import Notifications from './pages/Notifications';
 const App = () => {
   return (
     <>
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="schedule" element={<Schedule />} />
           <Route path="findUsers" element={<FindUser />} />
           <Route path="compareSchedule/:userId" element={<CompareSchedule />} />
+          <Route path="notifications" element={<Notifications />} />
         </Route>
       </Routes>
     </>

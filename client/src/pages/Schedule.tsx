@@ -2,7 +2,7 @@ import TimeSlotInput from '../components/Schedule/TimeSlotInput';
 import ScheduleBox from '../components/Schedule/ScheduleBox';
 import Toggle from '../components/Toggle';
 import { useAppDispatch } from '../redux/store';
-import { toggleReadOnly } from '../redux/feats/timeSlot/timeSlotSlice';
+import { toggleReadOnly } from '../redux/feats/globalSlice/globalSlice';
 const Schedule = () => {
   const dispatch = useAppDispatch();
   dispatch(toggleReadOnly(false));

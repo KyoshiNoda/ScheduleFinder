@@ -90,13 +90,41 @@ class FriendController {
                         message: `User ${userID} not found`,
                     });
                 }
-                for (const friendID of user.friendRequests) {
+                for (const friendID of user.receivedFriendRequests) {
                     let friend = yield userModel_1.default.findOne({ _id: friendID }).exec();
                     if (friend) {
                         userFriendRequests.push(friend);
                     }
                 }
                 res.send(userFriendRequests);
+            }
+            catch (err) {
+                console.error(err);
+                res.status(500).send({
+                    message: `Error while getting User ${userID}`,
+                    error: err,
+                });
+            }
+        });
+    }
+    static getPendingFriendRequests(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data._id;
+            let sentFriendRequests = [];
+            try {
+                const user = yield userModel_1.default.findOne({ _id: userID }).exec();
+                if (!user) {
+                    return res.status(404).send({
+                        message: `User ${userID} not found`,
+                    });
+                }
+                for (const friendID of user.sentFriendRequests) {
+                    let friend = yield userModel_1.default.findOne({ _id: friendID }).exec();
+                    if (friend) {
+                        sentFriendRequests.push(friend);
+                    }
+                }
+                res.send(sentFriendRequests);
             }
             catch (err) {
                 console.error(err);
@@ -119,13 +147,23 @@ class FriendController {
                         message: "One of the users doesn't exist!",
                     });
                 }
-                if (!user.friendRequests.includes(friendID)) {
-                    user.friendRequests.push(friendID);
+                if (!user.sentFriendRequests.includes(friendID)) {
+                    user.sentFriendRequests.push(friendID);
                     yield user.save();
                 }
-                if (!friend.friendRequests.includes(userID)) {
-                    friend.friendRequests.push(userID);
+                else {
+                    return res.status(404).send({
+                        message: 'Friend Request Already Send!',
+                    });
+                }
+                if (!friend.receivedFriendRequests.includes(userID)) {
+                    friend.receivedFriendRequests.push(userID);
                     yield friend.save();
+                }
+                else {
+                    return res.status(404).send({
+                        message: 'Friend Request Already Send!',
+                    });
                 }
                 return res.status(200).send({
                     message: 'Friend request sent successfully!',
@@ -152,12 +190,12 @@ class FriendController {
                         message: "One of the users doesn't exist!",
                     });
                 }
-                if (user.friendRequests.includes(friendID)) {
-                    user.friendRequests = user.friendRequests.filter((id) => id !== friendID);
+                if (user.receivedFriendRequests.includes(friendID)) {
+                    user.receivedFriendRequests = user.receivedFriendRequests.filter((id) => id !== friendID);
                     yield user.save();
                 }
-                if (friend.friendRequests.includes(userID)) {
-                    friend.friendRequests = friend.friendRequests.filter((id) => id !== userID);
+                if (friend.sentFriendRequests.includes(userID)) {
+                    friend.sentFriendRequests = friend.sentFriendRequests.filter((id) => id !== userID);
                     yield friend.save();
                 }
                 return res.status(200).send({
@@ -185,20 +223,25 @@ class FriendController {
                         message: "One of the users doesn't exist!",
                     });
                 }
-                if (!user.friendRequests.includes(friendID) ||
-                    !friend.friendRequests.includes(userID)) {
+                if (!user.receivedFriendRequests.includes(friendID) ||
+                    !friend.sentFriendRequests.includes(userID)) {
                     return res.status(404).send({
                         message: 'Missing Friend Request',
                     });
                 }
                 user.friends.push(friendID);
-                user.friendRequests = user.friendRequests.filter((id) => id !== friendID);
+                user.receivedFriendRequests = user.receivedFriendRequests.filter((id) => id !== friendID);
                 yield user.save();
                 friend.friends.push(userID);
-                friend.friendRequests = friend.friendRequests.filter((id) => id !== userID);
+                friend.sentFriendRequests = friend.sentFriendRequests.filter((id) => id !== userID);
                 yield friend.save();
+                const updatedUser = yield userModel_1.default.findOne({ _id: userID }).exec();
+                const updatedUserFriendRequests = yield userModel_1.default.find({
+                    _id: { $in: updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.receivedFriendRequests },
+                }).exec();
                 res.status(200).send({
                     message: 'Added friend successfully!',
+                    updatedFriendRequests: updatedUserFriendRequests,
                 });
             }
             catch (err) {
@@ -222,12 +265,17 @@ class FriendController {
                         message: "One of the users doesn't exist!",
                     });
                 }
-                user.friendRequests = user.friendRequests.filter((id) => id !== friendID);
+                user.receivedFriendRequests = user.receivedFriendRequests.filter((id) => id !== friendID);
                 yield user.save();
-                friend.friendRequests = friend.friendRequests.filter((id) => id !== userID);
+                friend.sentFriendRequests = friend.sentFriendRequests.filter((id) => id !== userID);
                 yield friend.save();
+                const updatedUser = yield userModel_1.default.findOne({ _id: userID }).exec();
+                const updatedUserFriendRequests = yield userModel_1.default.find({
+                    _id: { $in: updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.receivedFriendRequests },
+                }).exec();
                 res.status(200).send({
                     message: 'Friend Request was ignored!',
+                    updatedFriendRequests: updatedUserFriendRequests,
                 });
             }
             catch (err) {

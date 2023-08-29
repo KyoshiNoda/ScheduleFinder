@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Modal, Button, Label, TextInput } from 'flowbite-react';
+import { Modal, Button, Label, TextInput, Spinner } from 'flowbite-react';
 import { useChangePasswordMutation } from '../../../redux/services/user/userService';
 import {
   useGetUserInfoQuery,
@@ -171,7 +171,9 @@ const ProfileTab: any = () => {
           </div>
         </>
       ) : isLoading ? (
-        <div>Loading...</div>
+        <div className = 'flex justify-center'>
+          <Spinner aria-label="Profile loading spinner" size="xl" />
+        </div>
       ) : (
         <div>User information not available.</div>
       )}

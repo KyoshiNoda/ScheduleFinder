@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import {
-  useGetUserFriendQuery,
+  useGetUserFriendsQuery,
   useDeleteFriendMutation,
 } from '../../../redux/services/user/userService';
 import { User as UserType } from '../../../types';
 import { useNavigate } from 'react-router-dom';
-import { Button, Modal } from 'flowbite-react';
+import { Button, Modal, Spinner } from 'flowbite-react';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 const FriendsTab = () => {
-  const { data, isLoading } = useGetUserFriendQuery('User');
+  const { data, isLoading } = useGetUserFriendsQuery('User');
   const [friends, setFriends] = useState<UserType[]>();
   const [deleteFriend] = useDeleteFriendMutation();
   const [openModal, setOpenModal] = useState<string | undefined>();
@@ -103,7 +103,7 @@ const FriendsTab = () => {
           );
         })
       ) : (
-        <div>still rendering</div>
+        <Spinner aria-label="Friends loading spinner" size="xl" />
       )}
     </div>
   );
