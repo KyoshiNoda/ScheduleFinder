@@ -7,7 +7,7 @@ import {
 } from '../../../redux/services/user/userService';
 import { User as UserType } from '../../../types';
 import ProfilePic from './ProfilePic';
-function ProfileTab() {
+const ProfileTab: any = () => {
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
   const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
@@ -179,6 +179,6 @@ function ProfileTab() {
       )}
     </div>
   );
-}
+};
 
 export default ProfileTab;

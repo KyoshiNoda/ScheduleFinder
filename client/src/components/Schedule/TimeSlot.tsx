@@ -27,7 +27,7 @@ type Props = {
   days: DaysCheckedType;
 };
 
-function TimeSlot(props: Props) {
+const TimeSlot: any = (props: Props) => {
   const { data, isFetching, refetch } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
@@ -38,7 +38,7 @@ function TimeSlot(props: Props) {
   }
 
   // Check if the time slot is readonly
-  const readOnly: boolean = useAppSelector((state) => state.globalSlice.readOnly);
+  const readOnly: boolean = useAppSelector((state: any) => state.globalSlice.readOnly);
 
   const [deleteTimeSlotMutation] = useDeleteTimeSlotMutation();
   const [updateTimeSlotMutation] = useUpdateTimeSlotMutation();
@@ -431,6 +431,6 @@ function TimeSlot(props: Props) {
       </div>
     </>
   );
-}
+};
 
 export default TimeSlot;

@@ -7,7 +7,7 @@ import { User as UserType } from '../../../types';
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal, Spinner } from 'flowbite-react';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-function FriendsTab() {
+const FriendsTab = () => {
   const { data, isLoading } = useGetUserFriendsQuery('User');
   const [friends, setFriends] = useState<UserType[]>();
   const [deleteFriend] = useDeleteFriendMutation();
@@ -107,6 +107,6 @@ function FriendsTab() {
       )}
     </div>
   );
-}
+};
 
 export default FriendsTab;

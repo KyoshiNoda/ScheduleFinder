@@ -6,7 +6,7 @@ import {
 import { Dropdown } from 'flowbite-react';
 import { User as UserType } from '../../../types';
 
-function PersonalTab() {
+const  PersonalTab = () => {
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
   const [updateUser] = useUpdateUserInfoMutation();
