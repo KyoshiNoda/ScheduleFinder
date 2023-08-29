@@ -375,7 +375,7 @@ const TimeSlotInput = () => {
               </div>
               <button
                 type="submit"
-                className="w-full rounded-full bg-blue-400 px-8 py-3 text-lg font-semibold text-white dark:bg-slate-300 dark:text-black"
+                className="w-full rounded-full bg-blue-400 hover:bg-blue-600 px-8 py-3 text-lg font-semibold text-white dark:bg-slate-300 hover:dark:bg-slate-400 dark:text-black"
               >
                 Submit
               </button>

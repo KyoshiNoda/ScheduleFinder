@@ -395,14 +395,14 @@ const TimeSlot: any = (props: Props) => {
             </div>
             <button
               type="submit"
-              className="w-full rounded-full bg-green-400 px-8 py-3 text-lg font-semibold text-white dark:bg-green-700 dark:text-white"
+              className="w-full rounded-full bg-green-400 hover:bg-green-600 hover:dark:bg-green-800 px-8 py-3 text-lg font-semibold text-white dark:bg-green-700 dark:text-white"
               onClick={saveHandler}
             >
               Save
             </button>
             <button
               type="submit"
-              className="w-full rounded-full bg-red-500 px-8 py-3 text-lg font-semibold text-white  dark:bg-rose-700 dark:text-white"
+              className="w-full rounded-full bg-red-500 px-8 py-3 text-lg font-semibold text-white hover:bg-red-700 dark:bg-rose-600 hover:dark:bg-rose-800 dark:text-white"
               onClick={deleteHandler}
             >
               Delete
