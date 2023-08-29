@@ -12,36 +12,26 @@ enum Themes {
 }
 
 const Toggle = (props: Props) => {
-  const [theme, setTheme] = useState<string>('');
-  const [toggle, setToggle] = useState<boolean>(false);
 
-  useEffect(() => {
+  const isDarkModeOn = () => {
+    const darkModeStatus = localStorage.getItem('isDarkModeOn'); 
+    if (darkModeStatus) {
+      return JSON.parse(darkModeStatus);
+    }
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const userPrefersDark = mediaQuery.matches;
+    return mediaQuery.matches;
+  };
 
-    if (userPrefersDark) {
-      setTheme(Themes.DARK);
-      setToggle(true);
-    } else {
-      setTheme(Themes.LIGHT);
-      setToggle(false);
-    }
-  }, []);
+  const [theme, setTheme] = useState<string>('');
+  const [userPrefersDark, setUserPrefersDark] = useState<boolean>(isDarkModeOn());
+  const [toggle, setToggle] = useState<boolean>(isDarkModeOn());
 
-  useEffect(() => {
-    if (theme === Themes.DARK) {
-      document.documentElement.classList.add('dark');
-      setToggle(true);
-    } 
-    
-    if (theme === Themes.LIGHT) {
-      document.documentElement.classList.remove('dark');
-      setToggle(false);
-    }
-  }, [theme]);
+  userPrefersDark ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
 
   const handleThemeSwitch = () => {
     setTheme(theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
+    setUserPrefersDark(!userPrefersDark);
+    localStorage.setItem('isDarkModeOn', JSON.stringify(!userPrefersDark));
     props.getTheme?.(theme);
   };
 
@@ -52,7 +42,10 @@ const Toggle = (props: Props) => {
 
   return (
     <div className="flex gap-1">
-      <FiSun size="20" color={theme === Themes.DARK ? Themes.LIGHT : Themes.DARK} />
+      <FiSun
+        size="20"
+        color={userPrefersDark ? Themes.LIGHT : Themes.DARK}
+      />
 
       <div>
         <label className="relative mb-5 inline-flex cursor-pointer items-center">
@@ -65,7 +58,10 @@ const Toggle = (props: Props) => {
           <div className="peer h-5 w-9 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
         </label>
       </div>
-      <FaRegMoon size="20" color={theme === Themes.DARK ? Themes.LIGHT : Themes.DARK} />
+      <FaRegMoon
+        size="20"
+        color={userPrefersDark ? Themes.LIGHT : Themes.DARK}
+      />
     </div>
   );
 };
