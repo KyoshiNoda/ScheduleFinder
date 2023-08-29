@@ -99,7 +99,7 @@ const LoginForm = () => {
         </div>
         <button
           type="submit"
-          className="block w-full rounded-sm bg-blue-400 p-3 text-center font-bold text-white dark:bg-slate-300 dark:text-gray-900"
+          className="block w-full bg-blue-400 p-3 text-center font-bold text-white first-letter:rounded-sm hover:bg-blue-600 dark:bg-slate-300 dark:text-gray-900 dark:hover:bg-slate-400"
         >
           Sign in
         </button>

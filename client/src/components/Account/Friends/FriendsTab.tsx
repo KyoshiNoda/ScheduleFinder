@@ -93,7 +93,7 @@ const FriendsTab = () => {
               <div className="ml-auto flex items-center">
                 <button
                   type="button"
-                  className="rounded-lg bg-red-600 px-3 py-3 font-semibold text-white"
+                  className="rounded-lg bg-red-500 hover:bg-red-700 hover:dark:bg-red-700 px-3 py-3 font-semibold text-white"
                   onClick={() => tempFriendHandler(friend._id)}
                 >
                   Remove
