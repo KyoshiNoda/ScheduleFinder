@@ -26,7 +26,7 @@ const ClearScheduleButton = ({ scheduleId }: Props) => {
         onClose={() => setOpenModal(false)}
       >
         <Modal.Body className="py-20">
-          <p className="text-center text-2xl text-white">
+          <p className="text-center text-2xl dark:text-white">
             Are you sure you want to clear your schedule?
           </p>
           <div className="mt-5 flex justify-center">
