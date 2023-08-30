@@ -3,13 +3,12 @@ import Toggle from '../components/Toggle';
 import scheduleImg from '../assets/schedule.png';
 import { AiFillGithub } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
+import { isDarkModeOn } from '../utils/functions';
+import { Themes } from '../enums';
 
 const LandingPage = () => {
-  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-  const [theme, setTheme] = useState<string>(
-    mediaQuery.matches ? 'white' : 'black'
-  );
+  const [theme, setTheme] = useState<string>(isDarkModeOn() ? Themes.LIGHT : Themes.DARK);
 
   return (
     <div className="flex min-h-full w-full flex-col gap-6 bg-slate-100 p-3 dark:bg-slate-900">
