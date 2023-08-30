@@ -1,38 +1,24 @@
 import { FiSun } from 'react-icons/fi';
 import { FaRegMoon } from 'react-icons/fa';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { isDarkModeOn } from '../utils/functions';
+import { Themes } from '../enums';
 
 type Props = {
   getTheme?: (theme: string) => void;
 };
 
-enum Themes {
-  DARK = 'black',
-  LIGHT = 'white',
-}
-
 const Toggle = (props: Props) => {
 
-  const isDarkModeOn = () => {
-    const darkModeStatus = localStorage.getItem('isDarkModeOn'); 
-    if (darkModeStatus) {
-      return JSON.parse(darkModeStatus);
-    }
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    return mediaQuery.matches;
-  };
-
-  const [theme, setTheme] = useState<string>('');
   const [userPrefersDark, setUserPrefersDark] = useState<boolean>(isDarkModeOn());
   const [toggle, setToggle] = useState<boolean>(isDarkModeOn());
 
   userPrefersDark ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
 
   const handleThemeSwitch = () => {
-    setTheme(theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
     setUserPrefersDark(!userPrefersDark);
     localStorage.setItem('isDarkModeOn', JSON.stringify(!userPrefersDark));
-    props.getTheme?.(theme);
+    props.getTheme?.(userPrefersDark ? Themes.DARK : Themes.LIGHT);
   };
 
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
