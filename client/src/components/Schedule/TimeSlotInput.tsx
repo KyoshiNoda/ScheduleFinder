@@ -23,7 +23,6 @@ export const colors: string[] = [
   'rose',
 ];
 const TimeSlotInput = () => {
-
   // || Refs ||
   const formRef = useRef(document.createElement('form'));
   const titleRef = useRef(document.createElement('input'));
@@ -32,12 +31,10 @@ const TimeSlotInput = () => {
   const wednesdayRef = useRef(document.createElement('input'));
   const thursdayRef = useRef(document.createElement('input'));
   const fridayRef = useRef(document.createElement('input'));
-  const startTimeRef = useRef(document.createElement('input'));
   const startTimeHourRef = useRef(document.createElement('input'));
   const startTimeMinutesRef = useRef(document.createElement('input'));
   const endTimeHourRef = useRef(document.createElement('input'));
   const endTimeMinutesRef = useRef(document.createElement('input'));
-  const endTimeRef = useRef(document.createElement('input'));
   const locationRef = useRef(document.createElement('input'));
   const professorRef = useRef(document.createElement('input'));
 
@@ -50,8 +47,7 @@ const TimeSlotInput = () => {
   const [startTimeMeridiem, setStartTimeMeridiem] = useState<string>('AM');
   const [endTimeMeridiem, setEndTimeMeridiem] = useState<string>('AM');
 
-  const [createTimeSlotMutation, { isError, isLoading }] =
-    useCreateTimeSlotMutation();
+  const [createTimeSlotMutation] = useCreateTimeSlotMutation();
 
   let scheduleID = '';
   const { data, isFetching } = useGetScheduleQuery('schedule', {
@@ -60,6 +56,13 @@ const TimeSlotInput = () => {
   if (!isFetching && data) {
     scheduleID = data[0]._id;
   }
+
+  const validateMinutes = (minutes: string | null) => {
+    if (!minutes || minutes.length === 1) {
+      return `0${minutes}`;
+    }
+    return minutes;
+  };
 
   const addTimeSlot = async (event: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
@@ -87,7 +90,7 @@ const TimeSlotInput = () => {
       saturday: false,
       sunday: false,
     };
-    
+
     if (mondayRef.current.checked) {
       daySelection.monday = true;
       setDaysError(false);
@@ -109,13 +112,10 @@ const TimeSlotInput = () => {
       setDaysError(false);
     }
 
-    const startTime = `${startTimeHourRef.current.value}:${startTimeMinutesRef.current.value} ${startTimeMeridiem}`;
-    const endTime = `${endTimeHourRef.current.value}:${endTimeMinutesRef.current.value} ${endTimeMeridiem}`;
+    const startTime = `${startTimeHourRef.current.value}:${validateMinutes(startTimeMinutesRef.current.value)} ${startTimeMeridiem}`;
+    const endTime = `${endTimeHourRef.current.value}:${validateMinutes(endTimeMinutesRef.current.value)} ${endTimeMeridiem}`;
 
-    if (
-      convertTo24Hour(startTime) >
-      convertTo24Hour(endTime)
-    ) {
+    if (convertTo24Hour(startTime) > convertTo24Hour(endTime)) {
       setTimeError(true);
       return;
     }
@@ -124,14 +124,7 @@ const TimeSlotInput = () => {
       return;
     }
 
-    if (
-      !validTimeSlot(
-        startTime,
-        endTime,
-        data[0].timeSlot,
-        daySelection
-      )
-    ) {
+    if (!validTimeSlot(startTime, endTime, data[0].timeSlot, daySelection)) {
       setTimeSlotError(true);
       return;
     }
@@ -297,9 +290,7 @@ const TimeSlotInput = () => {
                   </li>
                 </ul>
                 <div className="flex w-full justify-center">
-                  {daysError && (
-                    <p className="text-rose-500">Please pick a day!</p>
-                  )}
+                  {daysError && <p className="text-rose-500">Please pick a day!</p>}
                 </div>
               </div>
               <div className="flex flex-col">
@@ -314,23 +305,25 @@ const TimeSlotInput = () => {
                     <div className="space-x-2">
                       <input
                         ref={startTimeHourRef}
-                        type="text"
+                        type="number"
                         id="title"
                         className={`inline-block w-1/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
                           timeError && 'border-rose-500'
                         }`}
                         placeholder="12"
+                        maxLength={2}
                         required
                       />
                       <span className="text-black dark:text-white">:</span>
                       <input
                         ref={startTimeMinutesRef}
-                        type="text"
+                        type="number"
                         id="title"
                         className={`inline-block w-1/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
                           timeError && 'border-rose-500'
                         }`}
                         placeholder="00"
+                        maxLength={2}
                         required
                       />
                     </div>
@@ -357,23 +350,25 @@ const TimeSlotInput = () => {
                     <div className="space-x-2">
                       <input
                         ref={endTimeHourRef}
-                        type="text"
+                        type="number"
                         id="title"
                         className={`inline-block w-1/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
                           timeError && 'border-rose-500'
                         }`}
                         placeholder="12"
+                        maxLength={2}
                         required
                       />
                       <span className="text-black dark:text-white">:</span>
                       <input
                         ref={endTimeMinutesRef}
-                        type="text"
+                        type="number"
                         id="title"
                         className={`inline-block w-1/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
                           timeError && 'border-rose-500'
                         }`}
                         placeholder="00"
+                        maxLength={2}
                         required
                       />
                     </div>
@@ -430,18 +425,14 @@ const TimeSlotInput = () => {
                         onClick={() => setTimeSlotColor(color)}
                         key={color}
                         className={`bg-${color}-400 h-8 w-8 cursor-pointer rounded-full border-4 lg:h-10 lg:w-10 ${
-                          timeSlotColor === color
-                            ? 'border-blue-700'
-                            : 'border-none'
+                          timeSlotColor === color ? 'border-blue-700' : 'border-none'
                         }`}
                       />
                     ))}
                   </div>
                 </div>
                 {colorError && (
-                  <p className="text-center font-bold text-rose-500">
-                    Please pick a color!
-                  </p>
+                  <p className="text-center font-bold text-rose-500">Please pick a color!</p>
                 )}
               </div>
               <button
@@ -493,4 +484,5 @@ const TimeSlotInput = () => {
     </>
   );
 };
+
 export default TimeSlotInput;
