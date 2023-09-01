@@ -23,6 +23,8 @@ export const colors: string[] = [
   'rose',
 ];
 const TimeSlotInput = () => {
+
+  // || Refs ||
   const formRef = useRef(document.createElement('form'));
   const titleRef = useRef(document.createElement('input'));
   const mondayRef = useRef(document.createElement('input'));
@@ -33,20 +35,24 @@ const TimeSlotInput = () => {
   const startTimeRef = useRef(document.createElement('input'));
   const startTimeHourRef = useRef(document.createElement('input'));
   const startTimeMinutesRef = useRef(document.createElement('input'));
-  const startTimeMeridiemRef = useRef(document.createElement('input'));
   const endTimeHourRef = useRef(document.createElement('input'));
   const endTimeMinutesRef = useRef(document.createElement('input'));
-  const endTimeMeridiemRef = useRef(document.createElement('input'));
   const endTimeRef = useRef(document.createElement('input'));
   const locationRef = useRef(document.createElement('input'));
   const professorRef = useRef(document.createElement('input'));
+
+  // || Local State ||
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
   const [daysError, setDaysError] = useState<boolean>(false);
   const [timeError, setTimeError] = useState<boolean>(false);
   const [colorError, setColorError] = useState<boolean>(false);
   const [timeSlotError, setTimeSlotError] = useState<boolean>(false);
+  const [startTimeMeridiem, setStartTimeMeridiem] = useState<string>('AM');
+  const [endTimeMeridiem, setEndTimeMeridiem] = useState<string>('AM');
+
   const [createTimeSlotMutation, { isError, isLoading }] =
     useCreateTimeSlotMutation();
+
   let scheduleID = '';
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
@@ -54,8 +60,9 @@ const TimeSlotInput = () => {
   if (!isFetching && data) {
     scheduleID = data[0]._id;
   }
+
   const addTimeSlot = async (event: React.FormEvent<HTMLFormElement>) => {
-    event?.preventDefault(); 
+    event?.preventDefault();
 
     // If no checkboxes have been selected, the form shouldn't be submitted.
     if (
@@ -70,6 +77,7 @@ const TimeSlotInput = () => {
       setDaysError(true);
       return;
     }
+
     const daySelection: DaysChecked = {
       monday: false,
       tuesday: false,
@@ -79,6 +87,7 @@ const TimeSlotInput = () => {
       saturday: false,
       sunday: false,
     };
+    
     if (mondayRef.current.checked) {
       daySelection.monday = true;
       setDaysError(false);
@@ -99,9 +108,13 @@ const TimeSlotInput = () => {
       daySelection.friday = true;
       setDaysError(false);
     }
+
+    const startTime = `${startTimeHourRef.current.value}:${startTimeMinutesRef.current.value} ${startTimeMeridiem}`;
+    const endTime = `${endTimeHourRef.current.value}:${endTimeMinutesRef.current.value} ${endTimeMeridiem}`;
+
     if (
-      convertTo24Hour(startTimeRef.current.value) >
-      convertTo24Hour(endTimeRef.current.value)
+      convertTo24Hour(startTime) >
+      convertTo24Hour(endTime)
     ) {
       setTimeError(true);
       return;
@@ -110,10 +123,11 @@ const TimeSlotInput = () => {
       setColorError(true);
       return;
     }
+
     if (
       !validTimeSlot(
-        startTimeRef.current.value,
-        endTimeRef.current.value,
+        startTime,
+        endTime,
         data[0].timeSlot,
         daySelection
       )
@@ -121,15 +135,17 @@ const TimeSlotInput = () => {
       setTimeSlotError(true);
       return;
     }
+
     const currentTimeSlot: TimeSlotType = {
       days: daySelection,
       title: titleRef.current.value,
-      startTime: startTimeRef.current.value,
-      endTime: endTimeRef.current.value,
+      startTime: startTime,
+      endTime: endTime,
       location: locationRef.current.value || null,
       professor: professorRef.current.value || null,
       color: timeSlotColor,
     };
+
     try {
       const result = await createTimeSlotMutation({
         scheduleId: scheduleID,
@@ -146,6 +162,19 @@ const TimeSlotInput = () => {
     }
     formRef.current.reset();
   };
+
+  const handleStartTimeMeridiemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStartTimeMeridiem(e.target.value);
+
+    if (e.target.value === 'PM') {
+      setEndTimeMeridiem('PM');
+    }
+  };
+
+  const handleEndTimeMeridiemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setEndTimeMeridiem(e.target.value);
+  };
+
   return (
     <>
       {!isFetching && data && (
@@ -305,8 +334,15 @@ const TimeSlotInput = () => {
                         required
                       />
                     </div>
-                    <Select id="startMeridiemTime" className="w-1/3" required>
-                      <option>AM</option> <option>PM</option>
+                    <Select
+                      value={startTimeMeridiem}
+                      onChange={(e) => handleStartTimeMeridiemChange(e)}
+                      id="startMeridiemTime"
+                      className="w-1/3"
+                      required
+                    >
+                      <option value="AM">AM</option>
+                      <option value="PM">PM</option>
                     </Select>
                   </div>
                 </div>
@@ -341,8 +377,15 @@ const TimeSlotInput = () => {
                         required
                       />
                     </div>
-                    <Select id="startMeridiemTime" className="w-1/3" required>
-                      <option>AM</option> <option>PM</option>
+                    <Select
+                      value={endTimeMeridiem}
+                      onChange={(e) => handleEndTimeMeridiemChange(e)}
+                      id="startMeridiemTime"
+                      className="w-1/3"
+                      required
+                    >
+                      <option value="AM">AM</option>
+                      <option value="PM">PM</option>
                     </Select>
                   </div>
                 </div>

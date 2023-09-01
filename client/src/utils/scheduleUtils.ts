@@ -11,7 +11,8 @@ export function convertTo24Hour(time12: any) {
     hour = 0;
   }
   return hour * 60 + parseInt(minute);
-}
+};
+
 export function isBetween(
   startTime: string,
   endTime: string,
@@ -21,7 +22,7 @@ export function isBetween(
   const end = new Date(`2022-01-01 ${endTime}`);
   const target = new Date(`2022-01-01 ${targetTime}`);
   return start <= target && target <= end;
-}
+};
 
 export function validTimeSlot(
   startTime: string,
@@ -68,4 +69,4 @@ export function validTimeSlot(
     }
   });
   return result;
-}
+};
