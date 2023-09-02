@@ -9,9 +9,10 @@ import {
 import { User as UserType } from '../types';
 import { Spinner } from 'flowbite-react';
 import { Link } from 'react-router-dom';
-function FriendRequest() {
+const FriendRequest = () => {
   const { data, isLoading } = useGetUserFriendRequestsQuery('User');
-  const [receivedFriendRequests , setReceivedFriendRequests] = useState<UserType[]>();
+  const [receivedFriendRequests, setReceivedFriendRequests] =
+    useState<UserType[]>();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
   const [rejectFriendRequest] = useRejectFriendRequestMutation();
@@ -124,6 +125,6 @@ function FriendRequest() {
       )}
     </div>
   );
-}
+};
 
 export default FriendRequest;

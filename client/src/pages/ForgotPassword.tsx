@@ -7,7 +7,7 @@ import {
   emailCheck,
   resetPasswordRequest,
 } from '../redux/feats/auth/authActions';
-function ForgotPassword() {
+const ForgotPassword = () => {
   const dispatch = useAppDispatch();
   const [isInvalidEmail, setIsInvalidEmail] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
@@ -72,7 +72,7 @@ function ForgotPassword() {
             <div className="flex justify-center">
               <button
                 type="button"
-                className="w-1/2 rounded-xl bg-blue-400 px-8 py-3 text-lg font-semibold text-white dark:bg-slate-300 dark:text-black"
+                className="w-1/2 rounded-xl bg-blue-400 px-8 py-3 text-lg font-semibold text-white hover:bg-blue-600 dark:bg-slate-300 dark:text-black hover:dark:bg-slate-400"
                 onClick={checkEmailHandler}
               >
                 Send Email
@@ -83,6 +83,6 @@ function ForgotPassword() {
       </div>
     </div>
   );
-}
+};
 
 export default ForgotPassword;

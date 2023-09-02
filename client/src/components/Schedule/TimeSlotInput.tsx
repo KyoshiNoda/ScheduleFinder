@@ -22,8 +22,9 @@ export const colors: string[] = [
   'fuchsia',
   'rose',
 ];
+
 const TimeSlotInput = () => {
-  // || Refs ||
+  // || Refs || 
   const formRef = useRef(document.createElement('form'));
   const titleRef = useRef(document.createElement('input'));
   const mondayRef = useRef(document.createElement('input'));
@@ -437,7 +438,7 @@ const TimeSlotInput = () => {
               </div>
               <button
                 type="submit"
-                className="w-full rounded-full bg-blue-400 px-8 py-3 text-lg font-semibold text-white hover:bg-blue-600 dark:bg-slate-300 dark:text-black hover:dark:bg-slate-400"
+                className="w-full rounded-full bg-blue-400 hover:bg-blue-600 px-8 py-3 text-lg font-semibold text-white dark:bg-slate-300 hover:dark:bg-slate-400 dark:text-black"
               >
                 Submit
               </button>

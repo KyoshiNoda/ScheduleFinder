@@ -10,8 +10,7 @@ enum TabType {
   FRIENDS = 'Friends',
 }
 
-function AccountBox() {
-
+const AccountBox = () => {
   const [currentTab, setCurrentTab] = useState<string | null>('Profile');
 
   const tabHandler = (tab: string | null) => {
@@ -26,6 +25,6 @@ function AccountBox() {
       {currentTab === TabType.FRIENDS && <FriendsTab />}
     </div>
   );
-}
+};
 
 export default AccountBox;

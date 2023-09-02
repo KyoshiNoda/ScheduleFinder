@@ -1,6 +1,4 @@
-type Props = {};
-
-function GoogleAuth({}: Props) {
+const GoogleAuth = () => {
   return (
     <div className="flex justify-center space-x-4">
       <button aria-label="Log in with Google" className="rounded-sm p-3">

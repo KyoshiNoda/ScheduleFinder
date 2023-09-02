@@ -6,7 +6,7 @@ import {
   useRejectFriendRequestMutation,
 } from '../redux/services/user/userService';
 import { Spinner } from 'flowbite-react';
-function Notifications() {
+const Notifications = () => {
   const { data, isFetching } = useGetUserFriendRequestsQuery('User');
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
   const [rejectFriendRequest] = useRejectFriendRequestMutation();
@@ -31,9 +31,11 @@ function Notifications() {
       <div className="flex justify-end">
         <Toggle />
       </div>
-      <div className='flex justify-center text-3xl dark:text-white text-bold'>Friend Requests</div>
+      <div className="text-bold flex justify-center text-3xl dark:text-white">
+        Friend Requests
+      </div>
       <div className="flex justify-center">
-        <div className="flex w-full lg:h-1/2 lg:w-1/2 flex-col items-center rounded-lg bg-white dark:bg-slate-800 pt-3">
+        <div className="flex w-full flex-col items-center rounded-lg bg-white pt-3 dark:bg-slate-800 lg:h-1/2 lg:w-1/2">
           {!isFetching ? (
             data.map((user: any) => {
               return (
@@ -78,6 +80,6 @@ function Notifications() {
       </div>
     </div>
   );
-}
+};
 
 export default Notifications;

@@ -6,7 +6,7 @@ import {
 import { Dropdown } from 'flowbite-react';
 import { User as UserType } from '../../../types';
 
-function PersonalTab() {
+const  PersonalTab = () => {
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
   const [updateUser] = useUpdateUserInfoMutation();
@@ -189,7 +189,7 @@ function PersonalTab() {
             type="button"
             onClick={saveHandler}
             form="changes"
-            className="w-full rounded-full bg-blue-600 px-8 py-3 font-semibold text-white"
+            className="w-full rounded-full bg-blue-600 hover:bg-blue-800 px-8 py-3 font-semibold text-white hover:dark:bg-blue-800"
           >
             Save Changes
           </button>

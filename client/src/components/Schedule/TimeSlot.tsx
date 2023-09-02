@@ -27,7 +27,7 @@ type Props = {
   days: DaysCheckedType;
 };
 
-function TimeSlot(props: Props) {
+const TimeSlot: any = (props: Props) => {
   const { data, isFetching, refetch } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
@@ -38,7 +38,7 @@ function TimeSlot(props: Props) {
   }
 
   // Check if the time slot is readonly
-  const readOnly: boolean = useAppSelector((state) => state.globalSlice.readOnly);
+  const readOnly: boolean = useAppSelector((state: any) => state.globalSlice.readOnly);
 
   const [deleteTimeSlotMutation] = useDeleteTimeSlotMutation();
   const [updateTimeSlotMutation] = useUpdateTimeSlotMutation();
@@ -395,14 +395,14 @@ function TimeSlot(props: Props) {
             </div>
             <button
               type="submit"
-              className="w-full rounded-full bg-green-400 px-8 py-3 text-lg font-semibold text-white dark:bg-green-700 dark:text-white"
+              className="w-full rounded-full bg-green-400 hover:bg-green-600 hover:dark:bg-green-800 px-8 py-3 text-lg font-semibold text-white dark:bg-green-700 dark:text-white"
               onClick={saveHandler}
             >
               Save
             </button>
             <button
               type="submit"
-              className="w-full rounded-full bg-red-500 px-8 py-3 text-lg font-semibold text-white  dark:bg-rose-700 dark:text-white"
+              className="w-full rounded-full bg-red-500 px-8 py-3 text-lg font-semibold text-white hover:bg-red-700 dark:bg-rose-600 hover:dark:bg-rose-800 dark:text-white"
               onClick={deleteHandler}
             >
               Delete
@@ -431,6 +431,6 @@ function TimeSlot(props: Props) {
       </div>
     </>
   );
-}
+};
 
 export default TimeSlot;

@@ -6,7 +6,7 @@ type Props = {
   timeSlots: TimeSlotType[] | undefined;
 };
 
-function ScheduleBox({ timeSlots }: Props) {
+const ScheduleBox = ({ timeSlots }: Props) => {
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
@@ -329,6 +329,6 @@ function ScheduleBox({ timeSlots }: Props) {
       </div>
     </>
   );
-}
+};
 
 export default ScheduleBox;

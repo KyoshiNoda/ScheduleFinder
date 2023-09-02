@@ -4,9 +4,9 @@ import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { Label, Button } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
 
-function ChangePassword() {
+const ChangePassword = () => {
   const dispatch = useAppDispatch();
-  const email = useAppSelector((state) => state.auth.email);
+  const email = useAppSelector((state: any) => state.auth.email);
   const navigate = useNavigate();
 
   const newPassword = useRef(document.createElement('input'));
@@ -85,6 +85,6 @@ function ChangePassword() {
       </div>
     </div>
   );
-}
+};
 
 export default ChangePassword;
