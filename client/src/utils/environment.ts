@@ -1,6 +1,6 @@
 export const getApiUrl = (): string => {
   // When merging, change this to the current environment
-  let environment = 'prod';
+  let environment = 'dev';
 
   let apiUrl = '';
 
