@@ -173,7 +173,7 @@ const TimeSlotInput = () => {
       {!isFetching && data && (
         <div className="flex flex-col">
           <ClearScheduleButton scheduleId={scheduleID} />
-          <div className="mt-6 flex  flex-col rounded-lg bg-slate-50 p-5 dark:bg-black sm:h-1/2">
+          <div className="mt-6 flex flex-col rounded-lg bg-slate-50 p-5 dark:bg-black">
             <form ref={formRef} onSubmit={addTimeSlot} className="space-y-2">
               <div>
                 <label
@@ -294,7 +294,7 @@ const TimeSlotInput = () => {
                 </div>
               </div>
               <div className="flex flex-col">
-                <div>
+                <div className='mb-2'>
                   <label
                     htmlFor="startTime"
                     className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
@@ -307,7 +307,7 @@ const TimeSlotInput = () => {
                         ref={startTimeHourRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-1/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
                           timeError && 'border-rose-500'
                         }`}
                         placeholder="12"
@@ -319,7 +319,7 @@ const TimeSlotInput = () => {
                         ref={startTimeMinutesRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-1/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
                           timeError && 'border-rose-500'
                         }`}
                         placeholder="00"
@@ -331,7 +331,7 @@ const TimeSlotInput = () => {
                       value={startTimeMeridiem}
                       onChange={(e) => handleStartTimeMeridiemChange(e)}
                       id="startMeridiemTime"
-                      className="w-1/3"
+                      className="w-3/5"
                       required
                     >
                       <option value="AM">AM</option>
@@ -352,7 +352,7 @@ const TimeSlotInput = () => {
                         ref={endTimeHourRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-1/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
                           timeError && 'border-rose-500'
                         }`}
                         placeholder="12"
@@ -364,7 +364,7 @@ const TimeSlotInput = () => {
                         ref={endTimeMinutesRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-1/3 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
+                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
                           timeError && 'border-rose-500'
                         }`}
                         placeholder="00"
@@ -376,7 +376,7 @@ const TimeSlotInput = () => {
                       value={endTimeMeridiem}
                       onChange={(e) => handleEndTimeMeridiemChange(e)}
                       id="startMeridiemTime"
-                      className="w-1/3"
+                      className="w-3/5"
                       required
                     >
                       <option value="AM">AM</option>
@@ -385,7 +385,7 @@ const TimeSlotInput = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex gap-12">
+              <div className="flex gap-3">
                 <div className="w-full">
                   <label
                     htmlFor="location"
@@ -401,7 +401,7 @@ const TimeSlotInput = () => {
                     placeholder="Whitman Hall"
                   />
                 </div>
-                <div className="w-1/2">
+                <div className="w-full">
                   <label
                     htmlFor="professor"
                     className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
