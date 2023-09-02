@@ -99,7 +99,6 @@ const CompareSchedule = () => {
 
   const findFreeIntervals = (timeSlots: TimeSlotType[], day: string) => {
     timeSlots.sort(compareTimeSlots);
-    if (timeSlots.length < 2) return timeSlots;
 
     const free: TimeSlotType[] = [];
     let combined: TimeSlotType[] = [...timeSlots];
