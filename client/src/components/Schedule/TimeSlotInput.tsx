@@ -24,7 +24,7 @@ export const colors: string[] = [
 ];
 
 const TimeSlotInput = () => {
-  // || Refs || 
+  // || Refs ||
   const formRef = useRef(document.createElement('form'));
   const titleRef = useRef(document.createElement('input'));
   const mondayRef = useRef(document.createElement('input'));
@@ -173,14 +173,11 @@ const TimeSlotInput = () => {
     <>
       {!isFetching && data && (
         <div className="flex flex-col">
-          <ClearScheduleButton scheduleId={scheduleID} />
+          <ClearScheduleButton scheduleId={scheduleID} currentSchedule={data} />
           <div className="mt-6 flex flex-col rounded-lg bg-slate-50 p-5 dark:bg-black">
             <form ref={formRef} onSubmit={addTimeSlot} className="space-y-2">
               <div>
-                <label
-                  htmlFor="title"
-                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                >
+                <label htmlFor="title" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                   Title
                 </label>
                 <input
@@ -193,10 +190,7 @@ const TimeSlotInput = () => {
                 />
               </div>
               <div className="mt-2">
-                <label
-                  htmlFor="days"
-                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                >
+                <label htmlFor="days" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                   Days
                 </label>
                 <ul
@@ -213,10 +207,7 @@ const TimeSlotInput = () => {
                         value="monday"
                         className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                       />
-                      <label
-                        htmlFor="monday"
-                        className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                      >
+                      <label htmlFor="monday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                         Mon
                       </label>
                     </div>
@@ -230,10 +221,7 @@ const TimeSlotInput = () => {
                         value="tuesday"
                         className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                       />
-                      <label
-                        htmlFor="tuesday"
-                        className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                      >
+                      <label htmlFor="tuesday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                         Tues
                       </label>
                     </div>
@@ -247,10 +235,7 @@ const TimeSlotInput = () => {
                         value="wednesday"
                         className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                       />
-                      <label
-                        htmlFor="wednesday"
-                        className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                      >
+                      <label htmlFor="wednesday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                         Wed
                       </label>
                     </div>
@@ -264,10 +249,7 @@ const TimeSlotInput = () => {
                         value="thursday"
                         className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                       />
-                      <label
-                        htmlFor="thursday"
-                        className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                      >
+                      <label htmlFor="thursday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                         Thurs
                       </label>
                     </div>
@@ -281,25 +263,17 @@ const TimeSlotInput = () => {
                         value="friday"
                         className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                       />
-                      <label
-                        htmlFor="friday"
-                        className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                      >
+                      <label htmlFor="friday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                         Fri
                       </label>
                     </div>
                   </li>
                 </ul>
-                <div className="flex w-full justify-center">
-                  {daysError && <p className="text-rose-500">Please pick a day!</p>}
-                </div>
+                <div className="flex w-full justify-center">{daysError && <p className="text-rose-500">Please pick a day!</p>}</div>
               </div>
               <div className="flex flex-col">
-                <div className='mb-2'>
-                  <label
-                    htmlFor="startTime"
-                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                  >
+                <div className="mb-2">
+                  <label htmlFor="startTime" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                     Start Time
                   </label>
                   <div className="flex items-center">
@@ -341,10 +315,7 @@ const TimeSlotInput = () => {
                   </div>
                 </div>
                 <div>
-                  <label
-                    htmlFor="startTime"
-                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                  >
+                  <label htmlFor="startTime" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                     End Time
                   </label>
                   <div className="flex items-center">
@@ -388,10 +359,7 @@ const TimeSlotInput = () => {
               </div>
               <div className="flex gap-3">
                 <div className="w-full">
-                  <label
-                    htmlFor="location"
-                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                  >
+                  <label htmlFor="location" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                     Location
                   </label>
                   <input
@@ -403,10 +371,7 @@ const TimeSlotInput = () => {
                   />
                 </div>
                 <div className="w-full">
-                  <label
-                    htmlFor="professor"
-                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                  >
+                  <label htmlFor="professor" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                     Professor
                   </label>
                   <input
@@ -432,13 +397,11 @@ const TimeSlotInput = () => {
                     ))}
                   </div>
                 </div>
-                {colorError && (
-                  <p className="text-center font-bold text-rose-500">Please pick a color!</p>
-                )}
+                {colorError && <p className="text-center font-bold text-rose-500">Please pick a color!</p>}
               </div>
               <button
                 type="submit"
-                className="w-full rounded-full bg-blue-400 hover:bg-blue-600 px-8 py-3 text-lg font-semibold text-white dark:bg-slate-300 hover:dark:bg-slate-400 dark:text-black"
+                className="w-full rounded-full bg-blue-400 px-8 py-3 text-lg font-semibold text-white hover:bg-blue-600 dark:bg-slate-300 dark:text-black hover:dark:bg-slate-400"
               >
                 Submit
               </button>
@@ -459,9 +422,7 @@ const TimeSlotInput = () => {
                 <Modal.Body>
                   <div className="text-center">
                     <AiFillWarning className="mx-auto mb-4 h-14 w-14 text-red-400 dark:text-gray-200" />
-                    <h3 className="mb-5 text-lg font-normal text-red-500 dark:text-gray-400">
-                      There is an existing TimeSlot!
-                    </h3>
+                    <h3 className="mb-5 text-lg font-normal text-red-500 dark:text-gray-400">There is an existing TimeSlot!</h3>
                     <div className="flex justify-center gap-4">
                       <Button
                         color="gray"
