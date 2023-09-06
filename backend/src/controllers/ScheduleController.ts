@@ -8,7 +8,7 @@ class ScheduleController {
   public static async getMySchedule(req: any, res: any) {
     const userID: string = req.user.data._id;
     try {
-      const userSchedule = await Schedule.find({ user_id: userID }).exec();
+      const userSchedule = await Schedule.findOne({ user_id: userID }).exec();
       if (!userSchedule) {
         return res.status(404).json({
           message: `Schedule for user ${userID} not found`,
