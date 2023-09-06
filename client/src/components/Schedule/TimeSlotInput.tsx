@@ -55,7 +55,7 @@ const TimeSlotInput = () => {
     pollingInterval: 900000,
   });
   if (!isFetching && data) {
-    scheduleID = data[0]._id;
+    scheduleID = data._id;
   }
 
   const validateMinutes = (minutes: string | null) => {

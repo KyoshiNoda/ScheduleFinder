@@ -34,7 +34,7 @@ const TimeSlot: any = (props: Props) => {
 
   let scheduleID: string;
   if (!isFetching) {
-    scheduleID = data[0]._id;
+    scheduleID = data._id;
   }
 
   // Check if the time slot is readonly

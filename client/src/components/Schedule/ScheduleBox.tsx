@@ -116,7 +116,7 @@ const ScheduleBox = ({ timeSlots }: Props) => {
                     />
                   ))
               : !isFetching &&
-                data[0].timeSlot
+                data.timeSlot
                   .filter((timeSlot: TimeSlotType) => timeSlot.days.monday)
                   .map((timeSlot: TimeSlotType) => (
                     <TimeSlot
@@ -163,7 +163,7 @@ const ScheduleBox = ({ timeSlots }: Props) => {
                     />
                   ))
               : !isFetching &&
-                data[0].timeSlot
+                data.timeSlot
                   .filter((timeSlot: TimeSlotType) => timeSlot.days.tuesday)
                   .map((timeSlot: TimeSlotType) => (
                     <TimeSlot
@@ -210,7 +210,7 @@ const ScheduleBox = ({ timeSlots }: Props) => {
                     />
                   ))
               : !isFetching &&
-                data[0].timeSlot
+                data.timeSlot
                   .filter((timeSlot: TimeSlotType) => timeSlot.days.wednesday)
                   .map((timeSlot: TimeSlotType) => (
                     <TimeSlot
@@ -257,7 +257,7 @@ const ScheduleBox = ({ timeSlots }: Props) => {
                     />
                   ))
               : !isFetching &&
-                data[0].timeSlot
+                data.timeSlot
                   .filter((timeSlot: TimeSlotType) => timeSlot.days.thursday)
                   .map((timeSlot: TimeSlotType) => (
                     <TimeSlot
@@ -304,7 +304,7 @@ const ScheduleBox = ({ timeSlots }: Props) => {
                     />
                   ))
               : !isFetching &&
-                data[0].timeSlot
+                data.timeSlot
                   .filter((timeSlot: TimeSlotType) => timeSlot.days.friday)
                   .map((timeSlot: TimeSlotType) => (
                     <TimeSlot
