@@ -35,7 +35,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.user.data._id;
             try {
-                const user = yield userModel_1.default.find({ _id: userID }).exec();
+                const user = yield userModel_1.default.findOne({ _id: userID }).exec();
                 if (!user) {
                     return res.status(404).json({
                         message: `User ${userID} not found`,
@@ -56,7 +56,7 @@ class UserController {
     static getUserById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            yield userModel_1.default.find({ _id: id }, (err, found) => {
+            yield userModel_1.default.findOne({ _id: id }, (err, found) => {
                 if (!err) {
                     res.send(found);
                 }

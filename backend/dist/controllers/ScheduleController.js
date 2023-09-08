@@ -224,7 +224,7 @@ class ScheduleController {
             // This is the user's id
             const id = req.params.id;
             try {
-                const schedule = yield scheduleModel_1.default.find({ user_id: id });
+                const schedule = yield scheduleModel_1.default.findOne({ user_id: id });
                 res.send(schedule);
             }
             catch (error) {
