@@ -19,8 +19,8 @@ const  PersonalTab = () => {
   const [gender, setGender] = useState<string | undefined>('Select Gender');
   useEffect(() => {
     if (data && !isLoading) {
-      setUserInfo(data[0]);
-      setGender(data[0].gender ?? 'Select Gender');
+      setUserInfo(data);
+      setGender(data.gender ?? 'Select Gender');
     }
   }, [data, isLoading]);
 

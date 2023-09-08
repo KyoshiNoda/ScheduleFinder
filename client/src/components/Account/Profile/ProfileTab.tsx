@@ -29,7 +29,7 @@ const ProfileTab: any = () => {
 
   useEffect(() => {
     if (data && !isLoading) {
-      const userInfoWithoutPassword = { ...data[0] };
+      const userInfoWithoutPassword = { ...data };
       delete userInfoWithoutPassword.password;
       setUserInfo(userInfoWithoutPassword);
     }
