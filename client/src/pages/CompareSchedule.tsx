@@ -51,8 +51,8 @@ const CompareSchedule = () => {
     fetch(`${BASE_URL}api/schedules/${userId}/user`)
       .then((res) => res.json())
       .then((data) => {
-        setScheduleB(data[0]);
-        setTimeSlots(data[0].timeSlot);
+        setScheduleB(data);
+        setTimeSlots(data.timeSlot);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -63,15 +63,14 @@ const CompareSchedule = () => {
   useEffect(() => {
     fetch(`${BASE_URL}api/users/${userId}`)
       .then((res) => res.json())
-      .then((data) => setUserName(data[0].firstName))
+      .then((data) => setUserName(data.firstName))
       .catch((err) => console.log(err));
   }, []);
 
   const mergeTimeSlots = () => {
-    const timeSlotsA = data[0].timeSlot.map((timeSlot: TimeSlotType) => {
+    const timeSlotsA = data.timeSlot.map((timeSlot: TimeSlotType) => {
       return { ...timeSlot, color: 'red', _id: crypto.randomUUID() };
     });
-
     const timeSlotsB = scheduleB.timeSlot.map((timeSlot: TimeSlotType) => {
       return { ...timeSlot, color: 'blue', _id: crypto.randomUUID() };
     });
@@ -285,7 +284,7 @@ const CompareSchedule = () => {
           </Button>
           <Button
             onClick={() => {
-              setTimeSlots(data[0].timeSlot);
+              setTimeSlots(data.timeSlot);
               setShowCompareSchedule(false);
               setShowOtherSchedule(false);
               setShowUserSchedule(true);

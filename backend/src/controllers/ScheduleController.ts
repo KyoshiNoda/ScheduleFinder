@@ -212,7 +212,7 @@ class ScheduleController {
     const id = req.params.id;
 
     try {
-      const schedule = await Schedule.find({ user_id: id });
+      const schedule = await Schedule.findOne({ user_id: id });
       res.send(schedule);
     } catch (error) {
       res.send({ message: 'Error retrieving schedule' });
