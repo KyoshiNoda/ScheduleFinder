@@ -67,11 +67,7 @@ class UserController {
     const userID: string = req.user.data._id;
 
     try {
-      const updatedUser = await User.findOneAndUpdate(
-        { _id: userID },
-        { ...req.body },
-        { returnOriginal: false }
-      );
+      const updatedUser = await User.findOneAndUpdate({ _id: userID }, { ...req.body }, { returnOriginal: false });
       res.status(200).json(updatedUser);
     } catch (error) {
       res.json(`The update attempt to user ${userID} has failed`);
@@ -82,26 +78,17 @@ class UserController {
     try {
       const userID: string = req.user.data._id;
       const userPassword: string = req.user.data.password;
-      const passwordMatch = await bcrypt.compare(
-        req.body.currentPassword,
-        userPassword
-      );
+      const passwordMatch = await bcrypt.compare(req.body.currentPassword, userPassword);
 
       if (!passwordMatch) {
-        res.status(401).send('Incorrect Password!');
-        return;
+        return res.status(401).send('Incorrect Password!');
       }
       if (req.body.newPassword !== req.body.confirmNewPassword) {
-        res.status(401).send("Passwords don't match!'");
-        return;
+        return res.status(401).send("Passwords don't match!");
       }
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
-      const updatedUser = await User.findOneAndUpdate(
-        { _id: userID },
-        { ...req.body, password: hashedPassword },
-        { returnOriginal: false }
-      );
+      const updatedUser = await User.findOneAndUpdate({ _id: userID }, { ...req.body, password: hashedPassword }, { returnOriginal: false });
       if (!updatedUser) {
         throw new Error('Error updating password');
       }
@@ -133,9 +120,7 @@ class UserController {
         throw new Error('Error updating password');
       }
 
-      return res
-        .status(200)
-        .send({ message: 'Password Changed!', updatedUser });
+      return res.status(200).send({ message: 'Password Changed!', updatedUser });
     } catch (error: any) {
       return res.status(500).send({ error: 'Error occurred' });
     }
