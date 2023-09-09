@@ -49,6 +49,7 @@ const ProfileTab = () => {
         newPassword: newPasswordRef.current.value,
         confirmNewPassword: newConfirmedPasswordRef.current.value,
       }).unwrap();
+      setIsChangePassword(false);
     } catch (error: any) {
       if (error.data.includes('Incorrect')) {
         setIsCurrentPasswordError(true);
