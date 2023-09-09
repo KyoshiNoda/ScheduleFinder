@@ -4,7 +4,7 @@ export const getApiUrl = (): string => {
 
   let apiUrl = '';
 
-  if (environment === 'dev') {
+  if (environment === 'local') {
     apiUrl = 'http://localhost:3001/';
   } else if (environment === 'dev') {
     apiUrl = 'https://schedulefinder-development.up.railway.app/';
