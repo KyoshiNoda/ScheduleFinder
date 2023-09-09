@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import Navbar from './Navbar';
+import Toggle from './Toggle';
 const PageLayout = () => {
   const { userInfo } = useAppSelector((state) => state.auth);
   if (Object.keys(userInfo).length === 0) {
@@ -17,6 +18,7 @@ const PageLayout = () => {
   return (
     <>
       <Navbar user={userInfo} />
+      <Toggle />
       <Outlet />
     </>
   );
