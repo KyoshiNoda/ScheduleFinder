@@ -10,7 +10,7 @@ import PageLayout from './components/PageLayout';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Notifications from './pages/Notifications';
-function App() {
+const App = () => {
   return (
     <>
       <Routes>

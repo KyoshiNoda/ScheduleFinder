@@ -41,7 +41,7 @@ const CompareSchedule = () => {
     _id: '',
     user_id: '',
     visibility: '',
-    timeSlot: [],
+    timeSlots: [],
   };
 
   // Schedule B is the schedule to compare against.
@@ -51,8 +51,8 @@ const CompareSchedule = () => {
     fetch(`${BASE_URL}api/schedules/${userId}/user`)
       .then((res) => res.json())
       .then((data) => {
-        setScheduleB(data[0]);
-        setTimeSlots(data[0].timeSlot);
+        setScheduleB(data);
+        setTimeSlots(data.timeSlot);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -63,16 +63,15 @@ const CompareSchedule = () => {
   useEffect(() => {
     fetch(`${BASE_URL}api/users/${userId}`)
       .then((res) => res.json())
-      .then((data) => setUserName(data[0].firstName))
+      .then((data) => setUserName(data.firstName))
       .catch((err) => console.log(err));
   }, []);
 
   const mergeTimeSlots = () => {
-    const timeSlotsA = data[0].timeSlot.map((timeSlot: TimeSlotType) => {
+    const timeSlotsA = data.timeSlots.map((timeSlot: TimeSlotType) => {
       return { ...timeSlot, color: 'red', _id: crypto.randomUUID() };
     });
-
-    const timeSlotsB = scheduleB.timeSlot.map((timeSlot: TimeSlotType) => {
+    const timeSlotsB = scheduleB.timeSlots.map((timeSlot: TimeSlotType) => {
       return { ...timeSlot, color: 'blue', _id: crypto.randomUUID() };
     });
 
@@ -99,7 +98,6 @@ const CompareSchedule = () => {
 
   const findFreeIntervals = (timeSlots: TimeSlotType[], day: string) => {
     timeSlots.sort(compareTimeSlots);
-    if (timeSlots.length < 2) return timeSlots;
 
     const free: TimeSlotType[] = [];
     let combined: TimeSlotType[] = [...timeSlots];
@@ -272,7 +270,7 @@ const CompareSchedule = () => {
         <Button.Group outline={true}>
           <Button
             onClick={() => {
-              setTimeSlots(scheduleB.timeSlot);
+              setTimeSlots(scheduleB.timeSlots);
               setShowCompareSchedule(false);
               setShowOtherSchedule(true);
               setShowUserSchedule(false);
@@ -286,7 +284,7 @@ const CompareSchedule = () => {
           </Button>
           <Button
             onClick={() => {
-              setTimeSlots(data[0].timeSlot);
+              setTimeSlots(data.timeSlots);
               setShowCompareSchedule(false);
               setShowOtherSchedule(false);
               setShowUserSchedule(true);

@@ -4,7 +4,7 @@ import hero2 from '../assets/plsWork.png';
 import Toggle from '../components/Toggle';
 type Props = {};
 
-function Login({}: Props) {
+const Login = () => {
   const [width, setWidth] = useState<number>(window.innerWidth);
 
   useEffect(() => {
@@ -34,6 +34,6 @@ function Login({}: Props) {
       </div>
     </div>
   );
-}
+};
 
 export default Login;

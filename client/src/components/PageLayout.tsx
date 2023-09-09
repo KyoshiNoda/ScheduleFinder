@@ -1,9 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import Navbar from './Navbar';
-
-type Props = {};
-function PageLayout({}: Props) {
+const PageLayout = () => {
   const { userInfo } = useAppSelector((state) => state.auth);
   if (Object.keys(userInfo).length === 0) {
     // checks if userInfo is empty
@@ -22,6 +20,6 @@ function PageLayout({}: Props) {
       <Outlet />
     </>
   );
-}
+};
 
 export default PageLayout;

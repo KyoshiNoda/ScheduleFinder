@@ -6,7 +6,7 @@ type Props = {
   timeSlots: TimeSlotType[] | undefined;
 };
 
-function ScheduleBox({ timeSlots }: Props) {
+const ScheduleBox = ({ timeSlots }: Props) => {
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
@@ -116,7 +116,7 @@ function ScheduleBox({ timeSlots }: Props) {
                     />
                   ))
               : !isFetching &&
-                data[0].timeSlot
+                data.timeSlots
                   .filter((timeSlot: TimeSlotType) => timeSlot.days.monday)
                   .map((timeSlot: TimeSlotType) => (
                     <TimeSlot
@@ -163,7 +163,7 @@ function ScheduleBox({ timeSlots }: Props) {
                     />
                   ))
               : !isFetching &&
-                data[0].timeSlot
+                data.timeSlots
                   .filter((timeSlot: TimeSlotType) => timeSlot.days.tuesday)
                   .map((timeSlot: TimeSlotType) => (
                     <TimeSlot
@@ -210,7 +210,7 @@ function ScheduleBox({ timeSlots }: Props) {
                     />
                   ))
               : !isFetching &&
-                data[0].timeSlot
+                data.timeSlots
                   .filter((timeSlot: TimeSlotType) => timeSlot.days.wednesday)
                   .map((timeSlot: TimeSlotType) => (
                     <TimeSlot
@@ -257,7 +257,7 @@ function ScheduleBox({ timeSlots }: Props) {
                     />
                   ))
               : !isFetching &&
-                data[0].timeSlot
+                data.timeSlots
                   .filter((timeSlot: TimeSlotType) => timeSlot.days.thursday)
                   .map((timeSlot: TimeSlotType) => (
                     <TimeSlot
@@ -304,7 +304,7 @@ function ScheduleBox({ timeSlots }: Props) {
                     />
                   ))
               : !isFetching &&
-                data[0].timeSlot
+                data.timeSlots
                   .filter((timeSlot: TimeSlotType) => timeSlot.days.friday)
                   .map((timeSlot: TimeSlotType) => (
                     <TimeSlot
@@ -329,6 +329,6 @@ function ScheduleBox({ timeSlots }: Props) {
       </div>
     </>
   );
-}
+};
 
 export default ScheduleBox;

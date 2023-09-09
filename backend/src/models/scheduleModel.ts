@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 type Days ={
   monday : boolean;
   tuesday : boolean;
@@ -22,7 +22,7 @@ export interface TimeSlot {
 export interface ISchedule extends Document {
   user_id: string;
   visibility: string;
-  timeSlot: TimeSlot[];
+  timeSlots: TimeSlot[];
 }
 
 const timeSlotSchema: Schema = new mongoose.Schema({
@@ -39,7 +39,7 @@ const timeSlotSchema: Schema = new mongoose.Schema({
 const scheduleSchema: Schema = new mongoose.Schema({
   user_id: { type: String, required: true },
   visibility: { type: String, required: true },
-  timeSlot: { type: Array, default: [timeSlotSchema] },
+  timeSlots: { type: Array, default: [timeSlotSchema] },
 });
 
 const Schedule = mongoose.model<ISchedule>('Schedule', scheduleSchema);

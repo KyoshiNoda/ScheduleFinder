@@ -1,9 +1,7 @@
 import LoginForm from './LoginForm';
 import GoogleAuth from '../Auth/GoogleAuth';
 import { Link } from 'react-router-dom';
-type Props = {};
-
-function LoginBox({}: Props) {
+const LoginBox = () => {
   return (
     <div className="w-full max-w-md space-y-3 rounded-xl bg-gray-100 p-8 dark:bg-slate-800 dark:text-gray-100 ">
       <h1 className="text-md text-center font-bold md:text-2xl">Login</h1>
@@ -29,6 +27,6 @@ function LoginBox({}: Props) {
       </div>
     </div>
   );
-}
+};
 
 export default LoginBox;

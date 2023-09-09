@@ -2,7 +2,7 @@ type Props = {
   picture: string | undefined;
 };
 
-function ProfilePic(props: Props) {
+const ProfilePic = (props: Props) => {
   return (
     <img
       alt=""
@@ -10,6 +10,6 @@ function ProfilePic(props: Props) {
       src={props.picture}
     />
   );
-}
+};
 
 export default ProfilePic;

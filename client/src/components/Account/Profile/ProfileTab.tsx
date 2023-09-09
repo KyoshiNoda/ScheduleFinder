@@ -7,7 +7,7 @@ import {
 } from '../../../redux/services/user/userService';
 import { User as UserType } from '../../../types';
 import ProfilePic from './ProfilePic';
-function ProfileTab() {
+const ProfileTab: any = () => {
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
   const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
@@ -29,7 +29,7 @@ function ProfileTab() {
 
   useEffect(() => {
     if (data && !isLoading) {
-      const userInfoWithoutPassword = { ...data[0] };
+      const userInfoWithoutPassword = { ...data };
       delete userInfoWithoutPassword.password;
       setUserInfo(userInfoWithoutPassword);
     }
@@ -89,14 +89,14 @@ function ProfileTab() {
             <button
               type="button"
               onClick={emailHandler}
-              className="w-full rounded bg-green-400 px-8 py-3 text-lg font-semibold text-white dark:bg-green-800"
+              className="w-full rounded bg-green-400 px-8 py-3 text-lg font-semibold text-white hover:bg-green-600 dark:bg-green-700 hover:dark:bg-green-800"
             >
               Save Changes
             </button>
             <button
               type="button"
               onClick={() => setIsChangePassword(true)}
-              className="w-full rounded bg-blue-400 px-8 py-3 text-lg font-semibold text-white dark:bg-blue-800"
+              className="w-full rounded bg-blue-400 hover:bg-blue-600 px-8 py-3 text-lg font-semibold text-white dark:bg-blue-700 hover:dark:bg-blue-800"
             >
               Change Password
             </button>{' '}
@@ -171,7 +171,7 @@ function ProfileTab() {
           </div>
         </>
       ) : isLoading ? (
-        <div className = 'flex justify-center'>
+        <div className="flex justify-center">
           <Spinner aria-label="Profile loading spinner" size="xl" />
         </div>
       ) : (
@@ -179,6 +179,6 @@ function ProfileTab() {
       )}
     </div>
   );
-}
+};
 
 export default ProfileTab;

@@ -37,7 +37,7 @@ const UserContainer = ({
   // of the array of users that are displayed in the FindUser page because it doesn't make
   // sense that the user sees themselves when they are trying to find a user.
   let loggedUserId: string = '';
-  if (!isFetching) loggedUserId = data[0].user_id;
+  if (!isFetching) loggedUserId = data.user_id;
 
   const [users, setUsers] = useState<UserType[]>([]);
   const [paginate, setPaginate] = useState<number>(9);

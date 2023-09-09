@@ -7,7 +7,7 @@ import { User as UserType } from '../../../types';
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal, Spinner } from 'flowbite-react';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-function FriendsTab() {
+const FriendsTab = () => {
   const { data, isLoading } = useGetUserFriendsQuery('User');
   const [friends, setFriends] = useState<UserType[]>();
   const [deleteFriend] = useDeleteFriendMutation();
@@ -93,7 +93,7 @@ function FriendsTab() {
               <div className="ml-auto flex items-center">
                 <button
                   type="button"
-                  className="rounded-lg bg-red-600 px-3 py-3 font-semibold text-white"
+                  className="rounded-lg bg-red-500 hover:bg-red-700 hover:dark:bg-red-700 px-3 py-3 font-semibold text-white"
                   onClick={() => tempFriendHandler(friend._id)}
                 >
                   Remove
@@ -107,6 +107,6 @@ function FriendsTab() {
       )}
     </div>
   );
-}
+};
 
 export default FriendsTab;

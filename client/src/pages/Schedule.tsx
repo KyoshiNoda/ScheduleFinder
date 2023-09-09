@@ -3,10 +3,7 @@ import ScheduleBox from '../components/Schedule/ScheduleBox';
 import Toggle from '../components/Toggle';
 import { useAppDispatch } from '../redux/store';
 import { toggleReadOnly } from '../redux/feats/globalSlice/globalSlice';
-
-type Props = {};
-
-function Schedule({}: Props) {
+const Schedule = () => {
   const dispatch = useAppDispatch();
   dispatch(toggleReadOnly(false));
 
@@ -21,6 +18,6 @@ function Schedule({}: Props) {
       </div>
     </div>
   );
-}
+};
 
 export default Schedule;

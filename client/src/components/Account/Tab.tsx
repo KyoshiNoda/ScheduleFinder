@@ -3,7 +3,7 @@ type Props = {
   activeTab: string | null;
 };
 
-function Tab(props: Props): JSX.Element {
+const Tab = (props: Props): JSX.Element => {
   return (
     <div className="mb-5 flex justify-center border-gray-200 text-center text-lg font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400">
       <ul className="flex flex-wrap sm:gap-5">
@@ -41,6 +41,6 @@ function Tab(props: Props): JSX.Element {
       </ul>
     </div>
   );
-}
+};
 
 export default Tab;

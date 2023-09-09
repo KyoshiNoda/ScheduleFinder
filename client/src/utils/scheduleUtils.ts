@@ -1,6 +1,6 @@
 import { TimeSlot, DaysChecked } from '../types';
 
-export function convertTo24Hour(time12: any) {
+export const convertTo24Hour = (time12: any) => {
   let [hour, minute] = time12.split(':');
   let period = time12.slice(-2);
   hour = parseInt(hour);
@@ -11,24 +11,24 @@ export function convertTo24Hour(time12: any) {
     hour = 0;
   }
   return hour * 60 + parseInt(minute);
-}
-export function isBetween(
+};
+export const isBetween = (
   startTime: string,
   endTime: string,
   targetTime: string
-) {
+) => {
   const start = new Date(`2022-01-01 ${startTime}`);
   const end = new Date(`2022-01-01 ${endTime}`);
   const target = new Date(`2022-01-01 ${targetTime}`);
   return start <= target && target <= end;
-}
+};
 
-export function validTimeSlot(
+export const validTimeSlot = (
   startTime: string,
   endTime: string,
   data: any,
   days: DaysChecked
-): boolean {
+): boolean => {
   let result: boolean = true;
   data.forEach((timeSlot: TimeSlot) => {
     if (
@@ -68,4 +68,4 @@ export function validTimeSlot(
     }
   });
   return result;
-}
+};
