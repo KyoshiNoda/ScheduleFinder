@@ -3,14 +3,8 @@ import { AiFillEdit } from 'react-icons/ai';
 import { Modal } from 'flowbite-react';
 import { colors } from './TimeSlotInput';
 import { ToggleSwitch } from 'flowbite-react';
-import {
-  DaysChecked as DaysCheckedType,
-  TimeSlot as TimeSlotType,
-} from '../../types';
-import {
-  useDeleteTimeSlotMutation,
-  useUpdateTimeSlotMutation,
-} from '../../redux/services/schedule/scheduleService';
+import { DaysChecked as DaysCheckedType, TimeSlot as TimeSlotType } from '../../types';
+import { useDeleteTimeSlotMutation, useUpdateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useAppSelector } from '../../redux/store';
 
@@ -60,13 +54,31 @@ const TimeSlot: any = (props: Props) => {
   const locationRef = useRef(document.createElement('input'));
   const professorRef = useRef(document.createElement('input'));
 
+  const [width, setWidth] = useState<number>(window.innerWidth);
+  const [courseTitle, setCourseTitle] = useState<string>(props.title);
+
+  // cuts the titles into shorter length for smaller screens
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    if (width < 450) {
+      const newTitle = props.title.slice(0, 6);
+      setCourseTitle(newTitle);
+    }
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [width]);
+
+  // populate input values in editModal modal
   useEffect(() => {
     if (titleRef.current) titleRef.current.value = props.title;
     if (startTimeRef.current) startTimeRef.current.value = props.startTime;
     if (endTimeRef.current) endTimeRef.current.value = props.endTime;
     if (locationRef.current) locationRef.current.value = props.location || '';
-    if (professorRef.current)
-      professorRef.current.value = props.professor || '';
+    if (professorRef.current) professorRef.current.value = props.professor || '';
   }, [editMode]);
 
   useEffect(() => {
@@ -161,11 +173,7 @@ const TimeSlot: any = (props: Props) => {
         <Modal.Header />
         <Modal.Body>
           <div className="flex flex-col gap-4">
-            <ToggleSwitch
-              checked={editMode}
-              label="Edit Mode"
-              onChange={() => setEditMode(!editMode)}
-            />
+            <ToggleSwitch checked={editMode} label="Edit Mode" onChange={() => setEditMode(!editMode)} />
             <div className="flex justify-center">
               {editMode ? (
                 <div className="w-full sm:w-1/2">
@@ -180,9 +188,7 @@ const TimeSlot: any = (props: Props) => {
                   />
                 </div>
               ) : (
-                <h1 className="text-center text-5xl font-medium text-gray-900 dark:text-white">
-                  {props.title}
-                </h1>
+                <h1 className="text-center text-5xl font-medium text-gray-900 dark:text-white">{props.title}</h1>
               )}
             </div>
             <div className="flex items-center justify-center text-2xl dark:text-white sm:text-4xl">
@@ -232,10 +238,7 @@ const TimeSlot: any = (props: Props) => {
                       value="monday"
                       className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                     />
-                    <label
-                      htmlFor="monday"
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
+                    <label htmlFor="monday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                       Mon
                     </label>
                   </div>
@@ -249,10 +252,7 @@ const TimeSlot: any = (props: Props) => {
                       value="tuesday"
                       className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                     />
-                    <label
-                      htmlFor="tuesday"
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
+                    <label htmlFor="tuesday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                       Tues
                     </label>
                   </div>
@@ -266,10 +266,7 @@ const TimeSlot: any = (props: Props) => {
                       value="wednesday"
                       className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                     />
-                    <label
-                      htmlFor="wednesday"
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
+                    <label htmlFor="wednesday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                       Wed
                     </label>
                   </div>
@@ -283,10 +280,7 @@ const TimeSlot: any = (props: Props) => {
                       value="thursday"
                       className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                     />
-                    <label
-                      htmlFor="thursday"
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
+                    <label htmlFor="thursday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                       Thur
                     </label>
                   </div>
@@ -300,10 +294,7 @@ const TimeSlot: any = (props: Props) => {
                       value="friday"
                       className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                     />
-                    <label
-                      htmlFor="friday"
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
+                    <label htmlFor="friday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                       Fri
                     </label>
                   </div>
@@ -323,10 +314,7 @@ const TimeSlot: any = (props: Props) => {
               <div>
                 {editMode ? (
                   <>
-                    <label
-                      htmlFor="location"
-                      className="text-sm dark:text-white"
-                    >
+                    <label htmlFor="location" className="text-sm dark:text-white">
                       Location
                     </label>
                     <input
@@ -340,19 +328,14 @@ const TimeSlot: any = (props: Props) => {
                 ) : (
                   <div className="space-x-2 text-2xl dark:text-white">
                     <span className="font-semibold">Location:</span>
-                    <span className="capitalize">
-                      {props.location ? props.location : 'N/A'}
-                    </span>
+                    <span className="capitalize">{props.location ? props.location : 'N/A'}</span>
                   </div>
                 )}
               </div>
               <div>
                 {editMode ? (
                   <>
-                    <label
-                      htmlFor="professor"
-                      className="text-sm dark:text-white"
-                    >
+                    <label htmlFor="professor" className="text-sm dark:text-white">
                       Professor
                     </label>
                     <input
@@ -366,9 +349,7 @@ const TimeSlot: any = (props: Props) => {
                 ) : (
                   <div className="space-x-2 text-2xl dark:text-white">
                     <span className="font-semibold">Professor:</span>
-                    <span className="capitalize">
-                      {props.professor ? props.professor : 'N/A'}
-                    </span>
+                    <span className="capitalize">{props.professor ? props.professor : 'N/A'}</span>
                   </div>
                 )}
               </div>
@@ -380,14 +361,10 @@ const TimeSlot: any = (props: Props) => {
                     <div
                       key={color}
                       className={`bg-${color}-400 h-7 w-7 cursor-pointer rounded-full border-4 p-1 sm:h-10 sm:w-10 ${
-                        timeSlotColor === color
-                          ? 'border-blue-700'
-                          : 'border-none'
+                        timeSlotColor === color ? 'border-blue-700' : 'border-none'
                       }`}
                       onClick={() => {
-                        setTimeSlotColor((prevColor) =>
-                          prevColor === color ? '' : color
-                        );
+                        setTimeSlotColor((prevColor) => (prevColor === color ? '' : color));
                       }}
                     />
                   ))}
@@ -395,14 +372,14 @@ const TimeSlot: any = (props: Props) => {
             </div>
             <button
               type="submit"
-              className="w-full rounded-full bg-green-400 hover:bg-green-600 hover:dark:bg-green-800 px-8 py-3 text-lg font-semibold text-white dark:bg-green-700 dark:text-white"
+              className="w-full rounded-full bg-green-400 px-8 py-3 text-lg font-semibold text-white hover:bg-green-600 dark:bg-green-700 dark:text-white hover:dark:bg-green-800"
               onClick={saveHandler}
             >
               Save
             </button>
             <button
               type="submit"
-              className="w-full rounded-full bg-red-500 px-8 py-3 text-lg font-semibold text-white hover:bg-red-700 dark:bg-rose-600 hover:dark:bg-rose-800 dark:text-white"
+              className="w-full rounded-full bg-red-500 px-8 py-3 text-lg font-semibold text-white hover:bg-red-700 dark:bg-rose-600 dark:text-white hover:dark:bg-rose-800"
               onClick={deleteHandler}
             >
               Delete
@@ -411,10 +388,8 @@ const TimeSlot: any = (props: Props) => {
         </Modal.Body>
       </Modal>
       <div
-        className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${
-          props.color
-        }-400 w-full ${
-          !readOnly && 'hover:cursor-pointer hover:brightness-50'
+        className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${props.color}-400 w-full ${
+          !readOnly && 'overflow-hidden hover:cursor-pointer hover:brightness-50'
         } dark:text-black`}
         style={{ top: `${props.top}px`, height: `${props.height}px` }}
         onClick={() => setIsTimeSlotClicked(readOnly ? false : true)}
@@ -424,8 +399,8 @@ const TimeSlot: any = (props: Props) => {
         {isHovering && <AiFillEdit size={'96'} />}
         {parseInt(props.height) > 55 && (
           <div className="flex flex-col items-center gap-1">
-            <h2 className="text-center font-bold">{props.title}</h2>
-            <span>{`${props.startTime} - ${props.endTime}`}</span>
+            <h2 className="text-center font-bold">{courseTitle}</h2>
+            <span className="invisible md:visible">{`${props.startTime} - ${props.endTime}`}</span>
           </div>
         )}
       </div>
