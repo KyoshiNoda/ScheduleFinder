@@ -41,7 +41,7 @@ const CompareSchedule = () => {
     _id: '',
     user_id: '',
     visibility: '',
-    timeSlot: [],
+    timeSlots: [],
   };
 
   // Schedule B is the schedule to compare against.
@@ -68,10 +68,10 @@ const CompareSchedule = () => {
   }, []);
 
   const mergeTimeSlots = () => {
-    const timeSlotsA = data.timeSlot.map((timeSlot: TimeSlotType) => {
+    const timeSlotsA = data.timeSlots.map((timeSlot: TimeSlotType) => {
       return { ...timeSlot, color: 'red', _id: crypto.randomUUID() };
     });
-    const timeSlotsB = scheduleB.timeSlot.map((timeSlot: TimeSlotType) => {
+    const timeSlotsB = scheduleB.timeSlots.map((timeSlot: TimeSlotType) => {
       return { ...timeSlot, color: 'blue', _id: crypto.randomUUID() };
     });
 
@@ -270,7 +270,7 @@ const CompareSchedule = () => {
         <Button.Group outline={true}>
           <Button
             onClick={() => {
-              setTimeSlots(scheduleB.timeSlot);
+              setTimeSlots(scheduleB.timeSlots);
               setShowCompareSchedule(false);
               setShowOtherSchedule(true);
               setShowUserSchedule(false);
@@ -284,7 +284,7 @@ const CompareSchedule = () => {
           </Button>
           <Button
             onClick={() => {
-              setTimeSlots(data.timeSlot);
+              setTimeSlots(data.timeSlots);
               setShowCompareSchedule(false);
               setShowOtherSchedule(false);
               setShowUserSchedule(true);
