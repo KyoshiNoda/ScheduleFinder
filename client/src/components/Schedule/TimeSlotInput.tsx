@@ -282,8 +282,11 @@ const TimeSlotInput = () => {
                         ref={startTimeHourRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                          timeError && 'border-rose-500'
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
+                          'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
+                        } ${
+                          timeError && 'dark:boder-rose-500 border-rose-500 focus:ring-rose-500 dark:focus:border-rose-500 dark:focus:ring-rose-500'
                         }`}
                         placeholder="12"
                         maxLength={2}
@@ -294,8 +297,11 @@ const TimeSlotInput = () => {
                         ref={startTimeMinutesRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                          timeError && 'border-rose-500'
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
+                          'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
+                        } ${
+                          timeError && 'dark:boder-rose-500 border-rose-500 focus:ring-rose-500 dark:focus:border-rose-500 dark:focus:ring-rose-500'
                         }`}
                         placeholder="00"
                         maxLength={2}
@@ -324,8 +330,11 @@ const TimeSlotInput = () => {
                         ref={endTimeHourRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                          timeError && 'border-rose-500'
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
+                          'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
+                        } ${
+                          timeError && 'dark:boder-rose-500 border-rose-500 focus:ring-rose-500 dark:focus:border-rose-500 dark:focus:ring-rose-500'
                         }`}
                         placeholder="12"
                         maxLength={2}
@@ -336,8 +345,11 @@ const TimeSlotInput = () => {
                         ref={endTimeMinutesRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                          timeError && 'border-rose-500'
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
+                          'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
+                        } ${
+                          timeError && 'dark:boder-rose-500 border-rose-500 focus:ring-rose-500 dark:focus:border-rose-500 dark:focus:ring-rose-500'
                         }`}
                         placeholder="00"
                         maxLength={2}
