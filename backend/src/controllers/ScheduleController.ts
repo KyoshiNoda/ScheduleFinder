@@ -57,7 +57,7 @@ class ScheduleController {
           user_id: userID,
         },
         {
-          $set: { timeSlot: [] },
+          $set: { timeSlots: [] },
         },
         { new: true }
       );
@@ -100,7 +100,7 @@ class ScheduleController {
     try {
       const schedule = await Schedule.findOneAndUpdate(
         { _id: scheduleID },
-        { $push: { timeSlot: newTimeSlot } },
+        { $push: { timeSlots: newTimeSlot } },
         { new: true }
       );
       if (!schedule) {
@@ -130,7 +130,7 @@ class ScheduleController {
           .status(404)
           .json(`Schedule not found for user with ID ${userID}`);
       }
-      const timeSlotIndex: number = schedule?.timeSlot.findIndex(
+      const timeSlotIndex: number = schedule?.timeSlots.findIndex(
         (timeSlot) => timeSlot._id == req.body._id
       )!;
 
@@ -139,12 +139,12 @@ class ScheduleController {
           .status(404)
           .json(`Time slot with ID ${req.body._id} not found in schedule`);
       }
-      schedule!.timeSlot[timeSlotIndex] = {
-        ...schedule?.timeSlot[timeSlotIndex],
+      schedule!.timeSlots[timeSlotIndex] = {
+        ...schedule?.timeSlots[timeSlotIndex],
         ...req.body,
       };
       await schedule?.save();
-      res.status(200).send(schedule!.timeSlot[timeSlotIndex]);
+      res.status(200).send(schedule!.timeSlots[timeSlotIndex]);
     } catch (error) {
       res.status(400).json(`${error}`);
     }
@@ -166,7 +166,7 @@ class ScheduleController {
       }
 
       const timeSlotId = req.body._id;
-      const deletedTimeSlot = schedule.timeSlot.find(
+      const deletedTimeSlot = schedule.timeSlots.find(
         (timeSlot) => timeSlot._id.toString() === timeSlotId
       );
 
@@ -175,7 +175,7 @@ class ScheduleController {
         return;
       }
 
-      schedule.timeSlot = schedule.timeSlot.filter(
+      schedule.timeSlots = schedule.timeSlots.filter(
         (timeSlot) => timeSlot._id.toString() !== timeSlotId
       );
 
@@ -224,7 +224,7 @@ class ScheduleController {
     const schedule = new Schedule({
       user_id: req.body.user_id,
       visibility: 'public',
-      timeSlot: [],
+      timeSlots: [],
     });
     schedule
       .save()

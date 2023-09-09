@@ -12,7 +12,7 @@ const ClearScheduleButton = ({ scheduleId, currentSchedule }: Props) => {
 
   const [clearSchedule] = useClearScheduleMutation();
 
-  const isScheduleEmpty = !currentSchedule || !currentSchedule.timeSlot || currentSchedule.timeSlot.length === 0;
+  const isScheduleEmpty = !currentSchedule || !currentSchedule.timeSlots || currentSchedule.timeSlots.length === 0;
   return (
     <>
       {currentSchedule && (

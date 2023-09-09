@@ -53,5 +53,5 @@ export type Schedule = {
   _id?: string | undefined;
   user_id: string;
   visibility: string;
-  timeSlot: TimeSlot[];
+  timeSlots: TimeSlot[];
 };

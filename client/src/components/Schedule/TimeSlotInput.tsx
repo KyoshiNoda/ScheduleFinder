@@ -125,7 +125,7 @@ const TimeSlotInput = () => {
       return;
     }
 
-    if (!validTimeSlot(startTime, endTime, data.timeSlot, daySelection)) {
+    if (!validTimeSlot(startTime, endTime, data.timeSlots, daySelection)) {
       setTimeSlotError(true);
       return;
     }
