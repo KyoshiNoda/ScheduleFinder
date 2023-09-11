@@ -30,6 +30,7 @@ export const colors: string[] = [
 ];
 
 const TimeSlotInput = () => {
+  
   // || Refs ||
   const formRef = useRef(document.createElement('form'));
   const titleRef = useRef(document.createElement('input'));
