@@ -6,6 +6,12 @@ import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
 import { Modal, Button, Select } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
 import ClearScheduleButton from './ClearScheduleButton';
+
+enum TypesOfInput {
+  HourInput,
+  MinutesInput,
+}
+
 export const colors: string[] = [
   'slate',
   'red',
@@ -157,6 +163,27 @@ const TimeSlotInput = () => {
     formRef.current.reset();
   };
 
+  const validateInput = (inputRef: React.RefObject<HTMLInputElement>, inputType: TypesOfInput) => {
+    // @ts-ignore: Object is possibly 'null'.
+    const inputValue: number = parseFloat(inputRef.current.value);
+
+    if (inputType === TypesOfInput.HourInput) {
+      if (inputValue < 1 || inputValue > 12) {
+        inputRef.current?.classList.add('border-red-500', 'dark:border-red-500', 'focus:ring-rose-500', 'dark:focus:border-rose-500', 'dark:focus:ring-rose-500');
+      } else {
+        inputRef.current?.classList.remove('border-red-500', 'dark:border-red-500', 'focus:ring-rose-500', 'dark:focus:border-rose-500', 'dark:focus:ring-rose-500');
+      }
+    }
+    
+    if (inputType === TypesOfInput.MinutesInput) {
+      if (inputValue < 0 || inputValue > 59) {
+        inputRef.current?.classList.add('border-red-500', 'dark:border-red-500', 'focus:ring-rose-500', 'dark:focus:border-rose-500', 'dark:focus:ring-rose-500');
+      } else {
+        inputRef.current?.classList.remove('border-red-500', 'dark:border-red-500', 'focus:ring-rose-500', 'dark:focus:border-rose-500', 'dark:focus:ring-rose-500');        
+      }
+    }
+  };
+
   const handleStartTimeMeridiemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setStartTimeMeridiem(e.target.value);
 
@@ -288,6 +315,7 @@ const TimeSlotInput = () => {
                         } ${
                           timeError && 'dark:boder-rose-500 border-rose-500 focus:ring-rose-500 dark:focus:border-rose-500 dark:focus:ring-rose-500'
                         }`}
+                        onChange={() => validateInput(startTimeHourRef, TypesOfInput.HourInput)}
                         placeholder="12"
                         maxLength={2}
                         required
@@ -303,6 +331,7 @@ const TimeSlotInput = () => {
                         } ${
                           timeError && 'dark:boder-rose-500 border-rose-500 focus:ring-rose-500 dark:focus:border-rose-500 dark:focus:ring-rose-500'
                         }`}
+                        onChange={() => validateInput(startTimeMinutesRef, TypesOfInput.MinutesInput)}
                         placeholder="00"
                         maxLength={2}
                         required
@@ -336,6 +365,7 @@ const TimeSlotInput = () => {
                         } ${
                           timeError && 'dark:boder-rose-500 border-rose-500 focus:ring-rose-500 dark:focus:border-rose-500 dark:focus:ring-rose-500'
                         }`}
+                        onChange={() => validateInput(endTimeHourRef, TypesOfInput.HourInput)}
                         placeholder="12"
                         maxLength={2}
                         required
@@ -351,6 +381,7 @@ const TimeSlotInput = () => {
                         } ${
                           timeError && 'dark:boder-rose-500 border-rose-500 focus:ring-rose-500 dark:focus:border-rose-500 dark:focus:ring-rose-500'
                         }`}
+                        onChange={() => validateInput(endTimeMinutesRef, TypesOfInput.MinutesInput)}
                         placeholder="00"
                         maxLength={2}
                         required
