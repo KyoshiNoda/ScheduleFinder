@@ -1,29 +1,27 @@
-import { useState, useRef } from 'react';
-const DayPicker = (propsDays: any) => {
+import { useState, useRef, useEffect } from 'react';
+interface DayPickerProps {
+  selectedDays: any;
+  setSelectedDays: (selectedDays: any) => void;
+  daysError: boolean; // Add this prop
+}
+const DayPicker = ({ selectedDays, setSelectedDays, daysError }: DayPickerProps): JSX.Element => {
   const mondayRef = useRef(document.createElement('input'));
   const tuesdayRef = useRef(document.createElement('input'));
   const wednesdayRef = useRef(document.createElement('input'));
   const thursdayRef = useRef(document.createElement('input'));
   const fridayRef = useRef(document.createElement('input'));
-  const [daysError, setDaysError] = useState<boolean>(false);
 
-  if (
-    !(
-      mondayRef.current.checked ||
-      tuesdayRef.current.checked ||
-      wednesdayRef.current.checked ||
-      thursdayRef.current.checked ||
-      fridayRef.current.checked
-    )
-  ) {
-    setDaysError(true);
-    return;
-  }
+  const handleCheckboxChange = (e: any, day: any) => {
+    const updatedSelectedDays = { ...selectedDays };
+    updatedSelectedDays[day] = e.target.checked;
+    setSelectedDays(updatedSelectedDays);
+  };
+
   return (
     <>
       <ul
         className={`w-full items-center rounded-lg border bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex ${
-          propsDays.error ? ' border-rose-400 dark:border-rose-400' : ''
+          daysError ? ' border-rose-400 dark:border-rose-400' : ''
         }`}
       >
         <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
@@ -33,6 +31,8 @@ const DayPicker = (propsDays: any) => {
               id="monday"
               type="checkbox"
               value="monday"
+              checked={selectedDays.monday}
+              onChange={(e) => handleCheckboxChange(e, "monday")}
               className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
             />
             <label htmlFor="monday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -47,6 +47,8 @@ const DayPicker = (propsDays: any) => {
               id="tuesday"
               type="checkbox"
               value="tuesday"
+              checked={selectedDays.tuesday}
+              onChange={(e) => handleCheckboxChange(e, "tuesday")}
               className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
             />
             <label htmlFor="tuesday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -61,6 +63,8 @@ const DayPicker = (propsDays: any) => {
               id="wednesday"
               type="checkbox"
               value="wednesday"
+              checked={selectedDays.wednesday}
+              onChange={(e) => handleCheckboxChange(e, "wednesday")}
               className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
             />
             <label htmlFor="wednesday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -75,6 +79,8 @@ const DayPicker = (propsDays: any) => {
               id="thursday"
               type="checkbox"
               value="thursday"
+              checked={selectedDays.thursday}
+              onChange={(e) => handleCheckboxChange(e, "thursday")}
               className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
             />
             <label htmlFor="thursday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -89,6 +95,8 @@ const DayPicker = (propsDays: any) => {
               id="friday"
               type="checkbox"
               value="friday"
+              checked={selectedDays.friday}
+              onChange={(e) => handleCheckboxChange(e, "friday")}
               className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
             />
             <label htmlFor="friday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -97,7 +105,7 @@ const DayPicker = (propsDays: any) => {
           </div>
         </li>
       </ul>
-      <div className="flex w-full justify-center">{propsDays.error && <p className="text-rose-500">Please pick a day!</p>}</div>
+      <div className="flex w-full justify-center">{daysError && <p className="text-rose-500">Please pick a day!</p>}</div>
     </>
   );
 };
