@@ -1,7 +1,8 @@
 import { useRef } from 'react';
+import { DaysChecked } from '../../types';
 interface DayPickerProps {
-  selectedDays: any;
-  setSelectedDays: (selectedDays: any) => void;
+  selectedDays: DaysChecked;
+  setSelectedDays: (selectedDays: DaysChecked) => void;
   daysError?: boolean;
 }
 const DayPicker = ({ selectedDays, setSelectedDays, daysError }: DayPickerProps): JSX.Element => {
@@ -11,7 +12,7 @@ const DayPicker = ({ selectedDays, setSelectedDays, daysError }: DayPickerProps)
   const thursdayRef = useRef(document.createElement('input'));
   const fridayRef = useRef(document.createElement('input'));
 
-  const handleCheckboxChange = (e: any, day: any) => {
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, day: string) => {
     const updatedSelectedDays = { ...selectedDays };
     updatedSelectedDays[day] = e.target.checked;
     setSelectedDays(updatedSelectedDays);
