@@ -6,6 +6,7 @@ import { Themes } from '../enums';
 
 type Props = {
   getTheme?: (theme: string) => void;
+  overrideBackground?: string;
 };
 
 const Toggle = (props: Props) => {
@@ -26,7 +27,7 @@ const Toggle = (props: Props) => {
   };
 
   return (
-    <div className="flex justify-end gap-1 bg-slate-400 py-5 px-8 dark:bg-slate-900">
+    <div className={`${props.overrideBackground || 'bg-slate-400'} flex justify-end gap-1 py-5 px-8 dark:bg-slate-900`}>
       <FiSun size="20" color={userPrefersDark ? Themes.LIGHT : Themes.DARK} />
       <div>
         <label className="relative mb-5 inline-flex cursor-pointer items-center">
