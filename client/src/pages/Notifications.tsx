@@ -1,4 +1,3 @@
-import Toggle from '../components/Toggle';
 import { AiOutlineCheck } from 'react-icons/ai';
 import { useGetUserFriendRequestsQuery, useAcceptFriendRequestMutation, useRejectFriendRequestMutation } from '../redux/services/user/userService';
 import { Spinner } from 'flowbite-react';

@@ -1,7 +1,6 @@
 import { Label, TextInput, Toast } from 'flowbite-react';
 import { HiCheck } from 'react-icons/hi';
 import UserContainer from '../components/findUsers/UserContainer';
-import Toggle from '../components/Toggle';
 import { useState } from 'react';
 import { useAppSelector } from '../redux/store';
 import { useAppDispatch } from '../redux/store';
