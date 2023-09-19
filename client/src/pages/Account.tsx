@@ -1,4 +1,3 @@
-import Toggle from '../components/Toggle';
 import AccountBox from '../components/Account/AccountBox';
 const Account = () => {
   return (
