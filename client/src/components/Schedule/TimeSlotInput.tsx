@@ -6,6 +6,7 @@ import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
 import { Modal, Button, Select } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
 import ClearScheduleButton from './ClearScheduleButton';
+import DayPicker from './DayPicker';
 export const colors: string[] = [
   'slate',
   'red',
@@ -27,11 +28,6 @@ const TimeSlotInput = () => {
   // || Refs ||
   const formRef = useRef(document.createElement('form'));
   const titleRef = useRef(document.createElement('input'));
-  const mondayRef = useRef(document.createElement('input'));
-  const tuesdayRef = useRef(document.createElement('input'));
-  const wednesdayRef = useRef(document.createElement('input'));
-  const thursdayRef = useRef(document.createElement('input'));
-  const fridayRef = useRef(document.createElement('input'));
   const startTimeHourRef = useRef(document.createElement('input'));
   const startTimeMinutesRef = useRef(document.createElement('input'));
   const endTimeHourRef = useRef(document.createElement('input'));
@@ -193,7 +189,8 @@ const TimeSlotInput = () => {
                 <label htmlFor="days" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                   Days
                 </label>
-                <ul
+                {/* i want to replace this here with DayPicker below
+                 <ul
                   className={`w-full items-center rounded-lg border bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex ${
                     daysError ? ' border-rose-400 dark:border-rose-400' : ''
                   }`}
@@ -268,7 +265,10 @@ const TimeSlotInput = () => {
                       </label>
                     </div>
                   </li>
-                </ul>
+                </ul> */}
+
+                <DayPicker days = {propsDays}/>
+
                 <div className="flex w-full justify-center">{daysError && <p className="text-rose-500">Please pick a day!</p>}</div>
               </div>
               <div className="flex flex-col">
