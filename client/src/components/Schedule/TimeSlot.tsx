@@ -7,6 +7,7 @@ import { DaysChecked as DaysCheckedType, TimeSlot as TimeSlotType } from '../../
 import { useDeleteTimeSlotMutation, useUpdateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useAppSelector } from '../../redux/store';
+import DayPicker from './DayPicker';
 
 type Props = {
   id?: undefined | string;
@@ -40,12 +41,7 @@ const TimeSlot: any = (props: Props) => {
   const [isTimeSlotClicked, setIsTimeSlotClicked] = useState<boolean>(false);
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [days, setDays] = useState<DaysCheckedType>(props.days);
-  const mondayRef = useRef(document.createElement('input'));
-  const tuesdayRef = useRef(document.createElement('input'));
-  const wednesdayRef = useRef(document.createElement('input'));
-  const thursdayRef = useRef(document.createElement('input'));
-  const fridayRef = useRef(document.createElement('input'));
+  const [selectedDays, setSelectedDays] = useState<DaysCheckedType>(props.days);
 
   // Input Refs
   const titleRef = useRef(document.createElement('input'));
@@ -97,15 +93,9 @@ const TimeSlot: any = (props: Props) => {
       days: props.days,
     };
 
-    if (
-      !(
-        mondayRef.current.checked ||
-        tuesdayRef.current.checked ||
-        wednesdayRef.current.checked ||
-        thursdayRef.current.checked ||
-        fridayRef.current.checked
-      )
-    ) {
+    const { monday, tuesday, wednesday, thursday, friday } = selectedDays;
+
+    if (!(monday || tuesday || wednesday || thursday || friday)) {
       try {
         await updateTimeSlotMutation({
           scheduleId: scheduleID,
@@ -125,11 +115,11 @@ const TimeSlot: any = (props: Props) => {
         sunday: false,
       };
 
-      if (mondayRef.current.checked) daySelection.monday = true;
-      if (tuesdayRef.current.checked) daySelection.tuesday = true;
-      if (wednesdayRef.current.checked) daySelection.wednesday = true;
-      if (thursdayRef.current.checked) daySelection.thursday = true;
-      if (fridayRef.current.checked) daySelection.friday = true;
+      if (monday) daySelection.monday = true;
+      if (tuesday) daySelection.tuesday = true;
+      if (wednesday) daySelection.wednesday = true;
+      if (thursday) daySelection.thursday = true;
+      if (friday) daySelection.friday = true;
 
       updatedTimeSlot.days = daySelection;
       updatedTimeSlot.color = timeSlotColor;
@@ -228,86 +218,15 @@ const TimeSlot: any = (props: Props) => {
             </div>
 
             {editMode ? (
-              <ul className="w-full items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex">
-                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                  <div className="flex items-center pl-3">
-                    <input
-                      ref={mondayRef}
-                      id="monday"
-                      type="checkbox"
-                      value="monday"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                    />
-                    <label htmlFor="monday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                      Mon
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                  <div className="flex items-center pl-3">
-                    <input
-                      ref={tuesdayRef}
-                      id="tuesday"
-                      type="checkbox"
-                      value="tuesday"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                    />
-                    <label htmlFor="tuesday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                      Tues
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                  <div className="flex items-center pl-3">
-                    <input
-                      ref={wednesdayRef}
-                      id="wednesday"
-                      type="checkbox"
-                      value="wednesday"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                    />
-                    <label htmlFor="wednesday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                      Wed
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                  <div className="flex items-center pl-3">
-                    <input
-                      ref={thursdayRef}
-                      id="thursday"
-                      type="checkbox"
-                      value="thursday"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                    />
-                    <label htmlFor="thursday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                      Thur
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full dark:border-gray-600">
-                  <div className="flex items-center pl-3">
-                    <input
-                      ref={fridayRef}
-                      id="friday"
-                      type="checkbox"
-                      value="friday"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                    />
-                    <label htmlFor="friday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                      Fri
-                    </label>
-                  </div>
-                </li>
-              </ul>
+              <DayPicker selectedDays={selectedDays} setSelectedDays={setSelectedDays} />
             ) : (
               <div className="flex justify-center gap-3 text-2xl dark:text-white">
                 <span className="font-semibold">Days:</span>
-                <span>{days?.monday && 'M'}</span>
-                <span>{days?.tuesday && 'T'}</span>
-                <span>{days?.wednesday && 'W'}</span>
-                <span>{days?.thursday && 'TH'}</span>
-                <span>{days?.friday && 'F'}</span>
+                <span>{selectedDays?.monday && 'M'}</span>
+                <span>{selectedDays?.tuesday && 'T'}</span>
+                <span>{selectedDays?.wednesday && 'W'}</span>
+                <span>{selectedDays?.thursday && 'TH'}</span>
+                <span>{selectedDays?.friday && 'F'}</span>
               </div>
             )}
             <div className="flex flex-col items-center justify-evenly sm:flex-row">

@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef } from 'react';
 interface DayPickerProps {
   selectedDays: any;
   setSelectedDays: (selectedDays: any) => void;
-  daysError: boolean; // Add this prop
+  daysError?: boolean;
 }
 const DayPicker = ({ selectedDays, setSelectedDays, daysError }: DayPickerProps): JSX.Element => {
   const mondayRef = useRef(document.createElement('input'));
