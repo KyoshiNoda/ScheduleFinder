@@ -3,16 +3,11 @@ import { AiFillEdit } from 'react-icons/ai';
 import { Modal } from 'flowbite-react';
 import { colors } from './TimeSlotInput';
 import { ToggleSwitch } from 'flowbite-react';
-import {
-  DaysChecked as DaysCheckedType,
-  TimeSlot as TimeSlotType,
-} from '../../types';
-import {
-  useDeleteTimeSlotMutation,
-  useUpdateTimeSlotMutation,
-} from '../../redux/services/schedule/scheduleService';
+import { DaysChecked as DaysCheckedType, TimeSlot as TimeSlotType } from '../../types';
+import { useDeleteTimeSlotMutation, useUpdateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useAppSelector } from '../../redux/store';
+import DayPicker from './DayPicker';
 
 type Props = {
   id?: undefined | string;
@@ -46,12 +41,7 @@ const TimeSlot: any = (props: Props) => {
   const [isTimeSlotClicked, setIsTimeSlotClicked] = useState<boolean>(false);
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [days, setDays] = useState<DaysCheckedType>(props.days);
-  const mondayRef = useRef(document.createElement('input'));
-  const tuesdayRef = useRef(document.createElement('input'));
-  const wednesdayRef = useRef(document.createElement('input'));
-  const thursdayRef = useRef(document.createElement('input'));
-  const fridayRef = useRef(document.createElement('input'));
+  const [selectedDays, setSelectedDays] = useState<DaysCheckedType>(props.days);
 
   // Input Refs
   const titleRef = useRef(document.createElement('input'));
@@ -60,13 +50,31 @@ const TimeSlot: any = (props: Props) => {
   const locationRef = useRef(document.createElement('input'));
   const professorRef = useRef(document.createElement('input'));
 
+  const [width, setWidth] = useState<number>(window.innerWidth);
+  const [courseTitle, setCourseTitle] = useState<string>(props.title);
+
+  // cuts the titles into shorter length for smaller screens
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    if (width < 450) {
+      const newTitle = props.title.slice(0, 6);
+      setCourseTitle(newTitle);
+    }
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [width]);
+
+  // populate input values in editModal modal
   useEffect(() => {
     if (titleRef.current) titleRef.current.value = props.title;
     if (startTimeRef.current) startTimeRef.current.value = props.startTime;
     if (endTimeRef.current) endTimeRef.current.value = props.endTime;
     if (locationRef.current) locationRef.current.value = props.location || '';
-    if (professorRef.current)
-      professorRef.current.value = props.professor || '';
+    if (professorRef.current) professorRef.current.value = props.professor || '';
   }, [editMode]);
 
   useEffect(() => {
@@ -85,15 +93,9 @@ const TimeSlot: any = (props: Props) => {
       days: props.days,
     };
 
-    if (
-      !(
-        mondayRef.current.checked ||
-        tuesdayRef.current.checked ||
-        wednesdayRef.current.checked ||
-        thursdayRef.current.checked ||
-        fridayRef.current.checked
-      )
-    ) {
+    const { monday, tuesday, wednesday, thursday, friday } = selectedDays;
+
+    if (!(monday || tuesday || wednesday || thursday || friday)) {
       try {
         await updateTimeSlotMutation({
           scheduleId: scheduleID,
@@ -113,11 +115,11 @@ const TimeSlot: any = (props: Props) => {
         sunday: false,
       };
 
-      if (mondayRef.current.checked) daySelection.monday = true;
-      if (tuesdayRef.current.checked) daySelection.tuesday = true;
-      if (wednesdayRef.current.checked) daySelection.wednesday = true;
-      if (thursdayRef.current.checked) daySelection.thursday = true;
-      if (fridayRef.current.checked) daySelection.friday = true;
+      if (monday) daySelection.monday = true;
+      if (tuesday) daySelection.tuesday = true;
+      if (wednesday) daySelection.wednesday = true;
+      if (thursday) daySelection.thursday = true;
+      if (friday) daySelection.friday = true;
 
       updatedTimeSlot.days = daySelection;
       updatedTimeSlot.color = timeSlotColor;
@@ -161,11 +163,7 @@ const TimeSlot: any = (props: Props) => {
         <Modal.Header />
         <Modal.Body>
           <div className="flex flex-col gap-4">
-            <ToggleSwitch
-              checked={editMode}
-              label="Edit Mode"
-              onChange={() => setEditMode(!editMode)}
-            />
+            <ToggleSwitch checked={editMode} label="Edit Mode" onChange={() => setEditMode(!editMode)} />
             <div className="flex justify-center">
               {editMode ? (
                 <div className="w-full sm:w-1/2">
@@ -180,9 +178,7 @@ const TimeSlot: any = (props: Props) => {
                   />
                 </div>
               ) : (
-                <h1 className="text-center text-5xl font-medium text-gray-900 dark:text-white">
-                  {props.title}
-                </h1>
+                <h1 className="text-center text-5xl font-medium text-gray-900 dark:text-white">{props.title}</h1>
               )}
             </div>
             <div className="flex items-center justify-center text-2xl dark:text-white sm:text-4xl">
@@ -222,111 +218,22 @@ const TimeSlot: any = (props: Props) => {
             </div>
 
             {editMode ? (
-              <ul className="w-full items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex">
-                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                  <div className="flex items-center pl-3">
-                    <input
-                      ref={mondayRef}
-                      id="monday"
-                      type="checkbox"
-                      value="monday"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                    />
-                    <label
-                      htmlFor="monday"
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Mon
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                  <div className="flex items-center pl-3">
-                    <input
-                      ref={tuesdayRef}
-                      id="tuesday"
-                      type="checkbox"
-                      value="tuesday"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                    />
-                    <label
-                      htmlFor="tuesday"
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Tues
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                  <div className="flex items-center pl-3">
-                    <input
-                      ref={wednesdayRef}
-                      id="wednesday"
-                      type="checkbox"
-                      value="wednesday"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                    />
-                    <label
-                      htmlFor="wednesday"
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Wed
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                  <div className="flex items-center pl-3">
-                    <input
-                      ref={thursdayRef}
-                      id="thursday"
-                      type="checkbox"
-                      value="thursday"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                    />
-                    <label
-                      htmlFor="thursday"
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Thur
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full dark:border-gray-600">
-                  <div className="flex items-center pl-3">
-                    <input
-                      ref={fridayRef}
-                      id="friday"
-                      type="checkbox"
-                      value="friday"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                    />
-                    <label
-                      htmlFor="friday"
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Fri
-                    </label>
-                  </div>
-                </li>
-              </ul>
+              <DayPicker selectedDays={selectedDays} setSelectedDays={setSelectedDays} />
             ) : (
               <div className="flex justify-center gap-3 text-2xl dark:text-white">
                 <span className="font-semibold">Days:</span>
-                <span>{days?.monday && 'M'}</span>
-                <span>{days?.tuesday && 'T'}</span>
-                <span>{days?.wednesday && 'W'}</span>
-                <span>{days?.thursday && 'TH'}</span>
-                <span>{days?.friday && 'F'}</span>
+                <span>{selectedDays?.monday && 'M'}</span>
+                <span>{selectedDays?.tuesday && 'T'}</span>
+                <span>{selectedDays?.wednesday && 'W'}</span>
+                <span>{selectedDays?.thursday && 'TH'}</span>
+                <span>{selectedDays?.friday && 'F'}</span>
               </div>
             )}
             <div className="flex flex-col items-center justify-evenly sm:flex-row">
               <div>
                 {editMode ? (
                   <>
-                    <label
-                      htmlFor="location"
-                      className="text-sm dark:text-white"
-                    >
+                    <label htmlFor="location" className="text-sm dark:text-white">
                       Location
                     </label>
                     <input
@@ -340,19 +247,14 @@ const TimeSlot: any = (props: Props) => {
                 ) : (
                   <div className="space-x-2 text-2xl dark:text-white">
                     <span className="font-semibold">Location:</span>
-                    <span className="capitalize">
-                      {props.location ? props.location : 'N/A'}
-                    </span>
+                    <span className="capitalize">{props.location ? props.location : 'N/A'}</span>
                   </div>
                 )}
               </div>
               <div>
                 {editMode ? (
                   <>
-                    <label
-                      htmlFor="professor"
-                      className="text-sm dark:text-white"
-                    >
+                    <label htmlFor="professor" className="text-sm dark:text-white">
                       Professor
                     </label>
                     <input
@@ -366,9 +268,7 @@ const TimeSlot: any = (props: Props) => {
                 ) : (
                   <div className="space-x-2 text-2xl dark:text-white">
                     <span className="font-semibold">Professor:</span>
-                    <span className="capitalize">
-                      {props.professor ? props.professor : 'N/A'}
-                    </span>
+                    <span className="capitalize">{props.professor ? props.professor : 'N/A'}</span>
                   </div>
                 )}
               </div>
@@ -380,14 +280,10 @@ const TimeSlot: any = (props: Props) => {
                     <div
                       key={color}
                       className={`bg-${color}-400 h-7 w-7 cursor-pointer rounded-full border-4 p-1 sm:h-10 sm:w-10 ${
-                        timeSlotColor === color
-                          ? 'border-blue-700'
-                          : 'border-none'
+                        timeSlotColor === color ? 'border-blue-700' : 'border-none'
                       }`}
                       onClick={() => {
-                        setTimeSlotColor((prevColor) =>
-                          prevColor === color ? '' : color
-                        );
+                        setTimeSlotColor((prevColor) => (prevColor === color ? '' : color));
                       }}
                     />
                   ))}
@@ -395,14 +291,14 @@ const TimeSlot: any = (props: Props) => {
             </div>
             <button
               type="submit"
-              className="w-full rounded-full bg-green-400 hover:bg-green-600 hover:dark:bg-green-800 px-8 py-3 text-lg font-semibold text-white dark:bg-green-700 dark:text-white"
+              className="w-full rounded-full bg-green-400 px-8 py-3 text-lg font-semibold text-white hover:bg-green-600 dark:bg-green-700 dark:text-white hover:dark:bg-green-800"
               onClick={saveHandler}
             >
               Save
             </button>
             <button
               type="submit"
-              className="w-full rounded-full bg-red-500 px-8 py-3 text-lg font-semibold text-white hover:bg-red-700 dark:bg-rose-600 hover:dark:bg-rose-800 dark:text-white"
+              className="w-full rounded-full bg-red-500 px-8 py-3 text-lg font-semibold text-white hover:bg-red-700 dark:bg-rose-600 dark:text-white hover:dark:bg-rose-800"
               onClick={deleteHandler}
             >
               Delete
@@ -411,10 +307,8 @@ const TimeSlot: any = (props: Props) => {
         </Modal.Body>
       </Modal>
       <div
-        className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${
-          props.color
-        }-400 w-full ${
-          !readOnly && 'hover:cursor-pointer hover:brightness-50'
+        className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${props.color}-400 w-full ${
+          !readOnly && 'overflow-hidden hover:cursor-pointer hover:brightness-50'
         } dark:text-black`}
         style={{ top: `${props.top}px`, height: `${props.height}px` }}
         onClick={() => setIsTimeSlotClicked(readOnly ? false : true)}
@@ -424,8 +318,8 @@ const TimeSlot: any = (props: Props) => {
         {isHovering && <AiFillEdit size={'96'} />}
         {parseInt(props.height) > 55 && (
           <div className="flex flex-col items-center gap-1">
-            <h2 className="text-center font-bold">{props.title}</h2>
-            <span>{`${props.startTime} - ${props.endTime}`}</span>
+            <h2 className="text-center font-bold">{courseTitle}</h2>
+            <span className="invisible md:visible">{`${props.startTime} - ${props.endTime}`}</span>
           </div>
         )}
       </div>

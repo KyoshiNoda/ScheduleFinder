@@ -100,12 +100,10 @@ class UserController {
                 const userPassword = req.user.data.password;
                 const passwordMatch = yield bcrypt_1.default.compare(req.body.currentPassword, userPassword);
                 if (!passwordMatch) {
-                    res.status(401).send('Incorrect Password!');
-                    return;
+                    return res.status(401).send('Incorrect Password!');
                 }
                 if (req.body.newPassword !== req.body.confirmNewPassword) {
-                    res.status(401).send("Passwords don't match!'");
-                    return;
+                    return res.status(401).send("Passwords don't match!");
                 }
                 const salt = yield bcrypt_1.default.genSalt();
                 const hashedPassword = yield bcrypt_1.default.hash(req.body.newPassword, salt);
@@ -136,9 +134,7 @@ class UserController {
                 if (!updatedUser) {
                     throw new Error('Error updating password');
                 }
-                return res
-                    .status(200)
-                    .send({ message: 'Password Changed!', updatedUser });
+                return res.status(200).send({ message: 'Password Changed!', updatedUser });
             }
             catch (error) {
                 return res.status(500).send({ error: 'Error occurred' });
