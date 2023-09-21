@@ -7,6 +7,8 @@ import { Modal, Button, Select } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
 import ClearScheduleButton from './ClearScheduleButton';
 import DayPicker from './DayPicker';
+import { TypesOfInput } from '../../enums';
+
 export const colors: string[] = [
   'slate',
   'red',
@@ -37,6 +39,7 @@ const TimeSlotInput = () => {
 
   // || Local State ||
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
+  const [inputValidationFailed, setInputValidationFailed] = useState<boolean>(false);
   const [daysError, setDaysError] = useState<boolean>(false);
   const [timeError, setTimeError] = useState<boolean>(false);
   const [colorError, setColorError] = useState<boolean>(false);
@@ -72,6 +75,8 @@ const TimeSlotInput = () => {
   const addTimeSlot = async (event: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
     const { monday, tuesday, wednesday, thursday, friday } = selectedDays;
+
+    if (inputValidationFailed) return;
 
     // If no checkboxes have been selected, the form shouldn't be submitted.
     if (!(monday || tuesday || wednesday || thursday || friday)) {
@@ -156,6 +161,59 @@ const TimeSlotInput = () => {
     formRef.current.reset();
   };
 
+  const validateInput = (inputRef: React.RefObject<HTMLInputElement>, inputType: TypesOfInput) => {
+    // @ts-ignore: Object is possibly 'null'.
+    const inputValue: number = parseFloat(inputRef.current.value);
+
+    if (inputType === TypesOfInput.HourInput) {
+      if (inputValue < 1 || inputValue > 12) {
+        inputRef.current?.classList.add(
+          'border-red-500',
+          'focus:border-rose-500',
+          'focus:ring-rose-500',
+          'dark:border-red-500',
+          'dark:focus:border-rose-500',
+          'dark:focus:ring-rose-500'
+        );
+        setInputValidationFailed(true);
+      } else {
+        inputRef.current?.classList.remove(
+          'border-red-500',
+          'focus:border-rose-500',
+          'focus:ring-rose-500',
+          'dark:border-red-500',
+          'dark:focus:border-rose-500',
+          'dark:focus:ring-rose-500'
+        );
+        setInputValidationFailed(false);
+      }
+    }
+
+    if (inputType === TypesOfInput.MinutesInput) {
+      if (inputValue < 0 || inputValue > 59) {
+        inputRef.current?.classList.add(
+          'border-red-500',
+          'focus:border-rose-500',
+          'focus:ring-rose-500',
+          'dark:border-red-500',
+          'dark:focus:border-rose-500',
+          'dark:focus:ring-rose-500'
+        );
+        setInputValidationFailed(true);
+      } else {
+        inputRef.current?.classList.remove(
+          'border-red-500',
+          'focus:border-rose-500',
+          'focus:ring-rose-500',
+          'dark:border-red-500',
+          'dark:focus:border-rose-500',
+          'dark:focus:ring-rose-500'
+        );
+        setInputValidationFailed(false);
+      }
+    }
+  };
+
   const handleStartTimeMeridiemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setStartTimeMeridiem(e.target.value);
 
@@ -206,9 +264,11 @@ const TimeSlotInput = () => {
                         ref={startTimeHourRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                          timeError && 'border-rose-500'
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
+                          'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
                         }`}
+                        onChange={() => validateInput(startTimeHourRef, TypesOfInput.HourInput)}
                         placeholder="12"
                         maxLength={2}
                         required
@@ -218,9 +278,11 @@ const TimeSlotInput = () => {
                         ref={startTimeMinutesRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                          timeError && 'border-rose-500'
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
+                          'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
                         }`}
+                        onChange={() => validateInput(startTimeMinutesRef, TypesOfInput.MinutesInput)}
                         placeholder="00"
                         maxLength={2}
                         required
@@ -248,9 +310,11 @@ const TimeSlotInput = () => {
                         ref={endTimeHourRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                          timeError && 'border-rose-500'
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
+                          'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
                         }`}
+                        onChange={() => validateInput(endTimeHourRef, TypesOfInput.HourInput)}
                         placeholder="12"
                         maxLength={2}
                         required
@@ -260,9 +324,11 @@ const TimeSlotInput = () => {
                         ref={endTimeMinutesRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                          timeError && 'border-rose-500'
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
+                          'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
                         }`}
+                        onChange={() => validateInput(endTimeMinutesRef, TypesOfInput.MinutesInput)}
                         placeholder="00"
                         maxLength={2}
                         required
