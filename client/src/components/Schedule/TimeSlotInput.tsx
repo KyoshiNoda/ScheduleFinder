@@ -7,11 +7,7 @@ import { Modal, Button, Select } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
 import ClearScheduleButton from './ClearScheduleButton';
 import DayPicker from './DayPicker';
-
-enum TypesOfInput {
-  HourInput,
-  MinutesInput,
-}
+import { TypesOfInput } from '../../enums';
 
 export const colors: string[] = [
   'slate',
