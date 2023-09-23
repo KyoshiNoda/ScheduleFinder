@@ -164,6 +164,8 @@ const TimeSlotInput = () => {
       setTimeSlotError(false);
       setDaysError(false);
       setSelectedDays(resetDays);
+      setStartTimeMeridiem('AM');
+      setEndTimeMeridiem('AM');
     } catch (error) {
       console.error(error);
     }
