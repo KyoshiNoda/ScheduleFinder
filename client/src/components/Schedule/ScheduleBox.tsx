@@ -1,11 +1,17 @@
 import { TimeSlot as TimeSlotType } from '../../types';
 import TimeSlot from './TimeSlot';
+import { useGetScheduleQuery } from '../../redux/services/schedule/scheduleService';
 
 type Props = {
   timeSlots: TimeSlotType[] | undefined;
 };
 
-const ScheduleBox = ({ timeSlots }: Props) => {const convertTimeToMinutes = (time: string) => {
+const ScheduleBox = ({ timeSlots }: Props) => {
+  const { data, isFetching } = useGetScheduleQuery('schedule', {
+    pollingInterval: 900000,
+  });
+
+  const convertTimeToMinutes = (time: string) => {
     const lastTwoChars: string = time.slice(time.length - 2, time.length);
     time = time.slice(0, time.indexOf(' '));
     const [hour, minutes] = time.split(':');
@@ -50,6 +56,8 @@ const ScheduleBox = ({ timeSlots }: Props) => {const convertTimeToMinutes = (tim
     return distanceFromTop.toString();
   };
 
+  if (!isFetching) {
+  }
   return (
     <>
       <div className="flex w-full flex-col">
@@ -83,109 +91,239 @@ const ScheduleBox = ({ timeSlots }: Props) => {const convertTimeToMinutes = (tim
           <hr className="absolute top-[864px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
           <hr className="absolute top-[936px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
           <div className="relative mx-2 h-[1008px] w-1/5">
-            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">{window.innerWidth < 535 ? 'm' : 'monday'}</h2>
-            {timeSlots &&
-              timeSlots
-                .filter((timeSlot: TimeSlotType) => timeSlot.days.monday)
-                .map((timeSlot: TimeSlotType) => (
-                  <TimeSlot
-                    key={timeSlot._id}
-                    id={timeSlot._id}
-                    top={calculateDistanceFromTop(timeSlot.startTime)}
-                    height={calculateHeight(timeSlot.startTime, timeSlot.endTime)}
-                    title={timeSlot.title}
-                    startTime={timeSlot.startTime}
-                    endTime={timeSlot.endTime}
-                    location={timeSlot.location}
-                    professor={timeSlot.professor}
-                    color={timeSlot.color}
-                    days={timeSlot.days}
-                  />
-                ))}
+            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
+              {window.innerWidth < 535 ? 'm' : 'monday'}
+            </h2>
+            {timeSlots
+              ? timeSlots
+                  .filter((timeSlot: TimeSlotType) => timeSlot.days.monday)
+                  .map((timeSlot: TimeSlotType) => (
+                    <TimeSlot
+                      key={timeSlot._id}
+                      id={timeSlot._id}
+                      top={calculateDistanceFromTop(timeSlot.startTime)}
+                      height={calculateHeight(
+                        timeSlot.startTime,
+                        timeSlot.endTime
+                      )}
+                      title={timeSlot.title}
+                      startTime={timeSlot.startTime}
+                      endTime={timeSlot.endTime}
+                      location={timeSlot.location}
+                      professor={timeSlot.professor}
+                      color={timeSlot.color}
+                      days={timeSlot.days}
+                    />
+                  ))
+              : !isFetching &&
+                data.timeSlots
+                  .filter((timeSlot: TimeSlotType) => timeSlot.days.monday)
+                  .map((timeSlot: TimeSlotType) => (
+                    <TimeSlot
+                      key={timeSlot._id}
+                      id={timeSlot._id}
+                      top={calculateDistanceFromTop(timeSlot.startTime)}
+                      height={calculateHeight(
+                        timeSlot.startTime,
+                        timeSlot.endTime
+                      )}
+                      title={timeSlot.title}
+                      startTime={timeSlot.startTime}
+                      endTime={timeSlot.endTime}
+                      location={timeSlot.location}
+                      professor={timeSlot.professor}
+                      color={timeSlot.color}
+                      days={timeSlot.days}
+                    />
+                  ))}
           </div>
           <div className="relative mx-2 h-[1008px] w-1/5">
-            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">{window.innerWidth < 535 ? 't' : 'tuesday'}</h2>
-            {timeSlots &&
-              timeSlots
-                .filter((timeSlot: TimeSlotType) => timeSlot.days.tuesday)
-                .map((timeSlot: TimeSlotType) => (
-                  <TimeSlot
-                    key={timeSlot._id}
-                    id={timeSlot._id}
-                    top={calculateDistanceFromTop(timeSlot.startTime)}
-                    height={calculateHeight(timeSlot.startTime, timeSlot.endTime)}
-                    title={timeSlot.title}
-                    startTime={timeSlot.startTime}
-                    endTime={timeSlot.endTime}
-                    location={timeSlot.location}
-                    professor={timeSlot.professor}
-                    color={timeSlot.color}
-                    days={timeSlot.days}
-                  />
-                ))}
+            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
+              {window.innerWidth < 535 ? 't' : 'tuesday'}
+            </h2>
+            {timeSlots
+              ? timeSlots
+                  .filter((timeSlot: TimeSlotType) => timeSlot.days.tuesday)
+                  .map((timeSlot: TimeSlotType) => (
+                    <TimeSlot
+                      key={timeSlot._id}
+                      id={timeSlot._id}
+                      top={calculateDistanceFromTop(timeSlot.startTime)}
+                      height={calculateHeight(
+                        timeSlot.startTime,
+                        timeSlot.endTime
+                      )}
+                      title={timeSlot.title}
+                      startTime={timeSlot.startTime}
+                      endTime={timeSlot.endTime}
+                      location={timeSlot.location}
+                      professor={timeSlot.professor}
+                      color={timeSlot.color}
+                      days={timeSlot.days}
+                    />
+                  ))
+              : !isFetching &&
+                data.timeSlots
+                  .filter((timeSlot: TimeSlotType) => timeSlot.days.tuesday)
+                  .map((timeSlot: TimeSlotType) => (
+                    <TimeSlot
+                      key={timeSlot._id}
+                      id={timeSlot._id}
+                      top={calculateDistanceFromTop(timeSlot.startTime)}
+                      height={calculateHeight(
+                        timeSlot.startTime,
+                        timeSlot.endTime
+                      )}
+                      title={timeSlot.title}
+                      startTime={timeSlot.startTime}
+                      endTime={timeSlot.endTime}
+                      location={timeSlot.location}
+                      professor={timeSlot.professor}
+                      color={timeSlot.color}
+                      days={timeSlot.days}
+                    />
+                  ))}
           </div>
           <div className="relative mx-2 h-[1008px] w-1/5">
-            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">{window.innerWidth < 535 ? 'w' : 'wednesday'}</h2>
-            {timeSlots &&
-              timeSlots
-                .filter((timeSlot: TimeSlotType) => timeSlot.days.wednesday)
-                .map((timeSlot: TimeSlotType) => (
-                  <TimeSlot
-                    key={timeSlot._id}
-                    id={timeSlot._id}
-                    top={calculateDistanceFromTop(timeSlot.startTime)}
-                    height={calculateHeight(timeSlot.startTime, timeSlot.endTime)}
-                    title={timeSlot.title}
-                    startTime={timeSlot.startTime}
-                    endTime={timeSlot.endTime}
-                    location={timeSlot.location}
-                    professor={timeSlot.professor}
-                    color={timeSlot.color}
-                    days={timeSlot.days}
-                  />
-                ))}
+            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
+              {window.innerWidth < 535 ? 'w' : 'wednesday'}
+            </h2>
+            {timeSlots
+              ? timeSlots
+                  .filter((timeSlot: TimeSlotType) => timeSlot.days.wednesday)
+                  .map((timeSlot: TimeSlotType) => (
+                    <TimeSlot
+                      key={timeSlot._id}
+                      id={timeSlot._id}
+                      top={calculateDistanceFromTop(timeSlot.startTime)}
+                      height={calculateHeight(
+                        timeSlot.startTime,
+                        timeSlot.endTime
+                      )}
+                      title={timeSlot.title}
+                      startTime={timeSlot.startTime}
+                      endTime={timeSlot.endTime}
+                      location={timeSlot.location}
+                      professor={timeSlot.professor}
+                      color={timeSlot.color}
+                      days={timeSlot.days}
+                    />
+                  ))
+              : !isFetching &&
+                data.timeSlots
+                  .filter((timeSlot: TimeSlotType) => timeSlot.days.wednesday)
+                  .map((timeSlot: TimeSlotType) => (
+                    <TimeSlot
+                      key={timeSlot._id}
+                      id={timeSlot._id}
+                      top={calculateDistanceFromTop(timeSlot.startTime)}
+                      height={calculateHeight(
+                        timeSlot.startTime,
+                        timeSlot.endTime
+                      )}
+                      title={timeSlot.title}
+                      startTime={timeSlot.startTime}
+                      endTime={timeSlot.endTime}
+                      location={timeSlot.location}
+                      professor={timeSlot.professor}
+                      color={timeSlot.color}
+                      days={timeSlot.days}
+                    />
+                  ))}
           </div>
           <div className="relative mx-2 h-[1008px] w-1/5">
-            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">{window.innerWidth < 535 ? 'th' : 'thursday'}</h2>
-            {timeSlots &&
-              timeSlots
-                .filter((timeSlot: TimeSlotType) => timeSlot.days.thursday)
-                .map((timeSlot: TimeSlotType) => (
-                  <TimeSlot
-                    key={timeSlot._id}
-                    id={timeSlot._id}
-                    top={calculateDistanceFromTop(timeSlot.startTime)}
-                    height={calculateHeight(timeSlot.startTime, timeSlot.endTime)}
-                    title={timeSlot.title}
-                    startTime={timeSlot.startTime}
-                    endTime={timeSlot.endTime}
-                    location={timeSlot.location}
-                    professor={timeSlot.professor}
-                    color={timeSlot.color}
-                    days={timeSlot.days}
-                  />
-                ))}
+            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
+              {window.innerWidth < 535 ? 'th' : 'thursday'}
+            </h2>
+            {timeSlots
+              ? timeSlots
+                  .filter((timeSlot: TimeSlotType) => timeSlot.days.thursday)
+                  .map((timeSlot: TimeSlotType) => (
+                    <TimeSlot
+                      key={timeSlot._id}
+                      id={timeSlot._id}
+                      top={calculateDistanceFromTop(timeSlot.startTime)}
+                      height={calculateHeight(
+                        timeSlot.startTime,
+                        timeSlot.endTime
+                      )}
+                      title={timeSlot.title}
+                      startTime={timeSlot.startTime}
+                      endTime={timeSlot.endTime}
+                      location={timeSlot.location}
+                      professor={timeSlot.professor}
+                      color={timeSlot.color}
+                      days={timeSlot.days}
+                    />
+                  ))
+              : !isFetching &&
+                data.timeSlots
+                  .filter((timeSlot: TimeSlotType) => timeSlot.days.thursday)
+                  .map((timeSlot: TimeSlotType) => (
+                    <TimeSlot
+                      key={timeSlot._id}
+                      id={timeSlot._id}
+                      top={calculateDistanceFromTop(timeSlot.startTime)}
+                      height={calculateHeight(
+                        timeSlot.startTime,
+                        timeSlot.endTime
+                      )}
+                      title={timeSlot.title}
+                      startTime={timeSlot.startTime}
+                      endTime={timeSlot.endTime}
+                      location={timeSlot.location}
+                      professor={timeSlot.professor}
+                      color={timeSlot.color}
+                      days={timeSlot.days}
+                    />
+                  ))}
           </div>
           <div className="relative mx-2 h-[1008px] w-1/5">
-            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">{window.innerWidth < 535 ? 'f' : 'friday'}</h2>
-            {timeSlots &&
-              timeSlots
-                .filter((timeSlot: TimeSlotType) => timeSlot.days.friday)
-                .map((timeSlot: TimeSlotType) => (
-                  <TimeSlot
-                    key={timeSlot._id}
-                    id={timeSlot._id}
-                    top={calculateDistanceFromTop(timeSlot.startTime)}
-                    height={calculateHeight(timeSlot.startTime, timeSlot.endTime)}
-                    title={timeSlot.title}
-                    startTime={timeSlot.startTime}
-                    endTime={timeSlot.endTime}
-                    location={timeSlot.location}
-                    professor={timeSlot.professor}
-                    color={timeSlot.color}
-                    days={timeSlot.days}
-                  />
-                ))}
+            <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
+              {window.innerWidth < 535 ? 'f' : 'friday'}
+            </h2>
+            {timeSlots
+              ? timeSlots
+                  .filter((timeSlot: TimeSlotType) => timeSlot.days.friday)
+                  .map((timeSlot: TimeSlotType) => (
+                    <TimeSlot
+                      key={timeSlot._id}
+                      id={timeSlot._id}
+                      top={calculateDistanceFromTop(timeSlot.startTime)}
+                      height={calculateHeight(
+                        timeSlot.startTime,
+                        timeSlot.endTime
+                      )}
+                      title={timeSlot.title}
+                      startTime={timeSlot.startTime}
+                      endTime={timeSlot.endTime}
+                      location={timeSlot.location}
+                      professor={timeSlot.professor}
+                      color={timeSlot.color}
+                      days={timeSlot.days}
+                    />
+                  ))
+              : !isFetching &&
+                data.timeSlots
+                  .filter((timeSlot: TimeSlotType) => timeSlot.days.friday)
+                  .map((timeSlot: TimeSlotType) => (
+                    <TimeSlot
+                      key={timeSlot._id}
+                      id={timeSlot._id}
+                      top={calculateDistanceFromTop(timeSlot.startTime)}
+                      height={calculateHeight(
+                        timeSlot.startTime,
+                        timeSlot.endTime
+                      )}
+                      title={timeSlot.title}
+                      startTime={timeSlot.startTime}
+                      endTime={timeSlot.endTime}
+                      location={timeSlot.location}
+                      professor={timeSlot.professor}
+                      color={timeSlot.color}
+                      days={timeSlot.days}
+                    />
+                  ))}
           </div>
         </div>
       </div>
