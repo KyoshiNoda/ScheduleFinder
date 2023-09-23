@@ -150,10 +150,20 @@ const TimeSlotInput = () => {
       if ('data' in result) {
         const { data } = result;
       }
+      const resetDays: DaysChecked = {
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+        sunday: false,
+      };
       setTimeSlotColor('border-none');
       setColorError(false);
       setTimeSlotError(false);
       setDaysError(false);
+      setSelectedDays(resetDays);
     } catch (error) {
       console.error(error);
     }
