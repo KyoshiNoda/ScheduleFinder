@@ -392,7 +392,7 @@ const TimeSlotInput = () => {
                 </div>
               </div>
               <div>
-                <label htmlFor="colorPicker" className=" font-medium">
+                <label htmlFor="colorPicker" className="font-medium dark:text-white">
                   Select a color
                 </label>
                 <div className="flex justify-center">
