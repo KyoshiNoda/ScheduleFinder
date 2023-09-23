@@ -85,7 +85,6 @@ const TimeSlot: any = (props: Props) => {
     const endHour = endTime[0];
     const endMin = endTime[1].trim();
 
-    // console.log(startMins);
     if (titleRef.current) titleRef.current.value = props.title;
     if (startTimeHourRef.current) startTimeHourRef.current.value = startHour;
     if (startTimeMinuteRef.current) startTimeMinuteRef.current.value = startMin;
@@ -208,7 +207,7 @@ const TimeSlot: any = (props: Props) => {
               )}
             </div>
             <div className="flex flex-col items-center justify-center dark:text-white sm:text-4xl">
-              {editMode ? (
+              {editMode && (
                 <>
                   <label htmlFor="endTime" className="ml-60 self-start text-2xl">
                     Start Time
@@ -247,13 +246,9 @@ const TimeSlot: any = (props: Props) => {
                     </div>
                   </div>
                 </>
-              ) : (
-                <span className="mx-3">{props.startTime}</span>
               )}
 
-              {!editMode && '-'}
-
-              {editMode ? (
+              {editMode && (
                 <>
                   <label htmlFor="endTime" className="ml-60 self-start text-2xl">
                     End Time
@@ -292,8 +287,11 @@ const TimeSlot: any = (props: Props) => {
                     </div>
                   </div>
                 </>
-              ) : (
-                <span className="mx-3">{props.endTime}</span>
+              )}
+              {!editMode && (
+                <div className="flex">
+                  <span className="mx-3">{props.startTime}</span> - <span className="mx-3">{props.endTime}</span>
+                </div>
               )}
             </div>
 
