@@ -46,9 +46,9 @@ const TimeSlot: any = (props: Props) => {
   // Input Refs
   const titleRef = useRef(document.createElement('input'));
   const startTimeHourRef = useRef(document.createElement('input'));
-  const startTimeRef = useRef(document.createElement('input'));
+  const startTimeMinuteRef = useRef(document.createElement('input'));
   const endTimeHourRef = useRef(document.createElement('input'));
-  const endTimeRef = useRef(document.createElement('input'));
+  const endTimeMinuteRef = useRef(document.createElement('input'));
   const locationRef = useRef(document.createElement('input'));
   const professorRef = useRef(document.createElement('input'));
 
@@ -75,9 +75,22 @@ const TimeSlot: any = (props: Props) => {
 
   // populate input values in editModal modal
   useEffect(() => {
+    const startTimeOnly = props.startTime.slice(0, -3);
+    const startTime = startTimeOnly.split(':');
+    const startHour = startTime[0];
+    const startMin = startTime[1].trim();
+
+    const endTimeOnly = props.endTime.slice(0, -3);
+    const endTime = endTimeOnly.split(':');
+    const endHour = endTime[0];
+    const endMin = endTime[1].trim();
+
+    // console.log(startMins);
     if (titleRef.current) titleRef.current.value = props.title;
-    if (startTimeRef.current) startTimeRef.current.value = props.startTime;
-    if (endTimeRef.current) endTimeRef.current.value = props.endTime;
+    if (startTimeHourRef.current) startTimeHourRef.current.value = startHour;
+    if (startTimeMinuteRef.current) startTimeMinuteRef.current.value = startMin;
+    if (endTimeHourRef.current) endTimeHourRef.current.value = endHour;
+    if (endTimeMinuteRef.current) endTimeMinuteRef.current.value = endMin;
     if (locationRef.current) locationRef.current.value = props.location || '';
     if (professorRef.current) professorRef.current.value = props.professor || '';
   }, [editMode]);
@@ -98,8 +111,8 @@ const TimeSlot: any = (props: Props) => {
     const updatedTimeSlot: TimeSlotType = {
       _id: props.id!,
       title: titleRef.current.value,
-      startTime: startTimeRef.current.value,
-      endTime: endTimeRef.current.value,
+      startTime: startTimeHourRef.current.value, // fix
+      endTime: endTimeHourRef.current.value, // fix
       color: timeSlotColor,
       professor: professorRef.current.value,
       location: locationRef.current.value,
@@ -194,7 +207,7 @@ const TimeSlot: any = (props: Props) => {
                 <h1 className="text-center text-5xl font-medium text-gray-900 dark:text-white">{props.title}</h1>
               )}
             </div>
-            <div className="flex flex-col items-center justify-center text-2xl dark:text-white sm:text-4xl">
+            <div className="flex flex-col items-center justify-center dark:text-white sm:text-4xl">
               {editMode ? (
                 <>
                   <label htmlFor="endTime" className="ml-60 self-start text-2xl">
@@ -204,16 +217,19 @@ const TimeSlot: any = (props: Props) => {
                     <div>
                       <input
                         id="startTime"
-                        type="text"
-                        ref={startTimeRef}
+                        type="number"
+                        ref={startTimeHourRef}
+                        defaultValue={startTimeHourRef.current.value}
                         className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                       />
                     </div>
+                    <span className="flex items-center text-lg">:</span>
                     <div>
                       <input
                         id="startTime"
-                        type="text"
-                        ref={startTimeRef}
+                        type="number"
+                        ref={startTimeMinuteRef}
+                        defaultValue={startTimeMinuteRef.current.value}
                         className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                       />
                     </div>
@@ -247,15 +263,18 @@ const TimeSlot: any = (props: Props) => {
                       <input
                         id="endTime"
                         type="text"
-                        ref={endTimeRef}
+                        ref={endTimeHourRef}
+                        defaultValue={endTimeHourRef.current.value}
                         className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                       />
                     </div>
+                    <span className="flex items-center text-lg">:</span>
                     <div>
                       <input
                         id="endTime"
                         type="text"
-                        ref={endTimeRef}
+                        ref={endTimeMinuteRef}
+                        defaultValue={endTimeMinuteRef.current.value}
                         className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                       />
                     </div>
