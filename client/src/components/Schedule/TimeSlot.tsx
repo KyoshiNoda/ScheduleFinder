@@ -107,11 +107,14 @@ const TimeSlot: any = (props: Props) => {
   };
 
   const saveHandler = async () => {
+    const startTime = startTimeHourRef.current.value + ':' + startTimeMinuteRef.current.value + ' ' + startTimeMeridiem;
+    const endTime = endTimeHourRef.current.value + ':' + endTimeMinuteRef.current.value + ' ' + endTimeMeridiem;
+
     const updatedTimeSlot: TimeSlotType = {
       _id: props.id!,
       title: titleRef.current.value,
-      startTime: startTimeHourRef.current.value, // fix
-      endTime: endTimeHourRef.current.value, // fix
+      startTime: startTime,
+      endTime: endTime,
       color: timeSlotColor,
       professor: professorRef.current.value,
       location: locationRef.current.value,
@@ -209,7 +212,7 @@ const TimeSlot: any = (props: Props) => {
             <div className="flex flex-col items-center justify-center dark:text-white sm:text-4xl">
               {editMode && (
                 <>
-                  <label htmlFor="endTime" className="ml-60 self-start text-2xl">
+                  <label htmlFor="startTime" className="ml-60 self-start text-2xl">
                     Start Time
                   </label>
                   <div className="mx-1 flex w-1/2 gap-3">
@@ -257,7 +260,7 @@ const TimeSlot: any = (props: Props) => {
                     <div>
                       <input
                         id="endTime"
-                        type="text"
+                        type="number"
                         ref={endTimeHourRef}
                         defaultValue={endTimeHourRef.current.value}
                         className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
@@ -267,7 +270,7 @@ const TimeSlot: any = (props: Props) => {
                     <div>
                       <input
                         id="endTime"
-                        type="text"
+                        type="number"
                         ref={endTimeMinuteRef}
                         defaultValue={endTimeMinuteRef.current.value}
                         className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
