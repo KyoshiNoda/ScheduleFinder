@@ -224,11 +224,10 @@ const TimeSlotInput = () => {
   const handleEndTimeMeridiemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setEndTimeMeridiem(e.target.value);
   };
-  
-  const handleColorPickerKeyPress = (e, color) => {
+
+  const handleColorPickerKeyPress = (e: React.KeyboardEvent<HTMLDivElement>, color: string) => {
     if (e.key === 'Enter' || e.key === ' ') {
-      // Handle Enter or Space key press to select a color
-      e.preventDefault(); // Prevent default behavior (e.g., scrolling on Space key)
+      e.preventDefault();
       setTimeSlotColor(color);
     }
   };
@@ -392,7 +391,7 @@ const TimeSlotInput = () => {
                         key={color}
                         id="colorPicker"
                         tabIndex={0}
-                        onKeyDown={(e) => handleColorPickerKeyPress(e,color)}
+                        onKeyDown={(e) => handleColorPickerKeyPress(e, color)}
                         className={`bg-${color}-400 h-8 w-8 cursor-pointer rounded-full border-4 lg:h-10 lg:w-10 ${
                           timeSlotColor === color ? 'border-blue-700' : 'border-none'
                         }`}
