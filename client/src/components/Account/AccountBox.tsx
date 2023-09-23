@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Tab from './Tab';
+import Tab from './Tabs';
 import ProfileTab from './Profile/ProfileTab';
 import PersonalTab from './Personal/PersonalTab';
 
