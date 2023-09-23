@@ -6,6 +6,7 @@ import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
 import { Modal, Button, Select } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
 import ClearScheduleButton from './ClearScheduleButton';
+
 import DayPicker from './DayPicker';
 import { TypesOfInput } from '../../enums';
 
@@ -359,7 +360,7 @@ const TimeSlotInput = () => {
                       className="w-3/5"
                       required
                     >
-                      <option value="AM">AM</option>
+                      <option value="AM" disabled={startTimeMeridiem === 'PM'}>AM</option>
                       <option value="PM">PM</option>
                     </Select>
                   </div>
