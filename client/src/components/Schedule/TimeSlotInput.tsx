@@ -355,7 +355,7 @@ const TimeSlotInput = () => {
                     <Select
                       value={endTimeMeridiem}
                       onChange={(e) => handleEndTimeMeridiemChange(e)}
-                      id="startMeridiemTime"
+                      id="endTimeMeridiem"
                       className="w-3/5"
                       required
                     >

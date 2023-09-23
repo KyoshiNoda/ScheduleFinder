@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { AiFillEdit } from 'react-icons/ai';
-import { Modal } from 'flowbite-react';
+import { Modal, Select } from 'flowbite-react';
 import { colors } from './TimeSlotInput';
 import { ToggleSwitch } from 'flowbite-react';
 import { DaysChecked as DaysCheckedType, TimeSlot as TimeSlotType } from '../../types';
@@ -45,13 +45,18 @@ const TimeSlot: any = (props: Props) => {
 
   // Input Refs
   const titleRef = useRef(document.createElement('input'));
+  const startTimeHourRef = useRef(document.createElement('input'));
   const startTimeRef = useRef(document.createElement('input'));
+  const endTimeHourRef = useRef(document.createElement('input'));
   const endTimeRef = useRef(document.createElement('input'));
   const locationRef = useRef(document.createElement('input'));
   const professorRef = useRef(document.createElement('input'));
 
   const [width, setWidth] = useState<number>(window.innerWidth);
   const [courseTitle, setCourseTitle] = useState<string>(props.title);
+
+  const [startTimeMeridiem, setStartTimeMeridiem] = useState<string>(props.startTime.slice(-2));
+  const [endTimeMeridiem, setEndTimeMeridiem] = useState<string>(props.endTime.slice(-2));
 
   // cuts the titles into shorter length for smaller screens
   useEffect(() => {
@@ -80,6 +85,14 @@ const TimeSlot: any = (props: Props) => {
   useEffect(() => {
     setTimeSlotColor(props.color);
   }, []);
+
+  const handleStartTimeMeridiemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStartTimeMeridiem(e.target.value);
+
+    if (e.target.value === 'PM') {
+      setEndTimeMeridiem('PM');
+    }
+  };
 
   const saveHandler = async () => {
     const updatedTimeSlot: TimeSlotType = {
@@ -181,19 +194,43 @@ const TimeSlot: any = (props: Props) => {
                 <h1 className="text-center text-5xl font-medium text-gray-900 dark:text-white">{props.title}</h1>
               )}
             </div>
-            <div className="flex items-center justify-center text-2xl dark:text-white sm:text-4xl">
+            <div className="flex flex-col items-center justify-center text-2xl dark:text-white sm:text-4xl">
               {editMode ? (
-                <div className="mx-1 w-full sm:w-1/6">
-                  <label htmlFor="startTime" className="text-2xl">
+                <>
+                  <label htmlFor="endTime" className="ml-60 self-start text-2xl">
                     Start Time
                   </label>
-                  <input
-                    id="startTime"
-                    type="text"
-                    ref={startTimeRef}
-                    className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
-                  />
-                </div>
+                  <div className="mx-1 flex w-1/2 gap-3">
+                    <div>
+                      <input
+                        id="startTime"
+                        type="text"
+                        ref={startTimeRef}
+                        className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        id="startTime"
+                        type="text"
+                        ref={startTimeRef}
+                        className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
+                      />
+                    </div>
+                    <div className="flex w-full items-end">
+                      <Select
+                        value={startTimeMeridiem}
+                        onChange={(e) => handleStartTimeMeridiemChange(e)}
+                        id="startMeridiemTime"
+                        className="w-3/4"
+                        required
+                      >
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                      </Select>
+                    </div>
+                  </div>
+                </>
               ) : (
                 <span className="mx-3">{props.startTime}</span>
               )}
@@ -201,17 +238,41 @@ const TimeSlot: any = (props: Props) => {
               {!editMode && '-'}
 
               {editMode ? (
-                <div className="mx-1 w-full sm:w-1/6">
-                  <label htmlFor="endTime" className="text-2xl">
+                <>
+                  <label htmlFor="endTime" className="ml-60 self-start text-2xl">
                     End Time
                   </label>
-                  <input
-                    id="endTime"
-                    type="text"
-                    ref={endTimeRef}
-                    className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
-                  />
-                </div>
+                  <div className="mx-1 flex w-1/2 gap-3">
+                    <div>
+                      <input
+                        id="endTime"
+                        type="text"
+                        ref={endTimeRef}
+                        className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        id="endTime"
+                        type="text"
+                        ref={endTimeRef}
+                        className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
+                      />
+                    </div>
+                    <div className="flex w-full items-end">
+                      <Select
+                        value={endTimeMeridiem}
+                        onChange={(e) => handleStartTimeMeridiemChange(e)}
+                        id="endTimeMeridiem"
+                        className="w-3/4"
+                        required
+                      >
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                      </Select>
+                    </div>
+                  </div>
+                </>
               ) : (
                 <span className="mx-3">{props.endTime}</span>
               )}
