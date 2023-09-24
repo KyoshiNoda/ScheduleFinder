@@ -9,6 +9,7 @@ This PR [adds/removes/fixes/replaces] the [feature/bug/etc].
 
 - [ ] 🍕 Feature
 - [ ] 🐛 Bug Fix
+- [ ] ✨ Enhancement
 - [ ] 📝 Documentation Update
 - [ ] 🎨 Style
 - [ ] 🧑‍💻 Code Refactor
