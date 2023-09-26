@@ -176,6 +176,12 @@ const TimeSlot: any = (props: Props) => {
       console.log(error); // handle errors here
     }
   };
+  const handleColorPickerKeyPress = (e: React.KeyboardEvent<HTMLDivElement>, color: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setTimeSlotColor(color);
+    }
+  };
 
   return (
     <>
@@ -359,6 +365,9 @@ const TimeSlot: any = (props: Props) => {
                 {editMode &&
                   colors.map((color) => (
                     <div
+                      id="colorPicker"
+                      tabIndex={0}
+                      onKeyDown={(e) => handleColorPickerKeyPress(e, color)}
                       key={color}
                       className={`bg-${color}-400 h-7 w-7 cursor-pointer rounded-full border-4 p-1 sm:h-10 sm:w-10 ${
                         timeSlotColor === color ? 'border-blue-700' : 'border-none'
