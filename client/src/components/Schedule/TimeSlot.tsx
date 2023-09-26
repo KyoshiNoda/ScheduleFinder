@@ -221,7 +221,7 @@ const TimeSlot: any = (props: Props) => {
                         id="startTime"
                         type="number"
                         ref={startTimeHourRef}
-                        defaultValue={startTimeHourRef.current.value}
+                        defaultValue={startTimeHourRef.current ? startTimeHourRef.current.value : ''}
                         className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                       />
                     </div>
@@ -231,7 +231,7 @@ const TimeSlot: any = (props: Props) => {
                         id="startTime"
                         type="number"
                         ref={startTimeMinuteRef}
-                        defaultValue={startTimeMinuteRef.current.value}
+                        defaultValue={startTimeMinuteRef.current ? startTimeMinuteRef.current.value : ''}
                         className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                       />
                     </div>
@@ -262,7 +262,7 @@ const TimeSlot: any = (props: Props) => {
                         id="endTime"
                         type="number"
                         ref={endTimeHourRef}
-                        defaultValue={endTimeHourRef.current.value}
+                        defaultValue={endTimeHourRef.current ? endTimeHourRef.current.value : ''}
                         className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                       />
                     </div>
@@ -272,7 +272,7 @@ const TimeSlot: any = (props: Props) => {
                         id="endTime"
                         type="number"
                         ref={endTimeMinuteRef}
-                        defaultValue={endTimeMinuteRef.current.value}
+                        defaultValue={endTimeMinuteRef.current ? endTimeMinuteRef.current.value : ''}
                         className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                       />
                     </div>
