@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { AiFillEdit } from 'react-icons/ai';
-import { Modal } from 'flowbite-react';
+import { Modal, Select } from 'flowbite-react';
 import { colors } from './TimeSlotInput';
 import { ToggleSwitch } from 'flowbite-react';
 import { DaysChecked as DaysCheckedType, TimeSlot as TimeSlotType } from '../../types';
@@ -45,13 +45,18 @@ const TimeSlot: any = (props: Props) => {
 
   // Input Refs
   const titleRef = useRef(document.createElement('input'));
-  const startTimeRef = useRef(document.createElement('input'));
-  const endTimeRef = useRef(document.createElement('input'));
+  const startTimeHourRef = useRef(document.createElement('input'));
+  const startTimeMinuteRef = useRef(document.createElement('input'));
+  const endTimeHourRef = useRef(document.createElement('input'));
+  const endTimeMinuteRef = useRef(document.createElement('input'));
   const locationRef = useRef(document.createElement('input'));
   const professorRef = useRef(document.createElement('input'));
 
   const [width, setWidth] = useState<number>(window.innerWidth);
   const [courseTitle, setCourseTitle] = useState<string>(props.title);
+
+  const [startTimeMeridiem, setStartTimeMeridiem] = useState<string>(props.startTime.slice(-2));
+  const [endTimeMeridiem, setEndTimeMeridiem] = useState<string>(props.endTime.slice(-2));
 
   // cuts the titles into shorter length for smaller screens
   useEffect(() => {
@@ -70,9 +75,21 @@ const TimeSlot: any = (props: Props) => {
 
   // populate input values in editModal modal
   useEffect(() => {
+    const startTimeOnly = props.startTime.slice(0, -3);
+    const startTime = startTimeOnly.split(':');
+    const startHour = startTime[0];
+    const startMin = startTime[1].trim();
+
+    const endTimeOnly = props.endTime.slice(0, -3);
+    const endTime = endTimeOnly.split(':');
+    const endHour = endTime[0];
+    const endMin = endTime[1].trim();
+
     if (titleRef.current) titleRef.current.value = props.title;
-    if (startTimeRef.current) startTimeRef.current.value = props.startTime;
-    if (endTimeRef.current) endTimeRef.current.value = props.endTime;
+    if (startTimeHourRef.current) startTimeHourRef.current.value = startHour;
+    if (startTimeMinuteRef.current) startTimeMinuteRef.current.value = startMin;
+    if (endTimeHourRef.current) endTimeHourRef.current.value = endHour;
+    if (endTimeMinuteRef.current) endTimeMinuteRef.current.value = endMin;
     if (locationRef.current) locationRef.current.value = props.location || '';
     if (professorRef.current) professorRef.current.value = props.professor || '';
   }, [editMode]);
@@ -81,12 +98,23 @@ const TimeSlot: any = (props: Props) => {
     setTimeSlotColor(props.color);
   }, []);
 
+  const handleStartTimeMeridiemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStartTimeMeridiem(e.target.value);
+
+    if (e.target.value === 'PM') {
+      setEndTimeMeridiem('PM');
+    }
+  };
+
   const saveHandler = async () => {
+    const startTime = startTimeHourRef.current.value + ':' + startTimeMinuteRef.current.value + ' ' + startTimeMeridiem;
+    const endTime = endTimeHourRef.current.value + ':' + endTimeMinuteRef.current.value + ' ' + endTimeMeridiem;
+
     const updatedTimeSlot: TimeSlotType = {
       _id: props.id!,
       title: titleRef.current.value,
-      startTime: startTimeRef.current.value,
-      endTime: endTimeRef.current.value,
+      startTime: startTime,
+      endTime: endTime,
       color: timeSlotColor,
       professor: professorRef.current.value,
       location: locationRef.current.value,
@@ -148,6 +176,12 @@ const TimeSlot: any = (props: Props) => {
       console.log(error); // handle errors here
     }
   };
+  const handleColorPickerKeyPress = (e: React.KeyboardEvent<HTMLDivElement>, color: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setTimeSlotColor(color);
+    }
+  };
 
   return (
     <>
@@ -181,39 +215,92 @@ const TimeSlot: any = (props: Props) => {
                 <h1 className="text-center text-5xl font-medium text-gray-900 dark:text-white">{props.title}</h1>
               )}
             </div>
-            <div className="flex items-center justify-center text-2xl dark:text-white sm:text-4xl">
-              {editMode ? (
-                <div className="mx-1 w-full sm:w-1/6">
-                  <label htmlFor="startTime" className="text-2xl">
+            <div className="flex flex-col items-center justify-center dark:text-white sm:text-4xl">
+              {editMode && (
+                <>
+                  <label htmlFor="startTime" className="ml-60 self-start text-2xl">
                     Start Time
                   </label>
-                  <input
-                    id="startTime"
-                    type="text"
-                    ref={startTimeRef}
-                    className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
-                  />
-                </div>
-              ) : (
-                <span className="mx-3">{props.startTime}</span>
+                  <div className="mx-1 flex w-1/2 gap-3">
+                    <div>
+                      <input
+                        id="startTime"
+                        type="number"
+                        ref={startTimeHourRef}
+                        defaultValue={startTimeHourRef.current ? startTimeHourRef.current.value : ''}
+                        className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
+                      />
+                    </div>
+                    <span className="flex items-center text-lg">:</span>
+                    <div>
+                      <input
+                        id="startTime"
+                        type="number"
+                        ref={startTimeMinuteRef}
+                        defaultValue={startTimeMinuteRef.current ? startTimeMinuteRef.current.value : ''}
+                        className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
+                      />
+                    </div>
+                    <div className="flex w-full items-end">
+                      <Select
+                        value={startTimeMeridiem}
+                        onChange={(e) => handleStartTimeMeridiemChange(e)}
+                        id="startMeridiemTime"
+                        className="w-3/4"
+                        required
+                      >
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                      </Select>
+                    </div>
+                  </div>
+                </>
               )}
 
-              {!editMode && '-'}
-
-              {editMode ? (
-                <div className="mx-1 w-full sm:w-1/6">
-                  <label htmlFor="endTime" className="text-2xl">
+              {editMode && (
+                <>
+                  <label htmlFor="endTime" className="ml-60 self-start text-2xl">
                     End Time
                   </label>
-                  <input
-                    id="endTime"
-                    type="text"
-                    ref={endTimeRef}
-                    className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
-                  />
+                  <div className="mx-1 flex w-1/2 gap-3">
+                    <div>
+                      <input
+                        id="endTime"
+                        type="number"
+                        ref={endTimeHourRef}
+                        defaultValue={endTimeHourRef.current ? endTimeHourRef.current.value : ''}
+                        className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
+                      />
+                    </div>
+                    <span className="flex items-center text-lg">:</span>
+                    <div>
+                      <input
+                        id="endTime"
+                        type="number"
+                        ref={endTimeMinuteRef}
+                        defaultValue={endTimeMinuteRef.current ? endTimeMinuteRef.current.value : ''}
+                        className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
+                      />
+                    </div>
+                    <div className="flex w-full items-end">
+                      <Select
+                        value={endTimeMeridiem}
+                        onChange={(e) => handleStartTimeMeridiemChange(e)}
+                        id="endTimeMeridiem"
+                        className="w-3/4"
+                        required
+                      >
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                      </Select>
+                    </div>
+                  </div>
+                </>
+              )}
+              {!editMode && (
+                <div className="flex">
+                  <span className="mx-3">{props.startTime}</span> - <span className="mx-3">{props.endTime}</span>
                 </div>
-              ) : (
-                <span className="mx-3">{props.endTime}</span>
               )}
             </div>
 
@@ -278,6 +365,9 @@ const TimeSlot: any = (props: Props) => {
                 {editMode &&
                   colors.map((color) => (
                     <div
+                      id="colorPicker"
+                      tabIndex={0}
+                      onKeyDown={(e) => handleColorPickerKeyPress(e, color)}
                       key={color}
                       className={`bg-${color}-400 h-7 w-7 cursor-pointer rounded-full border-4 p-1 sm:h-10 sm:w-10 ${
                         timeSlotColor === color ? 'border-blue-700' : 'border-none'

@@ -6,7 +6,6 @@ import { HiLogout } from 'react-icons/hi';
 import { FcCalendar } from 'react-icons/fc';
 import { MdSettings } from 'react-icons/md';
 import { BsSearchHeart } from 'react-icons/bs';
-import { FaUserFriends } from 'react-icons/fa'
 import FriendRequest from './FriendRequest';
 
 const Navbar = ({ user }: any) => {
@@ -53,12 +52,6 @@ const Navbar = ({ user }: any) => {
             <Dropdown.Item>
               <BsSearchHeart size="20" className="mr-2" />
               Find Users
-            </Dropdown.Item>
-          </Link>
-          <Link to={'/auth/friends'}>
-            <Dropdown.Item>
-              <FaUserFriends size="20" className="mr-2" />
-              Friends
             </Dropdown.Item>
           </Link>
           <Link to={'/auth/account'}>

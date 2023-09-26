@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, ReactNode } from 'react';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { DaysChecked, TimeSlot as TimeSlotType } from '../../types';
@@ -43,6 +43,7 @@ const TimeSlotInput = () => {
   const [daysError, setDaysError] = useState<boolean>(false);
   const [timeError, setTimeError] = useState<boolean>(false);
   const [colorError, setColorError] = useState<boolean>(false);
+  const [timeIntervalError, setTimeIntervalError] = useState<boolean>(false);
   const [timeSlotError, setTimeSlotError] = useState<boolean>(false);
   const [startTimeMeridiem, setStartTimeMeridiem] = useState<string>('AM');
   const [endTimeMeridiem, setEndTimeMeridiem] = useState<string>('AM');
@@ -83,7 +84,10 @@ const TimeSlotInput = () => {
       setDaysError(true);
       return;
     }
-  
+
+    if (parseInt(endTimeHourRef.current.value) > 9) {
+      return;
+    }
 
     const daySelection: DaysChecked = {
       monday: false,
@@ -151,10 +155,22 @@ const TimeSlotInput = () => {
       if ('data' in result) {
         const { data } = result;
       }
+      const resetDays: DaysChecked = {
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+        sunday: false,
+      };
       setTimeSlotColor('border-none');
       setColorError(false);
       setTimeSlotError(false);
       setDaysError(false);
+      setSelectedDays(resetDays);
+      setStartTimeMeridiem('AM');
+      setEndTimeMeridiem('AM');
     } catch (error) {
       console.error(error);
     }
@@ -164,7 +180,13 @@ const TimeSlotInput = () => {
   const validateInput = (inputRef: React.RefObject<HTMLInputElement>, inputType: TypesOfInput) => {
     // @ts-ignore: Object is possibly 'null'.
     const inputValue: number = parseFloat(inputRef.current.value);
- 
+
+    if ((inputRef === startTimeHourRef && inputValue < 7) || (inputRef === endTimeHourRef && inputValue > 9)) {
+      setTimeIntervalError(true);
+    } else {
+      setTimeIntervalError(false);
+    }
+    
     if (inputType === TypesOfInput.HourInput) {
       if (inputValue < 1 || inputValue > 12) {
         inputRef.current?.classList.add(
@@ -226,6 +248,15 @@ const TimeSlotInput = () => {
     setEndTimeMeridiem(e.target.value);
   };
 
+  const handleColorPickerKeyPress = (e: React.KeyboardEvent<HTMLDivElement>, color: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setTimeSlotColor(color);
+    }
+  };
+
+  console.log(startTimeHourRef.current.value.length); //////
+
   return (
     <>
       {!isFetching && data && (
@@ -250,7 +281,7 @@ const TimeSlotInput = () => {
                 <label htmlFor="days" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                   Days
                 </label>
-                <DayPicker selectedDays={selectedDays} setSelectedDays={setSelectedDays} daysError = {daysError}/>
+                <DayPicker selectedDays={selectedDays} setSelectedDays={setSelectedDays} daysError={daysError} />
                 <div className="flex w-full justify-center">{daysError && <p className="text-rose-500">Please pick a day!</p>}</div>
               </div>
               <div className="flex flex-col">
@@ -337,22 +368,25 @@ const TimeSlotInput = () => {
                     <Select
                       value={endTimeMeridiem}
                       onChange={(e) => handleEndTimeMeridiemChange(e)}
-                      id="startMeridiemTime"
+                      id="endTimeMeridiem"
                       className="w-3/5"
                       required
                     >
-                      <option value="AM">AM</option>
+                      <option value="AM" disabled={startTimeMeridiem === 'PM'}>
+                        AM
+                      </option>
                       <option value="PM">PM</option>
                     </Select>
                   </div>
                 </div>
+                {timeIntervalError && <strong className="mt-3 text-sm text-red-500">Valid interval is between 6:00 AM and 9:00 PM</strong>}
               </div>
               <div className="flex gap-3">
                 <div className="w-full">
                   <label htmlFor="location" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                    Location
+                    Location 
                   </label>
-                  <input
+                  <input  
                     ref={locationRef}
                     type="text"
                     id="location"
@@ -374,12 +408,18 @@ const TimeSlotInput = () => {
                 </div>
               </div>
               <div>
+                <label htmlFor="colorPicker" className="font-medium dark:text-white">
+                  Select a color
+                </label>
                 <div className="flex justify-center">
                   <div className="my-2 grid grid-cols-7 gap-2">
                     {colors.map((color) => (
                       <div
                         onClick={() => setTimeSlotColor(color)}
                         key={color}
+                        id="colorPicker"
+                        tabIndex={0}
+                        onKeyDown={(e) => handleColorPickerKeyPress(e, color)}
                         className={`bg-${color}-400 h-8 w-8 cursor-pointer rounded-full border-4 lg:h-10 lg:w-10 ${
                           timeSlotColor === color ? 'border-blue-700' : 'border-none'
                         }`}
