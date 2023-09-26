@@ -386,7 +386,7 @@ const TimeSlotInput = () => {
                   <label htmlFor="location" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                     Location 
                   </label>
-                  <input
+                  <input 
                     ref={locationRef}
                     type="text"
                     id="location"
