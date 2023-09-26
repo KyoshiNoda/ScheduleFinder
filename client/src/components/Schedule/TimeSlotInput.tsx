@@ -384,7 +384,7 @@ const TimeSlotInput = () => {
               <div className="flex gap-3">
                 <div className="w-full">
                   <label htmlFor="location" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                    Location
+                    Location 
                   </label>
                   <input
                     ref={locationRef}
