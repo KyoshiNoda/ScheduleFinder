@@ -1,6 +1,11 @@
 import { Request, Response } from 'express';
 import User from '../models/userModel';
 import bcrypt from 'bcrypt';
+import { v2 as cloudinary } from 'cloudinary';
+import multer from 'multer';
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 class UserController {
   // GET all user
@@ -123,6 +128,65 @@ class UserController {
       return res.status(200).send({ message: 'Password Changed!', updatedUser });
     } catch (error: any) {
       return res.status(500).send({ error: 'Error occurred' });
+    }
+  }
+
+  public static async changeProfilePicture(req: any, res: any) {
+    const userID: string = req.user.data._id;
+    try {
+      const uploadedFile = req.file;
+      const fileBuffer = uploadedFile.buffer;
+      const fileData = fileBuffer.toString('base64');
+      const result = await cloudinary.uploader.upload(`data:image/jpeg;base64,${fileData}`, {
+        folder: 'uploads',
+      });
+
+      const user = await User.findOneAndUpdate({ _id: userID },
+        {
+          photoURL: result.secure_url,
+        }
+      ).exec();
+      if (!user) {
+        return res.status(404).json({
+          message: `User ${userID} not found`,
+        });
+      }
+
+      res.status(200).send({
+        message: 'Profile picture updated successfully',
+        imageUrl: result.secure_url,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: `Error updating User ${userID}'s photoURL`,
+        error: err,
+      });
+    }
+  }
+  public static async deleteProfilePicture(req: any, res: any) {
+    const userID: string = req.user.data._id;
+    try {
+      const user = await User.findOneAndUpdate(
+        { _id: userID },
+        {
+          photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s',
+        }
+      ).exec();
+      res.status(200).send({
+        message: 'Profile picture removed successfully',
+      });
+      if (!user) {
+        return res.status(404).json({
+          message: `User ${userID} not found`,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: `Error removing User ${userID}'s photoURL`,
+        error: err,
+      });
     }
   }
 }
