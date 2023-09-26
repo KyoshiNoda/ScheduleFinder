@@ -1,10 +1,5 @@
-import Toggle from '../components/Toggle';
 import { AiOutlineCheck } from 'react-icons/ai';
-import {
-  useGetUserFriendRequestsQuery,
-  useAcceptFriendRequestMutation,
-  useRejectFriendRequestMutation,
-} from '../redux/services/user/userService';
+import { useGetUserFriendRequestsQuery, useAcceptFriendRequestMutation, useRejectFriendRequestMutation } from '../redux/services/user/userService';
 import { Spinner } from 'flowbite-react';
 const Notifications = () => {
   const { data, isFetching } = useGetUserFriendRequestsQuery('User');
@@ -28,12 +23,7 @@ const Notifications = () => {
   };
   return (
     <div className="flex min-h-full w-screen flex-col bg-slate-400 p-3 dark:bg-slate-900 lg:gap-40">
-      <div className="flex justify-end">
-        <Toggle />
-      </div>
-      <div className="text-bold flex justify-center text-3xl dark:text-white">
-        Friend Requests
-      </div>
+      <div className="text-bold flex justify-center text-3xl dark:text-white">Friend Requests</div>
       <div className="flex justify-center">
         <div className="flex w-full flex-col items-center rounded-lg bg-white pt-3 dark:bg-slate-800 lg:h-1/2 lg:w-1/2">
           {!isFetching ? (
@@ -49,9 +39,7 @@ const Notifications = () => {
                     <span className="font-semibold text-gray-900 dark:text-white">
                       {user.firstName} {user.lastName}
                     </span>
-                    <div className=" text-sm text-blue-600 dark:text-blue-500">
-                      {user.school}
-                    </div>
+                    <div className=" text-sm text-blue-600 dark:text-blue-500">{user.school}</div>
                   </div>
                   <div className="flex-grow" />
                   <div className="m-auto flex items-center gap-1">

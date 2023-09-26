@@ -1,7 +1,6 @@
 import { Label, TextInput, Toast } from 'flowbite-react';
 import { HiCheck } from 'react-icons/hi';
 import UserContainer from '../components/findUsers/UserContainer';
-import Toggle from '../components/Toggle';
 import { useState } from 'react';
 import { useAppSelector } from '../redux/store';
 import { useAppDispatch } from '../redux/store';
@@ -18,9 +17,6 @@ const FindUser = () => {
   };
   return (
     <div className="flex min-h-full flex-col items-center space-y-10 bg-slate-400 p-6 dark:bg-slate-900">
-      <div className="self-end">
-        <Toggle />
-      </div>
       <div>
         <form className="flex flex-col gap-8 lg:flex-row">
           <div>

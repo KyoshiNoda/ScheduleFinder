@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, ReactNode } from 'react';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { DaysChecked, TimeSlot as TimeSlotType } from '../../types';
@@ -6,6 +6,9 @@ import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
 import { Modal, Button, Select } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
 import ClearScheduleButton from './ClearScheduleButton';
+import DayPicker from './DayPicker';
+import { TypesOfInput } from '../../enums';
+
 export const colors: string[] = [
   'slate',
   'red',
@@ -27,11 +30,6 @@ const TimeSlotInput = () => {
   // || Refs ||
   const formRef = useRef(document.createElement('form'));
   const titleRef = useRef(document.createElement('input'));
-  const mondayRef = useRef(document.createElement('input'));
-  const tuesdayRef = useRef(document.createElement('input'));
-  const wednesdayRef = useRef(document.createElement('input'));
-  const thursdayRef = useRef(document.createElement('input'));
-  const fridayRef = useRef(document.createElement('input'));
   const startTimeHourRef = useRef(document.createElement('input'));
   const startTimeMinutesRef = useRef(document.createElement('input'));
   const endTimeHourRef = useRef(document.createElement('input'));
@@ -41,14 +39,24 @@ const TimeSlotInput = () => {
 
   // || Local State ||
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
+  const [inputValidationFailed, setInputValidationFailed] = useState<boolean>(false);
   const [daysError, setDaysError] = useState<boolean>(false);
   const [timeError, setTimeError] = useState<boolean>(false);
   const [colorError, setColorError] = useState<boolean>(false);
+  const [timeIntervalError, setTimeIntervalError] = useState<boolean>(false);
   const [timeSlotError, setTimeSlotError] = useState<boolean>(false);
   const [startTimeMeridiem, setStartTimeMeridiem] = useState<string>('AM');
   const [endTimeMeridiem, setEndTimeMeridiem] = useState<string>('AM');
 
   const [createTimeSlotMutation] = useCreateTimeSlotMutation();
+
+  const [selectedDays, setSelectedDays] = useState({
+    monday: false,
+    tuesday: false,
+    wednesday: false,
+    thursday: false,
+    friday: false,
+  });
 
   let scheduleID = '';
   const { data, isFetching } = useGetScheduleQuery('schedule', {
@@ -67,18 +75,17 @@ const TimeSlotInput = () => {
 
   const addTimeSlot = async (event: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
+    const { monday, tuesday, wednesday, thursday, friday } = selectedDays;
+
+    if (inputValidationFailed) return;
 
     // If no checkboxes have been selected, the form shouldn't be submitted.
-    if (
-      !(
-        mondayRef.current.checked ||
-        tuesdayRef.current.checked ||
-        wednesdayRef.current.checked ||
-        thursdayRef.current.checked ||
-        fridayRef.current.checked
-      )
-    ) {
+    if (!(monday || tuesday || wednesday || thursday || friday)) {
       setDaysError(true);
+      return;
+    }
+
+    if (parseInt(endTimeHourRef.current.value) > 9) {
       return;
     }
 
@@ -92,23 +99,23 @@ const TimeSlotInput = () => {
       sunday: false,
     };
 
-    if (mondayRef.current.checked) {
+    if (monday) {
       daySelection.monday = true;
       setDaysError(false);
     }
-    if (tuesdayRef.current.checked) {
+    if (tuesday) {
       daySelection.tuesday = true;
       setDaysError(false);
     }
-    if (wednesdayRef.current.checked) {
+    if (wednesday) {
       daySelection.wednesday = true;
       setDaysError(false);
     }
-    if (thursdayRef.current.checked) {
+    if (thursday) {
       daySelection.thursday = true;
       setDaysError(false);
     }
-    if (fridayRef.current.checked) {
+    if (friday) {
       daySelection.friday = true;
       setDaysError(false);
     }
@@ -148,13 +155,85 @@ const TimeSlotInput = () => {
       if ('data' in result) {
         const { data } = result;
       }
+      const resetDays: DaysChecked = {
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+        sunday: false,
+      };
       setTimeSlotColor('border-none');
       setColorError(false);
       setTimeSlotError(false);
+      setDaysError(false);
+      setSelectedDays(resetDays);
+      setStartTimeMeridiem('AM');
+      setEndTimeMeridiem('AM');
     } catch (error) {
       console.error(error);
     }
     formRef.current.reset();
+  };
+
+  const validateInput = (inputRef: React.RefObject<HTMLInputElement>, inputType: TypesOfInput) => {
+    // @ts-ignore: Object is possibly 'null'.
+    const inputValue: number = parseFloat(inputRef.current.value);
+
+    if ((inputRef === startTimeHourRef && inputValue < 7) || (inputRef === endTimeHourRef && inputValue > 9)) {
+      setTimeIntervalError(true);
+    } else {
+      setTimeIntervalError(false);
+    }
+
+    if (inputType === TypesOfInput.HourInput) {
+      if (inputValue < 1 || inputValue > 12) {
+        inputRef.current?.classList.add(
+          'border-red-500',
+          'focus:border-rose-500',
+          'focus:ring-rose-500',
+          'dark:border-red-500',
+          'dark:focus:border-rose-500',
+          'dark:focus:ring-rose-500'
+        );
+        setInputValidationFailed(true);
+      } else {
+        inputRef.current?.classList.remove(
+          'border-red-500',
+          'focus:border-rose-500',
+          'focus:ring-rose-500',
+          'dark:border-red-500',
+          'dark:focus:border-rose-500',
+          'dark:focus:ring-rose-500'
+        );
+        setInputValidationFailed(false);
+      }
+    }
+
+    if (inputType === TypesOfInput.MinutesInput) {
+      if (inputValue < 0 || inputValue > 59) {
+        inputRef.current?.classList.add(
+          'border-red-500',
+          'focus:border-rose-500',
+          'focus:ring-rose-500',
+          'dark:border-red-500',
+          'dark:focus:border-rose-500',
+          'dark:focus:ring-rose-500'
+        );
+        setInputValidationFailed(true);
+      } else {
+        inputRef.current?.classList.remove(
+          'border-red-500',
+          'focus:border-rose-500',
+          'focus:ring-rose-500',
+          'dark:border-red-500',
+          'dark:focus:border-rose-500',
+          'dark:focus:ring-rose-500'
+        );
+        setInputValidationFailed(false);
+      }
+    }
   };
 
   const handleStartTimeMeridiemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -168,6 +247,15 @@ const TimeSlotInput = () => {
   const handleEndTimeMeridiemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setEndTimeMeridiem(e.target.value);
   };
+
+  const handleColorPickerKeyPress = (e: React.KeyboardEvent<HTMLDivElement>, color: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setTimeSlotColor(color);
+    }
+  };
+
+  console.log(startTimeHourRef.current.value.length); //////
 
   return (
     <>
@@ -193,82 +281,7 @@ const TimeSlotInput = () => {
                 <label htmlFor="days" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                   Days
                 </label>
-                <ul
-                  className={`w-full items-center rounded-lg border bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex ${
-                    daysError ? ' border-rose-400 dark:border-rose-400' : ''
-                  }`}
-                >
-                  <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                    <div className="flex items-center pl-3">
-                      <input
-                        ref={mondayRef}
-                        id="monday"
-                        type="checkbox"
-                        value="monday"
-                        className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                      />
-                      <label htmlFor="monday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Mon
-                      </label>
-                    </div>
-                  </li>
-                  <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                    <div className="flex items-center pl-3">
-                      <input
-                        ref={tuesdayRef}
-                        id="tuesday"
-                        type="checkbox"
-                        value="tuesday"
-                        className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                      />
-                      <label htmlFor="tuesday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Tues
-                      </label>
-                    </div>
-                  </li>
-                  <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                    <div className="flex items-center pl-3">
-                      <input
-                        ref={wednesdayRef}
-                        id="wednesday"
-                        type="checkbox"
-                        value="wednesday"
-                        className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                      />
-                      <label htmlFor="wednesday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Wed
-                      </label>
-                    </div>
-                  </li>
-                  <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                    <div className="flex items-center pl-3">
-                      <input
-                        ref={thursdayRef}
-                        id="thursday"
-                        type="checkbox"
-                        value="thursday"
-                        className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                      />
-                      <label htmlFor="thursday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Thurs
-                      </label>
-                    </div>
-                  </li>
-                  <li className="w-full dark:border-gray-600">
-                    <div className="flex items-center pl-3">
-                      <input
-                        ref={fridayRef}
-                        id="friday"
-                        type="checkbox"
-                        value="friday"
-                        className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                      />
-                      <label htmlFor="friday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Fri
-                      </label>
-                    </div>
-                  </li>
-                </ul>
+                <DayPicker selectedDays={selectedDays} setSelectedDays={setSelectedDays} daysError={daysError} />
                 <div className="flex w-full justify-center">{daysError && <p className="text-rose-500">Please pick a day!</p>}</div>
               </div>
               <div className="flex flex-col">
@@ -282,9 +295,11 @@ const TimeSlotInput = () => {
                         ref={startTimeHourRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                          timeError && 'border-rose-500'
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
+                          'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
                         }`}
+                        onChange={() => validateInput(startTimeHourRef, TypesOfInput.HourInput)}
                         placeholder="12"
                         maxLength={2}
                         required
@@ -294,9 +309,11 @@ const TimeSlotInput = () => {
                         ref={startTimeMinutesRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                          timeError && 'border-rose-500'
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
+                          'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
                         }`}
+                        onChange={() => validateInput(startTimeMinutesRef, TypesOfInput.MinutesInput)}
                         placeholder="00"
                         maxLength={2}
                         required
@@ -324,9 +341,11 @@ const TimeSlotInput = () => {
                         ref={endTimeHourRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                          timeError && 'border-rose-500'
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
+                          'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
                         }`}
+                        onChange={() => validateInput(endTimeHourRef, TypesOfInput.HourInput)}
                         placeholder="12"
                         maxLength={2}
                         required
@@ -336,9 +355,11 @@ const TimeSlotInput = () => {
                         ref={endTimeMinutesRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-center text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${
-                          timeError && 'border-rose-500'
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
+                          'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
                         }`}
+                        onChange={() => validateInput(endTimeMinutesRef, TypesOfInput.MinutesInput)}
                         placeholder="00"
                         maxLength={2}
                         required
@@ -347,22 +368,25 @@ const TimeSlotInput = () => {
                     <Select
                       value={endTimeMeridiem}
                       onChange={(e) => handleEndTimeMeridiemChange(e)}
-                      id="startMeridiemTime"
+                      id="endTimeMeridiem"
                       className="w-3/5"
                       required
                     >
-                      <option value="AM">AM</option>
+                      <option value="AM" disabled={startTimeMeridiem === 'PM'}>
+                        AM
+                      </option>
                       <option value="PM">PM</option>
                     </Select>
                   </div>
                 </div>
+                {timeIntervalError && <strong className="mt-3 text-sm text-red-500">Valid interval is between 6:00 AM and 9:00 PM</strong>}
               </div>
               <div className="flex gap-3">
                 <div className="w-full">
                   <label htmlFor="location" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                    Location
+                    Location 
                   </label>
-                  <input
+                  <input 
                     ref={locationRef}
                     type="text"
                     id="location"
@@ -384,12 +408,18 @@ const TimeSlotInput = () => {
                 </div>
               </div>
               <div>
+                <label htmlFor="colorPicker" className="font-medium dark:text-white">
+                  Select a color
+                </label>
                 <div className="flex justify-center">
                   <div className="my-2 grid grid-cols-7 gap-2">
                     {colors.map((color) => (
                       <div
                         onClick={() => setTimeSlotColor(color)}
                         key={color}
+                        id="colorPicker"
+                        tabIndex={0}
+                        onKeyDown={(e) => handleColorPickerKeyPress(e, color)}
                         className={`bg-${color}-400 h-8 w-8 cursor-pointer rounded-full border-4 lg:h-10 lg:w-10 ${
                           timeSlotColor === color ? 'border-blue-700' : 'border-none'
                         }`}

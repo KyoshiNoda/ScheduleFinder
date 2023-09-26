@@ -52,7 +52,7 @@ const CompareSchedule = () => {
       .then((res) => res.json())
       .then((data) => {
         setScheduleB(data);
-        setTimeSlots(data.timeSlot);
+        setTimeSlots(data.timeSlots);
       })
       .catch((err) => console.log(err));
   }, []);
