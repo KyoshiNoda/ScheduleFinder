@@ -164,7 +164,7 @@ const TimeSlotInput = () => {
   const validateInput = (inputRef: React.RefObject<HTMLInputElement>, inputType: TypesOfInput) => {
     // @ts-ignore: Object is possibly 'null'.
     const inputValue: number = parseFloat(inputRef.current.value);
-
+ 
     if (inputType === TypesOfInput.HourInput) {
       if (inputValue < 1 || inputValue > 12) {
         inputRef.current?.classList.add(
