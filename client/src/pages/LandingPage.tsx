@@ -13,7 +13,7 @@ const LandingPage = () => {
   return (
     <div className="flex min-h-full w-full flex-col gap-6 bg-slate-100 p-3 dark:bg-slate-900">
       <div className="flex justify-end">
-        <Toggle getTheme={(theme) => setTheme(theme)} />
+        <Toggle getTheme={(theme) => setTheme(theme)} overrideBackground = {"bg-slate-100"}/>
       </div>
       <div className="slate-50 flex flex-col gap-4 sm:gap-8 sm:px-14 md:gap-14 lg:grid lg:grid-cols-2 lg:gap-0 lg:gap-x-14 2xl:mt-20">
         <div className=" flex flex-col gap-y-3 sm:gap-y-6 lg:mb-40 lg:justify-center lg:self-center">

@@ -1,18 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { AiFillEdit } from 'react-icons/ai';
-import { Modal } from 'flowbite-react';
+import { Modal, Select } from 'flowbite-react';
 import { colors } from './TimeSlotInput';
 import { ToggleSwitch } from 'flowbite-react';
-import {
-  DaysChecked as DaysCheckedType,
-  TimeSlot as TimeSlotType,
-} from '../../types';
-import {
-  useDeleteTimeSlotMutation,
-  useUpdateTimeSlotMutation,
-} from '../../redux/services/schedule/scheduleService';
+import { DaysChecked as DaysCheckedType, TimeSlot as TimeSlotType } from '../../types';
+import { useDeleteTimeSlotMutation, useUpdateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useAppSelector } from '../../redux/store';
+import DayPicker from './DayPicker';
 
 type Props = {
   id?: undefined | string;
@@ -46,54 +41,89 @@ const TimeSlot: any = (props: Props) => {
   const [isTimeSlotClicked, setIsTimeSlotClicked] = useState<boolean>(false);
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [days, setDays] = useState<DaysCheckedType>(props.days);
-  const mondayRef = useRef(document.createElement('input'));
-  const tuesdayRef = useRef(document.createElement('input'));
-  const wednesdayRef = useRef(document.createElement('input'));
-  const thursdayRef = useRef(document.createElement('input'));
-  const fridayRef = useRef(document.createElement('input'));
+  const [selectedDays, setSelectedDays] = useState<DaysCheckedType>(props.days);
 
   // Input Refs
   const titleRef = useRef(document.createElement('input'));
-  const startTimeRef = useRef(document.createElement('input'));
-  const endTimeRef = useRef(document.createElement('input'));
+  const startTimeHourRef = useRef(document.createElement('input'));
+  const startTimeMinuteRef = useRef(document.createElement('input'));
+  const endTimeHourRef = useRef(document.createElement('input'));
+  const endTimeMinuteRef = useRef(document.createElement('input'));
   const locationRef = useRef(document.createElement('input'));
   const professorRef = useRef(document.createElement('input'));
 
+  const [width, setWidth] = useState<number>(window.innerWidth);
+  const [courseTitle, setCourseTitle] = useState<string>(props.title);
+
+  const [startTimeMeridiem, setStartTimeMeridiem] = useState<string>(props.startTime.slice(-2));
+  const [endTimeMeridiem, setEndTimeMeridiem] = useState<string>(props.endTime.slice(-2));
+
+  // cuts the titles into shorter length for smaller screens
   useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    if (width < 450) {
+      const newTitle = props.title.slice(0, 6);
+      setCourseTitle(newTitle);
+    }
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [width]);
+
+  // populate input values in editModal modal
+  useEffect(() => {
+    const startTimeOnly = props.startTime.slice(0, -3);
+    const startTime = startTimeOnly.split(':');
+    const startHour = startTime[0];
+    const startMin = startTime[1].trim();
+
+    const endTimeOnly = props.endTime.slice(0, -3);
+    const endTime = endTimeOnly.split(':');
+    const endHour = endTime[0];
+    const endMin = endTime[1].trim();
+
     if (titleRef.current) titleRef.current.value = props.title;
-    if (startTimeRef.current) startTimeRef.current.value = props.startTime;
-    if (endTimeRef.current) endTimeRef.current.value = props.endTime;
+    if (startTimeHourRef.current) startTimeHourRef.current.value = startHour;
+    if (startTimeMinuteRef.current) startTimeMinuteRef.current.value = startMin;
+    if (endTimeHourRef.current) endTimeHourRef.current.value = endHour;
+    if (endTimeMinuteRef.current) endTimeMinuteRef.current.value = endMin;
     if (locationRef.current) locationRef.current.value = props.location || '';
-    if (professorRef.current)
-      professorRef.current.value = props.professor || '';
+    if (professorRef.current) professorRef.current.value = props.professor || '';
   }, [editMode]);
 
   useEffect(() => {
     setTimeSlotColor(props.color);
   }, []);
 
+  const handleStartTimeMeridiemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStartTimeMeridiem(e.target.value);
+
+    if (e.target.value === 'PM') {
+      setEndTimeMeridiem('PM');
+    }
+  };
+
   const saveHandler = async () => {
+    const startTime = startTimeHourRef.current.value + ':' + startTimeMinuteRef.current.value + ' ' + startTimeMeridiem;
+    const endTime = endTimeHourRef.current.value + ':' + endTimeMinuteRef.current.value + ' ' + endTimeMeridiem;
+
     const updatedTimeSlot: TimeSlotType = {
       _id: props.id!,
       title: titleRef.current.value,
-      startTime: startTimeRef.current.value,
-      endTime: endTimeRef.current.value,
+      startTime: startTime,
+      endTime: endTime,
       color: timeSlotColor,
       professor: professorRef.current.value,
       location: locationRef.current.value,
       days: props.days,
     };
 
-    if (
-      !(
-        mondayRef.current.checked ||
-        tuesdayRef.current.checked ||
-        wednesdayRef.current.checked ||
-        thursdayRef.current.checked ||
-        fridayRef.current.checked
-      )
-    ) {
+    const { monday, tuesday, wednesday, thursday, friday } = selectedDays;
+
+    if (!(monday || tuesday || wednesday || thursday || friday)) {
       try {
         await updateTimeSlotMutation({
           scheduleId: scheduleID,
@@ -113,11 +143,11 @@ const TimeSlot: any = (props: Props) => {
         sunday: false,
       };
 
-      if (mondayRef.current.checked) daySelection.monday = true;
-      if (tuesdayRef.current.checked) daySelection.tuesday = true;
-      if (wednesdayRef.current.checked) daySelection.wednesday = true;
-      if (thursdayRef.current.checked) daySelection.thursday = true;
-      if (fridayRef.current.checked) daySelection.friday = true;
+      if (monday) daySelection.monday = true;
+      if (tuesday) daySelection.tuesday = true;
+      if (wednesday) daySelection.wednesday = true;
+      if (thursday) daySelection.thursday = true;
+      if (friday) daySelection.friday = true;
 
       updatedTimeSlot.days = daySelection;
       updatedTimeSlot.color = timeSlotColor;
@@ -146,6 +176,12 @@ const TimeSlot: any = (props: Props) => {
       console.log(error); // handle errors here
     }
   };
+  const handleColorPickerKeyPress = (e: React.KeyboardEvent<HTMLDivElement>, color: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setTimeSlotColor(color);
+    }
+  };
 
   return (
     <>
@@ -161,11 +197,7 @@ const TimeSlot: any = (props: Props) => {
         <Modal.Header />
         <Modal.Body>
           <div className="flex flex-col gap-4">
-            <ToggleSwitch
-              checked={editMode}
-              label="Edit Mode"
-              onChange={() => setEditMode(!editMode)}
-            />
+            <ToggleSwitch checked={editMode} label="Edit Mode" onChange={() => setEditMode(!editMode)} />
             <div className="flex justify-center">
               {editMode ? (
                 <div className="w-full sm:w-1/2">
@@ -180,153 +212,115 @@ const TimeSlot: any = (props: Props) => {
                   />
                 </div>
               ) : (
-                <h1 className="text-center text-5xl font-medium text-gray-900 dark:text-white">
-                  {props.title}
-                </h1>
+                <h1 className="text-center text-5xl font-medium text-gray-900 dark:text-white">{props.title}</h1>
               )}
             </div>
-            <div className="flex items-center justify-center text-2xl dark:text-white sm:text-4xl">
-              {editMode ? (
-                <div className="mx-1 w-full sm:w-1/6">
-                  <label htmlFor="startTime" className="text-2xl">
+            <div className="flex flex-col items-center justify-center dark:text-white sm:text-4xl">
+              {editMode && (
+                <>
+                  <label htmlFor="startTime" className="ml-60 self-start text-2xl">
                     Start Time
                   </label>
-                  <input
-                    id="startTime"
-                    type="text"
-                    ref={startTimeRef}
-                    className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
-                  />
-                </div>
-              ) : (
-                <span className="mx-3">{props.startTime}</span>
+                  <div className="mx-1 flex w-1/2 gap-3">
+                    <div>
+                      <input
+                        id="startTime"
+                        type="number"
+                        ref={startTimeHourRef}
+                        defaultValue={startTimeHourRef.current ? startTimeHourRef.current.value : ''}
+                        className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
+                      />
+                    </div>
+                    <span className="flex items-center text-lg">:</span>
+                    <div>
+                      <input
+                        id="startTime"
+                        type="number"
+                        ref={startTimeMinuteRef}
+                        defaultValue={startTimeMinuteRef.current ? startTimeMinuteRef.current.value : ''}
+                        className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
+                      />
+                    </div>
+                    <div className="flex w-full items-end">
+                      <Select
+                        value={startTimeMeridiem}
+                        onChange={(e) => handleStartTimeMeridiemChange(e)}
+                        id="startMeridiemTime"
+                        className="w-3/4"
+                        required
+                      >
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                      </Select>
+                    </div>
+                  </div>
+                </>
               )}
 
-              {!editMode && '-'}
-
-              {editMode ? (
-                <div className="mx-1 w-full sm:w-1/6">
-                  <label htmlFor="endTime" className="text-2xl">
+              {editMode && (
+                <>
+                  <label htmlFor="endTime" className="ml-60 self-start text-2xl">
                     End Time
                   </label>
-                  <input
-                    id="endTime"
-                    type="text"
-                    ref={endTimeRef}
-                    className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
-                  />
+                  <div className="mx-1 flex w-1/2 gap-3">
+                    <div>
+                      <input
+                        id="endTime"
+                        type="number"
+                        ref={endTimeHourRef}
+                        defaultValue={endTimeHourRef.current ? endTimeHourRef.current.value : ''}
+                        className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
+                      />
+                    </div>
+                    <span className="flex items-center text-lg">:</span>
+                    <div>
+                      <input
+                        id="endTime"
+                        type="number"
+                        ref={endTimeMinuteRef}
+                        defaultValue={endTimeMinuteRef.current ? endTimeMinuteRef.current.value : ''}
+                        className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
+                      />
+                    </div>
+                    <div className="flex w-full items-end">
+                      <Select
+                        value={endTimeMeridiem}
+                        onChange={(e) => handleStartTimeMeridiemChange(e)}
+                        id="endTimeMeridiem"
+                        className="w-3/4"
+                        required
+                      >
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                      </Select>
+                    </div>
+                  </div>
+                </>
+              )}
+              {!editMode && (
+                <div className="flex">
+                  <span className="mx-3">{props.startTime}</span> - <span className="mx-3">{props.endTime}</span>
                 </div>
-              ) : (
-                <span className="mx-3">{props.endTime}</span>
               )}
             </div>
 
             {editMode ? (
-              <ul className="w-full items-center rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex">
-                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                  <div className="flex items-center pl-3">
-                    <input
-                      ref={mondayRef}
-                      id="monday"
-                      type="checkbox"
-                      value="monday"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                    />
-                    <label
-                      htmlFor="monday"
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Mon
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                  <div className="flex items-center pl-3">
-                    <input
-                      ref={tuesdayRef}
-                      id="tuesday"
-                      type="checkbox"
-                      value="tuesday"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                    />
-                    <label
-                      htmlFor="tuesday"
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Tues
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                  <div className="flex items-center pl-3">
-                    <input
-                      ref={wednesdayRef}
-                      id="wednesday"
-                      type="checkbox"
-                      value="wednesday"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                    />
-                    <label
-                      htmlFor="wednesday"
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Wed
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-                  <div className="flex items-center pl-3">
-                    <input
-                      ref={thursdayRef}
-                      id="thursday"
-                      type="checkbox"
-                      value="thursday"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                    />
-                    <label
-                      htmlFor="thursday"
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Thur
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full dark:border-gray-600">
-                  <div className="flex items-center pl-3">
-                    <input
-                      ref={fridayRef}
-                      id="friday"
-                      type="checkbox"
-                      value="friday"
-                      className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-                    />
-                    <label
-                      htmlFor="friday"
-                      className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Fri
-                    </label>
-                  </div>
-                </li>
-              </ul>
+              <DayPicker selectedDays={selectedDays} setSelectedDays={setSelectedDays} />
             ) : (
               <div className="flex justify-center gap-3 text-2xl dark:text-white">
                 <span className="font-semibold">Days:</span>
-                <span>{days?.monday && 'M'}</span>
-                <span>{days?.tuesday && 'T'}</span>
-                <span>{days?.wednesday && 'W'}</span>
-                <span>{days?.thursday && 'TH'}</span>
-                <span>{days?.friday && 'F'}</span>
+                <span>{selectedDays?.monday && 'M'}</span>
+                <span>{selectedDays?.tuesday && 'T'}</span>
+                <span>{selectedDays?.wednesday && 'W'}</span>
+                <span>{selectedDays?.thursday && 'TH'}</span>
+                <span>{selectedDays?.friday && 'F'}</span>
               </div>
             )}
             <div className="flex flex-col items-center justify-evenly sm:flex-row">
               <div>
                 {editMode ? (
                   <>
-                    <label
-                      htmlFor="location"
-                      className="text-sm dark:text-white"
-                    >
+                    <label htmlFor="location" className="text-sm dark:text-white">
                       Location
                     </label>
                     <input
@@ -340,19 +334,14 @@ const TimeSlot: any = (props: Props) => {
                 ) : (
                   <div className="space-x-2 text-2xl dark:text-white">
                     <span className="font-semibold">Location:</span>
-                    <span className="capitalize">
-                      {props.location ? props.location : 'N/A'}
-                    </span>
+                    <span className="capitalize">{props.location ? props.location : 'N/A'}</span>
                   </div>
                 )}
               </div>
               <div>
                 {editMode ? (
                   <>
-                    <label
-                      htmlFor="professor"
-                      className="text-sm dark:text-white"
-                    >
+                    <label htmlFor="professor" className="text-sm dark:text-white">
                       Professor
                     </label>
                     <input
@@ -366,9 +355,7 @@ const TimeSlot: any = (props: Props) => {
                 ) : (
                   <div className="space-x-2 text-2xl dark:text-white">
                     <span className="font-semibold">Professor:</span>
-                    <span className="capitalize">
-                      {props.professor ? props.professor : 'N/A'}
-                    </span>
+                    <span className="capitalize">{props.professor ? props.professor : 'N/A'}</span>
                   </div>
                 )}
               </div>
@@ -378,16 +365,15 @@ const TimeSlot: any = (props: Props) => {
                 {editMode &&
                   colors.map((color) => (
                     <div
+                      id="colorPicker"
+                      tabIndex={0}
+                      onKeyDown={(e) => handleColorPickerKeyPress(e, color)}
                       key={color}
                       className={`bg-${color}-400 h-7 w-7 cursor-pointer rounded-full border-4 p-1 sm:h-10 sm:w-10 ${
-                        timeSlotColor === color
-                          ? 'border-blue-700'
-                          : 'border-none'
+                        timeSlotColor === color ? 'border-blue-700' : 'border-none'
                       }`}
                       onClick={() => {
-                        setTimeSlotColor((prevColor) =>
-                          prevColor === color ? '' : color
-                        );
+                        setTimeSlotColor((prevColor) => (prevColor === color ? '' : color));
                       }}
                     />
                   ))}
@@ -395,14 +381,14 @@ const TimeSlot: any = (props: Props) => {
             </div>
             <button
               type="submit"
-              className="w-full rounded-full bg-green-400 hover:bg-green-600 hover:dark:bg-green-800 px-8 py-3 text-lg font-semibold text-white dark:bg-green-700 dark:text-white"
+              className="w-full rounded-full bg-green-400 px-8 py-3 text-lg font-semibold text-white hover:bg-green-600 dark:bg-green-700 dark:text-white hover:dark:bg-green-800"
               onClick={saveHandler}
             >
               Save
             </button>
             <button
               type="submit"
-              className="w-full rounded-full bg-red-500 px-8 py-3 text-lg font-semibold text-white hover:bg-red-700 dark:bg-rose-600 hover:dark:bg-rose-800 dark:text-white"
+              className="w-full rounded-full bg-red-500 px-8 py-3 text-lg font-semibold text-white hover:bg-red-700 dark:bg-rose-600 dark:text-white hover:dark:bg-rose-800"
               onClick={deleteHandler}
             >
               Delete
@@ -411,10 +397,8 @@ const TimeSlot: any = (props: Props) => {
         </Modal.Body>
       </Modal>
       <div
-        className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${
-          props.color
-        }-400 w-full ${
-          !readOnly && 'hover:cursor-pointer hover:brightness-50'
+        className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${props.color}-400 w-full ${
+          !readOnly && 'overflow-hidden hover:cursor-pointer hover:brightness-50'
         } dark:text-black`}
         style={{ top: `${props.top}px`, height: `${props.height}px` }}
         onClick={() => setIsTimeSlotClicked(readOnly ? false : true)}
@@ -424,8 +408,8 @@ const TimeSlot: any = (props: Props) => {
         {isHovering && <AiFillEdit size={'96'} />}
         {parseInt(props.height) > 55 && (
           <div className="flex flex-col items-center gap-1">
-            <h2 className="text-center font-bold">{props.title}</h2>
-            <span>{`${props.startTime} - ${props.endTime}`}</span>
+            <h2 className="text-center font-bold">{courseTitle}</h2>
+            <span className="invisible md:visible">{`${props.startTime} - ${props.endTime}`}</span>
           </div>
         )}
       </div>
