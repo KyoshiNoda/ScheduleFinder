@@ -6,7 +6,6 @@ import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
 import { Modal, Button, Select } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
 import ClearScheduleButton from './ClearScheduleButton';
-
 import DayPicker from './DayPicker';
 import { TypesOfInput } from '../../enums';
 
@@ -82,6 +81,11 @@ const TimeSlotInput = () => {
     // If no checkboxes have been selected, the form shouldn't be submitted.
     if (!(monday || tuesday || wednesday || thursday || friday)) {
       setDaysError(true);
+      return;
+    }
+
+    // If the start time is earlier than 7:00 AM or if the ending time is later than 9:00 PM, the form shouldn't be submitted.
+    if (parseInt(startTimeHourRef.current.value) < 7 || parseInt(endTimeHourRef.current.value) > 9) {
       return;
     }
 
@@ -360,7 +364,9 @@ const TimeSlotInput = () => {
                       className="w-3/5"
                       required
                     >
-                      <option value="AM" disabled={startTimeMeridiem === 'PM'}>AM</option>
+                      <option value="AM" disabled={startTimeMeridiem === 'PM'}>
+                        AM
+                      </option>
                       <option value="PM">PM</option>
                     </Select>
                   </div>
