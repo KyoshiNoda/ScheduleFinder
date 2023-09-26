@@ -26,7 +26,7 @@ const App = () => {
           <Route path="compareSchedule/:userId" element={<CompareSchedule />} />
           <Route path="notifications" element={<Notifications />} />
         </Route>
-      </Routes>
+      </Routes> 
     </>
   );
 }
