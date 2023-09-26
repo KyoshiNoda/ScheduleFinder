@@ -189,7 +189,7 @@ const TimeSlotInput = () => {
 
     if (inputType === TypesOfInput.HourInput) {
       if (inputValue < 1 || inputValue > 12) {
-        inputRef.current?.classList.add(
+        inputRef.current?.classList.add( 
           'border-red-500',
           'focus:border-rose-500',
           'focus:ring-rose-500',
