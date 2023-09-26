@@ -32,6 +32,7 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const cloudinary_1 = require("cloudinary");
 const userRoute_1 = __importDefault(require("./routes/userRoute"));
 const authRoute_1 = __importDefault(require("./routes/authRoute"));
 const scheduleRoute_1 = __importDefault(require("./routes/scheduleRoute"));
@@ -39,6 +40,12 @@ const friendRoute_1 = __importDefault(require("./routes/friendRoute"));
 const friendRequestRoute_1 = __importDefault(require("./routes/friendRequestRoute"));
 const port = process.env.PORT || 3001;
 const app = (0, express_1.default)();
+cloudinary_1.v2.config({
+    cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,
+    api_key: `${process.env.CLOUDINARY_API_KEY}`,
+    api_secret: `${process.env.CLOUDINARY_API_SECRET}`,
+    secure: true,
+});
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
