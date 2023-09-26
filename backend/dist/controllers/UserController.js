@@ -177,5 +177,30 @@ class UserController {
             }
         });
     }
+    static deleteProfilePicture(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data._id;
+            try {
+                const user = yield userModel_1.default.findOneAndUpdate({ _id: userID }, {
+                    photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s',
+                }).exec();
+                res.status(200).send({
+                    message: 'Profile picture removed successfully',
+                });
+                if (!user) {
+                    return res.status(404).json({
+                        message: `User ${userID} not found`,
+                    });
+                }
+            }
+            catch (err) {
+                console.error(err);
+                res.status(500).json({
+                    message: `Error removing User ${userID}'s photoURL`,
+                    error: err,
+                });
+            }
+        });
+    }
 }
 exports.default = UserController;

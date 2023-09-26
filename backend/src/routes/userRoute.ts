@@ -10,6 +10,7 @@ const upload = multer({ storage });
 router.get('/', AuthController.authenticateToken, UserController.getUserInfo);
 router.patch('/', AuthController.authenticateToken, UserController.updateUser);
 router.patch('/image', AuthController.authenticateToken, upload.single('photoURL'), UserController.changeProfilePicture);
+router.delete('/image', AuthController.authenticateToken, UserController.deleteProfilePicture);
 router.post('/changePassword/token', AuthController.authenticateToken, UserController.changePasswordWithToken);
 router.post('/changePassword', UserController.changePasswordWithoutToken);
 router.get('/allUsers', UserController.getAllUsers);
