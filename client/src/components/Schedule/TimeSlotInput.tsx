@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, ReactNode } from 'react';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { DaysChecked, TimeSlot as TimeSlotType } from '../../types';
@@ -43,6 +43,7 @@ const TimeSlotInput = () => {
   const [daysError, setDaysError] = useState<boolean>(false);
   const [timeError, setTimeError] = useState<boolean>(false);
   const [colorError, setColorError] = useState<boolean>(false);
+  const [timeIntervalError, setTimeIntervalError] = useState<boolean>(false);
   const [timeSlotError, setTimeSlotError] = useState<boolean>(false);
   const [startTimeMeridiem, setStartTimeMeridiem] = useState<string>('AM');
   const [endTimeMeridiem, setEndTimeMeridiem] = useState<string>('AM');
@@ -84,8 +85,7 @@ const TimeSlotInput = () => {
       return;
     }
 
-    // If the start time is earlier than 7:00 AM or if the ending time is later than 9:00 PM, the form shouldn't be submitted.
-    if (parseInt(startTimeHourRef.current.value) < 7 || parseInt(endTimeHourRef.current.value) > 9) {
+    if (parseInt(endTimeHourRef.current.value) > 9) {
       return;
     }
 
@@ -181,6 +181,12 @@ const TimeSlotInput = () => {
     // @ts-ignore: Object is possibly 'null'.
     const inputValue: number = parseFloat(inputRef.current.value);
 
+    if ((inputRef === startTimeHourRef && inputValue < 7) || (inputRef === endTimeHourRef && inputValue > 9)) {
+      setTimeIntervalError(true);
+    } else {
+      setTimeIntervalError(false);
+    }
+
     if (inputType === TypesOfInput.HourInput) {
       if (inputValue < 1 || inputValue > 12) {
         inputRef.current?.classList.add(
@@ -248,6 +254,8 @@ const TimeSlotInput = () => {
       setTimeSlotColor(color);
     }
   };
+
+  console.log(startTimeHourRef.current.value.length); //////
 
   return (
     <>
@@ -371,6 +379,7 @@ const TimeSlotInput = () => {
                     </Select>
                   </div>
                 </div>
+                {timeIntervalError && <strong className="mt-3 text-sm text-red-500">Valid interval is between 6:00 AM and 9:00 PM</strong>}
               </div>
               <div className="flex gap-3">
                 <div className="w-full">
