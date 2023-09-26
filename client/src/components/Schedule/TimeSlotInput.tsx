@@ -355,7 +355,7 @@ const TimeSlotInput = () => {
                     <Select
                       value={endTimeMeridiem}
                       onChange={(e) => handleEndTimeMeridiemChange(e)}
-                      id="startMeridiemTime"
+                      id="endTimeMeridiem"
                       className="w-3/5"
                       required
                     >
@@ -392,7 +392,7 @@ const TimeSlotInput = () => {
                 </div>
               </div>
               <div>
-                <label htmlFor="colorPicker" className=" font-medium">
+                <label htmlFor="colorPicker" className="font-medium dark:text-white">
                   Select a color
                 </label>
                 <div className="flex justify-center">
