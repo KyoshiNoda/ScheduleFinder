@@ -186,7 +186,7 @@ const TimeSlotInput = () => {
     } else {
       setTimeIntervalError(false);
     }
-
+    
     if (inputType === TypesOfInput.HourInput) {
       if (inputValue < 1 || inputValue > 12) {
         inputRef.current?.classList.add( 
