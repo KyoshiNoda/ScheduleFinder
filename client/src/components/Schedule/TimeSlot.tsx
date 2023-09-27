@@ -218,10 +218,10 @@ const TimeSlot: any = (props: Props) => {
             <div className="flex flex-col items-center justify-center dark:text-white sm:text-4xl">
               {editMode && (
                 <>
-                  <label htmlFor="startTime" className="ml-60 self-start text-2xl">
+                  <label htmlFor="startTime" className="self-start text-xl lg:ml-60 lg:text-2xl">
                     Start Time
                   </label>
-                  <div className="mx-1 flex w-1/2 gap-3">
+                  <div className="mx-1 flex gap-3 lg:w-1/2">
                     <div>
                       <input
                         id="startTime"
@@ -259,10 +259,10 @@ const TimeSlot: any = (props: Props) => {
 
               {editMode && (
                 <>
-                  <label htmlFor="endTime" className="ml-60 self-start text-2xl">
+                  <label htmlFor="endTime" className="self-start text-xl lg:ml-60 lg:text-2xl">
                     End Time
                   </label>
-                  <div className="mx-1 flex w-1/2 gap-3">
+                  <div className="mx-1 flex gap-3 lg:w-1/2">
                     <div>
                       <input
                         id="endTime"
@@ -299,7 +299,8 @@ const TimeSlot: any = (props: Props) => {
               )}
               {!editMode && (
                 <div className="flex">
-                  <span className="mx-3">{props.startTime}</span> - <span className="mx-3">{props.endTime}</span>
+                  <span className="text-2xl">{props.startTime} - </span>
+                  <span className="text-2xl">{props.endTime}</span>
                 </div>
               )}
             </div>
