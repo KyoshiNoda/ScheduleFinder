@@ -13,7 +13,7 @@ Built with React, Express, MongoDB and Redux using Typescript.
  - Unique feature that allows users to connect with other students during their free time slots.
  - Filter through various categories such as age, major, school, gender, and more to find like-minded peers to study with!
  - With a user-friendly interface and advanced search options, you'll be able to create the perfect schedule and connect with fellow students in no time! 
-<img width="1676" alt="Screenshot 2023-05-01 at 1 02 44 PM" src="https://user-images.githubusercontent.com/62672803/235493207-7f50d560-7bbf-4aba-a286-e0cb1b431f04.png">
+<img width="1678" alt="Screenshot 2023-09-27 at 11 37 54 AM" src="https://github.com/KyoshiNoda/ScheduleFinder/assets/62672803/9238ed90-e13f-4362-b470-b2783425afdb">
 
 ## Easily see when both you and your friend are free.
 - Our innovative application takes the hassle out of scheduling by allowing you to effortlessly preview when you and your friends are available on any given day.
@@ -21,6 +21,7 @@ Built with React, Express, MongoDB and Redux using Typescript.
 <img width="1510" alt="Screenshot 2023-05-01 at 1 03 09 PM" src="https://user-images.githubusercontent.com/62672803/235493277-753cbb22-66cd-49da-8c0a-1a1352d46b16.png">
 
 <img width="1148" alt="Screenshot 2023-05-01 at 1 03 29 PM" src="https://user-images.githubusercontent.com/62672803/235493329-376d5bf4-6f86-494a-b027-f5194b25211f.png">
+
 
 ## Wanna try it out? Check out our demo account yourself!
 - Link: https://schedulefinder.netlify.app
