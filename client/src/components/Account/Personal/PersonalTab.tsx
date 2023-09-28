@@ -1,12 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import {
-  useGetUserInfoQuery,
-  useUpdateUserInfoMutation,
-} from '../../../redux/services/user/userService';
-import { Dropdown } from 'flowbite-react';
+import { useGetUserInfoQuery, useUpdateUserInfoMutation } from '../../../redux/services/user/userService';
+import { Dropdown, Spinner } from 'flowbite-react';
 import { User as UserType } from '../../../types';
 
-const  PersonalTab = () => {
+const PersonalTab = () => {
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
   const [updateUser] = useUpdateUserInfoMutation();
@@ -27,34 +24,19 @@ const  PersonalTab = () => {
   const saveHandler = async () => {
     const updatedFields: Partial<UserType> = {};
 
-    if (
-      firstNameRef.current.value.trim() !== '' &&
-      firstNameRef.current.value !== userInfo?.firstName
-    ) {
+    if (firstNameRef.current.value.trim() !== '' && firstNameRef.current.value !== userInfo?.firstName) {
       updatedFields.firstName = firstNameRef.current.value;
     }
-    if (
-      lastNameRef.current.value.trim() !== '' &&
-      lastNameRef.current.value !== userInfo?.lastName
-    ) {
+    if (lastNameRef.current.value.trim() !== '' && lastNameRef.current.value !== userInfo?.lastName) {
       updatedFields.lastName = lastNameRef.current.value;
     }
-    if (
-      schoolRef.current.value.trim() !== '' &&
-      schoolRef.current.value !== userInfo?.school
-    ) {
+    if (schoolRef.current.value.trim() !== '' && schoolRef.current.value !== userInfo?.school) {
       updatedFields.school = schoolRef.current.value;
     }
-    if (
-      majorRef.current.value.trim() !== '' &&
-      majorRef.current.value !== userInfo?.major
-    ) {
+    if (majorRef.current.value.trim() !== '' && majorRef.current.value !== userInfo?.major) {
       updatedFields.major = majorRef.current.value;
     }
-    if (
-      birthdayRef.current.value !== '' &&
-      new Date(birthdayRef.current.value) !== userInfo?.birthday
-    ) {
+    if (birthdayRef.current.value !== '' && new Date(birthdayRef.current.value) !== userInfo?.birthday) {
       updatedFields.birthday = new Date(birthdayRef.current.value);
     }
 
@@ -75,10 +57,7 @@ const  PersonalTab = () => {
           <form id="changes">
             <div className="grid gap-3 sm:grid-cols-2 sm:grid-rows-3">
               <div>
-                <label
-                  htmlFor="first_name"
-                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                >
+                <label htmlFor="first_name" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                   First name
                 </label>
                 <input
@@ -91,10 +70,7 @@ const  PersonalTab = () => {
                 />
               </div>
               <div>
-                <label
-                  htmlFor="last_name"
-                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                >
+                <label htmlFor="last_name" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                   Last name
                 </label>
                 <input
@@ -108,10 +84,7 @@ const  PersonalTab = () => {
               </div>
 
               <div>
-                <label
-                  htmlFor="school"
-                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                >
+                <label htmlFor="school" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                   School
                 </label>
                 <input
@@ -124,10 +97,7 @@ const  PersonalTab = () => {
                 />
               </div>
               <div>
-                <label
-                  htmlFor="Major"
-                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                >
+                <label htmlFor="Major" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                   Major
                 </label>
                 <input
@@ -141,36 +111,17 @@ const  PersonalTab = () => {
               </div>
               <div className="flex items-end">
                 <Dropdown label={gender} size="lg">
-                  <Dropdown.Item onClick={() => setGender('Male')}>
-                    Male
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setGender('Female')}>
-                    Female
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setGender('Binary')}>
-                    Binary
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setGender('Transgender')}>
-                    Transgender
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setGender('Intersex')}>
-                    Intersex
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setGender('Other')}>
-                    Other
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => setGender('I prefer not to say')}
-                  >
-                    I prefer not to say
-                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => setGender('Male')}>Male</Dropdown.Item>
+                  <Dropdown.Item onClick={() => setGender('Female')}>Female</Dropdown.Item>
+                  <Dropdown.Item onClick={() => setGender('Binary')}>Binary</Dropdown.Item>
+                  <Dropdown.Item onClick={() => setGender('Transgender')}>Transgender</Dropdown.Item>
+                  <Dropdown.Item onClick={() => setGender('Intersex')}>Intersex</Dropdown.Item>
+                  <Dropdown.Item onClick={() => setGender('Other')}>Other</Dropdown.Item>
+                  <Dropdown.Item onClick={() => setGender('I prefer not to say')}>I prefer not to say</Dropdown.Item>
                 </Dropdown>
               </div>
               <div>
-                <label
-                  htmlFor="birthdate"
-                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                >
+                <label htmlFor="birthdate" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                   Date of Birth
                 </label>
                 <input
@@ -189,18 +140,18 @@ const  PersonalTab = () => {
             type="button"
             onClick={saveHandler}
             form="changes"
-            className="w-full rounded-full bg-blue-600 hover:bg-blue-800 px-8 py-3 font-semibold text-white hover:dark:bg-blue-800"
+            className="w-full rounded-full bg-blue-600 px-8 py-3 font-semibold text-white hover:bg-blue-800 hover:dark:bg-blue-800"
           >
             Save Changes
           </button>
         </div>
       ) : isLoading ? (
-        <div>Loading...</div>
+        <Spinner aria-label="Profile loading spinner" size="xl" />
       ) : (
         <div>User information not available.</div>
       )}
     </>
   );
-}
+};
 
 export default PersonalTab;
