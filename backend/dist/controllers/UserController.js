@@ -18,6 +18,7 @@ const cloudinary_1 = require("cloudinary");
 const multer_1 = __importDefault(require("multer"));
 const storage = multer_1.default.memoryStorage();
 const upload = (0, multer_1.default)({ storage: storage });
+const defaultProfilePicture = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s';
 class UserController {
     // GET all user
     static getAllUsers(req, res) {
@@ -146,23 +147,28 @@ class UserController {
         });
     }
     static changeProfilePicture(req, res) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.user.data._id;
             try {
                 const uploadedFile = req.file;
                 const fileBuffer = uploadedFile.buffer;
                 const fileData = fileBuffer.toString('base64');
-                const result = yield cloudinary_1.v2.uploader.upload(`data:image/jpeg;base64,${fileData}`, {
-                    folder: 'uploads',
-                });
-                const user = yield userModel_1.default.findOneAndUpdate({ _id: userID }, {
-                    photoURL: result.secure_url,
-                }).exec();
+                const user = yield userModel_1.default.findOne({ _id: userID }).exec();
                 if (!user) {
                     return res.status(404).json({
                         message: `User ${userID} not found`,
                     });
                 }
+                if ((user === null || user === void 0 ? void 0 : user.photoURL) !== defaultProfilePicture) {
+                    const publicID = (_a = user === null || user === void 0 ? void 0 : user.photoURL.split('/').pop()) === null || _a === void 0 ? void 0 : _a.split('.')[0];
+                    yield cloudinary_1.v2.uploader.destroy('uploads/' + publicID);
+                }
+                const result = yield cloudinary_1.v2.uploader.upload(`data:image/jpeg;base64,${fileData}`, {
+                    folder: 'uploads',
+                });
+                user.photoURL = result.secure_url;
+                yield user.save();
                 res.status(200).send({
                     message: 'Profile picture updated successfully',
                     imageUrl: result.secure_url,
@@ -182,7 +188,7 @@ class UserController {
             const userID = req.user.data._id;
             try {
                 const user = yield userModel_1.default.findOneAndUpdate({ _id: userID }, {
-                    photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s',
+                    photoURL: defaultProfilePicture,
                 }).exec();
                 res.status(200).send({
                     message: 'Profile picture removed successfully',

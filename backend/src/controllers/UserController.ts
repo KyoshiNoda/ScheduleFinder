@@ -7,6 +7,8 @@ import multer from 'multer';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+const defaultProfilePicture = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s';
+
 class UserController {
   // GET all user
   public static async getAllUsers(req: Request, res: Response): Promise<any> {
@@ -137,20 +139,24 @@ class UserController {
       const uploadedFile = req.file;
       const fileBuffer = uploadedFile.buffer;
       const fileData = fileBuffer.toString('base64');
-      const result = await cloudinary.uploader.upload(`data:image/jpeg;base64,${fileData}`, {
-        folder: 'uploads',
-      });
-
-      const user = await User.findOneAndUpdate({ _id: userID },
-        {
-          photoURL: result.secure_url,
-        }
-      ).exec();
+      const user = await User.findOne({ _id: userID }).exec();
       if (!user) {
         return res.status(404).json({
           message: `User ${userID} not found`,
         });
       }
+
+      if (user?.photoURL !== defaultProfilePicture) {
+        const publicID = user?.photoURL.split('/').pop()?.split('.')[0];
+        await cloudinary.uploader.destroy('uploads/' + publicID!);
+      }
+
+      const result = await cloudinary.uploader.upload(`data:image/jpeg;base64,${fileData}`, {
+        folder: 'uploads',
+      });
+
+      user.photoURL = result.secure_url;
+      await user.save();
 
       res.status(200).send({
         message: 'Profile picture updated successfully',
@@ -164,13 +170,14 @@ class UserController {
       });
     }
   }
+
   public static async deleteProfilePicture(req: any, res: any) {
     const userID: string = req.user.data._id;
     try {
       const user = await User.findOneAndUpdate(
         { _id: userID },
         {
-          photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s',
+          photoURL: defaultProfilePicture,
         }
       ).exec();
       res.status(200).send({
