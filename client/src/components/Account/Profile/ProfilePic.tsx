@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { AiTwotoneEdit } from 'react-icons/ai';
 import { useChangeProfilePictureMutation } from '../../../redux/services/user/userService';
+import { Spinner } from 'flowbite-react';
 
 type Props = {
   picture: string | undefined;
@@ -9,6 +10,7 @@ type Props = {
 const ProfilePic = (props: Props) => {
   const [imageURL, setImageURL] = useState<string | undefined>(props.picture);
   const [isHovering, setIsHovering] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [changeProfilePicture] = useChangeProfilePictureMutation();
 
@@ -22,8 +24,13 @@ const ProfilePic = (props: Props) => {
     const selectedFile = event.target.files?.[0];
 
     if (selectedFile) {
-      const request = await changeProfilePicture({ file: selectedFile }).unwrap();
-      setImageURL(request.imageUrl);
+      setIsLoading(true);
+      try {
+        const request = await changeProfilePicture({ file: selectedFile }).unwrap();
+        setImageURL(request.imageUrl);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -39,7 +46,14 @@ const ProfilePic = (props: Props) => {
           <AiTwotoneEdit className="rounded-full p-1 text-2xl text-white" size={40} />
         </div>
       )}
-      <img alt="" className="h-24 w-24 rounded-full border dark:border-gray-700 dark:bg-gray-500" src={imageURL} />
+
+      {isLoading ? (
+        <div className="h-24 w-24 rounded-full border dark:border-gray-700 dark:bg-gray-500 flex items-center justify-center">
+          <Spinner aria-label="Profile loading spinner" size="xl" />
+        </div>
+      ) : (
+        <img alt="" className="h-24 w-24 rounded-full border dark:border-gray-700 dark:bg-gray-500" src={imageURL} />
+      )}
       <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFileChange} />
     </div>
   );
