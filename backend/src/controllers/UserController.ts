@@ -153,6 +153,9 @@ class UserController {
 
       const result = await cloudinary.uploader.upload(`data:image/jpeg;base64,${fileData}`, {
         folder: 'uploads',
+        transformation: [
+          { width: 300, height: 300, crop: 'fill' }, // Replace 300 with your desired width and height
+        ],
       });
 
       user.photoURL = result.secure_url;
