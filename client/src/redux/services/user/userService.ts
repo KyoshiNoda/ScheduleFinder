@@ -119,6 +119,7 @@ export const userAPI = createApi({
           body: formData,
         };
       },
+      invalidatesTags: ['User'],
     }),
   }),
 });

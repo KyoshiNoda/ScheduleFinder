@@ -33,9 +33,6 @@ const authSlice = createSlice({
       state.error = null;
       state.email = null;
     },
-    setEmail: (state, action) => {
-      state.email = action.payload;
-    },
     updateUserInfo: (state,action) => {
       state.userInfo = action.payload;
     }
