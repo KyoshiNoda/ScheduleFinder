@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
-import { Modal, Button, Label, TextInput, Spinner } from 'flowbite-react';
+import { Modal, Button, Label, Spinner } from 'flowbite-react';
 import { useChangePasswordMutation } from '../../../redux/services/user/userService';
 import { useGetUserInfoQuery, useUpdateUserInfoMutation } from '../../../redux/services/user/userService';
 import { User as UserType } from '../../../types';
 import ProfilePic from './ProfilePic';
+import { useAppDispatch } from '../../../redux/store';
+import {updateUserInfo} from '../../../redux/feats/auth/authSlice';
 const ProfileTab = () => {
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
@@ -20,7 +22,7 @@ const ProfileTab = () => {
   const currentPasswordRef = useRef(document.createElement('input'));
   const newPasswordRef = useRef(document.createElement('input'));
   const newConfirmedPasswordRef = useRef(document.createElement('input'));
-
+  const dispatch = useAppDispatch();
   useEffect(() => {
     if (data && !isLoading) {
       const userInfoWithoutPassword = { ...data };
@@ -35,8 +37,7 @@ const ProfileTab = () => {
         ...userInfo,
         email: emailRef.current?.value,
       }).unwrap();
-      setUserInfo(updatedUser);
-      window.location.reload();
+      dispatch(updateUserInfo(updatedUser));
     } catch (error) {
       console.log(error);
     }
