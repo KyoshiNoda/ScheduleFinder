@@ -2,10 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import { useGetUserInfoQuery, useUpdateUserInfoMutation } from '../../../redux/services/user/userService';
 import { Dropdown, Spinner } from 'flowbite-react';
 import { User as UserType } from '../../../types';
-
+import { useAppDispatch } from '../../../redux/store';
+import { updateUserInfo } from '../../../redux/feats/auth/authSlice';
 const PersonalTab = () => {
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
+
   const [updateUser] = useUpdateUserInfoMutation();
 
   const firstNameRef = useRef(document.createElement('input'));
@@ -14,6 +16,8 @@ const PersonalTab = () => {
   const majorRef = useRef(document.createElement('input'));
   const birthdayRef = useRef(document.createElement('input'));
   const [gender, setGender] = useState<string | undefined>('Select Gender');
+
+  const dispatch = useAppDispatch();
   useEffect(() => {
     if (data && !isLoading) {
       setUserInfo(data);
@@ -43,8 +47,8 @@ const PersonalTab = () => {
     updatedFields.gender = gender;
 
     try {
-      const result = await updateUser(updatedFields);
-      window.location.reload();
+      const result = await updateUser(updatedFields).unwrap();
+      dispatch(updateUserInfo(result));
     } catch (error: any) {
       console.log(error);
     }
@@ -65,7 +69,7 @@ const PersonalTab = () => {
                   type="text"
                   id="first_name"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  placeholder={userInfo!.firstName}
+                  defaultValue={userInfo!.firstName}
                   required
                 />
               </div>
@@ -78,7 +82,7 @@ const PersonalTab = () => {
                   type="text"
                   id="last_name"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  placeholder={userInfo!.lastName}
+                  defaultValue={userInfo!.lastName}
                   required
                 />
               </div>
@@ -92,7 +96,7 @@ const PersonalTab = () => {
                   type="text"
                   id="school"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  placeholder={userInfo!.school}
+                  defaultValue={userInfo!.school}
                   required
                 />
               </div>
@@ -105,7 +109,7 @@ const PersonalTab = () => {
                   type="text"
                   id="Major"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  placeholder={userInfo!.major}
+                  defaultValue={userInfo!.major}
                   required
                 />
               </div>

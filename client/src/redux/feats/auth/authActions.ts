@@ -116,7 +116,6 @@ export const changePassword = createAsyncThunk(
     } catch (error: any) {
       if (error.response) {
         const { status, data } = error.response;
-        console.log(status, data);
         return rejectWithValue({ status, message: data.message });
       } else {
         return rejectWithValue({

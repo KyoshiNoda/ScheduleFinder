@@ -255,8 +255,6 @@ const TimeSlotInput = () => {
     }
   };
 
-  console.log(startTimeHourRef.current.value.length); //////
-
   return (
     <>
       {!isFetching && data && (
