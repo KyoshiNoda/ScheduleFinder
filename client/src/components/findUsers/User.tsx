@@ -5,6 +5,7 @@ import { toast } from '../../redux/feats/globalSlice/globalSlice';
 import {
   useSendFriendRequestMutation,
   useAcceptFriendRequestMutation,
+  useRemovePendingFriendRequestMutation,
 } from '../../redux/services/user/userService';
 import { BiTime } from 'react-icons/bi';
 import { useState } from 'react';
@@ -34,6 +35,7 @@ const User = ({
   const dispatch = useAppDispatch();
   const [sendFriendRequest] = useSendFriendRequestMutation();
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
+  const [removeSendFriendRequest] = useRemovePendingFriendRequestMutation();
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const fullName = `${firstName} ${lastName}`;
 
@@ -64,7 +66,16 @@ const User = ({
   };
 
   const cancelFriendRequestHandler = async (id: string) => {
-    console.log("Cancelled!")
+    dispatch( 
+      toast({
+        state: true,
+        message: 'Removed Friend Request!',
+      })
+    );
+    setTimeout(() => {
+      dispatch(toast({ state: false, message: null }));
+    }, 5000);
+    await removeSendFriendRequest({ friendID: id });
   };
 
   return (

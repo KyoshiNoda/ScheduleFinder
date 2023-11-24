@@ -113,6 +113,17 @@ export const userAPI = createApi({
       }),
       providesTags: ['User'],
     }),
+
+    removePendingFriendRequest: builder.mutation<
+      { message: string; updatedSendFriendRequests: UserType[] },
+      { friendID: string }
+    >({
+      query: ({ friendID }) => ({
+        url: `api/users/friendRequest/sent/${friendID}`,
+        method: 'DELETE'
+      }),
+      invalidatesTags: ['User']
+    })
   }),
 });
 
@@ -127,4 +138,5 @@ export const {
   useRejectFriendRequestMutation,
   useSendFriendRequestMutation,
   useGetPendingFriendRequestsQuery,
+  useRemovePendingFriendRequestMutation
 } = userAPI;

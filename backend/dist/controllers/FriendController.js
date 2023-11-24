@@ -309,7 +309,7 @@ class FriendController {
                 }).exec();
                 res.status(200).send({
                     message: 'Cancelled Friend Request!',
-                    updatedFriendRequests: updatedSendFriendRequests,
+                    updatedSendFriendRequests: updatedSendFriendRequests,
                 });
             }
             catch (err) {
