@@ -287,5 +287,39 @@ class FriendController {
             }
         });
     }
+    static cancelPendingFriendRequest(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data._id;
+            const friendID = req.params.friendID;
+            try {
+                const user = yield userModel_1.default.findOne({ _id: userID }).exec();
+                const friend = yield userModel_1.default.findOne({ _id: friendID }).exec();
+                if (!user || !friend) {
+                    return res.status(404).send({
+                        message: "One of the users doesn't exist!",
+                    });
+                }
+                user.sentFriendRequests = user.sentFriendRequests.filter((id) => id !== friend.id);
+                yield user.save();
+                friend.receivedFriendRequests = user.receivedFriendRequests.filter((id) => id !== user.id);
+                yield friend.save();
+                const updatedUser = yield userModel_1.default.findOne({ _id: userID }).exec();
+                const updatedSendFriendRequests = yield userModel_1.default.find({
+                    _id: { $in: updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.sentFriendRequests },
+                }).exec();
+                res.status(200).send({
+                    message: 'Cancelled Friend Request!',
+                    updatedFriendRequests: updatedSendFriendRequests,
+                });
+            }
+            catch (err) {
+                console.error(err);
+                res.status(500).send({
+                    message: `Error while getting User ${userID}`,
+                    error: err,
+                });
+            }
+        });
+    }
 }
 exports.default = FriendController;
