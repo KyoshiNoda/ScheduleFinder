@@ -125,9 +125,9 @@ const User = ({
                 {isHovered ? (
                   <button
                     onClick={() => cancelFriendRequestHandler(id)}
-                    className="inline-flex items-center rounded-lg bg-red-600 px-2 py-2 text-center text-sm font-medium text-white focus:outline-none focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800"
+                    className="inline-flex items-center rounded-lg bg-red-600 px-1 py-2 text-center text-sm font-medium text-white focus:outline-none focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800"
                   >
-                    Cancel Friend Request
+                    Cancel Request
                   </button>
                 ) : (
                   <span className="flex items-center gap-1 rounded border px-4 py-2 dark:text-white">

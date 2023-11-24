@@ -297,7 +297,7 @@ class FriendController {
       user.sentFriendRequests = user.sentFriendRequests.filter((id) => id !== friend.id);
       await user.save();
 
-      friend.receivedFriendRequests = user.receivedFriendRequests.filter((id) => id !== user.id);
+      friend.receivedFriendRequests = friend.receivedFriendRequests.filter((id) => id !== user.id);
       await friend.save();
 
       const updatedUser = await User.findOne({ _id: userID }).exec();

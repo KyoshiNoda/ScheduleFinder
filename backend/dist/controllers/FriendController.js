@@ -301,7 +301,7 @@ class FriendController {
                 }
                 user.sentFriendRequests = user.sentFriendRequests.filter((id) => id !== friend.id);
                 yield user.save();
-                friend.receivedFriendRequests = user.receivedFriendRequests.filter((id) => id !== user.id);
+                friend.receivedFriendRequests = friend.receivedFriendRequests.filter((id) => id !== user.id);
                 yield friend.save();
                 const updatedUser = yield userModel_1.default.findOne({ _id: userID }).exec();
                 const updatedSendFriendRequests = yield userModel_1.default.find({
