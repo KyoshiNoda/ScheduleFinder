@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
-import { Modal, Button, Label, TextInput, Spinner } from 'flowbite-react';
+import { Modal, Button, Label, Spinner } from 'flowbite-react';
 import { useChangePasswordMutation } from '../../../redux/services/user/userService';
 import { useGetUserInfoQuery, useUpdateUserInfoMutation } from '../../../redux/services/user/userService';
 import { User as UserType } from '../../../types';
 import ProfilePic from './ProfilePic';
+import { useAppDispatch } from '../../../redux/store';
+import {updateUserInfo} from '../../../redux/feats/auth/authSlice';
 const ProfileTab = () => {
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
@@ -20,7 +22,7 @@ const ProfileTab = () => {
   const currentPasswordRef = useRef(document.createElement('input'));
   const newPasswordRef = useRef(document.createElement('input'));
   const newConfirmedPasswordRef = useRef(document.createElement('input'));
-
+  const dispatch = useAppDispatch();
   useEffect(() => {
     if (data && !isLoading) {
       const userInfoWithoutPassword = { ...data };
@@ -35,8 +37,7 @@ const ProfileTab = () => {
         ...userInfo,
         email: emailRef.current?.value,
       }).unwrap();
-      setUserInfo(updatedUser);
-      window.location.reload();
+      dispatch(updateUserInfo(updatedUser));
     } catch (error) {
       console.log(error);
     }
@@ -80,7 +81,7 @@ const ProfileTab = () => {
               type="text"
               id="default-input"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder={userInfo.email}
+              defaultValue={userInfo.email}
             />
           </div>
           <div className="flex flex-col gap-3">
