@@ -150,7 +150,22 @@ class FriendController {
           from: 'schedulefinder@gmail.com',
           subject: 'ScheduleFinder - Friend Request',
           text: `You have a new friend request from ${user.firstName} ${user.lastName}!`,
-          html: `<strong>You have a new friend request from ${user.firstName} ${user.lastName}!</strong>`,
+          html: `
+            <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
+              <h2 style="color: #fff;">ScheduleFinder - Friend Request</h2>
+              <p><strong>You have a new friend request from ${user.firstName} ${user.lastName}!</strong></p>
+              <div style="display: flex; justify-content: space-between;">
+                <ul style="margin-right: 20px;">
+                  <li>First Name: ${friend.firstName}</li>
+                  <li>Last Name: ${friend.lastName}</li>
+                  <li>School: ${friend.school}</li>
+                  <li>Major: ${friend.major}</li>
+                </ul>
+                <img src="${friend.photoURL}" alt="Friend's Photo" style="border-radius: 50%; width: 100px; height: 100px; align-self: flex-start;">
+              </div>
+              <p>Please <a href="https://schedulefinder.netlify.app/" style="color: #fff; text-decoration: underline;">log in</a> to your account to accept or decline this request.</p>
+            </div>
+          `,
         };
         await sgMail.send(msg);
       } else {
