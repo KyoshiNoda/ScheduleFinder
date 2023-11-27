@@ -43,6 +43,11 @@ const ResetPassword = () => {
       if (error.status === 400) {
         setIsInvalidCode(true);
         setResponseMessage(error.message);
+        digit1.current!.value = '';
+        digit2.current!.value = '';
+        digit3.current!.value = '';
+        digit4.current!.value = '';
+        digit5.current!.value = '';
       }
     }
   };
@@ -65,9 +70,8 @@ const ResetPassword = () => {
           <ChangePassword />
         ) : (
           <div
-            className={`flex w-5/6 flex-col justify-center rounded-lg border bg-white p-5 dark:bg-slate-700 lg:w-1/3 ${
-              isInvalidCode ? 'border-rose-500 dark:border-rose-500' : ''
-            }`}
+            className={`flex w-5/6 flex-col justify-center rounded-lg border bg-white p-5 dark:bg-slate-700 lg:w-1/3 ${isInvalidCode ? 'border-rose-500 dark:border-rose-500' : ''
+              }`}
           >
             <div className="flex justify-center  text-2xl dark:text-white lg:text-4xl">
               <div className="flex items-center">Verification</div>
