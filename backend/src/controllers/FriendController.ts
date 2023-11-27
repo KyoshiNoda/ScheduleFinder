@@ -1,5 +1,7 @@
 import User from '../models/userModel';
 import { IUser } from '../models/userModel';
+import sgMail from '@sendgrid/mail';
+sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class FriendController {
   public static async getFriends(req: any, res: any) {
     const userID: string = req.user.data._id;
@@ -40,9 +42,8 @@ class FriendController {
       }
       if (!user.friends.includes(friendID)) {
         return res.status(404).send({
-          message: `User is not friends with ${
-            (friend.firstName, +' ' + friend.lastName)
-          }`,
+          message: `User is not friends with ${(friend.firstName, +' ' + friend.lastName)
+            }`,
         });
       }
       user.friends = user.friends.filter((id) => id !== friendID);
@@ -79,7 +80,7 @@ class FriendController {
           message: `User ${userID} not found`,
         });
       }
-      for (const friendID of user.receivedFriendRequests ) {
+      for (const friendID of user.receivedFriendRequests) {
         let friend = await User.findOne({ _id: friendID }).exec();
         if (friend) {
           userFriendRequests.push(friend);
@@ -141,9 +142,17 @@ class FriendController {
         });
       }
 
-      if (!friend.receivedFriendRequests .includes(userID)) {
-        friend.receivedFriendRequests .push(userID);
+      if (!friend.receivedFriendRequests.includes(userID)) {
+        friend.receivedFriendRequests.push(userID);
         await friend.save();
+        const msg: sgMail.MailDataRequired = {
+          to: friend.email,
+          from: 'schedulefinder@gmail.com',
+          subject: 'ScheduleFinder - Friend Request',
+          text: `You have a new friend request from ${user.firstName} ${user.lastName}!`,
+          html: `<strong>You have a new friend request from ${user.firstName} ${user.lastName}!</strong>`,
+        };
+        await sgMail.send(msg);
       } else {
         return res.status(404).send({
           message: 'Friend Request Already Send!',
@@ -174,8 +183,8 @@ class FriendController {
         });
       }
 
-      if (user.receivedFriendRequests .includes(friendID)) {
-        user.receivedFriendRequests  = user.receivedFriendRequests .filter(
+      if (user.receivedFriendRequests.includes(friendID)) {
+        user.receivedFriendRequests = user.receivedFriendRequests.filter(
           (id) => id !== friendID
         );
         await user.save();
@@ -212,7 +221,7 @@ class FriendController {
         });
       }
       if (
-        !user.receivedFriendRequests .includes(friendID) ||
+        !user.receivedFriendRequests.includes(friendID) ||
         !friend.sentFriendRequests.includes(userID)
       ) {
         return res.status(404).send({
@@ -221,7 +230,7 @@ class FriendController {
       }
 
       user.friends.push(friendID);
-      user.receivedFriendRequests  = user.receivedFriendRequests .filter((id) => id !== friendID);
+      user.receivedFriendRequests = user.receivedFriendRequests.filter((id) => id !== friendID);
       await user.save();
 
       friend.friends.push(userID);
@@ -232,7 +241,7 @@ class FriendController {
 
       const updatedUser = await User.findOne({ _id: userID }).exec();
       const updatedUserFriendRequests = await User.find({
-        _id: { $in: updatedUser?.receivedFriendRequests  },
+        _id: { $in: updatedUser?.receivedFriendRequests },
       }).exec();
 
       res.status(200).send({
@@ -258,7 +267,7 @@ class FriendController {
           message: "One of the users doesn't exist!",
         });
       }
-      user.receivedFriendRequests  = user.receivedFriendRequests .filter((id) => id !== friendID);
+      user.receivedFriendRequests = user.receivedFriendRequests.filter((id) => id !== friendID);
       await user.save();
 
       friend.sentFriendRequests = friend.sentFriendRequests.filter(
@@ -268,7 +277,7 @@ class FriendController {
 
       const updatedUser = await User.findOne({ _id: userID }).exec();
       const updatedUserFriendRequests = await User.find({
-        _id: { $in: updatedUser?.receivedFriendRequests  },
+        _id: { $in: updatedUser?.receivedFriendRequests },
       }).exec();
 
       res.status(200).send({

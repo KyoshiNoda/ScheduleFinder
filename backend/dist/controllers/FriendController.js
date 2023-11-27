@@ -13,6 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const userModel_1 = __importDefault(require("../models/userModel"));
+const mail_1 = __importDefault(require("@sendgrid/mail"));
+mail_1.default.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class FriendController {
     static getFriends(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -159,6 +161,14 @@ class FriendController {
                 if (!friend.receivedFriendRequests.includes(userID)) {
                     friend.receivedFriendRequests.push(userID);
                     yield friend.save();
+                    const msg = {
+                        to: friend.email,
+                        from: 'schedulefinder@gmail.com',
+                        subject: 'ScheduleFinder - Friend Request',
+                        text: `You have a new friend request from ${user.firstName} ${user.lastName}!`,
+                        html: `<strong>You have a new friend request from ${user.firstName} ${user.lastName}!</strong>`,
+                    };
+                    yield mail_1.default.send(msg);
                 }
                 else {
                     return res.status(404).send({
