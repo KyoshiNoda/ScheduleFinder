@@ -156,12 +156,12 @@ class FriendController {
               <p><strong>You have a new friend request from ${user.firstName} ${user.lastName}!</strong></p>
               <div style="display: flex; justify-content: space-between;">
                 <ul style="margin-right: 20px;">
-                  <li>First Name: ${friend.firstName}</li>
-                  <li>Last Name: ${friend.lastName}</li>
-                  <li>School: ${friend.school}</li>
-                  <li>Major: ${friend.major}</li>
+                  <li>First Name: ${user.firstName}</li>
+                  <li>Last Name: ${user.lastName}</li>
+                  <li>School: ${user.school}</li>
+                  <li>Major: ${user.major ? user.major : 'N/A'}</li>
                 </ul>
-                <img src="${friend.photoURL}" alt="Friend's Photo" style="border-radius: 50%; width: 100px; height: 100px; align-self: flex-start;">
+                <img src="${user.photoURL}" alt="Friend's Photo" style="border-radius: 50%; width: 100px; height: 100px; align-self: flex-start;">
               </div>
               <p>Please <a href="https://schedulefinder.netlify.app/" style="color: #fff; text-decoration: underline;">log in</a> to your account to accept or decline this request.</p>
             </div>
