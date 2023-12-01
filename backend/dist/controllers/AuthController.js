@@ -132,6 +132,31 @@ class AuthController {
             });
         });
     }
+    static newAccount(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let email = req.body.email;
+            let sender = req.body.otherEmail;
+            let randomCode = (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000).toString();
+            AuthController.randomCode = randomCode;
+            let message = `Here is your five digit code: ${AuthController.randomCode}`;
+            const msg = {
+                to: email,
+                from: sender,
+                subject: `${sender} - New Account`,
+                text: message,
+                html: `<strong>${message}</strong>`,
+            };
+            mail_1.default
+                .send(msg)
+                .then(() => {
+                res.status(200).send({ message: 'email sent!', email: email });
+            })
+                .catch((error) => {
+                console.log(error);
+                res.status(400).send({ error: 'error found try again!' });
+            });
+        });
+    }
     static verifyResetPasswordCode(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

@@ -135,6 +135,31 @@ class AuthController {
         res.status(400).send({ error: 'error found try again!' });
       });
   }
+  public static async newAccount(req: Request, res: Response) {
+    let email: string = req.body.email;
+    let sender: string = req.body.otherEmail;
+    let randomCode = (
+      Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
+    ).toString();
+    AuthController.randomCode = randomCode;
+    let message: string = `Here is your five digit code: ${AuthController.randomCode}`;
+    const msg: sgMail.MailDataRequired = {
+      to: email,
+      from: sender,
+      subject: `${sender} - New Account`,
+      text: message,
+      html: `<strong>${message}</strong>`,
+    };
+    sgMail
+      .send(msg)
+      .then(() => {
+        res.status(200).send({ message: 'email sent!', email: email });
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(400).send({ error: 'error found try again!' });
+      });
+  }
 
   public static async verifyResetPasswordCode(req: Request, res: Response) {
     try {
