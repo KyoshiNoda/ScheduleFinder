@@ -123,7 +123,7 @@ class AuthController {
       to: email,
       from: 'schedulefinder@gmail.com',
       subject: 'ScheduleFinder - Password Reset',
-      text: message,
+      text: message, 
       html: `<strong>${message}</strong>`,
     };
     sgMail
