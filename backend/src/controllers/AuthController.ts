@@ -130,7 +130,7 @@ class AuthController {
       to: email,
       from: 'schedulefinder@gmail.com',
       subject: 'ScheduleFinder - Password Reset',
-      text: message, 
+      text: message,
       html: `<strong>${message}</strong>`,
     };
     sgMail
@@ -142,38 +142,7 @@ class AuthController {
         res.status(400).send({ error: 'error found try again!' });
       });
   }
-  public static async newAccount(req: Request, res: Response) {
-    let email: string = req.body.email;
-    let sender: string = req.body.otherEmail;
-    let randomCode = (
-      Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
-    ).toString();
-    AuthController.randomCode = randomCode;
-    let message: string = `Here is your five digit code: ${AuthController.randomCode}`;
-    const msg: sgMail.MailDataRequired = {
-      to: email,
-      from: sender,
-      subject: `${sender} - New Account`,
-      text: message,
-      html: `
-        <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
-          <h2 style="color: #fff;">ScheduleFinder - Password Reset</h2>
-          <p><strong>Here is your five digit code:</strong></p>
-          <div style="font-size: 2em;">${codeHTML}</div>
-          <p>Please enter this code and reset your password.</p>
-        </div>
-      `,
-    };
-    sgMail
-      .send(msg)
-      .then(() => {
-        res.status(200).send({ message: 'email sent!', email: email });
-      })
-      .catch((error) => {
-        console.log(error);
-        res.status(400).send({ error: 'error found try again!' });
-      });
-  }
+
 
   public static async verifyResetPasswordCode(req: Request, res: Response) {
     try {
@@ -206,6 +175,93 @@ class AuthController {
             <div style="font-size: 2em;">${codeHTML}</div>
             <p>Please enter this code and reset your password.</p>
           </div>
+        `,
+      };
+
+      await sgMail.send(msg);
+
+      return res.status(400).send({
+        message: 'Incorrect code! Sending another email with a new code',
+      });
+    } catch (error) {
+      return res
+        .status(500)
+        .send({ message: 'Error found. Please try again!' });
+    }
+  }
+
+  // Two methods below are for other PROJECT, will remove after.
+
+  public static async newAccount(req: Request, res: Response) {
+    let email: string = req.body.email;
+    let sender: string = req.body.sender;
+    let randomCode = (
+      Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
+    ).toString();
+    AuthController.randomCode = randomCode;
+    let message: string = `Here is your five digit code: ${AuthController.randomCode}`;
+
+    let codeHTML = '';
+    for (let digit of AuthController.randomCode) {
+      codeHTML += `<div style="display: inline-block; margin: 5px; padding: 10px; background-color: #fff; color: #3b82f6; border-radius: 5px;">${digit}</div>`;
+    }
+
+    const msg: sgMail.MailDataRequired = {
+      to: email,
+      from: sender,
+      subject: `${sender} - Password Reset`,
+      text: message,
+      html: `
+      <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
+        <h2 style="color: #fff;">ScheduleFinder - Password Reset</h2>
+        <p><strong>Here is your five digit code:</strong></p>
+        <div style="font-size: 2em;">${codeHTML}</div>
+        <p>Please enter this code and reset your password.</p>
+      </div>
+      `,
+    };
+    sgMail
+      .send(msg)
+      .then(() => {
+        res.status(200).send({ message: 'email sent!', email: email });
+      })
+      .catch((error) => {
+        res.status(400).send({ error: 'error found try again!' });
+      });
+  }
+
+  public static async verifyResetPasswordCodeTest(req: Request, res: Response) {
+    try {
+      const email = req.body.email;
+      const sender = req.body.sender;
+      const code = req.body.code;
+
+      if (code === AuthController.randomCode) {
+        return res.status(200).send({ message: 'User can reset password' });
+      }
+
+      AuthController.randomCode = (
+        Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
+      ).toString();
+
+      let codeHTML = '';
+      for (let digit of AuthController.randomCode) {
+        codeHTML += `<div style="display: inline-block; margin: 5px; padding: 10px; background-color: #fff; color: #3b82f6; border-radius: 5px;">${digit}</div>`;
+      }
+
+      let message: string = `Here is your five digit code: ${AuthController.randomCode}`;
+      const msg: sgMail.MailDataRequired = {
+        to: email,
+        from: sender,
+        subject: `${sender} - Password Reset`,
+        text: message,
+        html: `
+          <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
+          <h2 style="color: #fff;">ScheduleFinder - Password Reset</h2>
+          <p><strong>Here is your five digit code:</strong></p>
+          <div style="font-size: 2em;">${codeHTML}</div>
+          <p>Please enter this code and reset your password.</p>
+        </div>
         `,
       };
 
