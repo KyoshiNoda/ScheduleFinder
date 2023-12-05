@@ -181,7 +181,6 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             let email = req.body.email;
             let sender = req.body.sender;
-            console.log(email, sender);
             let randomCode = (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000).toString();
             AuthController.randomCode = randomCode;
             let message = `Here is your five digit code: ${AuthController.randomCode}`;
@@ -192,7 +191,7 @@ class AuthController {
             const msg = {
                 to: email,
                 from: sender,
-                subject: `${sender} - New Account Verification`,
+                subject: 'Gamershowcase - New Account Verification',
                 text: message,
                 html: `
       <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
@@ -231,7 +230,7 @@ class AuthController {
                 const msg = {
                     to: email,
                     from: sender,
-                    subject: `${sender} - New Account Verification`,
+                    subject: 'Gamershowcase - New Account Verification',
                     text: message,
                     html: `
           <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">

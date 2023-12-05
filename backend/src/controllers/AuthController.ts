@@ -195,7 +195,6 @@ class AuthController {
   public static async newAccount(req: Request, res: Response) {
     let email: string = req.body.email;
     let sender: string = req.body.sender;
-    console.log(email, sender);
     let randomCode = (
       Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
     ).toString();
@@ -210,7 +209,7 @@ class AuthController {
     const msg: sgMail.MailDataRequired = {
       to: email,
       from: sender,
-      subject: `${sender} - New Account Verification`,
+      subject: 'Gamershowcase - New Account Verification',
       text: message,
       html: `
       <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
@@ -254,7 +253,7 @@ class AuthController {
       const msg: sgMail.MailDataRequired = {
         to: email,
         from: sender,
-        subject: `${sender} - New Account Verification`,
+        subject: 'Gamershowcase - New Account Verification',
         text: message,
         html: `
           <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
