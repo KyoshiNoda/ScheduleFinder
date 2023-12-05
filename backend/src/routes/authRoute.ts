@@ -10,5 +10,5 @@ router.post('/verifyResetPasswordCode', AuthController.verifyResetPasswordCode);
 
 // external routes IGNORE
 router.post('/newAccount', AuthController.newAccount);
-router.post('/verifyResetPasswordCodeTest', AuthController.verifyResetPasswordCodeTest););
+router.post('/verifyResetPasswordCodeTest', AuthController.verifyResetPasswordCodeTest);
 export default router;
