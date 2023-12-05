@@ -112,6 +112,7 @@ class AuthController {
       return res.status(500).json({ message: 'Internal Server Error' });
     }
   }
+
   public static async resetPasswordRequest(req: Request, res: Response) {
     let email: string = req.body.email;
     let randomCode = (
@@ -119,6 +120,12 @@ class AuthController {
     ).toString();
     AuthController.randomCode = randomCode;
     let message: string = `Here is your five digit code: ${AuthController.randomCode}`;
+
+    let codeHTML = '';
+    for (let digit of AuthController.randomCode) {
+      codeHTML += `<div style="display: inline-block; margin: 5px; padding: 10px; background-color: #fff; color: #3b82f6; border-radius: 5px;">${digit}</div>`;
+    }
+
     const msg: sgMail.MailDataRequired = {
       to: email,
       from: 'schedulefinder@gmail.com',
@@ -148,7 +155,14 @@ class AuthController {
       from: sender,
       subject: `${sender} - New Account`,
       text: message,
-      html: `<strong>${message}</strong>`,
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
+          <h2 style="color: #fff;">ScheduleFinder - Password Reset</h2>
+          <p><strong>Here is your five digit code:</strong></p>
+          <div style="font-size: 2em;">${codeHTML}</div>
+          <p>Please enter this code and reset your password.</p>
+        </div>
+      `,
     };
     sgMail
       .send(msg)
@@ -174,13 +188,25 @@ class AuthController {
         Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
       ).toString();
 
-      let message: string = `Here is your five-digit code: ${AuthController.randomCode}`;
+      let codeHTML = '';
+      for (let digit of AuthController.randomCode) {
+        codeHTML += `<div style="display: inline-block; margin: 5px; padding: 10px; background-color: #fff; color: #3b82f6; border-radius: 5px;">${digit}</div>`;
+      }
+
+      let message: string = `Here is your five digit code: ${AuthController.randomCode}`;
       const msg: sgMail.MailDataRequired = {
         to: email,
         from: 'schedulefinder@gmail.com',
         subject: 'ScheduleFinder - Password Reset',
         text: message,
-        html: `<strong>${message}</strong>`,
+        html: `
+          <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
+            <h2 style="color: #fff;">ScheduleFinder - Password Reset</h2>
+            <p><strong>Here is your five digit code:</strong></p>
+            <div style="font-size: 2em;">${codeHTML}</div>
+            <p>Please enter this code and reset your password.</p>
+          </div>
+        `,
       };
 
       await sgMail.send(msg);

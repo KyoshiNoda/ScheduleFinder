@@ -1,5 +1,7 @@
 import User from '../models/userModel';
 import { IUser } from '../models/userModel';
+import sgMail from '@sendgrid/mail';
+sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class FriendController {
   public static async getFriends(req: any, res: any) {
     const userID: string = req.user.data._id;
@@ -142,6 +144,29 @@ class FriendController {
       if (!friend.receivedFriendRequests.includes(userID)) {
         friend.receivedFriendRequests.push(userID);
         await friend.save();
+        const msg: sgMail.MailDataRequired = {
+          to: friend.email,
+          from: 'schedulefinder@gmail.com',
+          subject: 'ScheduleFinder - Friend Request',
+          text: `You have a new friend request from ${user.firstName} ${user.lastName}!`,
+          html: `
+            <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
+              <h2 style="color: #fff;">ScheduleFinder - Friend Request</h2>
+              <p><strong>You have a new friend request from ${user.firstName} ${user.lastName}!</strong></p>
+              <div style="display: flex; justify-content: space-between;">
+                <ul style="margin-right: 20px;">
+                  <li>First Name: ${user.firstName}</li>
+                  <li>Last Name: ${user.lastName}</li>
+                  <li>School: ${user.school}</li>
+                  <li>Major: ${user.major ? user.major : 'N/A'}</li>
+                </ul>
+                <img src="${user.photoURL}" alt="Friend's Photo" style="border-radius: 50%; width: 100px; height: 100px; align-self: flex-start;">
+              </div>
+              <p>Please <a href="https://schedulefinder.netlify.app/" style="color: #fff; text-decoration: underline;">log in</a> to your account to accept or decline this request.</p>
+            </div>
+          `,
+        };
+        await sgMail.send(msg);
       } else {
         return res.status(404).send({
           message: 'Friend Request Already Send!',

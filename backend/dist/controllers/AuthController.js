@@ -115,12 +115,23 @@ class AuthController {
             let randomCode = (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000).toString();
             AuthController.randomCode = randomCode;
             let message = `Here is your five digit code: ${AuthController.randomCode}`;
+            let codeHTML = '';
+            for (let digit of AuthController.randomCode) {
+                codeHTML += `<div style="display: inline-block; margin: 5px; padding: 10px; background-color: #fff; color: #3b82f6; border-radius: 5px;">${digit}</div>`;
+            }
             const msg = {
                 to: email,
                 from: 'schedulefinder@gmail.com',
                 subject: 'ScheduleFinder - Password Reset',
                 text: message,
-                html: `<strong>${message}</strong>`,
+                html: `
+        <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
+          <h2 style="color: #fff;">ScheduleFinder - Password Reset</h2>
+          <p><strong>Here is your five digit code:</strong></p>
+          <div style="font-size: 2em;">${codeHTML}</div>
+          <p>Please enter this code and reset your password.</p>
+        </div>
+      `,
             };
             mail_1.default
                 .send(msg)
@@ -166,13 +177,24 @@ class AuthController {
                     return res.status(200).send({ message: 'User can reset password' });
                 }
                 AuthController.randomCode = (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000).toString();
-                let message = `Here is your five-digit code: ${AuthController.randomCode}`;
+                let codeHTML = '';
+                for (let digit of AuthController.randomCode) {
+                    codeHTML += `<div style="display: inline-block; margin: 5px; padding: 10px; background-color: #fff; color: #3b82f6; border-radius: 5px;">${digit}</div>`;
+                }
+                let message = `Here is your five digit code: ${AuthController.randomCode}`;
                 const msg = {
                     to: email,
                     from: 'schedulefinder@gmail.com',
                     subject: 'ScheduleFinder - Password Reset',
                     text: message,
-                    html: `<strong>${message}</strong>`,
+                    html: `
+          <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
+            <h2 style="color: #fff;">ScheduleFinder - Password Reset</h2>
+            <p><strong>Here is your five digit code:</strong></p>
+            <div style="font-size: 2em;">${codeHTML}</div>
+            <p>Please enter this code and reset your password.</p>
+          </div>
+        `,
                 };
                 yield mail_1.default.send(msg);
                 return res.status(400).send({
