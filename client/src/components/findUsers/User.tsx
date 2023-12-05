@@ -5,8 +5,10 @@ import { toast } from '../../redux/feats/globalSlice/globalSlice';
 import {
   useSendFriendRequestMutation,
   useAcceptFriendRequestMutation,
+  useRemovePendingFriendRequestMutation,
 } from '../../redux/services/user/userService';
 import { BiTime } from 'react-icons/bi';
+import { useState } from 'react';
 type UserProps = {
   id: string;
   photoURL: string;
@@ -33,6 +35,8 @@ const User = ({
   const dispatch = useAppDispatch();
   const [sendFriendRequest] = useSendFriendRequestMutation();
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
+  const [removeSendFriendRequest] = useRemovePendingFriendRequestMutation();
+  const [isHovered, setIsHovered] = useState<boolean>(false);
   const fullName = `${firstName} ${lastName}`;
 
   const sendFriendRequestHandler = async (id: string) => {
@@ -59,6 +63,19 @@ const User = ({
       dispatch(toast({ state: false, message: null }));
     }, 5000);
     await acceptFriendRequest({ friendID: id });
+  };
+
+  const cancelFriendRequestHandler = async (id: string) => {
+    dispatch( 
+      toast({
+        state: true,
+        message: 'Removed Friend Request!',
+      })
+    );
+    setTimeout(() => {
+      dispatch(toast({ state: false, message: null }));
+    }, 5000);
+    await removeSendFriendRequest({ friendID: id });
   };
 
   return (
@@ -101,9 +118,23 @@ const User = ({
                 </>
               )
             ) : (
-              <span className="flex items-center gap-1 rounded border px-4 py-2 dark:text-white">
-                Pending <BiTime size="20" />
-              </span>
+              <div
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
+                {isHovered ? (
+                  <button
+                    onClick={() => cancelFriendRequestHandler(id)}
+                    className="inline-flex items-center rounded-lg bg-red-600 px-1 py-2 text-center text-sm font-medium text-white focus:outline-none focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800"
+                  >
+                    Cancel Request
+                  </button>
+                ) : (
+                  <span className="flex items-center gap-1 rounded border px-4 py-2 dark:text-white">
+                    Pending <BiTime size="20" />
+                  </span>
+                )}
+              </div>
             )}
             <Link
               to={`/auth/compareSchedule/${id}`}
@@ -117,5 +148,7 @@ const User = ({
     </div>
   );
 };
+
+
 
 export default User;

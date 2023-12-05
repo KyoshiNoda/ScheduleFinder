@@ -105,9 +105,19 @@ export const userAPI = createApi({
       }),
       providesTags: ['User'],
     }),
+    removePendingFriendRequest: builder.mutation<
+      { message: string; updatedSendFriendRequests: UserType[] },
+      { friendID: string }
+    >({
+      query: ({ friendID }) => ({
+        url: `api/users/friendRequest/sent/${friendID}`,
+        method: 'DELETE'
+      }),
+      invalidatesTags: ['User']
+    }),
     changeProfilePicture: builder.mutation<
-      FileUploadResponse, // Define the response type here
-      { file: File } // Define the request parameters here
+      FileUploadResponse,
+      { file: File }
     >({
       query: ({ file }) => {
         const formData = new FormData();
@@ -135,5 +145,6 @@ export const {
   useRejectFriendRequestMutation,
   useSendFriendRequestMutation,
   useGetPendingFriendRequestsQuery,
+  useRemovePendingFriendRequestMutation,
   useChangeProfilePictureMutation,
 } = userAPI;
