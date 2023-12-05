@@ -195,6 +195,7 @@ class AuthController {
   public static async newAccount(req: Request, res: Response) {
     let email: string = req.body.email;
     let sender: string = req.body.sender;
+    console.log(email, sender);
     let randomCode = (
       Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
     ).toString();
@@ -209,14 +210,14 @@ class AuthController {
     const msg: sgMail.MailDataRequired = {
       to: email,
       from: sender,
-      subject: `${sender} - Password Reset`,
+      subject: `${sender} - New Account Verification`,
       text: message,
       html: `
       <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
-        <h2 style="color: #fff;">ScheduleFinder - Password Reset</h2>
+        <h2 style="color: #fff;">${sender} - New Account Verification</h2>
         <p><strong>Here is your five digit code:</strong></p>
         <div style="font-size: 2em;">${codeHTML}</div>
-        <p>Please enter this code and reset your password.</p>
+        <p>Please enter this code to verify your acccount.</p>
       </div>
       `,
     };
@@ -253,14 +254,14 @@ class AuthController {
       const msg: sgMail.MailDataRequired = {
         to: email,
         from: sender,
-        subject: `${sender} - Password Reset`,
+        subject: `${sender} - New Account Verification`,
         text: message,
         html: `
           <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
-          <h2 style="color: #fff;">ScheduleFinder - Password Reset</h2>
+          <h2 style="color: #fff;">${sender} - New Account Verification</h2>
           <p><strong>Here is your five digit code:</strong></p>
           <div style="font-size: 2em;">${codeHTML}</div>
-          <p>Please enter this code and reset your password.</p>
+          <p>Please enter this code to verify your acccount.</p>
         </div>
         `,
       };
