@@ -213,7 +213,7 @@ class AuthController {
       text: message,
       html: `
       <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
-        <h2 style="color: #fff;">${sender} - New Account Verification</h2>
+        <h2 style="color: #fff;">Gamershowcase - New Account Verification</h2>
         <p><strong>Here is your five digit code:</strong></p>
         <div style="font-size: 2em;">${codeHTML}</div>
         <p>Please enter this code to verify your acccount.</p>
@@ -257,7 +257,7 @@ class AuthController {
         text: message,
         html: `
           <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
-          <h2 style="color: #fff;">${sender} - New Account Verification</h2>
+          <h2 style="color: #fff;">Gamershowcase - New Account Verification</h2>
           <p><strong>Here is your five digit code:</strong></p>
           <div style="font-size: 2em;">${codeHTML}</div>
           <p>Please enter this code to verify your acccount.</p>
