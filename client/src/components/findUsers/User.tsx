@@ -1,7 +1,5 @@
 import { Card } from 'flowbite-react';
 import { Link } from 'react-router-dom';
-import { useAppDispatch } from '../../redux/store';
-import { toast } from '../../redux/feats/globalSlice/globalSlice';
 import {
   useSendFriendRequestMutation,
   useAcceptFriendRequestMutation,
@@ -9,6 +7,7 @@ import {
 } from '../../redux/services/user/userService';
 import { BiTime } from 'react-icons/bi';
 import { useState } from 'react';
+import { useToast } from '../../utils/functions';
 type UserProps = {
   id: string;
   photoURL: string;
@@ -32,7 +31,7 @@ const User = ({
   isFriendRequest,
   isFriends,
 }: UserProps) => {
-  const dispatch = useAppDispatch();
+  const { showToast } = useToast();
   const [sendFriendRequest] = useSendFriendRequestMutation();
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
   const [removeSendFriendRequest] = useRemovePendingFriendRequestMutation();
@@ -40,42 +39,18 @@ const User = ({
   const fullName = `${firstName} ${lastName}`;
 
   const sendFriendRequestHandler = async (id: string) => {
-    dispatch(
-      toast({
-        state: true,
-        message: 'Friend Request Sent!',
-      })
-    );
-    setTimeout(() => {
-      dispatch(toast({ state: false, message: null }));
-    }, 5000);
     await sendFriendRequest({ friendID: id });
+    showToast('Friend Request Sent!');
   };
 
   const acceptFriendRequestHandler = async (id: string) => {
-    dispatch(
-      toast({
-        state: true,
-        message: 'Accepted Friend Request!',
-      })
-    );
-    setTimeout(() => {
-      dispatch(toast({ state: false, message: null }));
-    }, 5000);
     await acceptFriendRequest({ friendID: id });
+    showToast('Accepted Friend Request!');
   };
 
   const cancelFriendRequestHandler = async (id: string) => {
-    dispatch( 
-      toast({
-        state: true,
-        message: 'Canceled Friend Request!',
-      })
-    );
-    setTimeout(() => {
-      dispatch(toast({ state: false, message: null }));
-    }, 5000);
     await removeSendFriendRequest({ friendID: id });
+    showToast('Canceled Friend Request!');
   };
 
   return (
