@@ -69,7 +69,7 @@ const User = ({
     dispatch( 
       toast({
         state: true,
-        message: 'Removed Friend Request!',
+        message: 'Canceled Friend Request!',
       })
     );
     setTimeout(() => {
