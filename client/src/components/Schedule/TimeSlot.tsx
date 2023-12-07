@@ -8,6 +8,7 @@ import { useDeleteTimeSlotMutation, useUpdateTimeSlotMutation } from '../../redu
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useAppSelector } from '../../redux/store';
 import DayPicker from './DayPicker';
+import { useToast } from '../../utils/functions';
 
 type Props = {
   id?: undefined | string;
@@ -31,6 +32,7 @@ const TimeSlot: any = (props: Props) => {
   if (!isFetching) {
     scheduleID = data._id;
   }
+  const { showToast } = useToast();
 
   // Check if the time slot is readonly
   const readOnly: boolean = useAppSelector((state: any) => state.globalSlice.readOnly);
@@ -129,6 +131,7 @@ const TimeSlot: any = (props: Props) => {
           scheduleId: scheduleID,
           timeSlot: updatedTimeSlot,
         });
+        showToast("Updated TimeSlot");
       } catch (error) {
         console.log(error);
       }
@@ -156,6 +159,7 @@ const TimeSlot: any = (props: Props) => {
           scheduleId: scheduleID,
           timeSlot: updatedTimeSlot,
         });
+        showToast("Updated TimeSlot");
       } catch (error) {
         console.log(error);
       }
@@ -172,8 +176,9 @@ const TimeSlot: any = (props: Props) => {
         scheduleId: scheduleID,
         timeSlot: { _id: props.id! },
       });
+      showToast("Deleted TimeSlot");
     } catch (error) {
-      console.log(error); // handle errors here
+      console.log(error);
     }
   };
   const handleColorPickerKeyPress = (e: React.KeyboardEvent<HTMLDivElement>, color: string) => {
@@ -370,9 +375,8 @@ const TimeSlot: any = (props: Props) => {
                       tabIndex={0}
                       onKeyDown={(e) => handleColorPickerKeyPress(e, color)}
                       key={color}
-                      className={`bg-${color}-400 h-7 w-7 cursor-pointer rounded-full border-4 p-1 sm:h-10 sm:w-10 ${
-                        timeSlotColor === color ? 'border-blue-700' : 'border-none'
-                      }`}
+                      className={`bg-${color}-400 h-7 w-7 cursor-pointer rounded-full border-4 p-1 sm:h-10 sm:w-10 ${timeSlotColor === color ? 'border-blue-700' : 'border-none'
+                        }`}
                       onClick={() => {
                         setTimeSlotColor((prevColor) => (prevColor === color ? '' : color));
                       }}
@@ -398,9 +402,8 @@ const TimeSlot: any = (props: Props) => {
         </Modal.Body>
       </Modal>
       <div
-        className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${props.color}-400 w-full ${
-          !readOnly && 'overflow-hidden hover:cursor-pointer hover:brightness-50'
-        } dark:text-black`}
+        className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${props.color}-400 w-full ${!readOnly && 'overflow-hidden hover:cursor-pointer hover:brightness-50'
+          } dark:text-black`}
         style={{ top: `${props.top}px`, height: `${props.height}px` }}
         onClick={() => setIsTimeSlotClicked(readOnly ? false : true)}
         onMouseEnter={() => setIsHovering(readOnly ? false : true)}

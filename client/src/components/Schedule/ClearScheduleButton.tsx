@@ -2,16 +2,17 @@ import { useState } from 'react';
 import { useClearScheduleMutation } from '../../redux/services/schedule/scheduleService';
 import { Modal } from 'flowbite-react';
 import { Schedule as ScheduleType } from '../../types';
+import { useToast } from '../../utils/functions';
 type Props = {
   scheduleId: string;
   currentSchedule: ScheduleType;
 };
 
 const ClearScheduleButton = ({ scheduleId, currentSchedule }: Props) => {
+  const { showToast } = useToast();
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const [clearSchedule] = useClearScheduleMutation();
-
   const isScheduleEmpty = !currentSchedule || !currentSchedule.timeSlots || currentSchedule.timeSlots.length === 0;
   return (
     <>
@@ -32,6 +33,7 @@ const ClearScheduleButton = ({ scheduleId, currentSchedule }: Props) => {
                 <button
                   onClick={() => {
                     clearSchedule({ scheduleId });
+                    showToast("Cleared Schedule!");
                     setOpenModal(false);
                   }}
                   type="button"
