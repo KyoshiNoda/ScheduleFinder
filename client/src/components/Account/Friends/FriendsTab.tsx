@@ -7,7 +7,9 @@ import { User as UserType } from '../../../types';
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal, Spinner } from 'flowbite-react';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { useToast } from '../../../utils/functions';
 const FriendsTab = () => {
+  const { showToast } = useToast();
   const { data, isLoading } = useGetUserFriendsQuery('User');
   const [friends, setFriends] = useState<UserType[]>();
   const [deleteFriend] = useDeleteFriendMutation();
@@ -28,6 +30,7 @@ const FriendsTab = () => {
     try {
       await deleteFriend({ friendID: tempFriend });
       setOpenModal(undefined);
+      showToast("Removed Friend!");
     } catch (error: any) {
       console.log(error);
     }

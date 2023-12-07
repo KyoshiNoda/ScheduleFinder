@@ -9,7 +9,9 @@ import {
 import { User as UserType } from '../types';
 import { Spinner } from 'flowbite-react';
 import { Link } from 'react-router-dom';
+import { useToast } from '../utils/functions';
 const FriendRequest = () => {
+  const { showToast } = useToast();
   const { data, isLoading } = useGetUserFriendRequestsQuery('User');
   const [receivedFriendRequests, setReceivedFriendRequests] =
     useState<UserType[]>();
@@ -34,6 +36,7 @@ const FriendRequest = () => {
   const acceptFriendRequestHandler = async (id: string) => {
     try {
       await acceptFriendRequest({ friendID: id });
+      showToast("Accepted Friend Request!");
     } catch (error: any) {
       console.log(error);
     }
@@ -42,6 +45,7 @@ const FriendRequest = () => {
   const rejectFriendRequestHandler = async (id: string) => {
     try {
       await rejectFriendRequest({ friendID: id });
+      showToast("Rejected Friend Request.");
     } catch (error: any) {
       console.log(error);
     }

@@ -6,7 +6,9 @@ import { User as UserType } from '../../../types';
 import ProfilePic from './ProfilePic';
 import { useAppDispatch } from '../../../redux/store';
 import {updateUserInfo} from '../../../redux/feats/auth/authSlice';
+import { useToast } from '../../../utils/functions';
 const ProfileTab = () => {
+  const { showToast } = useToast();
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
   const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
@@ -38,6 +40,7 @@ const ProfileTab = () => {
         email: emailRef.current?.value,
       }).unwrap();
       dispatch(updateUserInfo(updatedUser));
+      showToast("Updated Email!");
     } catch (error) {
       console.log(error);
     }
@@ -50,6 +53,7 @@ const ProfileTab = () => {
         newPassword: newPasswordRef.current.value,
         confirmNewPassword: newConfirmedPasswordRef.current.value,
       }).unwrap();
+      showToast("Updated Password!");
       setIsChangePassword(false);
     } catch (error: any) {
       if (error.data.includes('Incorrect')) {

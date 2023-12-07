@@ -4,7 +4,9 @@ import { Dropdown, Spinner } from 'flowbite-react';
 import { User as UserType } from '../../../types';
 import { useAppDispatch } from '../../../redux/store';
 import { updateUserInfo } from '../../../redux/feats/auth/authSlice';
+import { useToast } from '../../../utils/functions';
 const PersonalTab = () => {
+  const { showToast } = useToast();
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
 
@@ -49,6 +51,7 @@ const PersonalTab = () => {
     try {
       const result = await updateUser(updatedFields).unwrap();
       dispatch(updateUserInfo(result));
+      showToast("Saved Information!");
     } catch (error: any) {
       console.log(error);
     }
