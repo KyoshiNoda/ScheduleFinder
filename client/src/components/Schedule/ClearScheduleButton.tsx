@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useClearScheduleMutation } from '../../redux/services/schedule/scheduleService';
 import { Modal } from 'flowbite-react';
-import { Schedule as ScheduleType } from '../../types';
+import { ScheduleEnum, Schedule as ScheduleType } from '../../types';
 import { useToast } from '../../utils/functions';
 type Props = {
   scheduleId: string;
@@ -33,7 +33,7 @@ const ClearScheduleButton = ({ scheduleId, currentSchedule }: Props) => {
                 <button
                   onClick={() => {
                     clearSchedule({ scheduleId });
-                    showToast("Cleared Schedule!");
+                    showToast(ScheduleEnum.CLEAR_SCHEDULE);
                     setOpenModal(false);
                   }}
                   type="button"

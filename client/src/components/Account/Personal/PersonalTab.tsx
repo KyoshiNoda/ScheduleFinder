@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useGetUserInfoQuery, useUpdateUserInfoMutation } from '../../../redux/services/user/userService';
 import { Dropdown, Spinner } from 'flowbite-react';
-import { User as UserType } from '../../../types';
+import { AccountEnum, User as UserType } from '../../../types';
 import { useAppDispatch } from '../../../redux/store';
 import { updateUserInfo } from '../../../redux/feats/auth/authSlice';
 import { useToast } from '../../../utils/functions';
@@ -51,7 +51,7 @@ const PersonalTab = () => {
     try {
       const result = await updateUser(updatedFields).unwrap();
       dispatch(updateUserInfo(result));
-      showToast("Saved Information!");
+      showToast(AccountEnum.SAVED);
     } catch (error: any) {
       console.log(error);
     }

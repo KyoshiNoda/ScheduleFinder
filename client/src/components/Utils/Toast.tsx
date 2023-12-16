@@ -2,11 +2,11 @@ import { Toast as FlowbiteToast } from 'flowbite-react';
 import { HiCheck } from 'react-icons/hi';
 import { toast } from '../../redux/feats/globalSlice/globalSlice';
 import { useAppDispatch } from '../../redux/store';
-interface ToastProps {
+type ToastProps = {
     message: string;
 }
 
-const Toast: React.FC<ToastProps> = ({ message }) => {
+const Toast = ({ message }: ToastProps) => {
     const dispatch = useAppDispatch();
 
     return (

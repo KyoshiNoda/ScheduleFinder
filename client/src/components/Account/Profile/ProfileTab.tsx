@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Modal, Button, Label, Spinner } from 'flowbite-react';
 import { useChangePasswordMutation } from '../../../redux/services/user/userService';
 import { useGetUserInfoQuery, useUpdateUserInfoMutation } from '../../../redux/services/user/userService';
-import { User as UserType } from '../../../types';
+import { AccountEnum, User as UserType } from '../../../types';
 import ProfilePic from './ProfilePic';
 import { useAppDispatch } from '../../../redux/store';
 import {updateUserInfo} from '../../../redux/feats/auth/authSlice';
@@ -40,7 +40,7 @@ const ProfileTab = () => {
         email: emailRef.current?.value,
       }).unwrap();
       dispatch(updateUserInfo(updatedUser));
-      showToast("Updated Email!");
+      showToast(AccountEnum.UPDATE_EMAIL);
     } catch (error) {
       console.log(error);
     }
@@ -53,7 +53,7 @@ const ProfileTab = () => {
         newPassword: newPasswordRef.current.value,
         confirmNewPassword: newConfirmedPasswordRef.current.value,
       }).unwrap();
-      showToast("Updated Password!");
+      showToast(AccountEnum.UPDATE_PASSWORD);
       setIsChangePassword(false);
     } catch (error: any) {
       if (error.data.includes('Incorrect')) {

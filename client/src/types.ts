@@ -3,6 +3,30 @@ export enum Environment {
   Dev = 'dev',
   Prod = 'prod',
 }
+
+export enum FriendsEnum {
+  ACCEPTED_REQUEST = 'Accepted Friend Request!',
+  REJECTED_REQUEST = 'Rejected Friend Request.',
+  SEND_REQUEST = 'Friend Request Sent!',
+  CANCEL_REQUEST = 'Canceled Friend Request!',
+  REMOVED = 'Removed Friend!',
+}
+
+export enum AccountEnum {
+  SAVED = "Saved Information!",
+  UPDATE_PROFILE_PICTURE = "Updated Profile Picture!",
+  UPDATE_EMAIL = "Updated Email!",
+  UPDATE_PASSWORD = "Updated Password!",
+  DELETE_ACCOUNT = "Deleted Account!",
+}
+
+export enum ScheduleEnum {
+  CLEAR_SCHEDULE = "Cleared Schedule!",
+  CREATED_TIMESLOT = "Created Time Slot!",
+  UPDATE_TIMESLOT = "Updated Time Slot!",
+  DELETED_TIMESLOT = "Deleted Time Slot!",
+}
+
 export type RegisterUser = {
   firstName: string;
   lastName: string;
@@ -11,6 +35,7 @@ export type RegisterUser = {
   birthday: Date;
   school: string;
 };
+
 export type User = {
   _id: string;
   firstName: string;

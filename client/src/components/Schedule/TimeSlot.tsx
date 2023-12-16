@@ -3,7 +3,7 @@ import { AiFillEdit } from 'react-icons/ai';
 import { Modal, Select } from 'flowbite-react';
 import { colors } from './TimeSlotInput';
 import { ToggleSwitch } from 'flowbite-react';
-import { DaysChecked as DaysCheckedType, TimeSlot as TimeSlotType } from '../../types';
+import { DaysChecked as DaysCheckedType, ScheduleEnum, TimeSlot as TimeSlotType } from '../../types';
 import { useDeleteTimeSlotMutation, useUpdateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useAppSelector } from '../../redux/store';
@@ -131,7 +131,7 @@ const TimeSlot: any = (props: Props) => {
           scheduleId: scheduleID,
           timeSlot: updatedTimeSlot,
         });
-        showToast("Updated TimeSlot");
+        showToast(ScheduleEnum.UPDATE_TIMESLOT);
       } catch (error) {
         console.log(error);
       }
@@ -159,7 +159,7 @@ const TimeSlot: any = (props: Props) => {
           scheduleId: scheduleID,
           timeSlot: updatedTimeSlot,
         });
-        showToast("Updated TimeSlot");
+        showToast(ScheduleEnum.UPDATE_TIMESLOT);
       } catch (error) {
         console.log(error);
       }
@@ -176,7 +176,7 @@ const TimeSlot: any = (props: Props) => {
         scheduleId: scheduleID,
         timeSlot: { _id: props.id! },
       });
-      showToast("Deleted TimeSlot");
+      showToast(ScheduleEnum.DELETED_TIMESLOT);
     } catch (error) {
       console.log(error);
     }
