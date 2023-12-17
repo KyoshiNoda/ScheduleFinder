@@ -3,12 +3,13 @@ import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { DaysChecked, TimeSlot as TimeSlotType } from '../../types';
 import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
+import { ToastEnum } from '../../enums';
 import { Modal, Button, Select } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
 import ClearScheduleButton from './ClearScheduleButton';
 import DayPicker from './DayPicker';
 import { TypesOfInput } from '../../enums';
-
+import { useToast } from '../../utils/functions';
 export const colors: string[] = [
   'slate',
   'red',
@@ -57,6 +58,8 @@ const TimeSlotInput = () => {
     thursday: false,
     friday: false,
   });
+
+  const { showToast } = useToast();
 
   let scheduleID = '';
   const { data, isFetching } = useGetScheduleQuery('schedule', {
@@ -152,6 +155,7 @@ const TimeSlotInput = () => {
         scheduleId: scheduleID,
         timeSlot: currentTimeSlot,
       });
+      showToast(ToastEnum.CREATED_TIMESLOT);
       if ('data' in result) {
         const { data } = result;
       }
@@ -186,10 +190,10 @@ const TimeSlotInput = () => {
     } else {
       setTimeIntervalError(false);
     }
-    
+
     if (inputType === TypesOfInput.HourInput) {
       if (inputValue < 1 || inputValue > 12) {
-        inputRef.current?.classList.add( 
+        inputRef.current?.classList.add(
           'border-red-500',
           'focus:border-rose-500',
           'focus:ring-rose-500',
@@ -293,10 +297,9 @@ const TimeSlotInput = () => {
                         ref={startTimeHourRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
-                          !timeError &&
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${!timeError &&
                           'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-                        }`}
+                          }`}
                         onChange={() => validateInput(startTimeHourRef, TypesOfInput.HourInput)}
                         placeholder="12"
                         maxLength={2}
@@ -307,10 +310,9 @@ const TimeSlotInput = () => {
                         ref={startTimeMinutesRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
-                          !timeError &&
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${!timeError &&
                           'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-                        }`}
+                          }`}
                         onChange={() => validateInput(startTimeMinutesRef, TypesOfInput.MinutesInput)}
                         placeholder="00"
                         maxLength={2}
@@ -339,10 +341,9 @@ const TimeSlotInput = () => {
                         ref={endTimeHourRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
-                          !timeError &&
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${!timeError &&
                           'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-                        }`}
+                          }`}
                         onChange={() => validateInput(endTimeHourRef, TypesOfInput.HourInput)}
                         placeholder="12"
                         maxLength={2}
@@ -353,10 +354,9 @@ const TimeSlotInput = () => {
                         ref={endTimeMinutesRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
-                          !timeError &&
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${!timeError &&
                           'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-                        }`}
+                          }`}
                         onChange={() => validateInput(endTimeMinutesRef, TypesOfInput.MinutesInput)}
                         placeholder="00"
                         maxLength={2}
@@ -382,9 +382,9 @@ const TimeSlotInput = () => {
               <div className="flex gap-3">
                 <div className="w-full">
                   <label htmlFor="location" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                    Location 
+                    Location
                   </label>
-                  <input  
+                  <input
                     ref={locationRef}
                     type="text"
                     id="location"
@@ -418,9 +418,8 @@ const TimeSlotInput = () => {
                         id="colorPicker"
                         tabIndex={0}
                         onKeyDown={(e) => handleColorPickerKeyPress(e, color)}
-                        className={`bg-${color}-400 h-8 w-8 cursor-pointer rounded-full border-4 lg:h-10 lg:w-10 ${
-                          timeSlotColor === color ? 'border-blue-700' : 'border-none'
-                        }`}
+                        className={`bg-${color}-400 h-8 w-8 cursor-pointer rounded-full border-4 lg:h-10 lg:w-10 ${timeSlotColor === color ? 'border-blue-700' : 'border-none'
+                          }`}
                       />
                     ))}
                   </div>

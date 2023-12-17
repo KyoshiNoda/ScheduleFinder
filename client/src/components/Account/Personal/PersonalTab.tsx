@@ -2,9 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import { useGetUserInfoQuery, useUpdateUserInfoMutation } from '../../../redux/services/user/userService';
 import { Dropdown, Spinner } from 'flowbite-react';
 import { User as UserType } from '../../../types';
+import { ToastEnum } from '../../../enums';
 import { useAppDispatch } from '../../../redux/store';
 import { updateUserInfo } from '../../../redux/feats/auth/authSlice';
+import { useToast } from '../../../utils/functions';
 const PersonalTab = () => {
+  const { showToast } = useToast();
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
 
@@ -49,6 +52,7 @@ const PersonalTab = () => {
     try {
       const result = await updateUser(updatedFields).unwrap();
       dispatch(updateUserInfo(result));
+      showToast(ToastEnum.SAVED_INFO);
     } catch (error: any) {
       console.log(error);
     }

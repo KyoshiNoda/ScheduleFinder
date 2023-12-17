@@ -5,11 +5,14 @@ import { Spinner } from 'flowbite-react';
 import { useAppDispatch } from '../../../redux/store';
 import { updateUserInfo } from '../../../redux/feats/auth/authSlice';
 import { useAppSelector } from '../../../redux/store';
+import { useToast } from '../../../utils/functions';
+import { ToastEnum } from '../../../enums';
 type Props = {
   picture: string | undefined;
 };
 
 const ProfilePic = (props: Props) => {
+  const { showToast } = useToast();
   const [imageURL, setImageURL] = useState<string | undefined>(props.picture);
   const [isHovering, setIsHovering] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -37,6 +40,7 @@ const ProfilePic = (props: Props) => {
         };
         dispatch(updateUserInfo(updatedUser));
         setImageURL(request.imageUrl);
+        showToast(ToastEnum.UPDATE_PROFILE_PICTURE);
       } finally {
         setIsLoading(false);
       }

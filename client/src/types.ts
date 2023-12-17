@@ -1,8 +1,3 @@
-export enum Environment {
-  Local = 'local',
-  Dev = 'dev',
-  Prod = 'prod',
-}
 export type RegisterUser = {
   firstName: string;
   lastName: string;
@@ -11,6 +6,7 @@ export type RegisterUser = {
   birthday: Date;
   school: string;
 };
+
 export type User = {
   _id: string;
   firstName: string;
