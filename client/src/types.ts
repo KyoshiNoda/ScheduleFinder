@@ -1,26 +1,3 @@
-export enum Environment {
-  Local = 'local',
-  Dev = 'dev',
-  Prod = 'prod',
-}
-
-export enum ToastEnum {
-  ACCEPTED_REQUEST = 'Accepted Friend Request!',
-  REJECTED_REQUEST = 'Rejected Friend Request.',
-  SEND_REQUEST = 'Friend Request Sent!',
-  CANCEL_REQUEST = 'Canceled Friend Request!',
-  REMOVED = 'Removed Friend!',
-  SAVED = "Saved Information!",
-  UPDATE_PROFILE_PICTURE = "Updated Profile Picture!",
-  UPDATE_EMAIL = "Updated Email!",
-  UPDATE_PASSWORD = "Updated Password!",
-  DELETE_ACCOUNT = "Deleted Account!",
-  CLEAR_SCHEDULE = "Cleared Schedule!",
-  CREATED_TIMESLOT = "Created Time Slot!",
-  UPDATE_TIMESLOT = "Updated Time Slot!",
-  DELETED_TIMESLOT = "Deleted Time Slot!",
-}
-
 export type RegisterUser = {
   firstName: string;
   lastName: string;

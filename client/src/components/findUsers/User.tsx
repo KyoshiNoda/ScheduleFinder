@@ -8,7 +8,7 @@ import {
 import { BiTime } from 'react-icons/bi';
 import { useState } from 'react';
 import { useToast } from '../../utils/functions';
-import { ToastEnum } from '../../types';
+import { ToastEnum } from '../../enums';
 type UserProps = {
   id: string;
   photoURL: string;
@@ -41,17 +41,17 @@ const User = ({
 
   const sendFriendRequestHandler = async (id: string) => {
     await sendFriendRequest({ friendID: id });
-    showToast(ToastEnum.SEND_REQUEST);
+    showToast(ToastEnum.SEND_FRIEND_REQUEST);
   };
 
   const acceptFriendRequestHandler = async (id: string) => {
     await acceptFriendRequest({ friendID: id });
-    showToast(ToastEnum.ACCEPTED_REQUEST);
+    showToast(ToastEnum.ACCEPTED_FRIEND_REQUEST);
   };
 
   const cancelFriendRequestHandler = async (id: string) => {
     await removeSendFriendRequest({ friendID: id });
-    showToast(ToastEnum.CANCEL_REQUEST);
+    showToast(ToastEnum.CANCEL_FRIEND_REQUEST);
   };
 
   return (

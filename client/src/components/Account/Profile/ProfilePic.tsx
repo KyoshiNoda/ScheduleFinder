@@ -6,7 +6,7 @@ import { useAppDispatch } from '../../../redux/store';
 import { updateUserInfo } from '../../../redux/feats/auth/authSlice';
 import { useAppSelector } from '../../../redux/store';
 import { useToast } from '../../../utils/functions';
-import { ToastEnum } from '../../../types';
+import { ToastEnum } from '../../../enums';
 type Props = {
   picture: string | undefined;
 };

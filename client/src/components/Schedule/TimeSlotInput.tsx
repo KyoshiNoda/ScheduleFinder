@@ -1,8 +1,9 @@
 import { useState, useRef, ReactNode } from 'react';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
-import { DaysChecked, ToastEnum, TimeSlot as TimeSlotType } from '../../types';
+import { DaysChecked, TimeSlot as TimeSlotType } from '../../types';
 import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
+import { ToastEnum } from '../../enums';
 import { Modal, Button, Select } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
 import ClearScheduleButton from './ClearScheduleButton';

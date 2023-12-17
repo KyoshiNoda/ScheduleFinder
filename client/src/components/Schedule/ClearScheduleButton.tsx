@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useClearScheduleMutation } from '../../redux/services/schedule/scheduleService';
 import { Modal } from 'flowbite-react';
-import { ToastEnum, Schedule as ScheduleType } from '../../types';
+import { Schedule as ScheduleType } from '../../types';
+import { ToastEnum } from '../../enums';
 import { useToast } from '../../utils/functions';
 type Props = {
   scheduleId: string;
