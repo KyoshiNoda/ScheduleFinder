@@ -3,7 +3,7 @@ import {
   useGetUserFriendsQuery,
   useDeleteFriendMutation,
 } from '../../../redux/services/user/userService';
-import { FriendsEnum, User as UserType } from '../../../types';
+import { ToastEnum, User as UserType } from '../../../types';
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal, Spinner } from 'flowbite-react';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
@@ -30,7 +30,7 @@ const FriendsTab = () => {
     try {
       await deleteFriend({ friendID: tempFriend });
       setOpenModal(undefined);
-      showToast(FriendsEnum.REMOVED);
+      showToast(ToastEnum.REMOVED);
     } catch (error: any) {
       console.log(error);
     }

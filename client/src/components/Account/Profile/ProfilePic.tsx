@@ -6,7 +6,7 @@ import { useAppDispatch } from '../../../redux/store';
 import { updateUserInfo } from '../../../redux/feats/auth/authSlice';
 import { useAppSelector } from '../../../redux/store';
 import { useToast } from '../../../utils/functions';
-import { AccountEnum } from '../../../types';
+import { ToastEnum } from '../../../types';
 type Props = {
   picture: string | undefined;
 };
@@ -40,7 +40,7 @@ const ProfilePic = (props: Props) => {
         };
         dispatch(updateUserInfo(updatedUser));
         setImageURL(request.imageUrl);
-        showToast(AccountEnum.UPDATE_PROFILE_PICTURE);
+        showToast(ToastEnum.UPDATE_PROFILE_PICTURE);
       } finally {
         setIsLoading(false);
       }

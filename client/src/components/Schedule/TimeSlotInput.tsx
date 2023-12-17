@@ -1,7 +1,7 @@
 import { useState, useRef, ReactNode } from 'react';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
-import { DaysChecked, ScheduleEnum, TimeSlot as TimeSlotType } from '../../types';
+import { DaysChecked, ToastEnum, TimeSlot as TimeSlotType } from '../../types';
 import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
 import { Modal, Button, Select } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
@@ -154,7 +154,7 @@ const TimeSlotInput = () => {
         scheduleId: scheduleID,
         timeSlot: currentTimeSlot,
       });
-      showToast(ScheduleEnum.CREATED_TIMESLOT);
+      showToast(ToastEnum.CREATED_TIMESLOT);
       if ('data' in result) {
         const { data } = result;
       }
