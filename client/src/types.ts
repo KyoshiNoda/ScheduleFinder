@@ -20,8 +20,8 @@ export type User = {
   school: string;
   major?: string | undefined;
   friends: User[];
-  receivedFriendRequests : User[];
-  sentFriendRequests : User[];
+  receivedFriendRequests: User[];
+  sentFriendRequests: User[];
 };
 
 export type DaysChecked = {
@@ -49,4 +49,9 @@ export type Schedule = {
   user_id: string;
   visibility: string;
   timeSlots: TimeSlot[];
+};
+
+export type FileUploadResponse = {
+  message: string;
+  imageUrl: string;
 };

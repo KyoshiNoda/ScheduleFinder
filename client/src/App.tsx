@@ -10,6 +10,7 @@ import PageLayout from './components/PageLayout';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Notifications from './pages/Notifications';
+import UserPage from './pages/UserPage';
 const App = () => {
   return (
     <>
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="findUsers" element={<FindUser />} />
           <Route path="compareSchedule/:userId" element={<CompareSchedule />} />
           <Route path="notifications" element={<Notifications />} />
+          <Route path ="user/:userId" element={<UserPage />} />
         </Route>
       </Routes> 
     </>

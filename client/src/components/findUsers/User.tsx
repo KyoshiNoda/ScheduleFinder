@@ -1,5 +1,5 @@
 import { Card } from 'flowbite-react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import {
   useSendFriendRequestMutation,
   useAcceptFriendRequestMutation,
@@ -21,17 +21,7 @@ type UserProps = {
   isFriends: boolean;
 };
 
-const User = ({
-  id,
-  photoURL,
-  firstName,
-  lastName,
-  school,
-  major,
-  isPending,
-  isFriendRequest,
-  isFriends,
-}: UserProps) => {
+const User = ({ id, photoURL, firstName, lastName, school, major, isPending, isFriendRequest, isFriends }: UserProps) => {
   const { showToast } = useToast();
   const [sendFriendRequest] = useSendFriendRequestMutation();
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
@@ -55,23 +45,13 @@ const User = ({
   };
 
   return (
-    <div className="max-w-sm">
+    <Link className="max-w-sm cursor-pointer" to={`/auth/user/${id}`}>
       <Card>
         <div className="flex flex-col items-center">
-          <img
-            className="mb-3 max-h-32 w-32 rounded-full object-cover shadow-lg"
-            src={photoURL}
-            alt={`Profile picture of ${fullName}`}
-          />
-          <h2 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-            {fullName}
-          </h2>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            {major}
-          </span>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            {school}
-          </span>
+          <img className="mb-3 max-h-32 w-32 rounded-full object-cover shadow-lg" src={photoURL} alt={`Profile picture of ${fullName}`} />
+          <h2 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{fullName}</h2>
+          <span className="text-sm text-gray-500 dark:text-gray-400">{major}</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">{school}</span>
           <div className="mt-4 flex space-x-3 lg:mt-6">
             {!isPending ? (
               isFriendRequest ? (
@@ -94,10 +74,7 @@ const User = ({
                 </>
               )
             ) : (
-              <div
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-              >
+              <div onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
                 {isHovered ? (
                   <button
                     onClick={() => cancelFriendRequestHandler(id)}
@@ -121,10 +98,8 @@ const User = ({
           </div>
         </div>
       </Card>
-    </div>
+    </Link>
   );
 };
-
-
 
 export default User;
