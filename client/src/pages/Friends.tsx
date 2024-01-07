@@ -10,7 +10,7 @@ const getFormattedFriendName = (friend: UserType) => {
 };
 
 const Friends = () => {
-  const { data: friends, isLoading } = useGetUserFriendsQuery('User');
+  const { data: friends } = useGetUserFriendsQuery('User');
   const [deleteFriend] = useDeleteFriendMutation();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [friendToDelete, setFriendToDelete] = useState<UserType>();

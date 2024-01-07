@@ -10,6 +10,8 @@ import PageLayout from './components/PageLayout';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Notifications from './pages/Notifications';
+import Friends from './pages/Friends';
+
 const App = () => {
   return (
     <>
@@ -22,6 +24,7 @@ const App = () => {
         <Route path="/auth" element={<PageLayout />}>
           <Route path="account" element={<Account />} />
           <Route path="schedule" element={<Schedule />} />
+          <Route path="friends" element={<Friends />} />
           <Route path="findUsers" element={<FindUser />} />
           <Route path="compareSchedule/:userId" element={<CompareSchedule />} />
           <Route path="notifications" element={<Notifications />} />
