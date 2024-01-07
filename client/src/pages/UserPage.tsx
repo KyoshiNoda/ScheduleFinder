@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
-import { User as UserType } from '../types';
+import { User as UserType, Schedule as ScheduleType } from '../types';
 import { useGetExternalUserInfoQuery } from '../redux/services/user/userService';
+import { useGetExternalScheduleQuery } from '../redux/services/schedule/scheduleService';
+import { useAppDispatch } from '../redux/store';
+import { toggleReadOnly } from '../redux/feats/globalSlice/globalSlice';
 import { useParams } from 'react-router-dom';
 import { Spinner } from 'flowbite-react';
 import { calculateAge } from '../utils/functions';
@@ -8,20 +11,26 @@ import { Button } from 'flowbite-react';
 import ScheduleBox from '../components/Schedule/ScheduleBox';
 const UserPage = () => {
   const { userId } = useParams();
-  const { data, isLoading } = useGetExternalUserInfoQuery(userId!);
+  const dispatch = useAppDispatch();
+  dispatch(toggleReadOnly(true));
+  const { data: userData, isLoading: userLoading } = useGetExternalUserInfoQuery(userId!);
+  const { data: scheduleData, isLoading: scheduleLoading } = useGetExternalScheduleQuery(userId!);
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
+  const [scheduleInfo, setScheduleInfo] = useState<ScheduleType | undefined>();
   const dummyTags: string[] = ['Basketball', 'Football', 'Soccer', 'Tennis', 'Golf'];
 
   useEffect(() => {
-    if (data && !isLoading) {
-      setUserInfo(data);
+    if (userData && !userLoading && scheduleData && !scheduleLoading) {
+      setUserInfo(userData);
+      setScheduleInfo(scheduleData);
+      console.log(scheduleInfo);
     }
-  }, [data, isLoading]);
+  }, [userData, userLoading, scheduleData, scheduleLoading]);
   return (
     <>
       {userInfo ? (
-        <div className="flex h-screen w-screen gap-10 bg-slate-400 dark:bg-slate-900">
-          <div className="ml-10 flex h-5/6 w-1/4 flex-col rounded-lg bg-white p-4 dark:bg-slate-800 dark:text-white">
+        <div className="flex min-h-full w-screen flex-col gap-20 bg-slate-400 pr-10 dark:bg-slate-900 lg:flex-row">
+          <div className="min-w-1/4 ml-10 flex h-5/6 flex-col rounded-lg bg-white p-4 dark:bg-slate-800 dark:text-white">
             <div className="flex flex-col items-center gap-3">
               <img src={userInfo.photoURL} className="h-44 w-44 rounded-full border-2" />
               <h1 className="mb-4 text-2xl font-bold">
@@ -51,7 +60,10 @@ const UserPage = () => {
               </div>
             </div>
           </div>
-          <ScheduleBox timeSlots={undefined}/>
+          <div className="flex w-full flex-col gap-10 text-center">
+            <h1 className="text-3xl font-semibold text-white">Schedule:</h1>
+            <ScheduleBox timeSlots={scheduleInfo!.timeSlots} />
+          </div>
         </div>
       ) : (
         <Spinner aria-label="Profile loading spinner" size="xl" />
