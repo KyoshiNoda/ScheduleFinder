@@ -54,17 +54,22 @@ const Friends = () => {
       </Modal>
 
       <div className="flex min-h-full flex-col gap-10 bg-slate-400 p-6 dark:bg-slate-900">
-        <h1 className="text-center text-5xl font-medium">Friends</h1>
+        <h1 className="text-center text-5xl font-medium dark:text-white">Friends</h1>
 
-        <div className="overflow-x-auto">
-          <table className="w-full rounded-xl bg-white">
+        <div className="overflow-x-auto px-5 md:px-20">
+          <table className="w-full rounded-xl bg-white dark:bg-gray-800">
             <tbody>
               {friends &&
-                friends.map((friend: UserType) => (
-                  <tr key={friend._id} className="flex w-full items-center justify-between border-b border-solid border-gray-300 p-4">
+                friends.map((friend: UserType, index: number) => (
+                  <tr
+                    key={friend._id}
+                    className={`flex w-full items-center justify-between ${
+                      index != friends.length - 1 && 'border-b border-solid border-gray-300 dark:border-gray-700'
+                    } p-4`}
+                  >
                     <td className="flex items-center gap-6">
                       <Avatar img={friend.photoURL} alt={`avatar of ${getFormattedFriendName(friend)}`} rounded size={'lg'} />
-                      <span>{getFormattedFriendName(friend)}</span>
+                      <span className="text-xl dark:text-white">{getFormattedFriendName(friend)}</span>
                     </td>
                     <td className="flex items-center gap-3">
                       {/* TODO: Add link to the user profile page */}
@@ -90,7 +95,6 @@ const Friends = () => {
           </table>
         </div>
       </div>
-
       {deleteFriendToast.state && <Toast message={deleteFriendToast.message} />}
     </>
   );
