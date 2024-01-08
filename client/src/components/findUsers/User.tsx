@@ -1,15 +1,7 @@
-import { Card } from 'flowbite-react';
 import { Link } from 'react-router-dom';
-import {
-  useSendFriendRequestMutation,
-  useAcceptFriendRequestMutation,
-  useRemovePendingFriendRequestMutation,
-} from '../../redux/services/user/userService';
-import { BiTime } from 'react-icons/bi';
-import { useState } from 'react';
-import { useToast } from '../../utils/functions';
-import { ToastEnum } from '../../enums';
+import { Card } from 'flowbite-react';
 import { User as UserType } from '../../types';
+import FriendStatusButton from '../Utils/FriendStatusButton';
 
 type UserProps = {
   user: UserType;
@@ -18,28 +10,8 @@ type UserProps = {
   isFriends: boolean;
 };
 const User = ({ user, isPending, isFriendRequest, isFriends }: UserProps) => {
-  const { showToast } = useToast();
-  const [sendFriendRequest] = useSendFriendRequestMutation();
-  const [acceptFriendRequest] = useAcceptFriendRequestMutation();
-  const [removeSendFriendRequest] = useRemovePendingFriendRequestMutation();
-  const [isHovered, setIsHovered] = useState<boolean>(false);
   const fullName = `${user.firstName} ${user.lastName}`;
-
-  const sendFriendRequestHandler = async (id: string) => {
-    await sendFriendRequest({ friendID: id });
-    showToast(ToastEnum.SEND_FRIEND_REQUEST);
-  };
-
-  const acceptFriendRequestHandler = async (id: string) => {
-    await acceptFriendRequest({ friendID: id });
-    showToast(ToastEnum.ACCEPTED_FRIEND_REQUEST);
-  };
-
-  const cancelFriendRequestHandler = async (id: string) => {
-    await removeSendFriendRequest({ friendID: id });
-    showToast(ToastEnum.CANCEL_FRIEND_REQUEST);
-  };
-
+  console.log(isPending, isFriendRequest, isFriends);
   return (
     <>
       <Card>
@@ -48,49 +20,13 @@ const User = ({ user, isPending, isFriendRequest, isFriends }: UserProps) => {
           <h2 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{fullName}</h2>
           <span className="text-sm text-gray-500 dark:text-gray-400">{user.major}</span>
           <span className="text-sm text-gray-500 dark:text-gray-400">{user.school}</span>
-          
-          <div className="mt-4 flex space-x-3 lg:mt-6">
-            {!isPending ? (
-              isFriendRequest ? (
-                <button
-                  onClick={() => acceptFriendRequestHandler(user._id)}
-                  className="inline-flex items-center rounded-lg bg-green-600 px-4 py-2 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
-                >
-                  Accept Friend Request
-                </button>
-              ) : (
-                <>
-                  {!isFriends && (
-                    <button
-                      onClick={() => sendFriendRequestHandler(user._id)}
-                      className="inline-flex items-center rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >
-                      Add Friend
-                    </button>
-                  )}
-                </>
-              )
-            ) : (
-              <div onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-                {isHovered ? (
-                  <button
-                    onClick={() => cancelFriendRequestHandler(user._id)}
-                    className="inline-flex items-center rounded-lg bg-red-600 px-1 py-2 text-center text-sm font-medium text-white focus:outline-none focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800"
-                  >
-                    Cancel Request
-                  </button>
-                ) : (
-                  <span className="flex items-center gap-1 rounded border px-4 py-2 dark:text-white">
-                    Pending <BiTime size="20" />
-                  </span>
-                )}
-              </div>
-            )}
+          <div className=" flex gap-4 h-full items-start justify-center bg-rose-500">
+            <FriendStatusButton isPending={isPending} isFriendRequest={isFriendRequest} isFriends={isFriends} userID={user._id} />
             <Link
-              to={`/auth/compareSchedule/${user._id}`}
-              className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+              to={`/auth/user/${user._id}`}
+              className="inline-flex h-fit items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
             >
-              See schedule
+              View User
             </Link>
           </div>
         </div>
