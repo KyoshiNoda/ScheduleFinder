@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
-import { FaUserFriends } from 'react-icons/fa';
+import { FaBell } from "react-icons/fa";
 import { AiOutlineCheck } from 'react-icons/ai';
-import {
-  useGetUserFriendRequestsQuery,
-  useAcceptFriendRequestMutation,
-  useRejectFriendRequestMutation,
-} from '../redux/services/user/userService';
+import { useGetUserFriendRequestsQuery, useAcceptFriendRequestMutation, useRejectFriendRequestMutation } from '../redux/services/user/userService';
 import { User as UserType } from '../types';
 import { Spinner } from 'flowbite-react';
 import { Link } from 'react-router-dom';
@@ -14,8 +10,7 @@ import { ToastEnum } from '../enums';
 const FriendRequest = () => {
   const { showToast } = useToast();
   const { data, isLoading } = useGetUserFriendRequestsQuery('User');
-  const [receivedFriendRequests, setReceivedFriendRequests] =
-    useState<UserType[]>();
+  const [receivedFriendRequests, setReceivedFriendRequests] = useState<UserType[]>();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
   const [rejectFriendRequest] = useRejectFriendRequestMutation();
@@ -59,7 +54,7 @@ const FriendRequest = () => {
         type="button"
         onClick={handleBellClick}
       >
-        <FaUserFriends onClick={handleIconClick} className="h-9 w-9" />
+        <FaBell onClick={handleIconClick} className="h-7 w-7 mt-2" />
       </button>
       {isDropdownOpen && (
         <div className="absolute right-4 z-20 w-3/4 divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-700 dark:bg-gray-800 lg:right-1 lg:w-1/4">
@@ -80,9 +75,7 @@ const FriendRequest = () => {
                       <span className="font-semibold text-gray-900 dark:text-white">
                         {user.firstName} {user.lastName}
                       </span>
-                      <div className=" text-sm text-blue-600 dark:text-blue-500">
-                        {user.school}
-                      </div>
+                      <div className=" text-sm text-blue-600 dark:text-blue-500">{user.school}</div>
                     </div>
                     <div className="flex-grow" />
                     <div className="m-auto flex items-center gap-1">
