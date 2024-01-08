@@ -1,8 +1,12 @@
 import { useGetUserFriendsQuery, useDeleteFriendMutation } from '../redux/services/user/userService';
-import { User, User as UserType } from '../types';
+import { User as UserType } from '../types';
 import { Link } from 'react-router-dom';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import { Avatar, Modal, Button } from 'flowbite-react';
+import { ToastEnum } from '../enums';
+import Toast from '../components/Utils/Toast';
+import { useToast } from '../utils/functions';
+import { useAppSelector } from '../redux/store';
 import { useState } from 'react';
 
 const getFormattedFriendName = (friend: UserType) => {
@@ -14,6 +18,8 @@ const Friends = () => {
   const [deleteFriend] = useDeleteFriendMutation();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [friendToDelete, setFriendToDelete] = useState<UserType>();
+  const { showToast } = useToast();
+  const deleteFriendToast = useAppSelector((state: any) => state.globalSlice.toast);
   console.log('LOG:', friends);
 
   const onConfirmDeleteFriend = async () => {
@@ -21,6 +27,7 @@ const Friends = () => {
     try {
       await deleteFriend({ friendID: friendToDelete._id });
       setOpenModal(false);
+      showToast(ToastEnum.REMOVED_FRIEND);
     } catch (error: any) {
       console.log(error);
     }
@@ -33,9 +40,7 @@ const Friends = () => {
         <Modal.Body>
           <div className="text-center">
             <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
-            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-              Are you sure you want to remove this person?
-            </h3>
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to remove this person?</h3>
             <div className="flex justify-center gap-4">
               <Button color="failure" onClick={() => onConfirmDeleteFriend()}>
                 Yes, I'm sure
@@ -48,24 +53,24 @@ const Friends = () => {
         </Modal.Body>
       </Modal>
 
-      <div className="min-h-full bg-slate-400 p-6 dark:bg-slate-900">
-        <h1>Friends Page</h1>
+      <div className="flex min-h-full flex-col gap-10 bg-slate-400 p-6 dark:bg-slate-900">
+        <h1 className="text-center text-5xl font-medium">Friends</h1>
 
         <div className="overflow-x-auto">
-          <table>
+          <table className="w-full rounded-xl bg-white">
             <tbody>
               {friends &&
                 friends.map((friend: UserType) => (
-                  <tr key={friend._id}>
-                    <td>
-                      <Avatar img={friend.photoURL} alt={`avatar of ${getFormattedFriendName(friend)}`} rounded />
+                  <tr key={friend._id} className="flex w-full items-center justify-between border-b border-solid border-gray-300 p-4">
+                    <td className="flex items-center gap-6">
+                      <Avatar img={friend.photoURL} alt={`avatar of ${getFormattedFriendName(friend)}`} rounded size={'lg'} />
                       <span>{getFormattedFriendName(friend)}</span>
                     </td>
-                    <td>
+                    <td className="flex items-center gap-3">
                       {/* TODO: Add link to the user profile page */}
                       <Link
                         to={'#'}
-                        className="me-2 mb-2 rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        className="rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                       >
                         View Profile
                       </Link>
@@ -74,7 +79,7 @@ const Friends = () => {
                           setFriendToDelete(friend);
                           setOpenModal(true);
                         }}
-                        className="me-2 mb-2 rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                        className="rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
                       >
                         Delete Friend
                       </button>
@@ -85,6 +90,8 @@ const Friends = () => {
           </table>
         </div>
       </div>
+
+      {deleteFriendToast.state && <Toast message={deleteFriendToast.message} />}
     </>
   );
 };
