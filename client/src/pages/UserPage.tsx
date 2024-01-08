@@ -1,31 +1,53 @@
 import { useState, useEffect } from 'react';
 import { User as UserType, Schedule as ScheduleType } from '../types';
-import { useGetExternalUserInfoQuery } from '../redux/services/user/userService';
+import {
+  useGetExternalUserInfoQuery,
+  useAcceptFriendRequestMutation,
+  useRemovePendingFriendRequestMutation,
+} from '../redux/services/user/userService';
 import { useGetExternalScheduleQuery } from '../redux/services/schedule/scheduleService';
-import { useAppDispatch } from '../redux/store';
+import { useToast } from '../utils/functions';
+import { ToastEnum } from '../enums';
+import { useAppDispatch, useAppSelector } from '../redux/store';
 import { toggleReadOnly } from '../redux/feats/globalSlice/globalSlice';
 import { useParams } from 'react-router-dom';
 import { Spinner } from 'flowbite-react';
 import { calculateAge } from '../utils/functions';
 import { Button } from 'flowbite-react';
 import ScheduleBox from '../components/Schedule/ScheduleBox';
+import Toast from '../components/Utils/Toast';
+
 const UserPage = () => {
   const { userId } = useParams();
+  const { showToast } = useToast();
   const dispatch = useAppDispatch();
-  dispatch(toggleReadOnly(true));
+  const friendToast = useAppSelector((state: any) => state.globalSlice.toast);
   const { data: userData, isLoading: userLoading } = useGetExternalUserInfoQuery(userId!);
   const { data: scheduleData, isLoading: scheduleLoading } = useGetExternalScheduleQuery(userId!);
+  const [acceptFriendRequest] = useAcceptFriendRequestMutation();
+  const [removeSendFriendRequest] = useRemovePendingFriendRequestMutation();
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
   const [scheduleInfo, setScheduleInfo] = useState<ScheduleType | undefined>();
+  const [isHovered, setIsHovered] = useState<boolean>(false);
   const dummyTags: string[] = ['Basketball', 'Football', 'Soccer', 'Tennis', 'Golf'];
 
+  dispatch(toggleReadOnly(true));
   useEffect(() => {
     if (userData && !userLoading && scheduleData && !scheduleLoading) {
       setUserInfo(userData);
       setScheduleInfo(scheduleData);
-      console.log(scheduleInfo);
     }
   }, [userData, userLoading, scheduleData, scheduleLoading]);
+
+  const acceptFriendRequestHandler = async (id: string) => {
+    await acceptFriendRequest({ friendID: id });
+    showToast(ToastEnum.ACCEPTED_FRIEND_REQUEST);
+  };
+  const cancelFriendRequestHandler = async (id: string) => {
+    await removeSendFriendRequest({ friendID: id });
+    showToast(ToastEnum.CANCEL_FRIEND_REQUEST);
+  };
+
   return (
     <>
       {userInfo ? (
@@ -43,7 +65,6 @@ const UserPage = () => {
                 <p>School: {userInfo.school}</p>
                 <p>Major: {userInfo.major}</p>
               </div>
-
               <div>
                 <h1 className="text-center">Hobbies:</h1>
                 <div className="flex flex-wrap gap-2">
@@ -54,7 +75,9 @@ const UserPage = () => {
                   ))}
                 </div>
               </div>
-
+              <Button color="green" onClick={() => acceptFriendRequestHandler(userInfo._id)}>
+                Add Friend
+              </Button>
               <div className="flex justify-center">
                 <span className="cursor-pointer font-normal underline">See More</span>
               </div>
@@ -68,6 +91,7 @@ const UserPage = () => {
       ) : (
         <Spinner aria-label="Profile loading spinner" size="xl" />
       )}
+      {friendToast.state && <Toast message={friendToast.message} />}
     </>
   );
 };
