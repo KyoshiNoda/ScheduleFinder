@@ -20,11 +20,11 @@ const User = ({ user, isPending, isFriendRequest, isFriends }: UserProps) => {
           <h2 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{fullName}</h2>
           <span className="text-sm text-gray-500 dark:text-gray-400">{user.major}</span>
           <span className="text-sm text-gray-500 dark:text-gray-400">{user.school}</span>
-          <div className=" flex gap-4 h-full items-start justify-center bg-rose-500">
+          <div className=" flex items-center gap-4 mt-4">
             <FriendStatusButton isPending={isPending} isFriendRequest={isFriendRequest} isFriends={isFriends} userID={user._id} />
             <Link
               to={`/auth/user/${user._id}`}
-              className="inline-flex h-fit items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+              className=" inline-flex h-fit items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
             >
               View User
             </Link>

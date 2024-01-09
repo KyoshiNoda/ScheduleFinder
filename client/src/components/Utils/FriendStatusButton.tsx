@@ -37,7 +37,7 @@ const FriendStatusButton = ({ isPending, isFriendRequest, isFriends, userID }: F
     showToast(ToastEnum.CANCEL_FRIEND_REQUEST);
   };
   return (
-    <div className="mt-4 flex space-x-3 lg:mt-6">
+    <div className="flex space-x-3">
       {!isPending ? (
         isFriendRequest ? (
           <button
@@ -74,7 +74,6 @@ const FriendStatusButton = ({ isPending, isFriendRequest, isFriends, userID }: F
           )}
         </div>
       )}
-
     </div>
   );
 };
