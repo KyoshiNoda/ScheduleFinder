@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useToast } from '../../utils/functions';
 import { ToastEnum } from '../../enums';
-import { Link } from 'react-router-dom';
+import { Button } from 'flowbite-react';
 import { BiTime } from 'react-icons/bi';
 import {
   useSendFriendRequestMutation,
@@ -40,35 +40,26 @@ const FriendStatusButton = ({ isPending, isFriendRequest, isFriends, userID }: F
     <div className="flex space-x-3">
       {!isPending ? (
         isFriendRequest ? (
-          <button
-            onClick={() => acceptFriendRequestHandler(userID)}
-            className="inline-flex items-center rounded-lg bg-green-600 px-4 py-2 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
-          >
+          <Button onClick={() => acceptFriendRequestHandler(userID)} color="green">
             Accept Friend Request
-          </button>
+          </Button>
         ) : (
           <>
             {!isFriends && (
-              <button
-                onClick={() => sendFriendRequestHandler(userID)}
-                className="inline-flex items-center rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
+              <Button onClick={() => sendFriendRequestHandler(userID)} color="blue">
                 Add Friend
-              </button>
+              </Button>
             )}
           </>
         )
       ) : (
         <div onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
           {isHovered ? (
-            <button
-              onClick={() => cancelFriendRequestHandler(userID)}
-              className="inline-flex items-center rounded-lg bg-red-600 px-1 py-2 text-center text-sm font-medium text-white focus:outline-none focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800"
-            >
+            <Button onClick={() => cancelFriendRequestHandler(userID)} color="red">
               Cancel Request
-            </button>
+            </Button>
           ) : (
-            <span className="flex items-center gap-1 rounded border px-4 py-2 dark:text-white">
+            <span className="flex items-center gap-1 rounded border px-4 py-2 dark:text-gray-500">
               Pending <BiTime size="20" />
             </span>
           )}
