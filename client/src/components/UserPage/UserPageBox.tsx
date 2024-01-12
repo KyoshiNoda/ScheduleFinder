@@ -2,9 +2,10 @@ import { useGetPendingFriendRequestsQuery, useGetUserFriendsQuery, useGetUserFri
 import { calculateAge } from '../../utils/functions';
 import FriendStatusButton from '../Utils/FriendStatusButton';
 import { Button } from 'flowbite-react';
+import { User as UserType } from '../../types';
 type UserPageBoxProps = {
   userId: string;
-  userInfo: any;
+  userInfo: UserType;
 };
 const UserPageBox = ({ userId, userInfo }: UserPageBoxProps) => {
   const dummyTags: string[] = ['Basketball', 'Football', 'Soccer', 'Tennis', 'Golf', 'Valorant'];

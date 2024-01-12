@@ -11,7 +11,6 @@ type UserProps = {
 };
 const User = ({ user, isPending, isFriendRequest, isFriends }: UserProps) => {
   const fullName = `${user.firstName} ${user.lastName}`;
-  console.log(isPending, isFriendRequest, isFriends);
   return (
     <>
       <Card>
