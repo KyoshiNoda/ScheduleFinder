@@ -28,16 +28,6 @@ const Tab = (props: Props): JSX.Element => {
             Personal
           </div>
         </li>
-        <li>
-          <div
-            className={`inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300 ${
-              props.activeTab === 'Friends' && 'active-tab'
-            }`}
-            onClick={() => props.getTab('Friends')}
-          >
-            Friends
-          </div>
-        </li>
       </ul>
     </div>
   );

@@ -20,7 +20,6 @@ const Friends = () => {
   const [friendToDelete, setFriendToDelete] = useState<UserType>();
   const { showToast } = useToast();
   const deleteFriendToast = useAppSelector((state: any) => state.globalSlice.toast);
-  console.log('LOG:', friends);
 
   const onConfirmDeleteFriend = async () => {
     if (!friendToDelete) return;
