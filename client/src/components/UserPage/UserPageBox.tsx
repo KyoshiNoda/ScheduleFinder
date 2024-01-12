@@ -23,7 +23,7 @@ const UserPageBox = ({ userId, userInfo }: UserPageBoxProps) => {
           {userInfo.firstName} {userInfo.lastName}
         </h1>
       </div>
-      <div className="w-7/8 flex h-1/2 flex-col gap-4 rounded-lg bg-slate-400 p-5 text-lg font-medium text-white dark:bg-white dark:text-black">
+      <div className="w-7/8 flex h-1/2 flex-col gap-4 rounded-lg bg-slate-400 p-5 text-lg font-medium text-white dark:bg-slate-900">
         <div>
           <p>Age: {calculateAge(new Date(userInfo.birthday))}</p>
           <p>School: {userInfo.school}</p>
