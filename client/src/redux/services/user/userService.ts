@@ -1,11 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { User as UserType } from '../../../types';
 import { getApiUrl } from '../../../utils/environment';
-type FileUploadResponse = {
-  // Define the properties you expect in the response
-  message: string;
-  imageUrl: string;
-};
+import { FileUploadResponse } from '../../../types';
 let BASE_URL = getApiUrl();
 export const userAPI = createApi({
   reducerPath: 'userAPI',
@@ -29,6 +25,13 @@ export const userAPI = createApi({
     getUserInfo: builder.query({
       query: () => ({
         url: 'api/users',
+        method: 'GET',
+      }),
+      providesTags: ['User'],
+    }),
+    getExternalUserInfo: builder.query<UserType, string>({
+      query: (userId) => ({
+        url: `api/users/${userId}`,
         method: 'GET',
       }),
       providesTags: ['User'],
@@ -105,20 +108,14 @@ export const userAPI = createApi({
       }),
       providesTags: ['User'],
     }),
-    removePendingFriendRequest: builder.mutation<
-      { message: string; updatedSendFriendRequests: UserType[] },
-      { friendID: string }
-    >({
+    removePendingFriendRequest: builder.mutation<{ message: string; updatedSendFriendRequests: UserType[] }, { friendID: string }>({
       query: ({ friendID }) => ({
         url: `api/users/friendRequest/sent/${friendID}`,
-        method: 'DELETE'
+        method: 'DELETE',
       }),
-      invalidatesTags: ['User']
+      invalidatesTags: ['User'],
     }),
-    changeProfilePicture: builder.mutation<
-      FileUploadResponse,
-      { file: File }
-    >({
+    changeProfilePicture: builder.mutation<FileUploadResponse, { file: File }>({
       query: ({ file }) => {
         const formData = new FormData();
         formData.append('photoURL', file);
@@ -136,6 +133,7 @@ export const userAPI = createApi({
 
 export const {
   useGetUserInfoQuery,
+  useGetExternalUserInfoQuery,
   useGetUserFriendsQuery,
   useUpdateUserInfoMutation,
   useChangePasswordMutation,

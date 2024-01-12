@@ -30,6 +30,13 @@ export const scheduleAPI = createApi({
       }),
       providesTags: ['Schedule'],
     }),
+    getExternalSchedule: builder.query<ScheduleType, string>({
+      query: (scheduleId) => ({
+        url: `api/schedules/${scheduleId}/user`,
+        method: 'GET',
+      }),
+      providesTags: ['Schedule'],
+    }),
     clearSchedule: builder.mutation<ScheduleType, { scheduleId: string }>({
       query: ({ scheduleId }) => ({
         url: `api/schedules/${scheduleId}`,
@@ -37,10 +44,7 @@ export const scheduleAPI = createApi({
       }),
       invalidatesTags: ['Schedule'],
     }),
-    createTimeSlot: builder.mutation<
-      ScheduleType,
-      { scheduleId: string; timeSlot: TimeSlotType }
-    >({
+    createTimeSlot: builder.mutation<ScheduleType, { scheduleId: string; timeSlot: TimeSlotType }>({
       query: ({ scheduleId, timeSlot }) => ({
         url: `api/schedules/${scheduleId}/`,
         method: 'POST',
@@ -48,10 +52,7 @@ export const scheduleAPI = createApi({
       }),
       invalidatesTags: ['Schedule'],
     }),
-    deleteTimeSlot: builder.mutation<
-      ScheduleType,
-      { scheduleId: string; timeSlot: { _id: string } }
-    >({
+    deleteTimeSlot: builder.mutation<ScheduleType, { scheduleId: string; timeSlot: { _id: string } }>({
       query: ({ scheduleId, timeSlot }) => ({
         url: `api/schedules/${scheduleId}/timeSlot`,
         method: 'DELETE',
@@ -59,10 +60,7 @@ export const scheduleAPI = createApi({
       }),
       invalidatesTags: ['Schedule'],
     }),
-    updateTimeSlot: builder.mutation<
-      ScheduleType,
-      { scheduleId: string; timeSlot: TimeSlotType }
-    >({
+    updateTimeSlot: builder.mutation<ScheduleType, { scheduleId: string; timeSlot: TimeSlotType }>({
       query: ({ scheduleId, timeSlot }) => ({
         url: `api/schedules/${scheduleId}/timeSlot`,
         method: 'PATCH',
@@ -75,6 +73,7 @@ export const scheduleAPI = createApi({
 
 export const {
   useGetScheduleQuery,
+  useGetExternalScheduleQuery,
   useClearScheduleMutation,
   useCreateTimeSlotMutation,
   useDeleteTimeSlotMutation,
