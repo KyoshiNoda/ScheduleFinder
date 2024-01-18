@@ -1,4 +1,4 @@
-import { useState, useRef, ReactNode } from 'react';
+import { useState, useRef } from 'react';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
 import { DaysChecked, TimeSlot as TimeSlotType } from '../../types';
@@ -40,7 +40,7 @@ const TimeSlotInput = () => {
 
   // || Local State ||
   const [timeSlotColor, setTimeSlotColor] = useState<string>('border-none');
-  const [inputValidationFailed, setInputValidationFailed] = useState<boolean>(false);
+  const [isMeridiemFailed, setIsMeridiemFailed] = useState<boolean>(false);
   const [daysError, setDaysError] = useState<boolean>(false);
   const [timeError, setTimeError] = useState<boolean>(false);
   const [colorError, setColorError] = useState<boolean>(false);
@@ -80,7 +80,7 @@ const TimeSlotInput = () => {
     event?.preventDefault();
     const { monday, tuesday, wednesday, thursday, friday } = selectedDays;
 
-    if (inputValidationFailed) return;
+    if (isMeridiemFailed) return;
 
     // If no checkboxes have been selected, the form shouldn't be submitted.
     if (!(monday || tuesday || wednesday || thursday || friday)) {
@@ -88,7 +88,12 @@ const TimeSlotInput = () => {
       return;
     }
 
-    if (parseInt(endTimeHourRef.current.value) > 9) {
+    // checks for valid range from 7 AM - 9 PM
+    if (
+      (endTimeMeridiem === 'AM' && parseInt(endTimeHourRef.current.value) < 7) ||
+      (endTimeMeridiem === 'PM' && parseInt(endTimeHourRef.current.value) > 9 && parseInt(endTimeHourRef.current.value) !== 12)
+    ) {
+      setTimeIntervalError(true);
       return;
     }
 
@@ -181,11 +186,14 @@ const TimeSlotInput = () => {
     formRef.current.reset();
   };
 
-  const validateInput = (inputRef: React.RefObject<HTMLInputElement>, inputType: TypesOfInput) => {
+  const validateMeridiem = (inputRef: React.RefObject<HTMLInputElement>, inputType: TypesOfInput) => {
     // @ts-ignore: Object is possibly 'null'.
     const inputValue: number = parseFloat(inputRef.current.value);
 
-    if ((inputRef === startTimeHourRef && inputValue < 7) || (inputRef === endTimeHourRef && inputValue > 9)) {
+    if (
+      (inputRef === startTimeHourRef && inputValue < 7 && startTimeMeridiem === 'AM') ||
+      (inputRef === endTimeHourRef && inputValue !== 12 && inputValue > 9 && endTimeMeridiem === 'PM')
+    ) {
       setTimeIntervalError(true);
     } else {
       setTimeIntervalError(false);
@@ -201,7 +209,7 @@ const TimeSlotInput = () => {
           'dark:focus:border-rose-500',
           'dark:focus:ring-rose-500'
         );
-        setInputValidationFailed(true);
+        setIsMeridiemFailed(true);
       } else {
         inputRef.current?.classList.remove(
           'border-red-500',
@@ -211,7 +219,7 @@ const TimeSlotInput = () => {
           'dark:focus:border-rose-500',
           'dark:focus:ring-rose-500'
         );
-        setInputValidationFailed(false);
+        setIsMeridiemFailed(false);
       }
     }
 
@@ -225,7 +233,7 @@ const TimeSlotInput = () => {
           'dark:focus:border-rose-500',
           'dark:focus:ring-rose-500'
         );
-        setInputValidationFailed(true);
+        setIsMeridiemFailed(true);
       } else {
         inputRef.current?.classList.remove(
           'border-red-500',
@@ -235,7 +243,7 @@ const TimeSlotInput = () => {
           'dark:focus:border-rose-500',
           'dark:focus:ring-rose-500'
         );
-        setInputValidationFailed(false);
+        setIsMeridiemFailed(false);
       }
     }
   };
@@ -297,10 +305,11 @@ const TimeSlotInput = () => {
                         ref={startTimeHourRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${!timeError &&
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
                           'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-                          }`}
-                        onChange={() => validateInput(startTimeHourRef, TypesOfInput.HourInput)}
+                        }`}
+                        onChange={() => validateMeridiem(startTimeHourRef, TypesOfInput.HourInput)}
                         placeholder="12"
                         maxLength={2}
                         required
@@ -310,10 +319,11 @@ const TimeSlotInput = () => {
                         ref={startTimeMinutesRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${!timeError &&
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
                           'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-                          }`}
-                        onChange={() => validateInput(startTimeMinutesRef, TypesOfInput.MinutesInput)}
+                        }`}
+                        onChange={() => validateMeridiem(startTimeMinutesRef, TypesOfInput.MinutesInput)}
                         placeholder="00"
                         maxLength={2}
                         required
@@ -332,7 +342,7 @@ const TimeSlotInput = () => {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="startTime" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                  <label htmlFor="endTime" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                     End Time
                   </label>
                   <div className="flex items-center">
@@ -341,10 +351,11 @@ const TimeSlotInput = () => {
                         ref={endTimeHourRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${!timeError &&
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
                           'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-                          }`}
-                        onChange={() => validateInput(endTimeHourRef, TypesOfInput.HourInput)}
+                        }`}
+                        onChange={() => validateMeridiem(endTimeHourRef, TypesOfInput.HourInput)}
                         placeholder="12"
                         maxLength={2}
                         required
@@ -354,22 +365,17 @@ const TimeSlotInput = () => {
                         ref={endTimeMinutesRef}
                         type="number"
                         id="title"
-                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${!timeError &&
+                        className={`inline-block w-2/5 rounded-lg border bg-gray-50 p-2.5 text-center text-sm text-gray-900 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 ${
+                          !timeError &&
                           'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-                          }`}
-                        onChange={() => validateInput(endTimeMinutesRef, TypesOfInput.MinutesInput)}
+                        }`}
+                        onChange={() => validateMeridiem(endTimeMinutesRef, TypesOfInput.MinutesInput)}
                         placeholder="00"
                         maxLength={2}
                         required
                       />
                     </div>
-                    <Select
-                      value={endTimeMeridiem}
-                      onChange={(e) => handleEndTimeMeridiemChange(e)}
-                      id="endTimeMeridiem"
-                      className="w-3/5"
-                      required
-                    >
+                    <Select value={endTimeMeridiem} onChange={(e) => handleEndTimeMeridiemChange(e)} id="endTimeMeridiem" className="w-3/5" required>
                       <option value="AM" disabled={startTimeMeridiem === 'PM'}>
                         AM
                       </option>
@@ -377,7 +383,7 @@ const TimeSlotInput = () => {
                     </Select>
                   </div>
                 </div>
-                {timeIntervalError && <strong className="mt-3 text-sm text-red-500">Valid interval is between 6:00 AM and 9:00 PM</strong>}
+                {timeIntervalError && <strong className="mt-3 text-sm text-red-500">Valid interval is between 7:00 AM and 9:00 PM</strong>}
               </div>
               <div className="flex gap-3">
                 <div className="w-full">
@@ -418,8 +424,9 @@ const TimeSlotInput = () => {
                         id="colorPicker"
                         tabIndex={0}
                         onKeyDown={(e) => handleColorPickerKeyPress(e, color)}
-                        className={`bg-${color}-400 h-8 w-8 cursor-pointer rounded-full border-4 lg:h-10 lg:w-10 ${timeSlotColor === color ? 'border-blue-700' : 'border-none'
-                          }`}
+                        className={`bg-${color}-400 h-8 w-8 cursor-pointer rounded-full border-4 lg:h-10 lg:w-10 ${
+                          timeSlotColor === color ? 'border-blue-700' : 'border-none'
+                        }`}
                       />
                     ))}
                   </div>
