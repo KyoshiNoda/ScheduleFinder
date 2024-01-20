@@ -9,6 +9,7 @@ import { Spinner } from 'flowbite-react';
 import ScheduleBox from '../components/Schedule/ScheduleBox';
 import Toast from '../components/Utils/Toast';
 import UserPageBox from '../components/UserPage/UserPageBox';
+import LoadingUserPage from '../components/UserPage/LoadingUserPage';
 const UserPage = () => {
   const { userId } = useParams();
   const dispatch = useAppDispatch();
@@ -36,7 +37,7 @@ const UserPage = () => {
           </div>
         </div>
       ) : (
-        <Spinner aria-label="Profile loading spinner" size="xl" />
+        <LoadingUserPage />
       )}
       {friendToast.state && <Toast message={friendToast.message} />}
     </>
