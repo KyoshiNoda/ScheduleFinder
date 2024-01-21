@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useToast } from '../../utils/functions';
 import { ToastEnum } from '../../enums';
 import { Button } from 'flowbite-react';
-import { BiTime } from 'react-icons/bi';
+import { BiTime } from 'react-icons/bi'
 import {
   useSendFriendRequestMutation,
   useAcceptFriendRequestMutation,
@@ -14,6 +14,7 @@ type FriendStatusButtonProps = {
   isPending: boolean;
   isFriendRequest: boolean;
   isFriends: boolean;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 const FriendStatusButton = ({ isPending, isFriendRequest, isFriends, userID }: FriendStatusButtonProps) => {
   const { showToast } = useToast();

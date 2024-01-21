@@ -5,7 +5,6 @@ import { useGetExternalScheduleQuery } from '../redux/services/schedule/schedule
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { toggleReadOnly } from '../redux/feats/globalSlice/globalSlice';
 import { useParams } from 'react-router-dom';
-import { Spinner } from 'flowbite-react';
 import ScheduleBox from '../components/Schedule/ScheduleBox';
 import Toast from '../components/Utils/Toast';
 import UserPageBox from '../components/UserPage/UserPageBox';
