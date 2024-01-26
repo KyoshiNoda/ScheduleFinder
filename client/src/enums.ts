@@ -24,3 +24,9 @@ export enum ToastEnum {
   UPDATE_TIMESLOT = "Updated Time Slot!",
   DELETED_TIMESLOT = "Deleted Time Slot!",
 }
+export enum AccountTabEnum {
+    PROFILE = 'Profile',
+    PERSONAL = 'Personal',
+    HOBBIES = 'Hobbies'
+  }
+  
