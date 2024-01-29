@@ -12,6 +12,7 @@ import ResetPassword from './pages/ResetPassword';
 import Notifications from './pages/Notifications';
 import UserPage from './pages/UserPage';
 import Friends from './pages/Friends';
+import NotFound from './pages/NotFound';
 
 const App = () => {
   return (
@@ -29,11 +30,12 @@ const App = () => {
           <Route path="findUsers" element={<FindUser />} />
           <Route path="compareSchedule/:userId" element={<CompareSchedule />} />
           <Route path="notifications" element={<Notifications />} />
-          <Route path ="user/:userId" element={<UserPage />} />
+          <Route path="user/:userId" element={<UserPage />} />
         </Route>
-      </Routes> 
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </>
   );
-}
+};
 
 export default App;
