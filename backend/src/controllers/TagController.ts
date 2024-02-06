@@ -27,7 +27,19 @@ class TagController {
   }
 
   // POST new tag
-  public static async createTag(req: any, res: any) {}
+  public static async createTag(req: any, res: any) {
+    const { name: newTagName } = req.body || null;
+    if (newTagName === null) {
+      res.status(400).json({ message: 'Error while getting new tag name', error: 'Possible malformed request' });
+    }
+
+    try {
+      const createdTag = await Tag.create({ name: newTagName });
+      res.status(201).json(createdTag);
+    } catch (error) {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
 }
 
 export default TagController;

@@ -20,6 +20,6 @@ router.delete('/userTags/:id', AuthController.authenticateToken, TagController.c
 router.get('/', TagController.getAllTags);
 
 // This route is used when a user creates a new tag.
-router.post('/');
+router.post('/', TagController.createTag);
 
 export default router;
