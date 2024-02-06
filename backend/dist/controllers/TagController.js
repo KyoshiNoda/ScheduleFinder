@@ -8,7 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const tagModel_1 = __importDefault(require("../models/tagModel"));
 class TagController {
     // GET user's tags by token
     static getUserTags(req, res) {
@@ -29,7 +33,13 @@ class TagController {
     // GET all tags
     static getAllTags(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            res.send('GET All tags working!');
+            try {
+                const allTags = yield tagModel_1.default.find({});
+                res.status(200).send(allTags);
+            }
+            catch (error) {
+                res.status(500).json({ message: 'Error while getting tags', error: error });
+            }
         });
     }
     // POST new tag

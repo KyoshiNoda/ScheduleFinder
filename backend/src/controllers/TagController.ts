@@ -18,7 +18,12 @@ class TagController {
 
   // GET all tags
   public static async getAllTags(req: any, res: any) {
-    res.send('GET All tags working!');
+    try {
+      const allTags = await Tag.find({});
+      res.status(200).send(allTags);
+    } catch (error) {
+      res.status(500).json({ message: 'Error while getting tags', error: error });
+    }
   }
 
   // POST new tag
