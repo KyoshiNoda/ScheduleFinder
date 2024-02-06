@@ -12,32 +12,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class TagController {
     // GET user's tags by token
     static getUserTags(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-        });
+        return __awaiter(this, void 0, void 0, function* () { });
     }
     // PATCH user's tags by token
     static updateUserTags(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-        });
+        return __awaiter(this, void 0, void 0, function* () { });
     }
-    // DELETE user's tags by token
+    // DELETE single user's tag by token
+    static deleteUserTag(req, res) {
+        return __awaiter(this, void 0, void 0, function* () { });
+    }
+    // DELETE all user's tags by token
     static clearUserTags(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-        });
+        return __awaiter(this, void 0, void 0, function* () { });
     }
     // GET all tags
     static getAllTags(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-        });
-    }
-    // GET tag by tag id
-    static getTagById(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+            res.send('GET All tags working!');
         });
     }
     // POST new tag
     static createTag(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-        });
+        return __awaiter(this, void 0, void 0, function* () { });
     }
 }
+exports.default = TagController;

@@ -1,16 +1,25 @@
 import express from 'express';
+import TagController from '../controllers/TagController';
 import AuthController from '../controllers/AuthController';
 
 const router = express.Router();
 
-router.get('/userTags', AuthController.authenticateToken);
+// GET all the tags of a user
+router.get('/userTags', AuthController.authenticateToken, TagController.getUserTags);
 
-router.patch('/userTags', AuthController.authenticateToken);
+// This route is used when a user wants to add an already existing tag to ther collection of tags.
+router.patch('/userTags', AuthController.authenticateToken, TagController.updateUserTags);
 
-router.delete('/userTags/:id', AuthController.authenticateToken);
+// This route is used when a user deletes a single tag from its list of tags.
+router.delete('/users/:id/userTags/:id', AuthController.authenticateToken, TagController.deleteUserTag);
 
-router.get('/');
+// This route is used when a user deletes all tags from its list of tags.
+router.delete('/userTags/:id', AuthController.authenticateToken, TagController.clearUserTags);
 
-router.get('/:id');
+// GET all existing tags
+router.get('/', TagController.getAllTags);
 
+// This route is used when a user creates a new tag.
 router.post('/');
+
+export default router;
