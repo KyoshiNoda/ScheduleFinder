@@ -1,11 +1,8 @@
-import { Request, Response } from 'express';
-import { Error, Types } from 'mongoose';
-import * as mongoose from 'mongoose';
 import Tag from '../models/tagModel';
 import User from '../models/userModel';
 
 class TagController {
-  // GET user's tags by token
+  // GET user's tags
   public static async getUserTags(req: any, res: any) {
     const userID: string = req.user.data._id;
 
@@ -27,20 +24,12 @@ class TagController {
     }
   }
 
-  // PATCH user's tags by token
+  // PATCH user's tags
   public static async updateUserTags(req: any, res: any) {
     const userID: string = req.user.data._id;
     const { tagId } = req.body;
 
     try {
-      const user = await User.findOne({ _id: userID }).exec();
-
-      if (!user) {
-        return res.status(404).send({
-          message: `User ${userID} not found`,
-        });
-      }
-
       const updatedUser = await User.findOneAndUpdate(
         { _id: userID },
         { $push: { hobbies: tagId } },
@@ -54,16 +43,45 @@ class TagController {
       }
 
       res.status(200).json(updatedUser);
-    } catch (error) {}
+    } catch (error) {
+      res.status(500).send({
+        message: `Error while getting hobbies for user with id: ${userID}`,
+        error: error,
+      });
+    }
   }
 
-  // DELETE single user's tag by token
-  public static async deleteUserTag(req: AudioNode, res: any) {}
+  // DELETE single user's tag
+  public static async deleteUserTag(req: any, res: any) {
+    const userID: string = req.user.data._id;
+    const { id: tagId } = req.params;
 
-  // DELETE all user's tags by token
+    try {
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userID },
+        { $pull: { hobbies: tagId } },
+        { new: true }
+      ).exec();
+
+      if (!updatedUser) {
+        return res.status(404).send({
+          message: `User ${userID} not found`,
+        });
+      }
+
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      res.status(500).send({
+        message: `Error while getting hobbies for user with id: ${userID}`,
+        error: error,
+      });
+    }
+  }
+
+  // DELETE all user's tags
   public static async clearUserTags(req: any, res: any) {}
 
-  // GET all tags
+  // GET all existing tags
   public static async getAllTags(req: any, res: any) {
     try {
       const allTags = await Tag.find({});

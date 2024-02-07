@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tagModel_1 = __importDefault(require("../models/tagModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 class TagController {
-    // GET user's tags by token
+    // GET user's tags
     static getUserTags(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.user.data._id;
@@ -36,18 +36,12 @@ class TagController {
             }
         });
     }
-    // PATCH user's tags by token
+    // PATCH user's tags
     static updateUserTags(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.user.data._id;
             const { tagId } = req.body;
             try {
-                const user = yield userModel_1.default.findOne({ _id: userID }).exec();
-                if (!user) {
-                    return res.status(404).send({
-                        message: `User ${userID} not found`,
-                    });
-                }
                 const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $push: { hobbies: tagId } }, { new: true }).exec();
                 if (!updatedUser) {
                     return res.status(404).send({
@@ -56,18 +50,41 @@ class TagController {
                 }
                 res.status(200).json(updatedUser);
             }
-            catch (error) { }
+            catch (error) {
+                res.status(500).send({
+                    message: `Error while getting hobbies for user with id: ${userID}`,
+                    error: error,
+                });
+            }
         });
     }
-    // DELETE single user's tag by token
+    // DELETE single user's tag
     static deleteUserTag(req, res) {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data._id;
+            const { id: tagId } = req.params;
+            try {
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $pull: { hobbies: tagId } }, { new: true }).exec();
+                if (!updatedUser) {
+                    return res.status(404).send({
+                        message: `User ${userID} not found`,
+                    });
+                }
+                res.status(200).json(updatedUser);
+            }
+            catch (error) {
+                res.status(500).send({
+                    message: `Error while getting hobbies for user with id: ${userID}`,
+                    error: error,
+                });
+            }
+        });
     }
-    // DELETE all user's tags by token
+    // DELETE all user's tags
     static clearUserTags(req, res) {
         return __awaiter(this, void 0, void 0, function* () { });
     }
-    // GET all tags
+    // GET all existing tags
     static getAllTags(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

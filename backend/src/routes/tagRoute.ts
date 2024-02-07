@@ -11,10 +11,10 @@ router.get('/userTags', AuthController.authenticateToken, TagController.getUserT
 router.patch('/userTags', AuthController.authenticateToken, TagController.updateUserTags);
 
 // This route is used when a user deletes a single tag from its list of tags.
-router.delete('/users/:id/userTags/:id', AuthController.authenticateToken, TagController.deleteUserTag);
+router.delete('/userTags/:id', AuthController.authenticateToken, TagController.deleteUserTag);
 
 // This route is used when a user deletes all tags from its list of tags.
-router.delete('/userTags/:id', AuthController.authenticateToken, TagController.clearUserTags);
+router.delete('/userTags', AuthController.authenticateToken, TagController.clearUserTags);
 
 // GET all existing tags
 router.get('/', TagController.getAllTags);
