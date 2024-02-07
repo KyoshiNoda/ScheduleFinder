@@ -123,7 +123,8 @@ class HobbyController {
                     .json({ message: 'Error while getting new hobby name', error: 'Possible malformed request' });
             }
             try {
-                const createdHobby = yield hobbyModel_1.default.create({ name: newHobbyName });
+                const lowerCaseHobbyName = newHobbyName.toLowerCase();
+                const createdHobby = yield hobbyModel_1.default.create({ name: lowerCaseHobbyName });
                 res.status(201).json(createdHobby);
             }
             catch (error) {

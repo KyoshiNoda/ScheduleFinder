@@ -124,7 +124,8 @@ class HobbyController {
     }
 
     try {
-      const createdHobby = await Hobby.create({ name: newHobbyName });
+      const lowerCaseHobbyName = newHobbyName.toLowerCase();
+      const createdHobby = await Hobby.create({ name: lowerCaseHobbyName });
       res.status(201).json(createdHobby);
     } catch (error) {
       res.status(500).json({ error: 'Internal Server Error' });
