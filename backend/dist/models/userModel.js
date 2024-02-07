@@ -18,6 +18,7 @@ const userSchema = new mongoose_1.default.Schema({
     gender: String,
     school: String,
     major: String,
+    hobbies: [{ type: String }],
 });
 const User = mongoose_1.default.model('User', userSchema);
 exports.default = User;

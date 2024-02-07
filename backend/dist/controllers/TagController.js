@@ -13,10 +13,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const tagModel_1 = __importDefault(require("../models/tagModel"));
+const userModel_1 = __importDefault(require("../models/userModel"));
 class TagController {
     // GET user's tags by token
     static getUserTags(req, res) {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data._id;
+            try {
+                const user = yield userModel_1.default.findOne({ _id: userID }).exec();
+                if (!user) {
+                    return res.status(404).send({
+                        message: `User ${userID} not found`,
+                    });
+                }
+                res.status(200).json({ hobbies: user.hobbies });
+            }
+            catch (error) {
+                res.status(500).send({
+                    message: `Error while getting hobbies for user with id: ${userID}`,
+                    error: error,
+                });
+            }
+        });
     }
     // PATCH user's tags by token
     static updateUserTags(req, res) {

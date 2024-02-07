@@ -2,10 +2,30 @@ import { Request, Response } from 'express';
 import { Error, Types } from 'mongoose';
 import * as mongoose from 'mongoose';
 import Tag from '../models/tagModel';
+import User from '../models/userModel';
 
 class TagController {
   // GET user's tags by token
-  public static async getUserTags(req: any, res: any) {}
+  public static async getUserTags(req: any, res: any) {
+    const userID: string = req.user.data._id;
+
+    try {
+      const user = await User.findOne({ _id: userID }).exec();
+
+      if (!user) {
+        return res.status(404).send({
+          message: `User ${userID} not found`,
+        });
+      }
+
+      res.status(200).json({ hobbies: user.hobbies });
+    } catch (error) {
+      res.status(500).send({
+        message: `Error while getting hobbies for user with id: ${userID}`,
+        error: error,
+      });
+    }
+  }
 
   // PATCH user's tags by token
   public static async updateUserTags(req: any, res: any) {}
