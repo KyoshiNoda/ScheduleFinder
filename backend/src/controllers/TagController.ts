@@ -79,7 +79,30 @@ class TagController {
   }
 
   // DELETE all user's tags
-  public static async clearUserTags(req: any, res: any) {}
+  public static async clearUserTags(req: any, res: any) {
+    const userID: string = req.user.data._id;
+
+    try {
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userID },
+        { $set: { hobbies: [] } },
+        { new: true }
+      ).exec();
+
+      if (!updatedUser) {
+        return res.status(404).send({
+          message: `User ${userID} not found`,
+        });
+      }
+
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      res.status(500).send({
+        message: `Error while clearing hobbies for user with id: ${userID}`,
+        error: error,
+      });
+    }
+  }
 
   // GET all existing tags
   public static async getAllTags(req: any, res: any) {
