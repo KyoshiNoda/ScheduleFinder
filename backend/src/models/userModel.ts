@@ -13,6 +13,7 @@ export interface IUser extends Document {
   friends: string[];
   receivedFriendRequests: string[];
   sentFriendRequests: string[];
+  hobbies: string[];
 }
 
 const userSchema: Schema = new mongoose.Schema({
@@ -29,6 +30,7 @@ const userSchema: Schema = new mongoose.Schema({
   gender: String,
   school: String,
   major: String,
+  hobbies: [{ type: String }],
 });
 
 const User = mongoose.model<IUser>('User', userSchema);
