@@ -45,7 +45,7 @@ class TagController {
       res.status(200).json(updatedUser);
     } catch (error) {
       res.status(500).send({
-        message: `Error while getting hobbies for user with id: ${userID}`,
+        message: `Error while updating hobbies for user with id: ${userID}`,
         error: error,
       });
     }
@@ -72,7 +72,7 @@ class TagController {
       res.status(200).json(updatedUser);
     } catch (error) {
       res.status(500).send({
-        message: `Error while getting hobbies for user with id: ${userID}`,
+        message: `Error while deleting hobbie tag for user with id: ${userID}`,
         error: error,
       });
     }
