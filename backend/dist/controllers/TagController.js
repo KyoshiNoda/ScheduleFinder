@@ -38,7 +38,26 @@ class TagController {
     }
     // PATCH user's tags by token
     static updateUserTags(req, res) {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            const userID = req.user.data._id;
+            const { tagId } = req.body;
+            try {
+                const user = yield userModel_1.default.findOne({ _id: userID }).exec();
+                if (!user) {
+                    return res.status(404).send({
+                        message: `User ${userID} not found`,
+                    });
+                }
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $push: { hobbies: tagId } }, { new: true }).exec();
+                if (!updatedUser) {
+                    return res.status(404).send({
+                        message: `User ${userID} not found`,
+                    });
+                }
+                res.status(200).json(updatedUser);
+            }
+            catch (error) { }
+        });
     }
     // DELETE single user's tag by token
     static deleteUserTag(req, res) {
@@ -65,7 +84,9 @@ class TagController {
         return __awaiter(this, void 0, void 0, function* () {
             const { name: newTagName } = req.body || null;
             if (newTagName === null) {
-                res.status(400).json({ message: 'Error while getting new tag name', error: 'Possible malformed request' });
+                res
+                    .status(400)
+                    .json({ message: 'Error while getting new tag name', error: 'Possible malformed request' });
             }
             try {
                 const createdTag = yield tagModel_1.default.create({ name: newTagName });

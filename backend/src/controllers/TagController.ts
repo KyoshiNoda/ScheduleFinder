@@ -28,7 +28,34 @@ class TagController {
   }
 
   // PATCH user's tags by token
-  public static async updateUserTags(req: any, res: any) {}
+  public static async updateUserTags(req: any, res: any) {
+    const userID: string = req.user.data._id;
+    const { tagId } = req.body;
+
+    try {
+      const user = await User.findOne({ _id: userID }).exec();
+
+      if (!user) {
+        return res.status(404).send({
+          message: `User ${userID} not found`,
+        });
+      }
+
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userID },
+        { $push: { hobbies: tagId } },
+        { new: true }
+      ).exec();
+
+      if (!updatedUser) {
+        return res.status(404).send({
+          message: `User ${userID} not found`,
+        });
+      }
+
+      res.status(200).json(updatedUser);
+    } catch (error) {}
+  }
 
   // DELETE single user's tag by token
   public static async deleteUserTag(req: AudioNode, res: any) {}
@@ -50,7 +77,9 @@ class TagController {
   public static async createTag(req: any, res: any) {
     const { name: newTagName } = req.body || null;
     if (newTagName === null) {
-      res.status(400).json({ message: 'Error while getting new tag name', error: 'Possible malformed request' });
+      res
+        .status(400)
+        .json({ message: 'Error while getting new tag name', error: 'Possible malformed request' });
     }
 
     try {
