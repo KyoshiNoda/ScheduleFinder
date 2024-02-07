@@ -1,9 +1,9 @@
-import Tag from '../models/tagModel';
+import Hobby from '../models/hobbyModel';
 import User from '../models/userModel';
 
-class TagController {
-  // GET user's tags
-  public static async getUserTags(req: any, res: any) {
+class HobbyController {
+  // GET user's hobbies
+  public static async getUserHobbies(req: any, res: any) {
     const userID: string = req.user.data._id;
 
     try {
@@ -24,15 +24,15 @@ class TagController {
     }
   }
 
-  // PATCH user's tags
-  public static async updateUserTags(req: any, res: any) {
+  // PATCH user's hobbies
+  public static async updateUserHobbies(req: any, res: any) {
     const userID: string = req.user.data._id;
-    const { tagId } = req.body;
+    const { hobbyId } = req.body;
 
     try {
       const updatedUser = await User.findOneAndUpdate(
         { _id: userID },
-        { $push: { hobbies: tagId } },
+        { $push: { hobbies: hobbyId } },
         { new: true }
       ).exec();
 
@@ -51,15 +51,15 @@ class TagController {
     }
   }
 
-  // DELETE single user's tag
-  public static async deleteUserTag(req: any, res: any) {
+  // DELETE single user's hobby
+  public static async deleteUserHobby(req: any, res: any) {
     const userID: string = req.user.data._id;
-    const { id: tagId } = req.params;
+    const { id: hobbyId } = req.params;
 
     try {
       const updatedUser = await User.findOneAndUpdate(
         { _id: userID },
-        { $pull: { hobbies: tagId } },
+        { $pull: { hobbies: hobbyId } },
         { new: true }
       ).exec();
 
@@ -72,14 +72,14 @@ class TagController {
       res.status(200).json(updatedUser);
     } catch (error) {
       res.status(500).send({
-        message: `Error while deleting hobbie tag for user with id: ${userID}`,
+        message: `Error while deleting hobbie hobby for user with id: ${userID}`,
         error: error,
       });
     }
   }
 
-  // DELETE all user's tags
-  public static async clearUserTags(req: any, res: any) {
+  // DELETE all user's hobbies
+  public static async clearUserHobbies(req: any, res: any) {
     const userID: string = req.user.data._id;
 
     try {
@@ -104,32 +104,32 @@ class TagController {
     }
   }
 
-  // GET all existing tags
+  // GET all existing hobbies
   public static async getAllTags(req: any, res: any) {
     try {
-      const allTags = await Tag.find({});
-      res.status(200).send(allTags);
+      const allHobbies = await Hobby.find({});
+      res.status(200).send(allHobbies);
     } catch (error) {
-      res.status(500).json({ message: 'Error while getting tags', error: error });
+      res.status(500).json({ message: 'Error while getting hobbies', error: error });
     }
   }
 
-  // POST new tag
-  public static async createTag(req: any, res: any) {
-    const { name: newTagName } = req.body || null;
-    if (newTagName === null) {
+  // POST new hobby
+  public static async createHobby(req: any, res: any) {
+    const { name: newHobbyName } = req.body || null;
+    if (newHobbyName === null) {
       res
         .status(400)
-        .json({ message: 'Error while getting new tag name', error: 'Possible malformed request' });
+        .json({ message: 'Error while getting new hobby name', error: 'Possible malformed request' });
     }
 
     try {
-      const createdTag = await Tag.create({ name: newTagName });
-      res.status(201).json(createdTag);
+      const createdHobby = await Hobby.create({ name: newHobbyName });
+      res.status(201).json(createdHobby);
     } catch (error) {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   }
 }
 
-export default TagController;
+export default HobbyController;

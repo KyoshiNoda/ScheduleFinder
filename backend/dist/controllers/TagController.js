@@ -12,11 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const tagModel_1 = __importDefault(require("../models/tagModel"));
+const hobbyModel_1 = __importDefault(require("../models/hobbyModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
-class TagController {
-    // GET user's tags
-    static getUserTags(req, res) {
+class HobbyController {
+    // GET user's hobbies
+    static getUserHobbies(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.user.data._id;
             try {
@@ -36,13 +36,13 @@ class TagController {
             }
         });
     }
-    // PATCH user's tags
-    static updateUserTags(req, res) {
+    // PATCH user's hobbies
+    static updateUserHobbies(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.user.data._id;
-            const { tagId } = req.body;
+            const { hobbyId } = req.body;
             try {
-                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $push: { hobbies: tagId } }, { new: true }).exec();
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $push: { hobbies: hobbyId } }, { new: true }).exec();
                 if (!updatedUser) {
                     return res.status(404).send({
                         message: `User ${userID} not found`,
@@ -58,13 +58,13 @@ class TagController {
             }
         });
     }
-    // DELETE single user's tag
-    static deleteUserTag(req, res) {
+    // DELETE single user's hobby
+    static deleteUserHobby(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.user.data._id;
-            const { id: tagId } = req.params;
+            const { id: hobbyId } = req.params;
             try {
-                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $pull: { hobbies: tagId } }, { new: true }).exec();
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $pull: { hobbies: hobbyId } }, { new: true }).exec();
                 if (!updatedUser) {
                     return res.status(404).send({
                         message: `User ${userID} not found`,
@@ -74,14 +74,14 @@ class TagController {
             }
             catch (error) {
                 res.status(500).send({
-                    message: `Error while deleting hobbie tag for user with id: ${userID}`,
+                    message: `Error while deleting hobbie hobby for user with id: ${userID}`,
                     error: error,
                 });
             }
         });
     }
-    // DELETE all user's tags
-    static clearUserTags(req, res) {
+    // DELETE all user's hobbies
+    static clearUserHobbies(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.user.data._id;
             try {
@@ -101,30 +101,30 @@ class TagController {
             }
         });
     }
-    // GET all existing tags
+    // GET all existing hobbies
     static getAllTags(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const allTags = yield tagModel_1.default.find({});
-                res.status(200).send(allTags);
+                const allHobbies = yield hobbyModel_1.default.find({});
+                res.status(200).send(allHobbies);
             }
             catch (error) {
-                res.status(500).json({ message: 'Error while getting tags', error: error });
+                res.status(500).json({ message: 'Error while getting hobbies', error: error });
             }
         });
     }
-    // POST new tag
-    static createTag(req, res) {
+    // POST new hobby
+    static createHobby(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { name: newTagName } = req.body || null;
-            if (newTagName === null) {
+            const { name: newHobbyName } = req.body || null;
+            if (newHobbyName === null) {
                 res
                     .status(400)
-                    .json({ message: 'Error while getting new tag name', error: 'Possible malformed request' });
+                    .json({ message: 'Error while getting new hobby name', error: 'Possible malformed request' });
             }
             try {
-                const createdTag = yield tagModel_1.default.create({ name: newTagName });
-                res.status(201).json(createdTag);
+                const createdHobby = yield hobbyModel_1.default.create({ name: newHobbyName });
+                res.status(201).json(createdHobby);
             }
             catch (error) {
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -132,4 +132,4 @@ class TagController {
         });
     }
 }
-exports.default = TagController;
+exports.default = HobbyController;
