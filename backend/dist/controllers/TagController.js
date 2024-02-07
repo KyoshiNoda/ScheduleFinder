@@ -118,12 +118,17 @@ class HobbyController {
         return __awaiter(this, void 0, void 0, function* () {
             const { name: newHobbyName } = req.body || null;
             if (newHobbyName === null) {
-                res
-                    .status(400)
-                    .json({ message: 'Error while getting new hobby name', error: 'Possible malformed request' });
+                res.status(400).json({
+                    message: 'Error while getting new hobby name',
+                    error: 'Possible malformed request',
+                });
             }
             try {
                 const lowerCaseHobbyName = newHobbyName.toLowerCase();
+                const existingHobby = yield hobbyModel_1.default.findOne({ name: lowerCaseHobbyName });
+                if (existingHobby) {
+                    return res.status(409).json({ message: 'Hobby already exists', existingHobby });
+                }
                 const createdHobby = yield hobbyModel_1.default.create({ name: lowerCaseHobbyName });
                 res.status(201).json(createdHobby);
             }

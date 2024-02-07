@@ -118,13 +118,20 @@ class HobbyController {
   public static async createHobby(req: any, res: any) {
     const { name: newHobbyName } = req.body || null;
     if (newHobbyName === null) {
-      res
-        .status(400)
-        .json({ message: 'Error while getting new hobby name', error: 'Possible malformed request' });
+      res.status(400).json({
+        message: 'Error while getting new hobby name',
+        error: 'Possible malformed request',
+      });
     }
 
     try {
       const lowerCaseHobbyName = newHobbyName.toLowerCase();
+
+      const existingHobby = await Hobby.findOne({ name: lowerCaseHobbyName });
+      if (existingHobby) {
+        return res.status(409).json({ message: 'Hobby already exists', existingHobby });
+      }
+
       const createdHobby = await Hobby.create({ name: lowerCaseHobbyName });
       res.status(201).json(createdHobby);
     } catch (error) {
