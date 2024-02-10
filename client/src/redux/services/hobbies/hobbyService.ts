@@ -19,38 +19,43 @@ export const hobbyAPI = createApi({
       }
     },
   }),
-  tagTypes: ['Hobby'],
+  tagTypes: ['Hobbies'],
   endpoints: (builder) => ({
-    getHobbies: builder.query({
+    getAllHobbies: builder.query({
       query: () => ({
-        url: 'api/hobby',
+        url: 'api/hobbies',
         method: 'GET',
       }),
-      providesTags: ['Hobby'],
+      providesTags: ['Hobbies'],
     }),
-    addHobby: builder.mutation<UserType, { name: string }>({
-      query: ({ name }) => ({
-        url: 'api/hobbies',
-        method: 'POST',
-        body: name,
+    getUserHobbies: builder.query({
+      query: () => ({
+        url: 'api/hobbies/userHobbies',
+        method: 'GET',
       }),
-      invalidatesTags: ['Hobby'],
+      providesTags: ['Hobbies'],
     }),
-    editHobby: builder.mutation<UserType, { hobbyID: string }>({
-      query: ({ hobbyID }) => ({
-        url: `api/hobby/${hobbyID}`,
+    addUserHobby: builder.mutation<UserType, { hobbyId: string }>({
+      query: ({ hobbyId }) => ({
+        url: 'api/hobbies/userHobbies',
         method: 'PATCH',
+        body: hobbyId,
       }),
-      invalidatesTags: ['Hobby'],
+      invalidatesTags: ['Hobbies'],
     }),
     deleteHobby: builder.mutation<UserType, { hobbyID: string }>({
       query: ({ hobbyID }) => ({
-        url: `api/hobby/${hobbyID}`,
+        url: `api/hobbies/userHobbies/${hobbyID}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Hobby'],
+      invalidatesTags: ['Hobbies'],
     }),
   }),
 });
 
-export const { useGetHobbiesQuery, useAddHobbyMutation, useDeleteHobbyMutation, useEditHobbyMutation } = hobbyAPI;
+export const {
+  useGetAllHobbiesQuery,
+  useGetUserHobbiesQuery,
+  useAddUserHobbyMutation,
+  useDeleteHobbyMutation,
+} = hobbyAPI;
