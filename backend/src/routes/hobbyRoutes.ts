@@ -1,5 +1,5 @@
 import express from 'express';
-import HobbyController from '../controllers/TagController';
+import HobbyController from '../controllers/HobbyController';
 import AuthController from '../controllers/AuthController';
 
 const router = express.Router();
