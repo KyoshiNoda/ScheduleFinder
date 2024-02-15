@@ -33,19 +33,19 @@ const HobbiesTab = () => {
     setOpenModal(true);
     setSelectedHobby(tagName);
   };
-const hobbyAddedHandler = async () => {
+  const hobbyAddedHandler = async () => {
     try {
-        await addHobby({ name: newHobby });
-        setOpenModal(false);
-        showToast(ToastEnum.ADDED_HOBBY);
-        const inputElement = document.getElementById('default-input') as HTMLInputElement;
-        if (inputElement) {
-            inputElement.value = '';
-        }
+      await addHobby({ name: newHobby });
+      setOpenModal(false);
+      showToast(ToastEnum.ADDED_HOBBY);
+      const inputElement = document.getElementById('default-input') as HTMLInputElement;
+      if (inputElement) {
+        inputElement.value = '';
+      }
     } catch (error: any) {
-        console.log(error);
+      console.log(error);
     }
-};
+  };
   const hobbyDeleteHandler = async () => {
     try {
       await removeHobby({ name: selectedHobby });
@@ -88,17 +88,21 @@ const hobbyAddedHandler = async () => {
 
             <div className="rounded-xl bg-blue-400 dark:bg-white">
               <div className="flex h-32 flex-wrap justify-center gap-2 rounded-xl p-4">
-                {hobbies.map((hobby) => (
-                  <Button
-                    color="blue"
-                    pill
-                    className="w-20"
-                    onClick={() => hobbyClickedHandler(hobby)}
-                    key={hobby}
-                  >
-                    {hobby}
-                  </Button>
-                ))}
+                {hobbies.length === 0 ? (
+                  <p>No Hobbies Found!</p>
+                ) : (
+                  hobbies.map((hobby) => (
+                    <Button
+                      color="blue"
+                      pill
+                      className="w-20"
+                      onClick={() => hobbyClickedHandler(hobby)}
+                      key={hobby}
+                    >
+                      {hobby}
+                    </Button>
+                  ))
+                )}
               </div>
             </div>
           </div>
