@@ -39,13 +39,13 @@ export const hobbyAPI = createApi({
       query: ({ name }) => ({
         url: 'api/hobbies/userHobbies',
         method: 'PATCH',
-        body: name,
+        body: { name },
       }),
       invalidatesTags: ['Hobbies'],
     }),
-    removeUserHobby: builder.mutation<UserType, { hobbyID: string }>({
-      query: ({ hobbyID }) => ({
-        url: `api/hobbies/userHobbies/${hobbyID}`,
+    removeUserHobby: builder.mutation<UserType, { name: string }>({
+      query: ({ name }) => ({
+        url: `api/hobbies/userHobbies/${name}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Hobbies'],

@@ -16,7 +16,7 @@ const HobbiesTab = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const [newHobby, setNewHobby] = useState<string>('');
-  const [currentTag, setCurrentTag] = useState<string | undefined>(undefined);
+  const [selectedHobby, setSelectedHobby] = useState<string>('');
   const [hobbies, setHobbies] = useState([]);
 
   const { data, isLoading } = useGetUserHobbiesQuery('Hobbies');
@@ -31,20 +31,24 @@ const HobbiesTab = () => {
 
   const hobbyClickedHandler = (tagName: string) => {
     setOpenModal(true);
-    setCurrentTag(tagName);
+    setSelectedHobby(tagName);
   };
-  const hobbyAddedHandler = async () => {
+const hobbyAddedHandler = async () => {
     try {
-      await addHobby({ name: newHobby });
-      setOpenModal(false);
-      showToast(ToastEnum.ADDED_HOBBY);
+        await addHobby({ name: newHobby });
+        setOpenModal(false);
+        showToast(ToastEnum.ADDED_HOBBY);
+        const inputElement = document.getElementById('default-input') as HTMLInputElement;
+        if (inputElement) {
+            inputElement.value = '';
+        }
     } catch (error: any) {
-      console.log(error);
+        console.log(error);
     }
-  };
+};
   const hobbyDeleteHandler = async () => {
     try {
-      // await removeHobby({ name: newHobby });
+      await removeHobby({ name: selectedHobby });
       setOpenModal(false);
       showToast(ToastEnum.REMOVE_HOBBY);
     } catch (error: any) {
@@ -109,7 +113,7 @@ const HobbiesTab = () => {
             <Modal.Body>
               <div className="flex flex-col items-center justify-center gap-3">
                 <p className="block text-base font-medium text-gray-900 dark:text-white">
-                  Remove {currentTag} from your hobbies?
+                  Remove {selectedHobby} from your hobbies?
                 </p>
                 <div className="flex justify-center gap-4">
                   <button

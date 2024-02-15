@@ -71,9 +71,9 @@ class HobbyController {
     static deleteUserHobby(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.user.data._id;
-            const { id: hobbyId } = req.params;
+            const { name: hobbyName } = req.params;
             try {
-                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $pull: { hobbies: hobbyId } }, { new: true }).exec();
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $pull: { hobbies: hobbyName.toLowerCase() } }, { new: true }).exec();
                 if (!updatedUser) {
                     return res.status(404).send({
                         message: `User ${userID} not found`,

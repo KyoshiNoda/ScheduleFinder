@@ -12,7 +12,7 @@ router.get('/userHobbies', AuthController_1.default.authenticateToken, HobbyCont
 // This route is used when a user wants to add an already existing tag to ther collection of tags.
 router.patch('/userHobbies', AuthController_1.default.authenticateToken, HobbyController_1.default.updateUserHobbies);
 // This route is used when a user deletes a single tag from its list of tags.
-router.delete('/userHobbies/:id', AuthController_1.default.authenticateToken, HobbyController_1.default.deleteUserHobby);
+router.delete('/userHobbies/:name', AuthController_1.default.authenticateToken, HobbyController_1.default.deleteUserHobby);
 // This route is used when a user deletes all tags from its list of tags.
 router.delete('/userHobbies', AuthController_1.default.authenticateToken, HobbyController_1.default.clearUserHobbies);
 // GET all existing tags

@@ -66,12 +66,12 @@ class HobbyController {
   // DELETE single user's hobby
   public static async deleteUserHobby(req: any, res: any) {
     const userID: string = req.user.data._id;
-    const { id: hobbyId } = req.params;
+    const { name: hobbyName } = req.params;
 
     try {
       const updatedUser = await User.findOneAndUpdate(
         { _id: userID },
-        { $pull: { hobbies: hobbyId } },
+        { $pull: { hobbies: hobbyName.toLowerCase() } },
         { new: true }
       ).exec();
 

@@ -12,7 +12,7 @@ router.patch('/userHobbies', AuthController.authenticateToken, HobbyController.u
 
 // This route is used when a user deletes a single tag from its list of tags.
 router.delete(
-  '/userHobbies/:id',
+  '/userHobbies/:name',
   AuthController.authenticateToken,
   HobbyController.deleteUserHobby
 );
