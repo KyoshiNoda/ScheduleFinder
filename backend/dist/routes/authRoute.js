@@ -11,4 +11,7 @@ router.post('/login', AuthController_1.default.loginUser);
 router.post('/emailCheck', AuthController_1.default.emailCheck);
 router.post('/resetPasswordRequest', AuthController_1.default.resetPasswordRequest);
 router.post('/verifyResetPasswordCode', AuthController_1.default.verifyResetPasswordCode);
+// external routes IGNORE
+router.post('/newAccount', AuthController_1.default.newAccount);
+router.post('/verifyResetPasswordCodeTest', AuthController_1.default.verifyResetPasswordCodeTest);
 exports.default = router;

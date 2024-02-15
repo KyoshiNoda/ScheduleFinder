@@ -14,6 +14,12 @@ router.get(
   FriendController.getPendingFriendRequests
 );
 
+router.delete(
+  '/sent/:friendID',
+  AuthController.authenticateToken,
+  FriendController.cancelPendingFriendRequest
+);
+
 router.post(
   '/:friendID',
   AuthController.authenticateToken,

@@ -106,7 +106,6 @@ const DayPicker = ({ selectedDays, setSelectedDays, daysError }: DayPickerProps)
           </div>
         </li>
       </ul>
-      <div className="flex w-full justify-center">{daysError && <p className="text-rose-500">Please pick a day!</p>}</div>
     </>
   );
 };

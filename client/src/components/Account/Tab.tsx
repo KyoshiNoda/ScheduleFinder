@@ -1,19 +1,20 @@
+import { AccountTabEnum } from '../../enums';
 type Props = {
-  getTab: (tab: string | null) => void;
+  getTab: (tab: AccountTabEnum | null) => void;
   activeTab: string | null;
 };
 
-const Tab = (props: Props): JSX.Element => {
+const Tab = (props: Props) => {
   return (
     <div className="mb-5 flex justify-center border-gray-200 text-center text-lg font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400">
       <ul className="flex flex-wrap sm:gap-5">
         <li>
           <div
             className={`inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300 ${
-              props.activeTab === 'Profile' && 'active-tab'
+              props.activeTab === AccountTabEnum.PROFILE && 'active-tab'
             }`}
             aria-current="page"
-            onClick={() => props.getTab('Profile')}
+            onClick={() => props.getTab(AccountTabEnum.PROFILE)}
           >
             Profile
           </div>
@@ -21,9 +22,9 @@ const Tab = (props: Props): JSX.Element => {
         <li>
           <div
             className={`inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300 ${
-              props.activeTab === 'Personal' && 'active-tab'
+              props.activeTab === AccountTabEnum.PERSONAL && 'active-tab'
             }`}
-            onClick={() => props.getTab('Personal')}
+            onClick={() => props.getTab(AccountTabEnum.PERSONAL)}
           >
             Personal
           </div>
@@ -31,11 +32,11 @@ const Tab = (props: Props): JSX.Element => {
         <li>
           <div
             className={`inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300 ${
-              props.activeTab === 'Friends' && 'active-tab'
+              props.activeTab === AccountTabEnum.HOBBIES && 'active-tab'
             }`}
-            onClick={() => props.getTab('Friends')}
+            onClick={() => props.getTab(AccountTabEnum.HOBBIES)}
           >
-            Friends
+            Hobbies
           </div>
         </li>
       </ul>

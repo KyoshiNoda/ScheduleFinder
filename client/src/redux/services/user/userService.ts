@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { User as UserType } from '../../../types';
 import { getApiUrl } from '../../../utils/environment';
-
+import { FileUploadResponse } from '../../../types';
 let BASE_URL = getApiUrl();
 export const userAPI = createApi({
   reducerPath: 'userAPI',
@@ -25,6 +25,13 @@ export const userAPI = createApi({
     getUserInfo: builder.query({
       query: () => ({
         url: 'api/users',
+        method: 'GET',
+      }),
+      providesTags: ['User'],
+    }),
+    getExternalUserInfo: builder.query<UserType, string>({
+      query: (userId) => ({
+        url: `api/users/${userId}`,
         method: 'GET',
       }),
       providesTags: ['User'],
@@ -59,10 +66,7 @@ export const userAPI = createApi({
       }),
       providesTags: ['User'],
     }),
-    deleteFriend: builder.mutation<
-      { message: string; friends: UserType[] },
-      { friendID: string }
-    >({
+    deleteFriend: builder.mutation<{ message: string; friends: UserType[] }, { friendID: string }>({
       query: ({ friendID }) => ({
         url: `api/users/friends/${friendID}`,
         method: 'DELETE',
@@ -76,30 +80,21 @@ export const userAPI = createApi({
       }),
       providesTags: ['User'],
     }),
-    acceptFriendRequest: builder.mutation<
-      { message: string; updatedFriendRequests: UserType[] },
-      { friendID: string }
-    >({
+    acceptFriendRequest: builder.mutation<{ message: string; updatedFriendRequests: UserType[] }, { friendID: string }>({
       query: ({ friendID }) => ({
         url: `api/users/friends/accept/${friendID}`,
         method: 'POST',
       }),
       invalidatesTags: ['User'],
     }),
-    rejectFriendRequest: builder.mutation<
-      { message: string; updatedFriendRequests: UserType[] },
-      { friendID: string }
-    >({
+    rejectFriendRequest: builder.mutation<{ message: string; updatedFriendRequests: UserType[] }, { friendID: string }>({
       query: ({ friendID }) => ({
         url: `api/users/friends/reject/${friendID}`,
         method: 'POST',
       }),
       invalidatesTags: ['User'],
     }),
-    sendFriendRequest: builder.mutation<
-      { message: string },
-      { friendID: string }
-    >({
+    sendFriendRequest: builder.mutation<{ message: string }, { friendID: string }>({
       query: ({ friendID }) => ({
         url: `api/users/friendRequest/${friendID}`,
         method: 'POST',
@@ -113,11 +108,32 @@ export const userAPI = createApi({
       }),
       providesTags: ['User'],
     }),
+    removePendingFriendRequest: builder.mutation<{ message: string; updatedSendFriendRequests: UserType[] }, { friendID: string }>({
+      query: ({ friendID }) => ({
+        url: `api/users/friendRequest/sent/${friendID}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['User'],
+    }),
+    changeProfilePicture: builder.mutation<FileUploadResponse, { file: File }>({
+      query: ({ file }) => {
+        const formData = new FormData();
+        formData.append('photoURL', file);
+
+        return {
+          url: 'api/users/image',
+          method: 'PATCH',
+          body: formData,
+        };
+      },
+      invalidatesTags: ['User'],
+    }),
   }),
 });
 
 export const {
   useGetUserInfoQuery,
+  useGetExternalUserInfoQuery,
   useGetUserFriendsQuery,
   useUpdateUserInfoMutation,
   useChangePasswordMutation,
@@ -127,4 +143,6 @@ export const {
   useRejectFriendRequestMutation,
   useSendFriendRequestMutation,
   useGetPendingFriendRequestsQuery,
+  useRemovePendingFriendRequestMutation,
+  useChangeProfilePictureMutation,
 } = userAPI;

@@ -1,8 +1,3 @@
-export enum Environment {
-  Local = 'local',
-  Dev = 'dev',
-  Prod = 'prod',
-}
 export type RegisterUser = {
   firstName: string;
   lastName: string;
@@ -11,6 +6,7 @@ export type RegisterUser = {
   birthday: Date;
   school: string;
 };
+
 export type User = {
   _id: string;
   firstName: string;
@@ -24,8 +20,9 @@ export type User = {
   school: string;
   major?: string | undefined;
   friends: User[];
-  receivedFriendRequests : User[];
-  sentFriendRequests : User[];
+  receivedFriendRequests: User[];
+  sentFriendRequests: User[];
+  hobbies: string[];
 };
 
 export type DaysChecked = {
@@ -53,4 +50,14 @@ export type Schedule = {
   user_id: string;
   visibility: string;
   timeSlots: TimeSlot[];
+};
+
+export type FileUploadResponse = {
+  message: string;
+  imageUrl: string;
+};
+
+export type Hobby = {
+  id: string;
+  name: string;
 };
