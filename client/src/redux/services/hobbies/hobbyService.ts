@@ -19,38 +19,43 @@ export const hobbyAPI = createApi({
       }
     },
   }),
-  tagTypes: ['Hobby'],
+  tagTypes: ['Hobbies'],
   endpoints: (builder) => ({
-    getHobbies: builder.query({
+    getAllHobbies: builder.query({
       query: () => ({
-        url: 'api/hobby',
+        url: 'api/hobbies',
         method: 'GET',
       }),
-      providesTags: ['Hobby'],
+      providesTags: ['Hobbies'],
     }),
-    addHobby: builder.mutation<UserType, { name: string }>({
+    getUserHobbies: builder.query({
+      query: () => ({
+        url: 'api/hobbies/userHobbies',
+        method: 'GET',
+      }),
+      providesTags: ['Hobbies'],
+    }),
+    addUserHobby: builder.mutation<UserType, { name: string }>({
       query: ({ name }) => ({
-        url: 'api/hobbies',
-        method: 'POST',
-        body: name,
-      }),
-      invalidatesTags: ['Hobby'],
-    }),
-    editHobby: builder.mutation<UserType, { hobbyID: string }>({
-      query: ({ hobbyID }) => ({
-        url: `api/hobby/${hobbyID}`,
+        url: 'api/hobbies/userHobbies',
         method: 'PATCH',
+        body: { name },
       }),
-      invalidatesTags: ['Hobby'],
+      invalidatesTags: ['Hobbies'],
     }),
-    deleteHobby: builder.mutation<UserType, { hobbyID: string }>({
-      query: ({ hobbyID }) => ({
-        url: `api/hobby/${hobbyID}`,
+    removeUserHobby: builder.mutation<UserType, { name: string }>({
+      query: ({ name }) => ({
+        url: `api/hobbies/userHobbies/${name}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Hobby'],
+      invalidatesTags: ['Hobbies'],
     }),
   }),
 });
 
-export const { useGetHobbiesQuery, useAddHobbyMutation, useDeleteHobbyMutation, useEditHobbyMutation } = hobbyAPI;
+export const {
+  useGetAllHobbiesQuery,
+  useGetUserHobbiesQuery,
+  useAddUserHobbyMutation,
+  useRemoveUserHobbyMutation,
+} = hobbyAPI;

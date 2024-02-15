@@ -39,22 +39,31 @@ class HobbyController {
     // PATCH user's hobbies
     static updateUserHobbies(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
-            const { hobbyId } = req.body;
             try {
-                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $push: { hobbies: hobbyId } }, { new: true }).exec();
+                const userID = req.user.data._id;
+                const { name: newHobbyName } = req.body || { name: null };
+                if (!newHobbyName) {
+                    return res.status(400).json({
+                        message: 'Error while getting new hobby name',
+                        error: 'Possible malformed request',
+                    });
+                }
+                const lowerCaseHobbyName = newHobbyName.toLowerCase();
+                let existingHobby = yield hobbyModel_1.default.findOne({ name: lowerCaseHobbyName });
+                if (!existingHobby) {
+                    existingHobby = yield hobbyModel_1.default.create({ name: lowerCaseHobbyName });
+                }
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $addToSet: { hobbies: existingHobby.name } }, { new: true }).exec();
                 if (!updatedUser) {
-                    return res.status(404).send({
+                    return res.status(404).json({
                         message: `User ${userID} not found`,
                     });
                 }
-                res.status(200).json(updatedUser);
+                res.status(existingHobby.isNew ? 201 : 200).json(existingHobby);
             }
             catch (error) {
-                res.status(500).send({
-                    message: `Error while updating hobbies for user with id: ${userID}`,
-                    error: error,
-                });
+                console.error(error);
+                res.status(500).json({ error: 'Internal Server Error' });
             }
         });
     }
@@ -62,9 +71,9 @@ class HobbyController {
     static deleteUserHobby(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.user.data._id;
-            const { id: hobbyId } = req.params;
+            const { name: hobbyName } = req.params;
             try {
-                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $pull: { hobbies: hobbyId } }, { new: true }).exec();
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $pull: { hobbies: hobbyName.toLowerCase() } }, { new: true }).exec();
                 if (!updatedUser) {
                     return res.status(404).send({
                         message: `User ${userID} not found`,
@@ -110,30 +119,6 @@ class HobbyController {
             }
             catch (error) {
                 res.status(500).json({ message: 'Error while getting hobbies', error: error });
-            }
-        });
-    }
-    // POST new hobby
-    static createHobby(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { name: newHobbyName } = req.body || null;
-            if (newHobbyName === null) {
-                res.status(400).json({
-                    message: 'Error while getting new hobby name',
-                    error: 'Possible malformed request',
-                });
-            }
-            try {
-                const lowerCaseHobbyName = newHobbyName.toLowerCase();
-                const existingHobby = yield hobbyModel_1.default.findOne({ name: lowerCaseHobbyName });
-                if (existingHobby) {
-                    return res.status(409).json({ message: 'Hobby already exists', existingHobby });
-                }
-                const createdHobby = yield hobbyModel_1.default.create({ name: lowerCaseHobbyName });
-                res.status(201).json(createdHobby);
-            }
-            catch (error) {
-                res.status(500).json({ error: 'Internal Server Error' });
             }
         });
     }

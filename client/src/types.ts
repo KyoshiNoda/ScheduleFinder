@@ -22,6 +22,7 @@ export type User = {
   friends: User[];
   receivedFriendRequests: User[];
   sentFriendRequests: User[];
+  hobbies: string[];
 };
 
 export type DaysChecked = {
@@ -54,4 +55,9 @@ export type Schedule = {
 export type FileUploadResponse = {
   message: string;
   imageUrl: string;
+};
+
+export type Hobby = {
+  id: string;
+  name: string;
 };

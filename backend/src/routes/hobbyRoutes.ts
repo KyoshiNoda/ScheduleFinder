@@ -1,5 +1,5 @@
 import express from 'express';
-import HobbyController from '../controllers/TagController';
+import HobbyController from '../controllers/HobbyController';
 import AuthController from '../controllers/AuthController';
 
 const router = express.Router();
@@ -12,7 +12,7 @@ router.patch('/userHobbies', AuthController.authenticateToken, HobbyController.u
 
 // This route is used when a user deletes a single tag from its list of tags.
 router.delete(
-  '/userHobbies/:id',
+  '/userHobbies/:name',
   AuthController.authenticateToken,
   HobbyController.deleteUserHobby
 );
@@ -22,8 +22,5 @@ router.delete('/userHobbies', AuthController.authenticateToken, HobbyController.
 
 // GET all existing tags
 router.get('/', HobbyController.getAllTags);
-
-// This route is used when a user creates a new tag.
-router.post('/', HobbyController.createHobby);
 
 export default router;
