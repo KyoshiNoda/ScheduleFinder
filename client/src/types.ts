@@ -55,3 +55,8 @@ export type FileUploadResponse = {
   message: string;
   imageUrl: string;
 };
+
+export type Hobby = {
+  id: string;
+  name: string;
+}

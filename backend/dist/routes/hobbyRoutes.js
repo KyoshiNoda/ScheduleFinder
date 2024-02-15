@@ -17,6 +17,4 @@ router.delete('/userHobbies/:id', AuthController_1.default.authenticateToken, Ho
 router.delete('/userHobbies', AuthController_1.default.authenticateToken, HobbyController_1.default.clearUserHobbies);
 // GET all existing tags
 router.get('/', HobbyController_1.default.getAllTags);
-// This route is used when a user creates a new tag.
-router.post('/', HobbyController_1.default.createHobby);
 exports.default = router;

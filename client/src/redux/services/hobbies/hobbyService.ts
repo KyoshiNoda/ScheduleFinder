@@ -35,15 +35,15 @@ export const hobbyAPI = createApi({
       }),
       providesTags: ['Hobbies'],
     }),
-    addUserHobby: builder.mutation<UserType, { hobbyId: string }>({
-      query: ({ hobbyId }) => ({
+    addUserHobby: builder.mutation<UserType, { name: string }>({
+      query: ({ name }) => ({
         url: 'api/hobbies/userHobbies',
         method: 'PATCH',
-        body: hobbyId,
+        body: name,
       }),
       invalidatesTags: ['Hobbies'],
     }),
-    deleteHobby: builder.mutation<UserType, { hobbyID: string }>({
+    removeUserHobby: builder.mutation<UserType, { hobbyID: string }>({
       query: ({ hobbyID }) => ({
         url: `api/hobbies/userHobbies/${hobbyID}`,
         method: 'DELETE',
@@ -57,5 +57,5 @@ export const {
   useGetAllHobbiesQuery,
   useGetUserHobbiesQuery,
   useAddUserHobbyMutation,
-  useDeleteHobbyMutation,
+  useRemoveUserHobbyMutation,
 } = hobbyAPI;

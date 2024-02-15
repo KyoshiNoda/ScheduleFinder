@@ -23,7 +23,4 @@ router.delete('/userHobbies', AuthController.authenticateToken, HobbyController.
 // GET all existing tags
 router.get('/', HobbyController.getAllTags);
 
-// This route is used when a user creates a new tag.
-router.post('/', HobbyController.createHobby);
-
 export default router;
