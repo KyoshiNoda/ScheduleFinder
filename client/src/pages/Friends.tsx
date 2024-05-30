@@ -55,8 +55,8 @@ const Friends = () => {
       <div className="flex min-h-full flex-col gap-10 bg-slate-400 p-6 dark:bg-slate-900">
         <h1 className="text-center text-5xl font-medium dark:text-white">Friends</h1>
 
-        <div className="overflow-x-auto px-5 md:px-20">
-          <table className="w-full rounded-xl bg-white dark:bg-gray-800">
+        <div className="overflow-x-auto px-5 md:px-20 flex justify-center">
+          <table className="w-full md:w-5/6 lg:w-1/2 rounded-xl bg-white dark:bg-gray-800">
             <tbody>
               {friends &&
                 friends.map((friend: UserType, index: number) => (
@@ -64,17 +64,16 @@ const Friends = () => {
                     key={friend._id}
                     className={`flex w-full items-center justify-between ${
                       index != friends.length - 1 && 'border-b border-solid border-gray-300 dark:border-gray-700'
-                    } p-4`}
+                    } lg:p-4 p-2`}
                   >
                     <td className="flex items-center gap-6">
                       <Avatar img={friend.photoURL} alt={`avatar of ${getFormattedFriendName(friend)}`} rounded size={'lg'} />
-                      <span className="text-xl dark:text-white">{getFormattedFriendName(friend)}</span>
+                      <span className=" text-md lg:text-xl dark:text-white">{getFormattedFriendName(friend)}</span>
                     </td>
                     <td className="flex items-center gap-3">
-                      {/* TODO: Add link to the user profile page */}
                       <Link
-                        to={'#'}
-                        className="rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        to={`/auth/user/${friend._id}`}
+                        className="rounded-lg bg-blue-700 text-sm p-1 sm:p-3 text-center font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                       >
                         View Profile
                       </Link>
@@ -83,7 +82,7 @@ const Friends = () => {
                           setFriendToDelete(friend);
                           setOpenModal(true);
                         }}
-                        className="rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                        className="rounded-lg bg-red-700 text-sm p-1 sm:p-3  font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
                       >
                         Delete Friend
                       </button>
