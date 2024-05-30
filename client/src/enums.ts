@@ -23,4 +23,13 @@ export enum ToastEnum {
   CREATED_TIMESLOT = "Created Time Slot!",
   UPDATE_TIMESLOT = "Updated Time Slot!",
   DELETED_TIMESLOT = "Deleted Time Slot!",
+  ADDED_HOBBY = "Added Hobby!",
+  EDITED_HOBBY = "Edited Hobby!",
+  REMOVE_HOBBY = "Removed Hobby!"
 }
+export enum AccountTabEnum {
+    PROFILE = 'Profile',
+    PERSONAL = 'Personal',
+    HOBBIES = 'Hobbies'
+  }
+  

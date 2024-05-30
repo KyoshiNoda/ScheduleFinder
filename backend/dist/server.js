@@ -38,6 +38,7 @@ const authRoute_1 = __importDefault(require("./routes/authRoute"));
 const scheduleRoute_1 = __importDefault(require("./routes/scheduleRoute"));
 const friendRoute_1 = __importDefault(require("./routes/friendRoute"));
 const friendRequestRoute_1 = __importDefault(require("./routes/friendRequestRoute"));
+const hobbyRoutes_1 = __importDefault(require("./routes/hobbyRoutes"));
 const port = process.env.PORT || 3001;
 const app = (0, express_1.default)();
 cloudinary_1.v2.config({
@@ -54,6 +55,7 @@ app.use('/api/users/friends', friendRoute_1.default);
 app.use('/api/users', userRoute_1.default);
 app.use('/api/auth', authRoute_1.default);
 app.use('/api/schedules', scheduleRoute_1.default);
+app.use('/api/hobbies', hobbyRoutes_1.default);
 mongoose_1.default.set('strictQuery', true);
 mongoose_1.default
     .connect(`${process.env.DB_URI}`, {})

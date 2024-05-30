@@ -1,4 +1,8 @@
-import { useGetPendingFriendRequestsQuery, useGetUserFriendsQuery, useGetUserFriendRequestsQuery } from '../../redux/services/user/userService';
+import {
+  useGetPendingFriendRequestsQuery,
+  useGetUserFriendsQuery,
+  useGetUserFriendRequestsQuery,
+} from '../../redux/services/user/userService';
 import { calculateAge } from '../../utils/functions';
 import FriendStatusButton from '../Utils/FriendStatusButton';
 import { Button } from 'flowbite-react';
@@ -8,7 +12,6 @@ type UserPageBoxProps = {
   userInfo: UserType;
 };
 const UserPageBox = ({ userId, userInfo }: UserPageBoxProps) => {
-  const dummyTags: string[] = ['Basketball', 'Football', 'Soccer', 'Tennis', 'Golf', 'Valorant'];
   const { data: sentFriendRequests } = useGetPendingFriendRequestsQuery('User');
   const { data: receivedFriendRequests } = useGetUserFriendRequestsQuery('User');
   const { data: friends } = useGetUserFriendsQuery('User');
@@ -17,7 +20,7 @@ const UserPageBox = ({ userId, userInfo }: UserPageBoxProps) => {
   const isFriendRequest = receivedFriendRequests?.some((friend: any) => friend._id === userId);
   const isFriends = friends?.some((friend: any) => friend._id === userId);
   return (
-    <div className="min-w-1/4 mx-5 flex h-5/6 flex-col rounded-lg bg-white p-4 dark:bg-slate-800 dark:text-white lg:mx-0 lg:ml-10">
+    <div className="w-2/5 mx-5 flex h-5/6 flex-col rounded-lg bg-white p-4 dark:bg-slate-800 dark:text-white lg:mx-0 lg:ml-10">
       <div className="flex flex-col items-center gap-3">
         <img src={userInfo.photoURL} className="h-44 w-44 rounded-full border-2" />
         <h1 className="mb-4 text-2xl font-bold">
@@ -33,7 +36,7 @@ const UserPageBox = ({ userId, userInfo }: UserPageBoxProps) => {
         <div>
           <h1 className="mb-4">Hobbies:</h1>
           <div className="flex flex-wrap justify-center gap-2">
-            {dummyTags.map((hobby) => (
+            {userInfo.hobbies.map((hobby) => (
               <Button color="blue" pill className="w-20">
                 {hobby}
               </Button>
@@ -44,7 +47,12 @@ const UserPageBox = ({ userId, userInfo }: UserPageBoxProps) => {
           <span className="cursor-pointer font-normal underline">See More</span>
         </div>
         <div className="flex w-full justify-center">
-          <FriendStatusButton isPending={isPending} isFriendRequest={isFriendRequest} isFriends={isFriends} userID={userId!} />
+          <FriendStatusButton
+            isPending={isPending}
+            isFriendRequest={isFriendRequest}
+            isFriends={isFriends}
+            userID={userId!}
+          />
         </div>
       </div>
     </div>

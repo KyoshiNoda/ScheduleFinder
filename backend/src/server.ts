@@ -10,6 +10,7 @@ import authRoute from './routes/authRoute';
 import scheduleRoute from './routes/scheduleRoute';
 import friendRoute from './routes/friendRoute';
 import friendRequestRoute from './routes/friendRequestRoute';
+import hobbyRoute from './routes/hobbyRoutes';
 const port = process.env.PORT || 3001;
 const app = express();
 
@@ -29,6 +30,7 @@ app.use('/api/users/friends', friendRoute);
 app.use('/api/users', userRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/schedules', scheduleRoute);
+app.use('/api/hobbies', hobbyRoute);
 mongoose.set('strictQuery', true);
 
 mongoose
