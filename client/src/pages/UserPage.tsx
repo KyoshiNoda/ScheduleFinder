@@ -30,7 +30,7 @@ const UserPage = () => {
       {userInfo ? (
         <div className="flex min-h-full w-screen flex-col gap-20 bg-slate-400 dark:bg-slate-900 lg:flex-row">
           <UserPageBox userId={userId!} userInfo={userInfo} />
-          <div className="mr-0 flex w-full flex-col gap-10 text-center lg:mr-10">
+          <div className="mr-0 flex w-full flex-col gap-10 text-center lg:mr-10 px-12">
             <h1 className="text-3xl font-semibold text-white">Schedule:</h1>
             <ScheduleBox timeSlots={scheduleInfo!.timeSlots} />
           </div>
