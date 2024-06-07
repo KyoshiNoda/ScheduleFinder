@@ -18,7 +18,7 @@ const Login = () => {
   }, []);
 
   return (
-    <div className="flex min-h-full w-screen flex-col gap-10 bg-slate-400 p-3 dark:bg-slate-900 lg:gap-40">
+    <div className="flex min-h-full w-screen flex-col gap-10 bg-gray-50 p-3 dark:bg-slate-900 lg:gap-40">
       <div className="flex justify-end">
         <Toggle />
       </div>

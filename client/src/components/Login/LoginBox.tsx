@@ -3,7 +3,7 @@ import GoogleAuth from '../Auth/GoogleAuth';
 import { Link } from 'react-router-dom';
 const LoginBox = () => {
   return (
-    <div className="w-full max-w-md space-y-3 rounded-xl bg-gray-100 p-8 dark:bg-slate-800 dark:text-gray-100 ">
+    <div className="w-full max-w-md space-y-3 rounded-xl bg-slate-200 p-8 dark:bg-slate-800 dark:text-gray-100 ">
       <h1 className="text-md text-center font-bold md:text-2xl">Login</h1>
       <LoginForm />
       {/* <div className="flex items-center space-x-1 pt-4">
