@@ -42,20 +42,31 @@ const ScheduleBox = ({ timeSlots }: Props) => {
           <span className="absolute left-1 top-[1604px] font-bold">10 PM</span>
           <span className="absolute left-1 top-[1676px] font-bold">11 PM</span>
 
-          <hr className="absolute top-0 w-full border-dotted bg-gray-400 dark:bg-gray-900" />
-          <hr className="absolute top-[72px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
-          <hr className="absolute top-[144px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
-          <hr className="absolute top-[216px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
-          <hr className="absolute top-[288px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
-          <hr className="absolute top-[360px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
-          <hr className="absolute top-[432px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
-          <hr className="absolute top-[504px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
-          <hr className="absolute top-[576px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
-          <hr className="absolute top-[648px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
-          <hr className="absolute top-[720px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
-          <hr className="absolute top-[792px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
-          <hr className="absolute top-[864px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
-          <hr className="absolute top-[936px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[32px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[104px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[176px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[248px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[320px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[392px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[464px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[536px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[608px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[680px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[752px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[824px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[896px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[968px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[1040px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[1112px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[1184px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[1256px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[1328px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[1400px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[1472px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[1544px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[1616px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+          <hr className="absolute top-[1688px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
+
           <div className="relative mx-2 h-[1008px] w-1/5">
             <h2 className="absolute -inset-8 text-center text-lg font-medium capitalize">
               {window.innerWidth < 535 ? 'm' : 'monday'}
