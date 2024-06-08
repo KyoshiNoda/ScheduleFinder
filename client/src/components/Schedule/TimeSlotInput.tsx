@@ -272,7 +272,7 @@ const TimeSlotInput = () => {
       {!isFetching && data && (
         <div className="flex flex-col">
           <ClearScheduleButton scheduleId={scheduleID} currentSchedule={data} />
-          <div className="mt-6 flex flex-col rounded-lg bg-slate-50 p-5 dark:bg-black">
+          <div className="mt-6 flex flex-col rounded-lg bg-white border shadow dark:shadow-none dark:border-none p-5 dark:bg-black">
             <form ref={formRef} onSubmit={addTimeSlot} className="space-y-2">
               <div>
                 <label htmlFor="title" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">

@@ -2,9 +2,9 @@ import SignUpForm from './SignUpForm';
 import GoogleAuth from '../Auth/GoogleAuth';
 import { Link } from 'react-router-dom';
 
-const SignUpBox = () => {
+const   SignUpBox = () => {
   return (
-    <div className="flex  h-full w-5/6 flex-col rounded-lg bg-gray-100 p-5 dark:bg-slate-800  dark:text-gray-100 md:w-2/3 lg:w-1/3">
+    <div className="flex h-full w-5/6 flex-col rounded-lg bg-white shadow border dark:shadow-none dark:border-none p-5 dark:bg-slate-800  dark:text-gray-100 md:w-2/3 lg:w-1/3">
       <div className="mb-5 flex justify-center text-4xl dark:text-white md:text-5xl">
         Sign up
       </div>
@@ -20,7 +20,6 @@ const SignUpBox = () => {
           Have an account?
         </p>
         <Link
-          rel="noopener noreferrer"
           to="/login"
           className="inline-block underline dark:text-gray-100"
         >

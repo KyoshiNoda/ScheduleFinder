@@ -1,8 +1,11 @@
 const LoadingUserPage = () => {
   return (
-    <div className="min-h-screen bg-slate-400 dark:bg-slate-900">
-      <div className="md:items-center md:space-x-8 animate-pulse space-y-8 rtl:space-x-reverse xl:space-x-16">
-        <div role="status" className="mx-10 h-3/4 w-2/3 rounded border border-gray-200 p-4 shadow dark:border-gray-700 md:ml-20 md:p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
+      <div className="animate-pulse space-y-8 rtl:space-x-reverse md:items-center md:space-x-8 xl:space-x-16">
+        <div
+          role="status"
+          className="mx-10 h-3/4 w-2/3 rounded border border-gray-200 p-4 shadow dark:border-gray-700 md:ml-20 md:p-6"
+        >
           <div className="mb-4 flex items-center justify-center rounded bg-gray-300 dark:bg-gray-700 md:h-64">
             <svg
               className="h-32 w-48 text-gray-200 dark:text-gray-600"

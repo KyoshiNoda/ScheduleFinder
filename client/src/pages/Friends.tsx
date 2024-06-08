@@ -52,10 +52,10 @@ const Friends = () => {
         </Modal.Body>
       </Modal>
 
-      <div className="flex min-h-full flex-col gap-10 bg-slate-400 p-6 dark:bg-slate-900">
+      <div className="flex min-h-full flex-col gap-10 bg-gray-50 p-6 dark:bg-slate-900">
         <h1 className="text-center text-5xl font-medium dark:text-white">Friends</h1>
         <div className="flex justify-center overflow-x-auto md:px-20">
-          <table className="w-full rounded-xl bg-white dark:bg-gray-800 md:w-5/6 lg:w-1/2">
+          <table className="w-full rounded-xl bg-white border dark:border-none dark:bg-gray-800 md:w-5/6 lg:w-1/2">
             <tbody>
               {friends &&
                 friends.map((friend: UserType, index: number) => (

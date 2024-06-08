@@ -11,8 +11,8 @@ const Schedule = () => {
 
 
   return (
-    <div className="flex min-h-full flex-col gap-10 bg-slate-400 py-5 px-8 dark:bg-slate-900 2xl:px-12">
-      <div className="flex flex-col lg:flex-row lg:gap-4 2xl:gap-10">
+    <div className="flex min-h-full flex-col gap-10 bg-gray-50 py-5 px-8 dark:bg-slate-900 2xl:px-12">
+      <div className="flex flex-col lg:flex-row lg:gap-4 2xl:gap-10 mt-16">
         <ScheduleBox timeSlots={undefined} />
         <TimeSlotInput />
       </div>

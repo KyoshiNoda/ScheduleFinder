@@ -5,7 +5,6 @@ import Toggle from './Toggle';
 const PageLayout = () => {
   const { userInfo } = useAppSelector((state) => state.auth);
   if (Object.keys(userInfo).length === 0) {
-    // checks if userInfo is empty
     return (
       <div>
         <h1>Unauthorized</h1>
@@ -18,7 +17,6 @@ const PageLayout = () => {
   return (
     <>
       <Navbar user={userInfo} />
-      <Toggle />
       <Outlet />
     </>
   );

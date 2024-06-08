@@ -15,7 +15,7 @@ const ScheduleBox = ({ timeSlots }: Props) => {
   }
   return (
     <>
-      <div className="flex w-full flex-col">
+      <div className="flex w-full flex-col border shadow dark:border-none dark:shadow-none">
         <div className="relative mb-6 flex h-[1008px] rounded bg-white dark:bg-black dark:text-white">
           <span className="absolute -left-5 top-[-11px] font-bold">7</span>
           <span className="absolute -left-5 top-[61px] font-bold">8</span>

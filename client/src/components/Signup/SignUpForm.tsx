@@ -97,9 +97,7 @@ const SignUpForm = () => {
               placeholder="johndoe@gmail.com"
               required
             />
-            {emailError && (
-              <span className="text-xs text-red-500">{emailError}</span>
-            )}
+            {emailError && <span className="text-xs text-red-500">{emailError}</span>}
           </div>
           <div>
             <label
@@ -196,12 +194,14 @@ const SignUpForm = () => {
           </div>
         </div>
       </div>
-      <button
-        type="submit"
-        className="w-full rounded-full bg-blue-700 px-8 py-3 text-lg font-semibold text-white hover:bg-blue-800 dark:bg-slate-200 dark:text-black dark:hover:bg-slate-400"
-      >
-        Submit
-      </button>
+      <div className="flex justify-center">
+        <button
+          type="submit"
+          className="w-3/4 rounded-xl bg-blue-700 px-8 py-3 text-lg font-semibold text-white hover:bg-blue-800 dark:bg-slate-200 dark:text-black dark:hover:bg-slate-400"
+        >
+          Start Now
+        </button>
+      </div>
     </form>
   );
 };

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Toggle from '../components/Toggle';
 import scheduleImg from '../assets/schedule.png';
 import { AiFillGithub } from 'react-icons/ai';
@@ -7,13 +7,29 @@ import { isDarkModeOn } from '../utils/functions';
 import { Themes } from '../enums';
 
 const LandingPage = () => {
+  const [theme, setTheme] = useState<string>(isDarkModeOn() ? Themes.DARK : Themes.LIGHT);
 
-  const [theme, setTheme] = useState<string>(isDarkModeOn() ? Themes.LIGHT : Themes.DARK);
+  useEffect(() => {
+    const handleSystemThemeChange = (e: MediaQueryListEvent) => {
+      if (e.matches) {
+        setTheme(Themes.DARK);
+      } else {
+        setTheme(Themes.LIGHT);
+      }
+    };
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener('change', handleSystemThemeChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleSystemThemeChange);
+    };
+  }, []);
 
   return (
     <div className="flex min-h-full w-full flex-col gap-6 bg-slate-100 p-3 dark:bg-slate-900">
       <div className="flex justify-end">
-        <Toggle getTheme={(theme) => setTheme(theme)} overrideBackground = {"bg-slate-100"}/>
+        <Toggle getTheme={setTheme} />
       </div>
       <div className="slate-50 flex flex-col gap-4 sm:gap-8 sm:px-14 md:gap-14 lg:grid lg:grid-cols-2 lg:gap-0 lg:gap-x-14 2xl:mt-20">
         <div className=" flex flex-col gap-y-3 sm:gap-y-6 lg:mb-40 lg:justify-center lg:self-center">
@@ -21,8 +37,8 @@ const LandingPage = () => {
             Schedule Finder
           </h1>
           <p className="flex justify-center px-1 text-center text-sm dark:text-white sm:text-xl md:text-3xl lg:px-0 lg:text-xl 2xl:text-2xl">
-            Easily create and compare your schedule with others. Discover new
-            people within your free time periods.
+            Easily create and compare your schedule with others. Discover new people within your
+            free time periods.
           </p>
         </div>
         <div className="my-6 flex flex-col gap-6 md:gap-20 lg:my-0 lg:gap-0 lg:space-y-14">
@@ -47,7 +63,10 @@ const LandingPage = () => {
           href="https://github.com/KyoshiNoda/ScheduleFinder"
           target="_blank"
         >
-          <AiFillGithub size={window.innerWidth < 700 ? '50' : '96'} color={`${theme}`} />
+          <AiFillGithub
+            size={window.innerWidth < 700 ? '50' : '96'}
+            color={theme === Themes.DARK ? 'white' : 'black'}
+          />
         </a>
       </div>
     </div>

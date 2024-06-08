@@ -69,7 +69,7 @@ const Toggle = (props: Props) => {
   };
 
   return (
-    <div className={`${props.overrideBackground} flex justify-end py-5 px-8 `}>
+    <div className={`${props.overrideBackground} flex justify-end`}>
       <button
         onClick={() => setDropdownOpen((dropdownOpen) => !dropdownOpen)}
         className="flex items-center gap-1 rounded-lg border p-3"
@@ -81,7 +81,7 @@ const Toggle = (props: Props) => {
         )}
       </button>
       {dropdownOpen && (
-        <div className="absolute top-20 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+        <div className="absolute top-16 z-20 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
           <div className="py-1">
             <button
               onClick={() => handleMenuItemClick(Themes.LIGHT)}
