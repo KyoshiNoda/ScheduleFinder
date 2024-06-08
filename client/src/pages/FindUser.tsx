@@ -10,7 +10,7 @@ const FindUser = () => {
   const friendToast = useAppSelector((state: any) => state.globalSlice.toast);
 
   return (
-    <div className="flex min-h-full flex-col items-center space-y-10 bg-slate-400 p-6 dark:bg-slate-900">
+    <div className="flex min-h-full flex-col items-center space-y-10 bg-gray-50 p-6 dark:bg-slate-900">
       <div>
         <form className="flex flex-col gap-8 lg:flex-row">
           <div>

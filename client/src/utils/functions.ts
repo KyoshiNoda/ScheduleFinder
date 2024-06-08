@@ -1,15 +1,16 @@
 import { useAppDispatch } from '../redux/store';
 import { toast } from '../redux/feats/globalSlice/globalSlice';
-
+import { Themes } from '../enums';
 export const isDarkModeOn = () => {
-  const darkModeStatus = localStorage.getItem('isDarkModeOn');
-  if (darkModeStatus) {
-    return JSON.parse(darkModeStatus);
+  const theme = localStorage.getItem('theme');
+  if (theme === Themes.DARK) {
+    return true;
   }
-  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-  return mediaQuery.matches;
+  if (theme === Themes.LIGHT) {
+    return false;
+  }
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 };
-
 
 export const useToast = () => {
   const dispatch = useAppDispatch();
@@ -26,14 +27,14 @@ export const useToast = () => {
 };
 
 export const calculateAge = (birthDate: Date): number => {
-    const currentDate = new Date();
-    const age = currentDate.getFullYear() - birthDate.getFullYear();
-    if (
-      currentDate.getMonth() < birthDate.getMonth() ||
-      (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())
-    ) {
-      return age - 1;
-    }
+  const currentDate = new Date();
+  const age = currentDate.getFullYear() - birthDate.getFullYear();
+  if (
+    currentDate.getMonth() < birthDate.getMonth() ||
+    (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())
+  ) {
+    return age - 1;
+  }
 
-    return age;
-  };
+  return age;
+};

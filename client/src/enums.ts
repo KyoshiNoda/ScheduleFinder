@@ -1,6 +1,7 @@
 export enum Themes {
   DARK = 'black',
   LIGHT = 'white',
+  SYSTEM = 'system'
 }
 
 export enum TypesOfInput {

@@ -28,12 +28,12 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="flex min-h-full w-screen flex-col bg-slate-400 p-3 dark:bg-slate-900 lg:gap-40">
+    <div className="flex min-h-full w-screen flex-col bg-gray-50 p-3 dark:bg-slate-900 lg:gap-40">
       <div className="flex justify-end">
         <Toggle />
       </div>
       <div className="flex items-center justify-center">
-        <div className="flex w-5/6 flex-col justify-center rounded-lg bg-white p-5 dark:bg-slate-700 lg:w-1/3">
+        <div className="flex w-5/6 flex-col justify-center rounded-lg bg-gray-200 p-5 dark:bg-slate-700 lg:w-1/3">
           <div className="flex justify-center">
             <FaUserLock size="80" />
           </div>

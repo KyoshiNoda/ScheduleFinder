@@ -20,14 +20,14 @@ const UserPageBox = ({ userId, userInfo }: UserPageBoxProps) => {
   const isFriendRequest = receivedFriendRequests?.some((friend: any) => friend._id === userId);
   const isFriends = friends?.some((friend: any) => friend._id === userId);
   return (
-    <div className="w-full lg:w-2/5 flex h-5/6 flex-col rounded-lg bg-white p-4 dark:bg-slate-800 dark:text-white lg:mx-0 lg:ml-10">
+    <div className="w-full lg:w-2/5 flex h-5/6 flex-col mt-12 lg:mt-20 rounded-lg bg-white border dark:border-none shadow dark:shadow-none p-4 dark:bg-slate-800 dark:text-white lg:mx-0 lg:ml-10">
       <div className="flex flex-col items-center gap-3">
         <img src={userInfo.photoURL} className="h-44 w-44 rounded-full border-2" />
         <h1 className="mb-4 text-2xl font-bold">
           {userInfo.firstName} {userInfo.lastName}
         </h1>
       </div>
-      <div className="w-7/8 flex h-1/2 flex-col gap-4 rounded-lg bg-slate-400 p-5 text-lg font-medium text-white dark:bg-slate-900">
+      <div className="w-7/8 flex h-1/2 flex-col gap-4 rounded-lg bg-slate-200 p-5 text-lg font-medium  dark:bg-slate-900">
         <div>
           <p>Age: {calculateAge(new Date(userInfo.birthday))}</p>
           <p>School: {userInfo.school}</p>
