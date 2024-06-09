@@ -1,4 +1,4 @@
-const ScheduleLines = () => {
+const ScheduleHorziontalLines = () => {
   return (
     <>
       <hr className="absolute left-16 top-[52px] w-full border-dotted bg-gray-400 dark:bg-gray-900" />
@@ -29,4 +29,4 @@ const ScheduleLines = () => {
   );
 };
 
-export default ScheduleLines;
+export default ScheduleHorziontalLines;

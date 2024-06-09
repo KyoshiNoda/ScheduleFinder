@@ -3,8 +3,9 @@ import { TimeSlot as TimeSlotType } from '../../types';
 import TimeSlot from './TimeSlot';
 import { useGetScheduleQuery } from '../../redux/services/schedule/scheduleService';
 import { calculateHeight, calculateDistanceFromTop } from '../../utils/scheduleUtils';
-import ScheduleLines from './ScheduleLines';
+import ScheduleHorziontalLines from './ScheduleHorziontalLines';
 import ScheduleHours from './ScheduleHours';
+import ScheduleVerticalLines from './ScheduleVerticalLines';
 
 type Props = {
   timeSlots: TimeSlotType[] | undefined;
@@ -22,7 +23,6 @@ const ScheduleBox = ({ timeSlots }: Props) => {
 
   useEffect(() => {
     if (scrollRef.current) {
-      // Calculate the scroll position for middle value (6 AM)
       const sixAMPosition = (6 * 60 * 72) / 60 + 20;
       scrollRef.current.scrollTop = sixAMPosition;
     }
@@ -31,11 +31,11 @@ const ScheduleBox = ({ timeSlots }: Props) => {
   return (
     <div className="flex w-full flex-col border shadow dark:border-none dark:shadow-none">
       <div className="relative mb-6 h-[678px] overflow-scroll rounded bg-white dark:bg-black dark:text-white">
-        <div className="sticky top-0 bg-white dark:bg-black z-10">
-          <div className="grid grid-cols-7 mx-20">
+        <div className="sticky top-0 z-10 bg-white dark:bg-black">
+          <div className="mx-20 grid grid-cols-7">
             {days.map((day, index) => (
               <div key={day} className="relative">
-                <h2 className="text-center text-lg font-medium capitalize py-2">
+                <h2 className="py-2 text-center text-lg font-medium capitalize z-20">
                   {window.innerWidth < 535 ? dayNames[index] : day}
                 </h2>
               </div>
@@ -43,7 +43,7 @@ const ScheduleBox = ({ timeSlots }: Props) => {
           </div>
         </div>
         <div ref={scrollRef} className="relative h-full overflow-auto">
-          <div className="grid h-full grid-cols-7 mx-20">
+          <div className="relative mx-20 grid h-full grid-cols-7 gap-3">
             {days.map((day, index) => (
               <div key={day} className="relative h-full">
                 {timeSlots
@@ -86,7 +86,8 @@ const ScheduleBox = ({ timeSlots }: Props) => {
             ))}
           </div>
           <ScheduleHours />
-          <ScheduleLines />
+          <ScheduleHorziontalLines />
+          <ScheduleVerticalLines />
         </div>
       </div>
     </div>

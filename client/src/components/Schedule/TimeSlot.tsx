@@ -425,7 +425,7 @@ const TimeSlot: any = (props: Props) => {
         </Modal.Body>
       </Modal>
       <div
-        className={`absolute z-20 flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${
+        className={`absolute z-10 flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${
           props.color
         }-400 w-full ${
           !readOnly && 'overflow-hidden hover:cursor-pointer hover:brightness-50'
