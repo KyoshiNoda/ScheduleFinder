@@ -31,6 +31,8 @@ export type DaysChecked = {
   wednesday: boolean;
   thursday: boolean;
   friday: boolean;
+  saturday: boolean;
+  sunday: boolean;
   [key: string]: boolean;
 };
 
