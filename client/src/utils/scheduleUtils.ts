@@ -109,7 +109,7 @@ export const calculateDistanceFromTop = (startTime: string) => {
   const minutes: number = calculateMinutesFromTop(startTime);
   const distanceFromTop: number = (minutes * 72) / 60;
   if (distanceFromTop == 72) {
-    return Number(0).toString();
+    return Number(52).toString();
   }
-  return distanceFromTop.toString();
+  return (distanceFromTop + 52).toString();
 };
