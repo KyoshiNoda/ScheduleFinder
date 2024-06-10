@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Card } from 'flowbite-react';
 import { User as UserType } from '../../types';
-import FriendStatusButton from '../Utils/FriendStatusButton';
+import FriendStatusButton from '../Globals/FriendStatusButton';
 
 type UserProps = {
   user: UserType;
