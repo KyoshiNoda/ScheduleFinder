@@ -31,21 +31,22 @@ const ScheduleBox = ({ timeSlots }: Props) => {
   return (
     <div className="flex w-full flex-col border shadow dark:border-none dark:shadow-none">
       <div className="relative mb-6 h-[678px] overflow-scroll rounded bg-white dark:bg-black dark:text-white">
-        <div className="sticky top-0 z-10 bg-white dark:bg-black">
-          <div className="mx-20 grid grid-cols-7">
+        <div className="sticky z-10 mx-16 w-full dark:bg-black">
+          <div className="grid grid-cols-7">
             {days.map((day, index) => (
               <div key={day} className="relative">
-                <h2 className="py-2 text-center text-lg font-medium capitalize z-20">
+                <h2 className="z-20 py-2 text-center text-lg font-medium capitalize">
                   {window.innerWidth < 535 ? dayNames[index] : day}
                 </h2>
               </div>
             ))}
           </div>
         </div>
+
         <div ref={scrollRef} className="relative h-full overflow-auto">
-          <div className="relative mx-20 grid h-full grid-cols-7 gap-3">
+          <div className="mx-16 grid h-full grid-cols-7 w-full">
             {days.map((day, index) => (
-              <div key={day} className="relative h-full">
+              <div key={day} className="w-1/7 relative h-full">
                 {timeSlots
                   ? timeSlots
                       .filter((timeSlot: TimeSlotType) => timeSlot.days[day])
