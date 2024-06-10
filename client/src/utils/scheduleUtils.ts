@@ -68,7 +68,7 @@ const convertTimeToMinutes = (time: string) => {
 
   if (lastTwoChars === 'AM' && hourNumber == 12) {
     // This is for 12 AM edge case
-    hourNumber = 1;
+    hourNumber = 0;
   } else if (lastTwoChars === 'PM' && hourNumber < 12) {
     hourNumber += 12;
   }
@@ -79,11 +79,6 @@ const convertTimeToMinutes = (time: string) => {
 export const calculateHeight = (startTime: string, endTime: string) => {
   let [startHour, startMinutes] = convertTimeToMinutes(startTime);
   let [endHour, endMinutes] = convertTimeToMinutes(endTime);
-
-  if (startHour == 1) {
-    // This is for 12 AM edge case convertTimeToMinutes()
-    startHour = 0;
-  }
 
   let hours: number = endHour - startHour;
   let minutes: number = endMinutes - startMinutes;
@@ -108,8 +103,8 @@ const calculateMinutesFromTop = (time: string) => {
 export const calculateDistanceFromTop = (startTime: string) => {
   const minutes: number = calculateMinutesFromTop(startTime);
   const distanceFromTop: number = (minutes * 72) / 60;
-  if (distanceFromTop == 72) {
-    return Number(52).toString();
+  if (distanceFromTop === 0) {
+    return Number(52).toString()
   }
-  return (distanceFromTop + 52).toString();
+  return Number(distanceFromTop + 52).toString();
 };
