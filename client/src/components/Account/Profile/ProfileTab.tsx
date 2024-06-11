@@ -1,19 +1,24 @@
 import { useState, useEffect, useRef } from 'react';
-import { Modal, Button, Label, Spinner } from 'flowbite-react';
+import { Spinner } from 'flowbite-react';
 import { useChangePasswordMutation } from '../../../redux/services/user/userService';
-import { useGetUserInfoQuery, useUpdateUserInfoMutation } from '../../../redux/services/user/userService';
+import {
+  useGetUserInfoQuery,
+  useUpdateUserInfoMutation,
+} from '../../../redux/services/user/userService';
 import { User as UserType } from '../../../types';
 import { ToastEnum } from '../../../enums';
 import ProfilePic from './ProfilePic';
 import { useAppDispatch } from '../../../redux/store';
-import {updateUserInfo} from '../../../redux/feats/auth/authSlice';
+import { updateUserInfo } from '../../../redux/feats/auth/authSlice';
 import { useToast } from '../../../utils/functions';
+import ChangePasswordModal from '../../Modals/ChangePasswordModal';
+
 const ProfileTab = () => {
   const { showToast } = useToast();
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
   const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
-  const [updateUser, { isLoading: isUpdating }] = useUpdateUserInfoMutation();
+  const [updateUser] = useUpdateUserInfoMutation();
   const [changePassword] = useChangePasswordMutation();
 
   const [isCurrentPasswordError, setIsCurrentPasswordError] = useState<boolean>(false);
@@ -21,11 +26,11 @@ const ProfileTab = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const emailRef = useRef(document.createElement('input'));
-
   const currentPasswordRef = useRef(document.createElement('input'));
   const newPasswordRef = useRef(document.createElement('input'));
   const newConfirmedPasswordRef = useRef(document.createElement('input'));
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     if (data && !isLoading) {
       const userInfoWithoutPassword = { ...data };
@@ -78,7 +83,10 @@ const ProfileTab = () => {
             </div>
           </div>
           <div className="mb-6">
-            <label htmlFor="default-input" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+            <label
+              htmlFor="default-input"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+            >
               Email
             </label>
             <input
@@ -103,75 +111,19 @@ const ProfileTab = () => {
               className="w-full rounded bg-blue-400 px-8 py-3 text-lg font-semibold text-white hover:bg-blue-600 dark:bg-blue-700 hover:dark:bg-blue-800"
             >
               Change Password
-            </button>{' '}
-            <Modal show={isChangePassword} size="md" popup={true} onClose={() => setIsChangePassword(false)}>
-              <Modal.Header />
-              <Modal.Body>
-                <div className="flex flex-col">
-                  <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
-                    <h3 className="text-center text-xl font-medium text-gray-900 dark:text-white">Reset Password</h3>
-                    <div>
-                      <div className="mb-2 block">
-                        <Label htmlFor="currentPassword" value="Current Password" />
-                      </div>
-                      <input
-                        ref={currentPasswordRef}
-                        id="currentPassword"
-                        placeholder="••••••••"
-                        required={true}
-                        type="password"
-                        className={`w-full rounded-md border-gray-300 bg-gray-50 px-4 py-3 text-sm dark:border-gray-700  dark:bg-gray-200 dark:text-black focus:dark:border-gray-400 ${
-                          isCurrentPasswordError ? 'border-rose-500 dark:border-rose-500' : ''
-                        }`}
-                      />
-                      {isCurrentPasswordError && <span className="text-md px-2 text-red-500">{errorMessage}</span>}
-                    </div>
-                    <div>
-                      <div className="mb-2 block">
-                        <Label htmlFor="password" value="New Password" />
-                      </div>
-                      <input
-                        ref={newPasswordRef}
-                        id="newPassword"
-                        placeholder="••••••••"
-                        required={true}
-                        type="password"
-                        className={`w-full rounded-md border-gray-300 bg-gray-50 px-4 py-3 text-sm dark:border-gray-700  dark:bg-gray-200 dark:text-black focus:dark:border-gray-400 ${
-                          isNewPasswordError ? 'border-rose-500 dark:border-rose-500' : ''
-                        }`}
-                      />
-                      {isNewPasswordError && <span className="text-md px-2 text-red-500">{errorMessage}</span>}
-                    </div>
-                    <div>
-                      <div className="mb-2 block">
-                        <Label htmlFor="newConfirmedPassword" value="Confirm Password" />
-                      </div>
-                      <input
-                        ref={newConfirmedPasswordRef}
-                        id="newConfirmedPassword"
-                        placeholder="••••••••"
-                        required={true}
-                        type="password"
-                        className={`w-full rounded-md border-gray-300 bg-gray-50 px-4 py-3 text-sm dark:border-gray-700  dark:bg-gray-200 dark:text-black focus:dark:border-gray-400 ${
-                          isNewPasswordError ? 'border-rose-500 dark:border-rose-500' : ''
-                        }`}
-                      />
-                      {isNewPasswordError && <span className="text-md px-2 text-red-500">{errorMessage}</span>}
-                    </div>
-                  </div>
-                  <Button onClick={passwordHandler} size="xl">
-                    Reset Password
-                  </Button>
-                </div>
-              </Modal.Body>
-            </Modal>
-            {/* <button
-              type="button"
-              className="w-full rounded bg-red-400 px-8 py-3 text-lg font-semibold text-white dark:bg-red-800"
-            >
-              Delete My Account
-            </button> */}
+            </button>
           </div>
+          <ChangePasswordModal
+            isChangePassword={isChangePassword}
+            setIsChangePassword={setIsChangePassword}
+            currentPasswordRef={currentPasswordRef}
+            newPasswordRef={newPasswordRef}
+            newConfirmedPasswordRef={newConfirmedPasswordRef}
+            isCurrentPasswordError={isCurrentPasswordError}
+            isNewPasswordError={isNewPasswordError}
+            errorMessage={errorMessage}
+            passwordHandler={passwordHandler}
+          />
         </>
       ) : isLoading ? (
         <div className="flex justify-center">
