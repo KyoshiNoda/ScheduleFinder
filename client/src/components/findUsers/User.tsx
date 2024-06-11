@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Card } from 'flowbite-react';
 import { User as UserType } from '../../types';
-import FriendStatusButton from '../Utils/FriendStatusButton';
+import FriendStatusButton from '../Globals/FriendStatusButton';
 
 type UserProps = {
   user: UserType;
@@ -14,7 +14,7 @@ const User = ({ user }: UserProps) => {
 
   return (
     <>
-      <Card>
+      <Card className='bg-rose-400'>
         <div className="flex flex-col items-center">
           <img className="mb-3 max-h-32 w-32 rounded-full object-cover shadow-lg" src={user.photoURL} alt={`Profile picture of ${fullName}`} />
           <h2 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{fullName}</h2>

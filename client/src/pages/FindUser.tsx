@@ -1,6 +1,6 @@
 import { Label, TextInput } from 'flowbite-react';
 import UserContainer from '../components/findUsers/UserContainer';
-import Toast from '../components/Utils/Toast';
+import Toast from '../components/Globals/Toast';
 import { useState } from 'react';
 import { useAppSelector } from '../redux/store';
 const FindUser = () => {

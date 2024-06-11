@@ -4,7 +4,7 @@ import {
   useGetUserFriendRequestsQuery,
 } from '../../redux/services/user/userService';
 import { calculateAge } from '../../utils/functions';
-import FriendStatusButton from '../Utils/FriendStatusButton';
+import FriendStatusButton from '../Globals/FriendStatusButton';
 import { Button } from 'flowbite-react';
 import { User as UserType } from '../../types';
 type UserPageBoxProps = {

@@ -8,7 +8,7 @@ import {
   useGetUserHobbiesQuery,
   useRemoveUserHobbyMutation,
 } from '../../../redux/services/hobbies/hobbyService';
-import Toast from '../../Utils/Toast';
+import Toast from '../../Globals/Toast';
 import { Spinner, Button } from 'flowbite-react';
 const HobbiesTab = () => {
   const hobbyToast = useAppSelector((state: any) => state.globalSlice.toast);

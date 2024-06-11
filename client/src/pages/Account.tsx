@@ -1,5 +1,5 @@
 import AccountBox from '../components/Account/AccountBox';
-import Toast from '../components/Utils/Toast';
+import Toast from '../components/Globals/Toast';
 import { useAppSelector } from '../redux/store';
 const Account = () => {
   const accountToast = useAppSelector((state: any) => state.globalSlice.toast);

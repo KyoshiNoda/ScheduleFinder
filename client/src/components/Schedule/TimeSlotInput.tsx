@@ -44,7 +44,6 @@ const TimeSlotInput = () => {
   const [daysError, setDaysError] = useState<boolean>(false);
   const [timeError, setTimeError] = useState<boolean>(false);
   const [colorError, setColorError] = useState<boolean>(false);
-  const [timeIntervalError, setTimeIntervalError] = useState<boolean>(false);
   const [timeSlotError, setTimeSlotError] = useState<boolean>(false);
   const [startTimeMeridiem, setStartTimeMeridiem] = useState<string>('AM');
   const [endTimeMeridiem, setEndTimeMeridiem] = useState<string>('AM');
@@ -85,15 +84,6 @@ const TimeSlotInput = () => {
     // If no checkboxes have been selected, the form shouldn't be submitted.
     if (!(monday || tuesday || wednesday || thursday || friday)) {
       setDaysError(true);
-      return;
-    }
-
-    // checks for valid range from 7 AM - 9 PM
-    if (
-      (endTimeMeridiem === 'AM' && parseInt(endTimeHourRef.current.value) < 7) ||
-      (endTimeMeridiem === 'PM' && parseInt(endTimeHourRef.current.value) > 9 && parseInt(endTimeHourRef.current.value) !== 12)
-    ) {
-      setTimeIntervalError(true);
       return;
     }
 
@@ -189,16 +179,6 @@ const TimeSlotInput = () => {
   const validateMeridiem = (inputRef: React.RefObject<HTMLInputElement>, inputType: TypesOfInput) => {
     // @ts-ignore: Object is possibly 'null'.
     const inputValue: number = parseFloat(inputRef.current.value);
-
-    if (
-      (inputRef === startTimeHourRef && inputValue < 7 && startTimeMeridiem === 'AM') ||
-      (inputRef === endTimeHourRef && inputValue !== 12 && inputValue > 9 && endTimeMeridiem === 'PM')
-    ) {
-      setTimeIntervalError(true);
-    } else {
-      setTimeIntervalError(false);
-    }
-
     if (inputType === TypesOfInput.HourInput) {
       if (inputValue < 1 || inputValue > 12) {
         inputRef.current?.classList.add(
@@ -383,7 +363,6 @@ const TimeSlotInput = () => {
                     </Select>
                   </div>
                 </div>
-                {timeIntervalError && <strong className="mt-3 text-sm text-red-500">Valid interval is between 7:00 AM and 9:00 PM</strong>}
               </div>
               <div className="flex gap-3">
                 <div className="w-full">

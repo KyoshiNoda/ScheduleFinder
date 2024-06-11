@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import { Avatar, Modal, Button } from 'flowbite-react';
 import { ToastEnum } from '../enums';
-import Toast from '../components/Utils/Toast';
+import Toast from '../components/Globals/Toast';
 import { useToast } from '../utils/functions';
 import { useAppSelector } from '../redux/store';
 import { useState } from 'react';
