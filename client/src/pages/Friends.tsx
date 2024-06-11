@@ -1,13 +1,16 @@
-import { useGetUserFriendsQuery, useDeleteFriendMutation } from '../redux/services/user/userService';
+import {
+  useGetUserFriendsQuery,
+  useDeleteFriendMutation,
+} from '../redux/services/user/userService';
 import { User as UserType } from '../types';
 import { Link } from 'react-router-dom';
-import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import { Avatar, Modal, Button } from 'flowbite-react';
+import { Avatar } from 'flowbite-react';
 import { ToastEnum } from '../enums';
 import Toast from '../components/Globals/Toast';
 import { useToast } from '../utils/functions';
 import { useAppSelector } from '../redux/store';
 import { useState } from 'react';
+import FriendRemovalModal from '../components/Modals/FriendRemovalModal';
 
 const getFormattedFriendName = (friend: UserType) => {
   return `${friend.firstName} ${friend.lastName}`;
@@ -34,40 +37,30 @@ const Friends = () => {
 
   return (
     <>
-      <Modal show={openModal} size="md" popup onClose={() => setOpenModal(false)} className="pt-60">
-        <Modal.Header />
-        <Modal.Body>
-          <div className="text-center">
-            <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
-            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to remove this person?</h3>
-            <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={() => onConfirmDeleteFriend()}>
-                Yes, I'm sure
-              </Button>
-              <Button color="gray" onClick={() => setOpenModal(false)}>
-                No, cancel
-              </Button>
-            </div>
-          </div>
-        </Modal.Body>
-      </Modal>
-
       <div className="flex min-h-full flex-col gap-10 bg-gray-50 p-6 dark:bg-slate-900">
         <h1 className="text-center text-5xl font-medium dark:text-white">Friends</h1>
         <div className="flex justify-center overflow-x-auto md:px-20">
-          <table className="w-full rounded-xl bg-white border dark:border-none dark:bg-gray-800 md:w-5/6 lg:w-1/2">
+          <table className="w-full rounded-xl border bg-white dark:border-none dark:bg-gray-800 md:w-5/6 lg:w-1/2">
             <tbody>
               {friends &&
                 friends.map((friend: UserType, index: number) => (
                   <tr
                     key={friend._id}
                     className={`flex w-full items-center justify-between ${
-                      index != friends.length - 1 && 'border-b border-solid border-gray-300 dark:border-gray-700'
+                      index != friends.length - 1 &&
+                      'border-b border-solid border-gray-300 dark:border-gray-700'
                     } p-2 lg:p-4`}
                   >
                     <Link to={`/auth/user/${friend._id}`} className="mr-1 flex items-center gap-6">
-                      <Avatar img={friend.photoURL} alt={`avatar of ${getFormattedFriendName(friend)}`} rounded size={'lg'} />
-                      <span className=" text-md dark:text-white lg:text-xl">{getFormattedFriendName(friend)}</span>
+                      <Avatar
+                        img={friend.photoURL}
+                        alt={`avatar of ${getFormattedFriendName(friend)}`}
+                        rounded
+                        size={'lg'}
+                      />
+                      <span className=" text-md dark:text-white lg:text-xl">
+                        {getFormattedFriendName(friend)}
+                      </span>
                     </Link>
                     <td className="flex items-center gap-3">
                       <Link
@@ -93,6 +86,11 @@ const Friends = () => {
         </div>
       </div>
       {deleteFriendToast.state && <Toast message={deleteFriendToast.message} />}
+      <FriendRemovalModal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        onConfirmDeleteFriend={onConfirmDeleteFriend}
+      />
     </>
   );
 };

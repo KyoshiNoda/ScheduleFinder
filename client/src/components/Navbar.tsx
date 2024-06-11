@@ -20,7 +20,7 @@ const Navbar = ({ user }: any) => {
         </span>
       </Link>
 
-      <div className="flex gap-10 md:order-2">
+      <div className="flex gap-10 md:order-2 z-20">
         <div className="flex items-center">
           <Toggle />
         </div>
