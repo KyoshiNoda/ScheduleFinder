@@ -16,7 +16,7 @@ const getFormattedFriendName = (friend: UserType) => {
   return `${friend.firstName} ${friend.lastName}`;
 };
 
-const Friends = () => {
+const FriendsListPage = () => {
   const { data: friends } = useGetUserFriendsQuery('User');
   const [deleteFriend] = useDeleteFriendMutation();
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -95,4 +95,4 @@ const Friends = () => {
   );
 };
 
-export default Friends;
+export default FriendsListPage;

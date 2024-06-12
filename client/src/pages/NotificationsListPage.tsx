@@ -1,7 +1,7 @@
 import { AiOutlineCheck } from 'react-icons/ai';
 import { useGetUserFriendRequestsQuery, useAcceptFriendRequestMutation, useRejectFriendRequestMutation } from '../redux/services/user/userService';
 import { Spinner } from 'flowbite-react';
-const Notifications = () => {
+const NotificationsListPage = () => {
   const { data, isFetching } = useGetUserFriendRequestsQuery('User');
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
   const [rejectFriendRequest] = useRejectFriendRequestMutation();
@@ -70,4 +70,4 @@ const Notifications = () => {
   );
 };
 
-export default Notifications;
+export default NotificationsListPage;

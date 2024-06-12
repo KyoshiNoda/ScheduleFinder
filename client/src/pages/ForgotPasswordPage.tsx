@@ -7,7 +7,7 @@ import {
   emailCheck,
   resetPasswordRequest,
 } from '../redux/feats/auth/authActions';
-const ForgotPassword = () => {
+const ForgotPasswordPage = () => {
   const dispatch = useAppDispatch();
   const [isInvalidEmail, setIsInvalidEmail] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
@@ -85,4 +85,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ForgotPasswordPage;
