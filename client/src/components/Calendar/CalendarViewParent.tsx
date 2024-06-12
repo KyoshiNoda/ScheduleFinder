@@ -70,31 +70,36 @@ const CalendarViewParent = () => {
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute top-12 z-10 w-44 divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700">
-                <div className="py-1">
-                  <button className="w-full px-4 py-2 text-start text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
-                    Separated link
-                  </button>
-                </div>
-                <div className="py-1">
-                  <button className="w-full px-4 py-2 text-start text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
-                    Separated link
-                  </button>
-                </div>
-                <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-                  <li>
-                    <button className="w-full px-4 py-2 text-start hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                      Dashboard
+              <div className="absolute top-12 z-10 w-44 rounded-lg bg-white py-2 shadow dark:divide-gray-600 dark:bg-gray-700">
+                <ul className="divide-y  divide-gray-100 text-sm text-gray-700 dark:text-gray-200">
+                  <li className="py-1">
+                    <button className="w-full px-4 py-2 text-start text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
+                      Create event
+                    </button>
+                  </li>
+                  <li className="py-1">
+                    <button className="w-full px-4 py-2 text-start text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
+                      Go to today
                     </button>
                   </li>
                   <li>
                     <button className="w-full px-4 py-2 text-start hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                      Settings
+                      Day view
                     </button>
                   </li>
                   <li>
                     <button className="w-full px-4 py-2 text-start hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                      Earnings
+                      Week view
+                    </button>
+                  </li>
+                  <li>
+                    <button className="w-full px-4 py-2 text-start hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                      Month view
+                    </button>
+                  </li>
+                  <li>
+                    <button className="w-full px-4 py-2 text-start hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                      Year view
                     </button>
                   </li>
                 </ul>
