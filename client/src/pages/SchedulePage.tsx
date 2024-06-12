@@ -1,5 +1,5 @@
-import TimeSlotInput from '../components/Schedule/TimeSlotInput';
-import ScheduleBox from '../components/Schedule/ScheduleBox';
+import TimeSlotInput from '../components/Calendar/TimeSlotInput';
+import ScheduleBox from '../components/Calendar/ScheduleBox';
 import Toast from '../components/Globals/Toast';
 import { useAppDispatch } from '../redux/store';
 import { toggleReadOnly } from '../redux/feats/globalSlice/globalSlice';

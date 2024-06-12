@@ -1,4 +1,4 @@
-import ScheduleBox from '../components/Schedule/ScheduleBox';
+import ScheduleBox from '../components/Calendar/ScheduleBox';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useGetScheduleQuery } from '../redux/services/schedule/scheduleService';
