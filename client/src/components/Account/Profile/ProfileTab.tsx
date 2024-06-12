@@ -17,7 +17,7 @@ const ProfileTab = () => {
   const { showToast } = useToast();
   const { data, isLoading } = useGetUserInfoQuery('User');
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
-  const [isChangePassword, setIsChangePassword] = useState<boolean>(false);
+  const [modalState, setModalState] = useState<boolean>(false);
   const [updateUser] = useUpdateUserInfoMutation();
   const [changePassword] = useChangePasswordMutation();
 
@@ -60,7 +60,7 @@ const ProfileTab = () => {
         confirmNewPassword: newConfirmedPasswordRef.current.value,
       }).unwrap();
       showToast(ToastEnum.UPDATE_PASSWORD);
-      setIsChangePassword(false);
+      setModalState(false);
     } catch (error: any) {
       if (error.data.includes('Incorrect')) {
         setIsCurrentPasswordError(true);
@@ -107,15 +107,15 @@ const ProfileTab = () => {
             </button>
             <button
               type="button"
-              onClick={() => setIsChangePassword(true)}
+              onClick={() => setModalState(true)}
               className="w-full rounded bg-blue-400 px-8 py-3 text-lg font-semibold text-white hover:bg-blue-600 dark:bg-blue-700 hover:dark:bg-blue-800"
             >
               Change Password
             </button>
           </div>
           <ChangePasswordModal
-            isChangePassword={isChangePassword}
-            setIsChangePassword={setIsChangePassword}
+            state={modalState}
+            setState={setModalState}
             currentPasswordRef={currentPasswordRef}
             newPasswordRef={newPasswordRef}
             newConfirmedPasswordRef={newConfirmedPasswordRef}

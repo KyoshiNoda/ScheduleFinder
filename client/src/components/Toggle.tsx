@@ -72,7 +72,7 @@ const Toggle = (props: Props) => {
     <div className={`${props.overrideBackground} flex justify-end`}>
       <button
         onClick={() => setDropdownOpen((dropdownOpen) => !dropdownOpen)}
-        className="flex items-center gap-1 rounded-lg border p-3"
+        className="flex items-center gap-1 rounded-lg border p-3 border-black dark:border-white"
       >
         {userPrefersDark ? (
           <FaRegMoon size="20" color={iconColor()} />
@@ -81,23 +81,23 @@ const Toggle = (props: Props) => {
         )}
       </button>
       {dropdownOpen && (
-        <div className="absolute top-16 z-20 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+        <div className="absolute top-16 z-20 w-48 rounded-md bg-white dark:bg-slate-800 shadow-lg ring-1 ring-black ring-opacity-5">
           <div className="py-1">
             <button
               onClick={() => handleMenuItemClick(Themes.LIGHT)}
-              className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+              className="block w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 hover:dark:bg-gray-900"
             >
               Light
             </button>
             <button
               onClick={() => handleMenuItemClick(Themes.DARK)}
-              className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+              className="block w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 hover:dark:bg-gray-900"
             >
               Dark
             </button>
             <button
               onClick={() => handleMenuItemClick(Themes.SYSTEM)}
-              className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+              className="block w-full px-4 py-2 text-left text-sm text-gray-700  dark:text-gray-100 hover:bg-gray-100 hover:dark:bg-gray-900"
             >
               System
             </button>

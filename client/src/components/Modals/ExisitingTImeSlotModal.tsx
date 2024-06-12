@@ -1,6 +1,7 @@
 import { Modal, Button } from 'flowbite-react';
 import { AiFillWarning } from 'react-icons/ai';
 import { Dispatch, SetStateAction, RefObject } from 'react';
+import { useEscapeKey } from '../../utils/functions';
 type ExistingTimeSlotModalProps = {
   timeSlotError: boolean;
   setTimeSlotError: Dispatch<SetStateAction<boolean>>;
@@ -16,6 +17,7 @@ const ExistingTimeSlotModal = ({
   setColorError,
   formRef,
 }: ExistingTimeSlotModalProps) => {
+  useEscapeKey(() => setTimeSlotError(false));
   return (
     <Modal
       show={timeSlotError}

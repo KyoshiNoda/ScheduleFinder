@@ -1,6 +1,7 @@
 import { useAppDispatch } from '../redux/store';
 import { toast } from '../redux/feats/globalSlice/globalSlice';
 import { Themes } from '../enums';
+import { useEffect } from 'react';
 export const isDarkModeOn = () => {
   const theme = localStorage.getItem('theme');
   if (theme === Themes.DARK) {
@@ -37,4 +38,19 @@ export const calculateAge = (birthDate: Date): number => {
   }
 
   return age;
+};
+
+export const useEscapeKey = (onClose: () => void) => {
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [onClose]);
 };

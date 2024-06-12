@@ -9,6 +9,7 @@ import { DaysChecked as DaysCheckedType, TimeSlot as TimeSlotType } from '../../
 import { ToastEnum } from '../../enums';
 import DayPicker from '../Schedule/DayPicker';
 import { colors } from '../Schedule/TimeSlotInput';
+import { useEscapeKey } from '../../utils/functions';
 
 type EditTimeSlotModalProps = {
   isTimeSlotClicked: boolean;
@@ -150,6 +151,7 @@ const EditTimeSlotModal = ({
       setTimeSlotColor(color);
     }
   };
+  useEscapeKey(() => setIsTimeSlotClicked(false));
 
   return (
     <Modal

@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { Avatar } from 'flowbite-react';
 import { ToastEnum } from '../enums';
 import Toast from '../components/Globals/Toast';
-import { useToast } from '../utils/functions';
+import { useToast,useEscapeKey } from '../utils/functions';
 import { useAppSelector } from '../redux/store';
 import { useState } from 'react';
 import FriendRemovalModal from '../components/Modals/FriendRemovalModal';
@@ -34,7 +34,7 @@ const Friends = () => {
       console.log(error);
     }
   };
-
+  useEscapeKey(() => setOpenModal(false));
   return (
     <>
       <div className="flex min-h-full flex-col gap-10 bg-gray-50 p-6 dark:bg-slate-900">

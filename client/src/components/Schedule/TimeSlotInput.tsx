@@ -9,7 +9,7 @@ import ClearScheduleButton from './ClearScheduleButton';
 import DayPicker from './DayPicker';
 import { TypesOfInput } from '../../enums';
 import { useToast } from '../../utils/functions';
-import ExistingTimeSlotModal from '../Modals/ExisitingTImeSlotModal';
+import ExistingTimeSlotModal from '../Modals/ExisitingTimeSlotModal';
 export const colors: string[] = [
   'slate',
   'red',

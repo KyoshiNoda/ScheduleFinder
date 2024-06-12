@@ -1,10 +1,11 @@
 import { Dispatch, SetStateAction, RefObject } from 'react';
 import { Modal, Button } from 'flowbite-react';
 import { Label } from 'flowbite-react';
+import { useEscapeKey } from '../../utils/functions';
 
 type ChangePasswordModalProps = {
-  isChangePassword: boolean;
-  setIsChangePassword: Dispatch<SetStateAction<boolean>>;
+  state: boolean;
+  setState: Dispatch<SetStateAction<boolean>>;
   currentPasswordRef: RefObject<HTMLInputElement>;
   newPasswordRef: RefObject<HTMLInputElement>;
   newConfirmedPasswordRef: RefObject<HTMLInputElement>;
@@ -15,8 +16,8 @@ type ChangePasswordModalProps = {
 };
 
 const ChangePasswordModal = ({
-  isChangePassword,
-  setIsChangePassword,
+  state,
+  setState,
   currentPasswordRef,
   newPasswordRef,
   newConfirmedPasswordRef,
@@ -25,13 +26,9 @@ const ChangePasswordModal = ({
   errorMessage,
   passwordHandler,
 }: ChangePasswordModalProps) => {
+  useEscapeKey(() => setState(false));
   return (
-    <Modal
-      show={isChangePassword}
-      size="md"
-      popup={true}
-      onClose={() => setIsChangePassword(false)}
-    >
+    <Modal show={state} size="md" popup={true} onClose={() => setState(false)}>
       <Modal.Header />
       <Modal.Body>
         <div className="flex flex-col">

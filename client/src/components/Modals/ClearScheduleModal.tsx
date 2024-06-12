@@ -3,6 +3,7 @@ import { ToastEnum } from '../../enums';
 import { useToast } from '../../utils/functions';
 import { Modal } from 'flowbite-react';
 import { useClearScheduleMutation } from '../../redux/services/schedule/scheduleService';
+import { useEscapeKey } from '../../utils/functions';
 
 type Props = {
   scheduleId: string;
@@ -13,6 +14,7 @@ type Props = {
 const ClearScheduleModal = ({ scheduleId, openModal, setOpenModal }: Props) => {
   const { showToast } = useToast();
   const [clearSchedule] = useClearScheduleMutation();
+  useEscapeKey(() => setOpenModal(false));
 
   return (
     <Modal className="pt-20" show={openModal} onClose={() => setOpenModal(false)}>

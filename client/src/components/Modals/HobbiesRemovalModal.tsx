@@ -3,6 +3,7 @@ import { Modal } from 'flowbite-react';
 import { ToastEnum } from '../../enums';
 import { useToast } from '../../utils/functions';
 import { useRemoveUserHobbyMutation } from '../../redux/services/hobbies/hobbyService';
+import { useEscapeKey } from '../../utils/functions';
 
 type Props = {
   openModal: boolean;
@@ -23,6 +24,7 @@ const HobbiesRemovalModal = ({ openModal, setOpenModal, selectedHobby }: Props) 
       console.log(error);
     }
   };
+  useEscapeKey(() => setOpenModal(false));
 
   return (
     <Modal show={openModal} size="lg" onClose={() => setOpenModal(false)} popup position="center">

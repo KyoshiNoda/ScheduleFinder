@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { DaysChecked as DaysCheckedType } from '../../types';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useAppSelector } from '../../redux/store';
-import EditTimeSlotModal from '../Modals/EditTimeslotModal';
+import EditTimeSlotModal from '../Modals/EditTimeSlotModal';
 
 type Props = {
   id?: undefined | string;
