@@ -9,7 +9,7 @@ import ScheduleBox from '../components/Schedule/ScheduleBox';
 import Toast from '../components/Globals/Toast';
 import UserPageBox from '../components/UserPage/UserPageBox';
 import LoadingUserPage from '../components/UserPage/LoadingUserPage';
-const UserPage = () => {
+const UserProfilePage = () => {
   const { userId } = useParams();
   const dispatch = useAppDispatch();
   const friendToast = useAppSelector((state: any) => state.globalSlice.toast);
@@ -43,4 +43,4 @@ const UserPage = () => {
   );
 };
 
-export default UserPage;
+export default UserProfilePage;

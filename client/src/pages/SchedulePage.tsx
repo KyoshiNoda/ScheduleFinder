@@ -4,7 +4,7 @@ import Toast from '../components/Globals/Toast';
 import { useAppDispatch } from '../redux/store';
 import { toggleReadOnly } from '../redux/feats/globalSlice/globalSlice';
 import { useAppSelector } from '../redux/store';
-const Schedule = () => {
+const SchedulePage = () => {
   const dispatch = useAppDispatch();
   const scheduleToast = useAppSelector((state: any) => state.globalSlice.toast);
   dispatch(toggleReadOnly(false));
@@ -21,4 +21,4 @@ const Schedule = () => {
   );
 };
 
-export default Schedule;
+export default SchedulePage;

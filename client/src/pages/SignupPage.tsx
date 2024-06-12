@@ -4,7 +4,7 @@ import SignUpBox from '../components/Signup/SignUpBox';
 import pic1 from '../assets/loggingOn.png';
 import pic2 from '../assets/wavy-man-creating-a-website.png';
 
-const Signup = () => {
+const SignupPage = () => {
   const [width, setWidth] = useState<number>(window.innerWidth);
   useEffect(() => {
     const handleResize = () => {
@@ -39,4 +39,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SignupPage;
