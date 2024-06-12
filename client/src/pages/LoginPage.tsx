@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import LoginBox from '../components/Login/LoginBox';
 import hero2 from '../assets/plsWork.png';
 import Toggle from '../components/Toggle';
-type Props = {};
 
-const Login = () => {
+const LoginPage = () => {
   const [width, setWidth] = useState<number>(window.innerWidth);
 
   useEffect(() => {
@@ -36,4 +35,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;

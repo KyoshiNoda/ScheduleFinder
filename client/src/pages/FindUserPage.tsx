@@ -3,7 +3,7 @@ import UserContainer from '../components/findUsers/UserContainer';
 import Toast from '../components/Globals/Toast';
 import { useState } from 'react';
 import { useAppSelector } from '../redux/store';
-const FindUser = () => {
+const FindUserPage = () => {
   const [nameSearch, setNameSearch] = useState<string>('');
   const [schoolSearch, setSchoolSearch] = useState<string>('');
   const [majorSearch, setMajorSearch] = useState<string>('');
@@ -75,4 +75,4 @@ const FindUser = () => {
   );
 };
 
-export default FindUser;
+export default FindUserPage;

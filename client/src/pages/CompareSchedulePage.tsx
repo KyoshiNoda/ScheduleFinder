@@ -10,7 +10,7 @@ import { TimeSlot as TimeSlotType, Schedule as ScheduleType } from '../types';
 
 let BASE_URL = getApiUrl();
 
-const CompareSchedule = () => {
+const CompareSchedulePage = () => {
   const { userId } = useParams();
 
   const dispatch = useAppDispatch();
@@ -393,4 +393,4 @@ const CompareSchedule = () => {
   );
 };
 
-export default CompareSchedule;
+export default CompareSchedulePage;

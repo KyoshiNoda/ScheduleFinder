@@ -5,7 +5,7 @@ import { useAppDispatch } from '../redux/store';
 import { useAppSelector } from '../redux/store';
 import { verifyPasswordRequest } from '../redux/feats/auth/authActions';
 import ChangePassword from '../components/Auth/ChangePassword';
-const ResetPassword = () => {
+const ResetPasswordPage = () => {
   const dispatch = useAppDispatch();
   const email = useAppSelector((state: any) => state.auth.email);
 
@@ -148,4 +148,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ResetPasswordPage;
