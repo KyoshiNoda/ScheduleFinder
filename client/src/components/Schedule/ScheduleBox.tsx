@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { TimeSlot as TimeSlotType } from '../../types';
 import TimeSlot from './TimeSlot';
 import { useGetScheduleQuery } from '../../redux/services/schedule/scheduleService';
@@ -44,7 +44,7 @@ const ScheduleBox = ({ timeSlots }: Props) => {
         </div>
 
         <div ref={scrollRef} className="relative h-full overflow-auto">
-          <div className="mx-16 grid h-full grid-cols-7 w-full">
+          <div className="mx-16 grid h-full w-full grid-cols-7">
             {days.map((day) => (
               <div key={day} className="w-1/7 relative h-full">
                 {timeSlots

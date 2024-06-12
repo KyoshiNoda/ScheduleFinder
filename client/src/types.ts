@@ -24,16 +24,15 @@ export type User = {
   sentFriendRequests: User[];
   hobbies: string[];
 };
-
 export type DaysChecked = {
   monday: boolean;
   tuesday: boolean;
   wednesday: boolean;
   thursday: boolean;
   friday: boolean;
-  saturday: boolean;
-  sunday: boolean;
-  [key: string]: boolean;
+  saturday?: boolean;
+  sunday?: boolean;
+  [key: string]: boolean | undefined;
 };
 
 export type TimeSlot = {
