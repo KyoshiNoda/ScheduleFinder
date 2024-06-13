@@ -29,7 +29,7 @@ const NotificationsListPage = () => {
 
   return (
     <div className="flex min-h-full w-screen flex-col gap-4 bg-gray-50 p-3 dark:bg-slate-900 lg:gap-10">
-      <h1 className="text-center text-5xl font-medium dark:text-white">Friend Requests</h1>
+      <h1 className="text-center text-3xl lg:text-5xl font-medium dark:text-white">Friend Requests</h1>
       <div className="flex justify-center md:px-20">
         <table className="w-full rounded-xl border bg-white dark:border-none dark:bg-gray-800 md:w-5/6 lg:w-1/2">
           <tbody className="block max-h-[400px] overflow-y-scroll sm:max-h-[600px]">
