@@ -1,6 +1,11 @@
 import { AiOutlineCheck } from 'react-icons/ai';
-import { useGetUserFriendRequestsQuery, useAcceptFriendRequestMutation, useRejectFriendRequestMutation } from '../redux/services/user/userService';
+import {
+  useGetUserFriendRequestsQuery,
+  useAcceptFriendRequestMutation,
+  useRejectFriendRequestMutation,
+} from '../redux/services/user/userService';
 import { Spinner } from 'flowbite-react';
+
 const NotificationsListPage = () => {
   const { data, isFetching } = useGetUserFriendRequestsQuery('User');
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
@@ -21,15 +26,26 @@ const NotificationsListPage = () => {
       console.log(error);
     }
   };
+
   return (
-    <div className="flex min-h-full w-screen flex-col bg-gray-50 p-3 dark:bg-slate-900 lg:gap-40">
-      <div className="text-bold flex justify-center text-3xl dark:text-white">Friend Requests</div>
-      <div className="flex justify-center">
-        <div className="flex w-full flex-col items-center rounded-lg bg-white border shadow dark:border-none dark:shadow-none pt-3 dark:bg-slate-800 lg:h-1/2 lg:w-1/2">
-          {!isFetching ? (
-            data.map((user: any) => {
-              return (
-                <div className="mb-3 flex w-2/3 gap-4" key={user._id}>
+    <div className="flex min-h-full w-screen flex-col gap-4 bg-gray-50 p-3 dark:bg-slate-900 lg:gap-10">
+      <h1 className="text-center text-5xl font-medium dark:text-white">Friend Requests</h1>
+      <div className="flex justify-center md:px-20">
+        <table className="w-full rounded-xl border bg-white dark:border-none dark:bg-gray-800 md:w-5/6 lg:w-1/2">
+          <tbody className="block max-h-[400px] overflow-y-scroll sm:max-h-[600px]">
+            {isFetching ? (
+              <tr className="flex w-full h-20 items-center justify-center  ">
+                <Spinner />
+              </tr>
+            ) : (
+              data.map((user: any, index: number) => (
+                <tr
+                  key={user._id}
+                  className={`flex w-full items-center justify-between ${
+                    index !== data.length - 1 &&
+                    'border-b border-solid border-gray-300 dark:border-gray-700'
+                  } p-2 lg:p-4`}
+                >
                   <img
                     className="h-11 w-11 rounded-full border shadow-lg dark:border-gray-700 dark:bg-gray-500"
                     src={user.photoURL}
@@ -39,7 +55,7 @@ const NotificationsListPage = () => {
                     <span className="font-semibold text-gray-900 dark:text-white">
                       {user.firstName} {user.lastName}
                     </span>
-                    <div className=" text-sm text-blue-600 dark:text-blue-500">{user.school}</div>
+                    <div className="text-sm text-blue-600 dark:text-blue-500">{user.school}</div>
                   </div>
                   <div className="flex-grow" />
                   <div className="m-auto flex items-center gap-1">
@@ -58,13 +74,11 @@ const NotificationsListPage = () => {
                       X
                     </button>
                   </div>
-                </div>
-              );
-            })
-          ) : (
-            <Spinner />
-          )}
-        </div>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );
