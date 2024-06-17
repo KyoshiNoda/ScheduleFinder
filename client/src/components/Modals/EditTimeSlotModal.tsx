@@ -3,13 +3,14 @@ import {
   useUpdateTimeSlotMutation,
   useDeleteTimeSlotMutation,
 } from '../../redux/services/schedule/scheduleService';
-import { Modal, Select, Button, ToggleSwitch } from 'flowbite-react';
+import { Modal, Select, ToggleSwitch } from 'flowbite-react';
 import { useToast } from '../../utils/functions';
 import { DaysChecked as DaysCheckedType, TimeSlot as TimeSlotType } from '../../types';
 import { ToastEnum } from '../../enums';
 import DayPicker from '../Schedule/DayPicker';
 import { colors } from '../Schedule/TimeSlotInput';
 import { useEscapeKey } from '../../utils/functions';
+import { FaTrashAlt } from 'react-icons/fa';
 
 type EditTimeSlotModalProps = {
   isTimeSlotClicked: boolean;
@@ -38,7 +39,6 @@ const EditTimeSlotModal = ({
   isTimeSlotClicked,
   setIsTimeSlotClicked,
   courseTitle,
-  setCourseTitle,
   timeSlotColor,
   setTimeSlotColor,
   editMode,
@@ -269,7 +269,7 @@ const EditTimeSlotModal = ({
               </>
             )}
             {!editMode && (
-              <div className="flex">
+              <div className="flex gap-2">
                 <span className="text-2xl">{startTime} - </span>
                 <span className="text-2xl">{endTime}</span>
               </div>
@@ -351,20 +351,24 @@ const EditTimeSlotModal = ({
                 ))}
             </div>
           </div>
-          <Button
-            type="submit"
-            className="w-full rounded-full bg-green-400 px-8 py-3 text-lg font-semibold text-white hover:bg-green-600 dark:bg-green-700 dark:text-white hover:dark:bg-green-800"
-            onClick={saveHandler}
-          >
-            Save
-          </Button>
-          <Button
-            type="submit"
-            className="w-full rounded-full bg-red-500 px-8 py-3 text-lg font-semibold text-white hover:bg-red-700 dark:bg-rose-600 dark:text-white hover:dark:bg-rose-800"
-            onClick={deleteHandler}
-          >
-            Delete
-          </Button>
+          <div className="flex gap-3">
+            {editMode && (
+              <button
+                type="submit"
+                className="w-full rounded-lg bg-green-400 px-8 py-3 text-xl font-semibold text-white hover:bg-green-600 dark:bg-green-700 dark:text-white hover:dark:bg-green-800"
+                onClick={saveHandler}
+              >
+                Save
+              </button>
+            )}
+            <button
+              type="submit"
+              className="w-full rounded-lg bg-red-500 px-8 py-3 text-xl font-semibold text-white hover:bg-red-700 dark:bg-rose-600 dark:text-white hover:dark:bg-rose-800"
+              onClick={deleteHandler}
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </Modal.Body>
     </Modal>
