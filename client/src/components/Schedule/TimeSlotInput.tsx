@@ -150,14 +150,12 @@ const TimeSlotInput = () => {
     };
 
     try {
-      const result = await createTimeSlotMutation({
+      await createTimeSlotMutation({
         scheduleId: scheduleID,
         timeSlot: currentTimeSlot,
       });
       showToast(ToastEnum.CREATED_TIMESLOT);
-      if ('data' in result) {
-        const { data } = result;
-      }
+
       const resetDays: DaysChecked = {
         monday: false,
         tuesday: false,
