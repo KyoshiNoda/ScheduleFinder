@@ -7,14 +7,13 @@ import { FaAngleDown } from 'react-icons/fa6';
 interface Props {}
 
 const CalendarViewParent = () => {
-  const calendarView = localStorage.getItem('calendarView');
-  const [selectedView, setSelectedView] = useState<CalendarViewEnum>(
-    calendarView ? JSON.parse(calendarView) : CalendarViewEnum.WEEK
+  const [selectedView, setSelectedView] = useState<string>(
+    localStorage.getItem('calendarView') || CalendarViewEnum.WEEK
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
   const handleViewSelection = (calendarView: CalendarViewEnum) => {
-    localStorage.setItem('calendarView', JSON.stringify(calendarView));
+    localStorage.setItem('calendarView', calendarView);
     setSelectedView(calendarView);
     setIsDropdownOpen(false);
   };
