@@ -67,15 +67,15 @@ const CalendarViewParent = () => {
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute top-12 right-0 z-10 w-36 rounded-lg bg-white py-2 shadow dark:divide-gray-600 dark:bg-gray-700">
-                <ul className="divide-y  divide-gray-100 text-sm text-gray-700 dark:divide-slate-600 dark:text-gray-200">
-                  <li className="py-1">
-                    <button className="w-full px-4 py-2 text-start text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
+              <div className="absolute top-12 right-0 z-10 w-36 rounded-lg bg-white py-1 shadow dark:bg-gray-700">
+                <ul className="text-sm text-gray-700 dark:divide-slate-600 dark:text-gray-200">
+                  <li className="hidden py-1 md:block">
+                    <button className="w-full border-b border-b-gray-100 px-4 py-2 text-start text-sm text-gray-700 hover:bg-gray-100 dark:border-b-gray-600 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
                       Create event
                     </button>
                   </li>
-                  <li className="py-1">
-                    <button className="w-full px-4 py-2 text-start text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
+                  <li className="hidden py-1 md:block">
+                    <button className="w-full border-b border-b-gray-100 px-4 py-2 text-start text-sm text-gray-700 hover:bg-gray-100 dark:border-b-gray-600 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
                       Go to today
                     </button>
                   </li>
