@@ -2,7 +2,7 @@ import { Button } from 'flowbite-react';
 import { useState } from 'react';
 import { CalendarViewEnum } from '../../enums';
 import { capitalizeWord } from '../../utils/functions';
-import { FaAngleDown } from 'react-icons/fa6';
+import { FaAngleDown, FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
 
 interface Props {}
 
@@ -17,46 +17,6 @@ const CalendarViewParent = () => {
     setSelectedView(calendarView);
     setIsDropdownOpen(false);
   };
-
-  const leftArrowSVG = (
-    <svg
-      className="h-[16px] w-[16px] text-gray-500 dark:text-white"
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="m15 19-7-7 7-7"
-      />
-    </svg>
-  );
-
-  const rightArrowSVG = (
-    <svg
-      className="h-[16px] w-[16px] text-gray-500 dark:text-white"
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="m9 5 7 7-7 7"
-      />
-    </svg>
-  );
 
   const horizontalDotsSVG = (
     <svg
@@ -77,11 +37,15 @@ const CalendarViewParent = () => {
           <h1 className="text-md font-semibold">June 2024</h1>
           <div className="relative flex items-center gap-6">
             <Button.Group>
-              <Button color="gray">{leftArrowSVG}</Button>
+              <Button color="gray">
+                <FaAngleLeft className="h-4" />
+              </Button>
               <Button color="gray" size="sm" className="hidden md:block">
                 <span className="px-3">Today</span>
               </Button>
-              <Button color="gray">{rightArrowSVG}</Button>
+              <Button color="gray">
+                <FaAngleRight className="h-4" />
+              </Button>
             </Button.Group>
 
             <Button
@@ -91,7 +55,7 @@ const CalendarViewParent = () => {
               size="sm"
             >
               {capitalizeWord(selectedView)} view
-              <FaAngleDown className="ml-2 text-gray-400" />
+              <FaAngleDown className="ml-2 text-gray-500" />
             </Button>
 
             <button
