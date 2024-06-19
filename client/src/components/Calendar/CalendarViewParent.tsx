@@ -1,14 +1,20 @@
 import { Button } from 'flowbite-react';
 import { useState } from 'react';
 import { CalendarViewEnum } from '../../enums';
+import { capitalizeWord } from '../../utils/functions';
+import { FaAngleDown } from 'react-icons/fa6';
 
 interface Props {}
 
 const CalendarViewParent = () => {
+  const calendarView = localStorage.getItem('calendarView');
+  const [selectedView, setSelectedView] = useState<CalendarViewEnum>(
+    calendarView ? JSON.parse(calendarView) : CalendarViewEnum.WEEK
+  );
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [selectedView, setSelectedView] = useState<CalendarViewEnum>(CalendarViewEnum.WEEK);
 
   const handleViewSelection = (calendarView: CalendarViewEnum) => {
+    localStorage.setItem('calendarView', JSON.stringify(calendarView));
     setSelectedView(calendarView);
     setIsDropdownOpen(false);
   };
@@ -73,12 +79,25 @@ const CalendarViewParent = () => {
           <div className="relative flex items-center gap-6">
             <Button.Group>
               <Button color="gray">{leftArrowSVG}</Button>
+              <Button color="gray" size="sm" className="hidden md:block">
+                <span className="px-3">Today</span>
+              </Button>
               <Button color="gray">{rightArrowSVG}</Button>
             </Button.Group>
 
+            <Button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="hidden md:block"
+              color="gray"
+              size="sm"
+            >
+              {capitalizeWord(selectedView)} view
+              <FaAngleDown className="ml-2 text-gray-400" />
+            </Button>
+
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="inline-flex items-center rounded-lg p-2 text-center text-sm font-medium text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-700 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+              className="inline-flex items-center rounded-lg p-2 text-center text-sm font-medium text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-700 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-600 md:hidden"
               type="button"
             >
               {horizontalDotsSVG}
@@ -132,6 +151,12 @@ const CalendarViewParent = () => {
                 </ul>
               </div>
             )}
+
+            {/* <div></div> */}
+
+            <Button size="sm" className="hidden md:block">
+              Add event
+            </Button>
           </div>
         </header>
         <main>
