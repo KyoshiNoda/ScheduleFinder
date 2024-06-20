@@ -115,8 +115,6 @@ const CalendarViewParent = () => {
               )}
             </div>
 
-            {/* <div></div> */}
-
             <Button size="sm" className="hidden md:block">
               Add event
             </Button>
