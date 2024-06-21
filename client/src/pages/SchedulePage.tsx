@@ -1,5 +1,5 @@
-import TimeSlotInput from '../components/Calendar/TimeSlotInput';
-import ScheduleBox from '../components/Calendar/ScheduleBox';
+import TimeSlotInput from '../components/TimeSlot/TimeSlotInput';
+import ScheduleBox from '../components/Schedule/ScheduleBox';
 import Toast from '../components/Globals/Toast';
 import CalendarViewParent from '../components/Calendar/CalendarViewParent';
 import { useAppDispatch } from '../redux/store';

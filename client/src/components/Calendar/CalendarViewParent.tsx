@@ -4,8 +4,6 @@ import { CalendarViewEnum } from '../../enums';
 import { capitalizeWord } from '../../utils/functions';
 import { FaAngleDown, FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
 
-interface Props {}
-
 const CalendarViewParent = () => {
   const [selectedView, setSelectedView] = useState<string>(
     localStorage.getItem('calendarView') || CalendarViewEnum.WEEK
@@ -75,7 +73,7 @@ const CalendarViewParent = () => {
                     </li>
                     <li className="py-1 md:hidden">
                       <button className="w-full border-b border-b-gray-100 px-4 py-2 text-start text-sm text-gray-700 hover:bg-gray-100 dark:border-b-gray-600 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
-                        Go to today
+                        Today
                       </button>
                     </li>
                     <li>
