@@ -2,7 +2,7 @@ import { Button } from 'flowbite-react';
 import { useState } from 'react';
 import { CalendarViewEnum } from '../../enums';
 import { capitalizeWord } from '../../utils/functions';
-import { FaAngleDown, FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
+import { FaAngleDown, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 
 const CalendarViewParent = () => {
   const [selectedView, setSelectedView] = useState<string>(
