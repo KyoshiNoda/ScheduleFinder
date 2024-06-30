@@ -5,11 +5,11 @@ import { DaysChecked, TimeSlot as TimeSlotType } from '../../types';
 import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
 import { ToastEnum } from '../../enums';
 import { Select } from 'flowbite-react';
-import ClearScheduleButton from './ClearScheduleButton';
-import DayPicker from './DayPicker';
+import ClearScheduleButton from '../Schedule/ClearScheduleButton';
+import DayPicker from '../Calendar/DayPicker';
 import { TypesOfInput } from '../../enums';
 import { useToast } from '../../utils/functions';
-import ExistingTimeSlotModal from '../Modals/ExisitingTimeSlotModal';
+import ExistingTimeSlotModal from '../Modals/ExisitingTImeSlotModal';
 export const colors: string[] = [
   'slate',
   'red',

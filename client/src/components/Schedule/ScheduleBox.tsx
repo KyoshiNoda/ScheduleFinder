@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { TimeSlot as TimeSlotType } from '../../types';
-import TimeSlot from './TimeSlot';
+import TimeSlot from '../TimeSlot/TimeSlot';
 import { useGetScheduleQuery } from '../../redux/services/schedule/scheduleService';
 import { calculateHeight, calculateDistanceFromTop } from '../../utils/scheduleUtils';
 import ScheduleHorziontalLines from './ScheduleHorziontalLines';
