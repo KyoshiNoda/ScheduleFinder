@@ -24,7 +24,7 @@ class AuthController {
       }
 
       const accessToken = jwt.sign({ data: user }, `${process.env.ACCESS_TOKEN_SECRET}`, {
-        expiresIn: '2s',
+        expiresIn: '10s',
       });
 
       res.send({ token: accessToken, user: user });
