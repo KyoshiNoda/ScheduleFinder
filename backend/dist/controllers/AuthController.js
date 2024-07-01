@@ -34,7 +34,7 @@ class AuthController {
                     return res.status(400).send({ error: 'Incorrect password.' });
                 }
                 const accessToken = jsonwebtoken_1.default.sign({ data: user }, `${process.env.ACCESS_TOKEN_SECRET}`, {
-                    expiresIn: '10s',
+                    expiresIn: '1d',
                 });
                 res.send({ token: accessToken, user: user });
             }

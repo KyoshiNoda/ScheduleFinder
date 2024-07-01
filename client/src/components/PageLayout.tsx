@@ -1,17 +1,11 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import Navbar from './Navbar';
+import UnauthorizedPage from '../pages/UnauthorizedPage';
 const PageLayout = () => {
   const { userToken, userInfo } = useAppSelector((state) => state.auth);
   if (Object.keys(userToken).length === 0) {
-    return (
-      <div>
-        <h1>Unauthorized</h1>
-        <span>
-          <NavLink to="/login">Login</NavLink> to gain access
-        </span>
-      </div>
-    );
+    return <UnauthorizedPage />;
   }
   return (
     <>
