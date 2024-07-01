@@ -20,34 +20,33 @@ mail_1.default.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class AuthController {
     static loginUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const email = req.body.email;
-            const password = req.body.password;
+            const { email, password } = req.body;
             if (!email || !password) {
-                return res
-                    .status(400)
-                    .send({ error: 'Email and password are required.' });
+                return res.status(400).send({ error: 'Email and password are required.' });
             }
-            const user = yield userModel_1.default.findOne({ email });
-            if (!user) {
-                return res.status(400).send({ error: 'Email not found.' });
+            try {
+                const user = yield userModel_1.default.findOne({ email });
+                if (!user) {
+                    return res.status(400).send({ error: 'Email not found.' });
+                }
+                const match = yield bcrypt_1.default.compare(password, user.password);
+                if (!match) {
+                    return res.status(400).send({ error: 'Incorrect password.' });
+                }
+                const accessToken = jsonwebtoken_1.default.sign({ data: user }, `${process.env.ACCESS_TOKEN_SECRET}`, {
+                    expiresIn: '2s',
+                });
+                res.send({ token: accessToken, user: user });
             }
-            const match = yield bcrypt_1.default.compare(password, user.password);
-            if (!match) {
-                return res.status(400).send({ error: 'Incorrect password.' });
+            catch (err) {
+                res.status(500).send({ error: 'Unable to log in.' });
             }
-            const accessToken = jsonwebtoken_1.default.sign({ data: user }, `${process.env.ACCESS_TOKEN_SECRET}`);
-            res.send({ token: accessToken, user: user });
         });
     }
     static registerUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { firstName, lastName, email, password, school, birthday } = req.body;
-            if (!firstName ||
-                !lastName ||
-                !email ||
-                !password ||
-                !school ||
-                !birthday) {
+            if (!firstName || !lastName || !email || !password || !school || !birthday) {
                 return res.status(400).send({ error: 'All fields are required.' });
             }
             const userExists = yield userModel_1.default.findOne({ email });
@@ -69,7 +68,9 @@ class AuthController {
             });
             try {
                 const savedUser = yield user.save();
-                const accessToken = jsonwebtoken_1.default.sign({ data: savedUser }, `${process.env.ACCESS_TOKEN_SECRET}`);
+                const accessToken = jsonwebtoken_1.default.sign({ data: savedUser }, `${process.env.ACCESS_TOKEN_SECRET}`, {
+                    expiresIn: '1d',
+                });
                 res.status(200).send({ token: accessToken, user: savedUser });
             }
             catch (err) {
@@ -170,86 +171,7 @@ class AuthController {
                 });
             }
             catch (error) {
-                return res
-                    .status(500)
-                    .send({ message: 'Error found. Please try again!' });
-            }
-        });
-    }
-    // Two methods below are for other PROJECT, will remove after.
-    static newAccount(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let email = req.body.email;
-            let sender = req.body.sender;
-            let randomCode = (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000).toString();
-            AuthController.randomCode = randomCode;
-            let message = `Here is your five digit code: ${AuthController.randomCode}`;
-            let codeHTML = '';
-            for (let digit of AuthController.randomCode) {
-                codeHTML += `<div style="display: inline-block; margin: 5px; padding: 10px; background-color: #fff; color: #3b82f6; border-radius: 5px;">${digit}</div>`;
-            }
-            const msg = {
-                to: email,
-                from: sender,
-                subject: 'Gamershowcase - New Account Verification',
-                text: message,
-                html: `
-      <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
-        <h2 style="color: #fff;">Gamershowcase - New Account Verification</h2>
-        <p><strong>Here is your five digit code:</strong></p>
-        <div style="font-size: 2em;">${codeHTML}</div>
-        <p>Please enter this code to verify your acccount.</p>
-      </div>
-      `,
-            };
-            mail_1.default
-                .send(msg)
-                .then(() => {
-                res.status(200).send({ message: 'email sent!', email: email });
-            })
-                .catch((error) => {
-                res.status(400).send({ error: 'error found try again!' });
-            });
-        });
-    }
-    static verifyResetPasswordCodeTest(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const email = req.body.email;
-                const sender = req.body.sender;
-                const code = req.body.code;
-                if (code === AuthController.randomCode) {
-                    return res.status(200).send({ message: 'User can reset password' });
-                }
-                AuthController.randomCode = (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000).toString();
-                let codeHTML = '';
-                for (let digit of AuthController.randomCode) {
-                    codeHTML += `<div style="display: inline-block; margin: 5px; padding: 10px; background-color: #fff; color: #3b82f6; border-radius: 5px;">${digit}</div>`;
-                }
-                let message = `Here is your five digit code: ${AuthController.randomCode}`;
-                const msg = {
-                    to: email,
-                    from: sender,
-                    subject: 'Gamershowcase - New Account Verification',
-                    text: message,
-                    html: `
-          <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
-          <h2 style="color: #fff;">Gamershowcase - New Account Verification</h2>
-          <p><strong>Here is your five digit code:</strong></p>
-          <div style="font-size: 2em;">${codeHTML}</div>
-          <p>Please enter this code to verify your acccount.</p>
-        </div>
-        `,
-                };
-                yield mail_1.default.send(msg);
-                return res.status(400).send({
-                    message: 'Incorrect code! Sending another email with a new code',
-                });
-            }
-            catch (error) {
-                return res
-                    .status(500)
-                    .send({ message: 'Error found. Please try again!' });
+                return res.status(500).send({ message: 'Error found. Please try again!' });
             }
         });
     }
