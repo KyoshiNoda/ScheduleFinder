@@ -32,10 +32,10 @@ const LandingNavBar = () => {
         <a>Repository </a>
       </div>
       <div className="flex items-center gap-6">
-        <Link to="/login" className="text-lg font-bold text-gray-500">
+        <Link to="/login" className="text-lg font-bold text-gray-500 dark:text-gray-400">
           Login
         </Link>
-        <Link to="/login" className="rounded-xl bg-blue-800 px-3 py-2 text-lg font-bold text-white">
+        <Link to="/login" className="rounded-xl bg-blue-600 dark:bg-blue-800 px-3 py-2 text-lg font-bold text-white">
           Get Started
         </Link>
         <Toggle getTheme={setTheme} />
