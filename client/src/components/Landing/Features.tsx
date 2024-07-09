@@ -1,7 +1,10 @@
 import compareSchedule from '../../assets/compareSchedule.png';
 const Features = () => {
   return (
-    <div className="h-screen gap-4">
+    <div className="h-screen">
+      <div className="flex justify-center items-center mb-12">
+        <h1 className='text-6xl font-bold dark:text-white'>Features</h1>
+      </div>
       <div className="flex h-1/3 gap-4">
         <img
           src={compareSchedule}
@@ -48,7 +51,8 @@ const Features = () => {
             User spotlight with AI
           </span>
           <span className="text-center text-xl text-gray-500 dark:text-gray-400">
-          AI powered, user reccomendation based off hobbies, user interests blah blah blah dolore magna aliqua. Ut enim ad minim veniam,
+            AI powered, user reccomendation based off hobbies, user interests blah blah blah dolore
+            magna aliqua. Ut enim ad minim veniam,
           </span>
         </div>
       </div>
