@@ -1,4 +1,6 @@
-import compareSchedule from '../../assets/compareSchedule.png';
+import findUsers from '../../assets/findUsers.png';
+import hourlyView from '../../assets/24HourView.png';
+import AIHobbies from '../../assets/AIHobbies.png';
 const Features = () => {
   return (
     <div className="h-screen">
@@ -7,8 +9,8 @@ const Features = () => {
       </div>
       <div className="flex h-1/3 gap-4">
         <img
-          src={compareSchedule}
-          className="w-1/2 rounded-xl object-cover"
+          src={findUsers}
+          className="w-1/2 rounded-xl object-cover shadow-xl border-4 border-gray-500"
           alt="Schedule Comparison"
         />
         <div className="flex w-1/2 flex-col justify-center">
@@ -34,16 +36,16 @@ const Features = () => {
           </span>
         </div>
         <img
-          src={compareSchedule}
-          className="w-1/2 rounded-xl object-cover"
+          src={hourlyView}
+          className="w-1/2 rounded-xl object-cover shadow-xl border-4 border-gray-500"
           alt="Schedule Comparison"
         />
       </div>
 
       <div className="flex h-1/3 gap-4">
         <img
-          src={compareSchedule}
-          className="w-1/2 rounded-xl object-cover"
+          src={AIHobbies}
+          className="w-1/2 rounded-xl object-cover shadow-xl border-4 border-gray-500"
           alt="Schedule Comparison"
         />
         <div className="flex w-1/2 flex-col justify-center">
