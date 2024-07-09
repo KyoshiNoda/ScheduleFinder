@@ -33,9 +33,9 @@ const Testimonials = () => {
   return (
     <div className="mb-20 flex flex-col items-center justify-center gap-8">
       <div>
-        <span className="block text-center text-4xl font-semibold dark:text-white">Testimonials</span>
+        <span className="block text-center text-6xl font-semibold dark:text-white">Testimonials</span>
         <div className="flex justify-center">
-          <span className="w-3/4 text-center text-xl text-gray-500 dark:text-gray-400">
+          <span className="w-3/4 text-center text-2xl text-gray-500 dark:text-gray-400">
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Animi quaerat numquam nihil
             dolor
           </span>
