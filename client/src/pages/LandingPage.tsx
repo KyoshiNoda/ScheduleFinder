@@ -1,10 +1,14 @@
 import LandingNavBar from '../components/Landing/LandingNavBar';
 import Hero from '../components/Landing/Hero';
+import Features from '../components/Landing/Features';
 const LandingPage = () => {
   return (
-    <div className="flex min-h-full w-full flex-col gap-6 bg-slate-100 p-3 dark:bg-slate-900">
+    <div className="min-h-full w-full bg-slate-100 p-3 dark:bg-slate-900">
       <LandingNavBar />
-      <Hero />
+      <div className="flex flex-col gap-48">
+        <Hero />
+        <Features />
+      </div>
     </div>
   );
 };
