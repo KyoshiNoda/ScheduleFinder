@@ -24,16 +24,22 @@ const LandingNavBar = () => {
   }, []);
 
   return (
-    <div className="flex justify-between items-center p-4 dark:bg-slate-900">
-      <Link to="/auth/schedule" className="text-3xl font-semibold dark:text-white">
-        ScheduleFinder
-      </Link>
-      <div className='w-1/3 flex justify-evenly text-lg text-gray-500 dark:text-gray-400 font-bold'>
+    <div className="flex items-center justify-between p-4 dark:bg-slate-900">
+      <span className="text-3xl font-semibold dark:text-white">ScheduleFinder</span>
+      <div className="flex w-1/3 justify-evenly text-xl font-bold text-gray-500 dark:text-gray-400">
         <a>Features</a>
         <a>Testimonials</a>
         <a>Repository </a>
       </div>
-      <Toggle getTheme={setTheme} />
+      <div className="flex items-center gap-6">
+        <Link to="/login" className="text-lg font-bold text-gray-500">
+          Login
+        </Link>
+        <Link to="/login" className="rounded-xl bg-blue-800 px-3 py-2 text-lg font-bold text-white">
+          Get Started
+        </Link>
+        <Toggle getTheme={setTheme} />
+      </div>
     </div>
   );
 };
