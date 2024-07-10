@@ -4,8 +4,8 @@ import AIHobbies from '../../assets/AIHobbies.png';
 const Features = () => {
   return (
     <div className="h-screen">
-      <div className="flex justify-center items-center mb-12">
-        <h1 className='text-6xl font-bold dark:text-white'>Features</h1>
+      <div className="flex justify-center items-center mb-4 lg:mb-12">
+        <h1 className='text-4xl lg:text-6xl font-bold dark:text-white'>Features</h1>
       </div>
       <div className="flex h-1/3 gap-4">
         <img
@@ -14,10 +14,10 @@ const Features = () => {
           alt="Schedule Comparison"
         />
         <div className="flex w-1/2 flex-col justify-center">
-          <span className="block text-center text-3xl font-bold dark:text-white">
+          <span className="block text-center text-lg lg:text-3xl font-bold dark:text-white">
             Create meaningful connections
           </span>
-          <span className="text-center text-xl text-gray-500 dark:text-gray-400">
+          <span className="text-center text-sm lg:text-xl text-gray-500 dark:text-gray-400">
             Discover new potential friends based on shared interests and availability. Filter
             through various categories such as age, major, school, gender, and more to find
             like-minded peers to study with.
@@ -27,10 +27,10 @@ const Features = () => {
 
       <div className="flex h-1/3 gap-4">
         <div className="flex w-1/2 flex-col justify-center">
-          <span className="block text-center text-3xl font-bold dark:text-white">
+          <span className="block text-center text-lg lg:text-3xl font-bold dark:text-white">
             Sync Google Calander
           </span>
-          <span className="text-center text-xl text-gray-500 dark:text-gray-400">
+          <span className="text-center text-sm md:text-xl text-gray-500 dark:text-gray-400">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
             incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
           </span>
@@ -49,10 +49,10 @@ const Features = () => {
           alt="Schedule Comparison"
         />
         <div className="flex w-1/2 flex-col justify-center">
-          <span className="block text-center text-3xl font-bold dark:text-white">
+          <span className="block text-center text-lg md:text-3xl font-bold dark:text-white">
             User spotlight with AI
           </span>
-          <span className="text-center text-xl text-gray-500 dark:text-gray-400">
+          <span className="text-center text-sm md:text-xl text-gray-500 dark:text-gray-400">
             AI powered, user reccomendation based off hobbies, user interests blah blah blah dolore
             magna aliqua. Ut enim ad minim veniam,
           </span>

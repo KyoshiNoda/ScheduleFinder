@@ -31,11 +31,11 @@ const Testimonials = () => {
   const currentQuote = quotes[currentIndex];
 
   return (
-    <div className="mb-20 flex flex-col items-center justify-center gap-8">
+    <div className="mb-20 mt-20 md:mt-0 flex flex-col items-center justify-center gap-2 md:gap-8">
       <div>
-        <span className="block text-center text-6xl font-semibold dark:text-white">Testimonials</span>
+        <span className="block text-center text-4xl md:text-6xl font-semibold dark:text-white">Testimonials</span>
         <div className="flex justify-center">
-          <span className="w-3/4 text-center text-2xl text-gray-500 dark:text-gray-400">
+          <span className="w-3/4 text-center text-lg md:text-2xl text-gray-500 dark:text-gray-400">
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Animi quaerat numquam nihil
             dolor
           </span>
@@ -44,7 +44,7 @@ const Testimonials = () => {
 
       <div className="flex flex-col gap-4">
         <div className="flex justify-center">
-          <span className="w-1/2 text-center text-2xl dark:text-white">{currentQuote.quote}</span>
+          <span className="w-full md:w-1/2 text-center text-lg md:text-2xl dark:text-white">{currentQuote.quote}</span>
         </div>
         <div className="flex items-center justify-center gap-4">
           <Avatar rounded placeholderInitials={currentQuote.initials} bordered color='info'/>
