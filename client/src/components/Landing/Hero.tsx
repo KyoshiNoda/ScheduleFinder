@@ -13,7 +13,7 @@ const Hero = () => {
           Create schedules, compare with friends, <br />
           and discover new connections.
         </span>
-        <div>
+        <div className='md:hidden'>
           <Link
             to="/signup"
             className="text-md rounded-xl bg-blue-600 px-3 py-2 font-bold text-white dark:bg-blue-800"
