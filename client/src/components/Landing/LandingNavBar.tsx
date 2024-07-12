@@ -27,7 +27,7 @@ const LandingNavBar = () => {
   }, []);
 
   return (
-    <nav className="flex items-center justify-between p-4 dark:bg-slate-900">
+    <nav className="flex items-center justify-between p-4 dark:bg-slate-900 bg-gray-100 bg-opacity-95 sticky top-0">
       <span className="text-lg font-semibold dark:text-white lg:text-3xl">ScheduleFinder</span>
       <div className="hidden w-1/3 justify-evenly gap-4 text-xl font-bold text-gray-500 dark:text-gray-400 md:flex">
         <a>Features</a>
