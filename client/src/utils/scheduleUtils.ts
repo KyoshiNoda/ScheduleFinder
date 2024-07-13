@@ -1,4 +1,5 @@
 import { TimeSlot, DaysChecked } from '../types';
+import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays } from 'date-fns';
 
 export const convertTo24Hour = (time12: any) => {
   let [hour, minute] = time12.split(':');
@@ -104,7 +105,22 @@ export const calculateDistanceFromTop = (startTime: string) => {
   const minutes: number = calculateMinutesFromTop(startTime);
   const distanceFromTop: number = (minutes * 72) / 60;
   if (distanceFromTop === 0) {
-    return Number(52).toString()
+    return Number(52).toString();
   }
   return Number(distanceFromTop + 52).toString();
+};
+
+export const generateMonthlyDates = (monthDate: Date) => {
+  const startOfMonthDate = startOfMonth(monthDate);
+  const endOfMonthDate = endOfMonth(monthDate);
+  const days = [];
+
+  let currentDate = startOfWeek(startOfMonthDate, { weekStartsOn: 1 });
+  const lastDate = endOfWeek(endOfMonthDate, { weekStartsOn: 1 });
+
+  while (currentDate <= lastDate) {
+    days.push(new Date(currentDate));
+    currentDate = addDays(currentDate, 1);
+  }
+  return days;
 };
