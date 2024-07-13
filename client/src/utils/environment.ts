@@ -1,6 +1,6 @@
 export const getApiUrl = (): string => {
   // TODO: CHANGE PROPER ENVIRONMENT BELOW  
-  let environment = 'local';
+  let environment = 'dev';
 
   let apiUrl = '';
 
