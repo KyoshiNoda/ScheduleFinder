@@ -33,7 +33,7 @@ const Testimonials = () => {
   return (
     <div className="mb-20 mt-20 md:mt-0 flex flex-col items-center justify-center gap-2 md:gap-8">
       <div>
-        <span className="block text-center text-4xl md:text-6xl font-semibold dark:text-white">Testimonials</span>
+        <h2 className="block text-center text-4xl md:text-6xl font-semibold dark:text-white">Testimonials</h2>
         <div className="flex justify-center">
           <span className="w-3/4 text-center text-lg md:text-2xl text-gray-500 dark:text-gray-400">
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Animi quaerat numquam nihil
@@ -48,7 +48,7 @@ const Testimonials = () => {
         </div>
         <div className="flex items-center justify-center gap-4">
           <Avatar rounded placeholderInitials={currentQuote.initials} bordered color='info'/>
-          <span className="font-semibold dark:text-white">{currentQuote.person}</span>
+          <h3 className="font-semibold dark:text-white">{currentQuote.person}</h3>
           <span className="text-3xl font-semibold text-gray-700">|</span>
           <span className="text-gray-500">{currentQuote.role}</span>
         </div>

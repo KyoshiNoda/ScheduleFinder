@@ -4,14 +4,11 @@ const Hero = () => {
   return (
     <div className="flex h-full flex-col items-center dark:text-white">
       <div className="flex h-full flex-col items-center justify-center gap-5">
-        <div>
-          
-        </div>
-        <div className="text-center text-4xl font-extrabold lg:text-8xl">
-          <span>Meet People</span>
+        <h1 className="text-center text-4xl font-extrabold lg:text-8xl">
+          Meet People
           <br />
-          <span>On Your Clock.</span>
-        </div>
+          On Your Clock.
+        </h1>
         <span className="text-md text-center font-bold text-gray-500 dark:text-gray-400 lg:text-xl">
           Create schedules, compare with friends, <br />
           and discover new connections.

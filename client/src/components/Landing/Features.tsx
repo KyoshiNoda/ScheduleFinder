@@ -6,7 +6,7 @@ const Features = () => {
   return (
     <div className="h-screen lg:px-12 mb-12 md:mb-36">
       <div className="mb-4 flex items-center justify-center lg:mb-12">
-        <h1 className="text-4xl font-bold dark:text-white lg:text-6xl">Features</h1>
+        <h2 className="text-4xl font-bold dark:text-white lg:text-6xl">Features</h2>
       </div>
       <div className="flex h-1/3 gap-4">
         <img
@@ -15,9 +15,9 @@ const Features = () => {
           alt="Schedule Comparison"
         />
         <div className="flex w-3/5 flex-col justify-center">
-          <span className="block text-center text-lg font-bold dark:text-white lg:text-3xl">
+          <h3 className="block text-center text-lg font-bold dark:text-white lg:text-3xl">
             Create meaningful connections
-          </span>
+          </h3>
           <span className="text-center text-sm text-gray-500 dark:text-gray-400 lg:text-xl">
             Discover new potential friends based on shared interests and availability. Filter
             through various categories such as age, major, school, gender, and more to find
@@ -28,9 +28,9 @@ const Features = () => {
 
       <div className="flex h-1/3 gap-4">
         <div className="flex w-3/5 flex-col justify-center">
-          <span className="block text-center text-lg font-bold dark:text-white lg:text-3xl">
+          <h3 className="block text-center text-lg font-bold dark:text-white lg:text-3xl">
             Sync Google Calendar
-          </span>
+          </h3>
           <span className="text-center text-sm text-gray-500 dark:text-gray-400 md:text-xl">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
             incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -50,9 +50,9 @@ const Features = () => {
           alt="Hobbies AI"
         />
         <div className="flex w-3/5 flex-col justify-center">
-          <span className="block text-center text-lg font-bold dark:text-white md:text-3xl">
+          <h3 className="block text-center text-lg font-bold dark:text-white md:text-3xl">
             User spotlight with AI
-          </span>
+          </h3>
           <span className="text-center text-sm text-gray-500 dark:text-gray-400 md:text-xl">
             AI powered, user recommendation based off hobbies, user interests, blah blah blah dolore
             magna aliqua. Ut enim ad minim veniam,
