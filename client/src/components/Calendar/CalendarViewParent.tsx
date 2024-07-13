@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { CalendarViewEnum } from '../../enums';
 import { capitalizeWord } from '../../utils/functions';
 import { FaAngleDown, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import WeeklyView from './Views/WeeklyView';
+import { generateWeeklyDates } from '../../utils/scheduleUtils';
 
 const CalendarViewParent = () => {
   const [selectedView, setSelectedView] = useState<string>(
@@ -27,6 +29,19 @@ const CalendarViewParent = () => {
       <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
     </svg>
   );
+
+  const renderView = () => {
+    switch (selectedView) {
+      case CalendarViewEnum.DAY:
+        return 'Daily view';
+      case CalendarViewEnum.WEEK:
+        return <WeeklyView />;
+      case CalendarViewEnum.MONTH:
+        return 'Month view';
+      case CalendarViewEnum.YEAR:
+        return 'Yearly view';
+    }
+  };
 
   return (
     <>
@@ -118,12 +133,7 @@ const CalendarViewParent = () => {
             </Button>
           </div>
         </header>
-        <main>
-          {selectedView === CalendarViewEnum.DAY && <h2>Day view</h2>}
-          {selectedView === CalendarViewEnum.WEEK && <h2>Week view</h2>}
-          {selectedView === CalendarViewEnum.MONTH && <h2>Month view</h2>}
-          {selectedView === CalendarViewEnum.YEAR && <h2>Year view</h2>}
-        </main>
+        <main>{renderView()}</main>
       </div>
     </>
   );

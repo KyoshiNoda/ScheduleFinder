@@ -1,4 +1,5 @@
 import { TimeSlot, DaysChecked } from '../types';
+import { startOfWeek, endOfWeek, addDays } from 'date-fns';
 
 export const convertTo24Hour = (time12: any) => {
   let [hour, minute] = time12.split(':');
@@ -104,7 +105,21 @@ export const calculateDistanceFromTop = (startTime: string) => {
   const minutes: number = calculateMinutesFromTop(startTime);
   const distanceFromTop: number = (minutes * 72) / 60;
   if (distanceFromTop === 0) {
-    return Number(52).toString()
+    return Number(52).toString();
   }
   return Number(distanceFromTop + 52).toString();
+};
+
+// We are assuming Monday is the first day in the week.
+export const generateWeeklyDates = () => {
+  let startWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
+  const endWeek = endOfWeek(new Date(), { weekStartsOn: 1 });
+
+  const week = [];
+  while (startWeek <= endWeek) {
+    week.push(new Date(startWeek));
+    startWeek = addDays(startWeek, 1);
+  }
+
+  return week;
 };
