@@ -13,6 +13,7 @@
     "@types/react-redux": "^7.1.25",
     "@types/redux": "^3.6.0",
     "axios": "^1.3.4",
+    "date-fns": "^3.6.0",
     "dayjs": "^1.11.7",
     "flowbite": "^1.8.1",
     "flowbite-react": "^0.4.1",
