@@ -11,13 +11,13 @@ const CalendarViewParent = () => {
     localStorage.getItem('calendarView') || CalendarViewEnum.WEEK
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const handleViewSelection = (calendarView: CalendarViewEnum) => {
     localStorage.setItem('calendarView', calendarView);
     setSelectedView(calendarView);
     setIsDropdownOpen(false);
   };
-  const [currentDate, setCurrentDate] = useState(new Date());
 
   const leftArrow = () => {
     switch (selectedView) {
@@ -80,7 +80,9 @@ const CalendarViewParent = () => {
                 <FaAngleLeft className="h-4" />
               </Button>
               <Button color="gray" size="sm" className="hidden md:block">
-                <span className="px-3">Today</span>
+                <span className="px-3" onClick={() => setCurrentDate(new Date())}>
+                  Today
+                </span>
               </Button>
               <Button color="gray" onClick={rightArrow}>
                 <FaAngleRight className="h-4" />
