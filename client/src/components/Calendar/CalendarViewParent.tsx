@@ -5,6 +5,7 @@ import { capitalizeWord } from '../../utils/functions';
 import { FaAngleDown, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { addDays, subDays, addMonths, subMonths, addYears, subYears, format } from 'date-fns';
 import MonthlyView from './Views/MonthlyView';
+import DailyView from './Views/DailyView';
 
 const CalendarViewParent = () => {
   const [selectedView, setSelectedView] = useState<string>(
@@ -162,7 +163,7 @@ const CalendarViewParent = () => {
           </div>
         </header>
         <main className="h-5/6">
-          {selectedView === CalendarViewEnum.DAY && <h2>Day view</h2>}
+          {selectedView === CalendarViewEnum.DAY && <DailyView currentDate={currentDate} />}
           {selectedView === CalendarViewEnum.WEEK && <h2>Week view</h2>}
           {selectedView === CalendarViewEnum.MONTH && <MonthlyView currentDate={currentDate} />}
           {selectedView === CalendarViewEnum.YEAR && <h2>Year view</h2>}

@@ -1,4 +1,3 @@
-import React from 'react';
 import { format, isSameDay } from 'date-fns';
 import { generateMonthlyDates } from '../../../utils/scheduleUtils';
 type Props = {
@@ -7,7 +6,7 @@ type Props = {
 const MonthlyView = ({ currentDate }: Props) => {
   const dates = generateMonthlyDates(currentDate);
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // Normalize today's date to midnight
+  today.setHours(0, 0, 0, 0);
 
   return (
     <div className="grid h-full grid-cols-7 p-2">

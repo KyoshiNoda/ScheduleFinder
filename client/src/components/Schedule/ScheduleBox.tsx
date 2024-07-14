@@ -12,6 +12,7 @@ type Props = {
 };
 
 const ScheduleBox = ({ timeSlots }: Props) => {
+  // we might not even need this...? Check for the null case?
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
