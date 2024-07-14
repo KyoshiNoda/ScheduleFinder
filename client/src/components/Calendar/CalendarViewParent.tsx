@@ -13,11 +13,13 @@ const CalendarViewParent = () => {
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [dateTitle, setDateTitle] = useState<string>(format(currentDate, 'MMMM yyyy'));
 
   const handleViewSelection = (calendarView: CalendarViewEnum) => {
     localStorage.setItem('calendarView', calendarView);
     setSelectedView(calendarView);
     setIsDropdownOpen(false);
+    handleDateFormat();
   };
 
   const leftArrow = () => {
@@ -58,6 +60,25 @@ const CalendarViewParent = () => {
     }
   };
 
+  const handleDateFormat = () => {
+    switch (selectedView) {
+      case CalendarViewEnum.DAY:
+        setDateTitle(format(currentDate, 'MMMM dd, yyyy'));
+        break;
+      case CalendarViewEnum.WEEK:
+        setDateTitle(format(currentDate, 'MMMM yyyy'));
+        break;
+      case CalendarViewEnum.MONTH:
+        setDateTitle(format(currentDate, 'MMMM yyyy'));
+        break;
+      case CalendarViewEnum.YEAR:
+        setDateTitle(format(currentDate, 'yyyy'));
+        break;
+      default:
+        break;
+    }
+  };
+
   const horizontalDotsSVG = (
     <svg
       className="h-5 w-5"
@@ -74,7 +95,8 @@ const CalendarViewParent = () => {
     <>
       <div className="h-5/6 rounded-md border dark:border-slate-700">
         <header className="flex items-center justify-between border border-t-0 border-l-0 border-r-0 bg-gray-50 px-6 py-4 dark:border-slate-700 dark:bg-gray-800">
-          <h1 className="text-md font-semibold">{format(currentDate, 'MMMM yyyy')}</h1>
+          <h1 className="text-md font-semibold">{dateTitle}</h1>
+          {selectedView === CalendarViewEnum.DAY && <span className='text-xl text-gray-200'>{format(currentDate, 'EEEE')}</span>}
           <div className="flex items-center gap-6">
             <Button.Group>
               <Button color="gray" onClick={leftArrow}>

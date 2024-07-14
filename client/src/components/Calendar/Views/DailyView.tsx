@@ -1,11 +1,11 @@
 import ScheduleHorizontalLines from '../../Schedule/ScheduleHorziontalLines';
 import ScheduleHours from '../../Schedule/ScheduleHours';
-import ScheduleVerticalLines from '../../Schedule/ScheduleVerticalLines';
 import TimeSlot from '../../TimeSlot/TimeSlot';
 import { useEffect, useRef } from 'react';
 import { TimeSlot as TimeSlotType } from '../../../types';
 import { calculateHeight, calculateDistanceFromTop } from '../../../utils/scheduleUtils';
 import { useGetScheduleQuery } from '../../../redux/services/auth/authService';
+import { format } from 'date-fns';
 
 type Props = {
   currentDate: Date;
@@ -17,24 +17,26 @@ const DailyView = ({ currentDate }: Props) => {
   });
 
   const scrollRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (scrollRef.current) {
-      const sixAMPosition = (6 * 60 * 72) / 60 + 20;
-      scrollRef.current.scrollTop = sixAMPosition;
+      const currentHour = currentDate.getHours();
+      const currentHourPosition = (currentHour * 60 * 72) / 60 + 20;
+      scrollRef.current.scrollTop = currentHourPosition;
     }
-  }, []);
+  }, [currentDate]);
 
   return (
     <div className="flex h-full w-full flex-col border shadow dark:border-none dark:shadow-none">
       <div ref={scrollRef} className="relative h-full overflow-auto">
-        <div className="relative h-full w-5/6">
+        <div className="relative h-full w-full">
           <ScheduleHours />
           {!isFetching &&
             data.timeSlots
-              .filter((timeSlot: TimeSlotType) => timeSlot.days['monday'])
+              .filter(
+                (timeSlot: TimeSlotType) => timeSlot.days[format(currentDate, 'EEEE').toLowerCase()]
+              )
               .map((timeSlot: TimeSlotType) => (
-                <div className='px-20'>
+                <div className="relative w-2/3 px-24 md:w-5/6 md:px-44" key={timeSlot._id}>
                   <TimeSlot
                     key={timeSlot._id}
                     id={timeSlot._id}
