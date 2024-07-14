@@ -5,17 +5,58 @@ import { capitalizeWord } from '../../utils/functions';
 import { FaAngleDown, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import WeeklyView from './Views/WeeklyView';
 import { generateWeeklyDates } from '../../utils/scheduleUtils';
+import { addDays, subDays, addMonths, subMonths, addYears, subYears, format } from 'date-fns';
+import MonthlyView from './Views/MonthlyView';
 
 const CalendarViewParent = () => {
   const [selectedView, setSelectedView] = useState<string>(
     localStorage.getItem('calendarView') || CalendarViewEnum.WEEK
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const handleViewSelection = (calendarView: CalendarViewEnum) => {
     localStorage.setItem('calendarView', calendarView);
     setSelectedView(calendarView);
     setIsDropdownOpen(false);
+  };
+
+  const leftArrowClickHandler = () => {
+    switch (selectedView) {
+      case CalendarViewEnum.DAY:
+        setCurrentDate(subDays(currentDate, 1));
+        break;
+      case CalendarViewEnum.WEEK:
+        setCurrentDate(subDays(currentDate, 7));
+        break;
+      case CalendarViewEnum.MONTH:
+        setCurrentDate(subMonths(currentDate, 1));
+        break;
+      case CalendarViewEnum.YEAR:
+        setCurrentDate(subYears(currentDate, 1));
+        break;
+      default:
+        break;
+    }
+  };
+
+  const rightArrowClickHandler = () => {
+    switch (selectedView) {
+      case CalendarViewEnum.DAY:
+        setCurrentDate(addDays(currentDate, 1));
+        break;
+      case CalendarViewEnum.WEEK:
+        setCurrentDate(addDays(currentDate, 7));
+        break;
+      case CalendarViewEnum.MONTH:
+        setCurrentDate(addMonths(currentDate, 1));
+        break;
+      case CalendarViewEnum.YEAR:
+        setCurrentDate(addYears(currentDate, 1));
+        break;
+      default:
+        break;
+    }
   };
 
   const horizontalDotsSVG = (
@@ -37,7 +78,7 @@ const CalendarViewParent = () => {
       case CalendarViewEnum.WEEK:
         return <WeeklyView />;
       case CalendarViewEnum.MONTH:
-        return 'Month view';
+        return <MonthlyView currentDate={currentDate} />;
       case CalendarViewEnum.YEAR:
         return 'Yearly view';
     }
@@ -45,18 +86,20 @@ const CalendarViewParent = () => {
 
   return (
     <>
-      <div className="h-56 rounded-md border dark:border-slate-700">
+      <div className="rounded-md border dark:border-slate-700 overflow-hidden">
         <header className="flex items-center justify-between border border-t-0 border-l-0 border-r-0 bg-gray-50 px-6 py-4 dark:border-slate-700 dark:bg-gray-800">
-          <h1 className="text-md font-semibold">June 2024</h1>
+          <h1 className="text-md font-semibold">{format(currentDate, 'MMMM yyyy')}</h1>
           <div className="flex items-center gap-6">
             <Button.Group>
-              <Button color="gray">
+              <Button color="gray" onClick={leftArrowClickHandler}>
                 <FaAngleLeft className="h-4" />
               </Button>
               <Button color="gray" size="sm" className="hidden md:block">
-                <span className="px-3">Today</span>
+                <span className="px-3" onClick={() => setCurrentDate(new Date())}>
+                  Today
+                </span>
               </Button>
-              <Button color="gray">
+              <Button color="gray" onClick={rightArrowClickHandler}>
                 <FaAngleRight className="h-4" />
               </Button>
             </Button.Group>
@@ -133,7 +176,7 @@ const CalendarViewParent = () => {
             </Button>
           </div>
         </header>
-        <main>{renderView()}</main>
+        <main className="">{renderView()}</main>
       </div>
     </>
   );

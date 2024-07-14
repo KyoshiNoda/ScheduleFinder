@@ -18,7 +18,7 @@ const SchedulePage = () => {
     //   </div>
     //   {scheduleToast.state && <Toast message={scheduleToast.message} />}
     // </div>
-    <div className="min-h-full p-5 dark:bg-slate-900 dark:text-white">
+    <div className="h-screen p-5 dark:bg-slate-900 dark:text-white">
       <CalendarViewParent />
     </div>
   );
