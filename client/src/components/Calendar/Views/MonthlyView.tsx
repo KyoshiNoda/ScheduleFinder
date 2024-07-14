@@ -1,12 +1,11 @@
-import { format } from 'date-fns';
+import React from 'react';
+import { format, isSameDay } from 'date-fns';
 import { generateMonthlyDates } from '../../../utils/scheduleUtils';
-import { useState } from 'react';
-const MonthlyView = ({currentDate}) => {
 
+const MonthlyView = ({ currentDate }) => {
   const dates = generateMonthlyDates(currentDate);
-
-  const prevMonth = () => {};
-  const nextMonth = () => {};
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Normalize today's date to midnight
 
   return (
     <div className="grid h-full grid-cols-7 p-2">
@@ -17,14 +16,20 @@ const MonthlyView = ({currentDate}) => {
       ))}
       {dates.map((date) => (
         <div
-          className={`border-collapse border px-4 py-1 text-sm ${
+          className={`border-collapse border px-4 py-1 text-sm relative ${
             format(date, 'MM') === format(currentDate, 'MM')
               ? 'text-black dark:text-white'
               : 'text-gray-400 dark:text-gray-600'
           }`}
           key={date.toISOString()}
         >
-          {format(date, 'd')}
+          <div
+            className={`${
+              isSameDay(date, today) ? 'flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 dark:bg-blue-700 text-white' : ''
+            }`}
+          >
+            {format(date, 'd')}
+          </div>
         </div>
       ))}
     </div>
