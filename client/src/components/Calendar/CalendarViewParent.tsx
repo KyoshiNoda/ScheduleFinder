@@ -96,7 +96,7 @@ const CalendarViewParent = () => {
       <div className="h-5/6 rounded-md border dark:border-slate-700">
         <header className="flex items-center justify-between border border-t-0 border-l-0 border-r-0 bg-gray-50 px-6 py-4 dark:border-slate-700 dark:bg-gray-800">
           <h1 className="text-md font-semibold">{dateTitle}</h1>
-          {selectedView === CalendarViewEnum.DAY && <span className='text-xl text-gray-200'>{format(currentDate, 'EEEE')}</span>}
+          {selectedView === CalendarViewEnum.DAY && <span className='text-xl dark:text-gray-200'>{format(currentDate, 'EEEE')}</span>}
           <div className="flex items-center gap-6">
             <Button.Group>
               <Button color="gray" onClick={leftArrow}>
