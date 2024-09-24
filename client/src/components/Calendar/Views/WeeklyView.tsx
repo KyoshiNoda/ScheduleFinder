@@ -21,7 +21,12 @@ const WeeklyView = ({ currentDate }: Props) => {
   const dates = generateWeekDates();
   console.log('dates:', dates);
   return (
-    <div className="h-[750px] w-full overflow-y-scroll pl-12 pr-7">
+    <div className="relative h-[750px] w-full overflow-y-scroll pl-12 pr-7">
+      <div className="absolute left-[10px] top-[74px] flex flex-col gap-y-24">
+        {CALENDAR_HOURS.map((hour) => (
+          <span className="text-xs text-gray-400">{hour}</span>
+        ))}
+      </div>
       <div className="sticky top-0 z-10 grid grid-cols-7 bg-white shadow">
         {dates.map((date, index) => (
           <div className="flex h-14 items-center justify-center gap-1 border-[0.5px] text-sm">
