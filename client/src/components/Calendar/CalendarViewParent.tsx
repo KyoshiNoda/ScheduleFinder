@@ -4,7 +4,6 @@ import { CalendarViewEnum } from '../../enums';
 import { capitalizeWord } from '../../utils/functions';
 import { FaAngleDown, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import WeeklyView from './Views/WeeklyView';
-import { generateWeeklyDates } from '../../utils/scheduleUtils';
 import { addDays, subDays, addMonths, subMonths, addYears, subYears, format } from 'date-fns';
 import MonthlyView from './Views/MonthlyView';
 
@@ -76,7 +75,7 @@ const CalendarViewParent = () => {
       case CalendarViewEnum.DAY:
         return 'Daily view';
       case CalendarViewEnum.WEEK:
-        return <WeeklyView />;
+        return <WeeklyView currentDate={currentDate} />;
       case CalendarViewEnum.MONTH:
         return <MonthlyView currentDate={currentDate} />;
       case CalendarViewEnum.YEAR:
@@ -86,7 +85,7 @@ const CalendarViewParent = () => {
 
   return (
     <>
-      <div className="rounded-md border dark:border-slate-700 overflow-hidden">
+      <div className="overflow-hidden rounded-md border dark:border-slate-700">
         <header className="flex items-center justify-between border border-t-0 border-l-0 border-r-0 bg-gray-50 px-6 py-4 dark:border-slate-700 dark:bg-gray-800">
           <h1 className="text-md font-semibold">{format(currentDate, 'MMMM yyyy')}</h1>
           <div className="flex items-center gap-6">
@@ -122,7 +121,7 @@ const CalendarViewParent = () => {
                 {horizontalDotsSVG}
               </button>
               {isDropdownOpen && (
-                <div className="absolute top-12 right-0 z-10 w-36 rounded-lg bg-white py-1 shadow dark:bg-gray-700">
+                <div className="absolute top-12 right-0 z-50 w-36 rounded-lg bg-white py-1 shadow dark:bg-gray-700">
                   <ul className="text-sm text-gray-700 dark:divide-slate-600 dark:text-gray-200">
                     <li className="py-1 md:hidden">
                       <button className="w-full border-b border-b-gray-100 px-4 py-2 text-start text-sm text-gray-700 hover:bg-gray-100 dark:border-b-gray-600 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
@@ -176,7 +175,7 @@ const CalendarViewParent = () => {
             </Button>
           </div>
         </header>
-        <main className="">{renderView()}</main>
+        <main>{renderView()}</main>
       </div>
     </>
   );

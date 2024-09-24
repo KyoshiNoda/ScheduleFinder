@@ -1,17 +1,18 @@
 import { format } from 'date-fns';
-import { generateMonthlyDates } from '../../../utils/scheduleUtils';
+import { generateMonthDates } from '../../../utils/scheduleUtils';
+import { WEEK_DAYS } from '../../../utils/constants';
 
 type Props = {
   currentDate: Date;
 };
 
 const MonthlyView = ({ currentDate }: Props) => {
-  const dates = generateMonthlyDates(currentDate);
+  const dates = generateMonthDates(currentDate);
 
   return (
     <div className="h-full w-full">
       <div className="grid grid-cols-7">
-        {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
+        {WEEK_DAYS.map((day) => (
           <div className="border-[0.5px] py-2 text-center text-sm font-semibold" key={day}>
             {day}
           </div>
