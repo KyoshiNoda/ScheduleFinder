@@ -5,11 +5,11 @@ import { cn } from '../../../utils/functions';
 import { isSameDay } from 'date-fns';
 
 type Props = {
-  currentDate: Date;
+  initialDisplayDate: Date;
 };
 
-const MonthlyView = ({ currentDate }: Props) => {
-  const dates = generateMonthDates(currentDate);
+const MonthlyView = ({ initialDisplayDate }: Props) => {
+  const dates = generateMonthDates(initialDisplayDate);
 
   return (
     <div className="h-full w-full">
@@ -28,7 +28,7 @@ const MonthlyView = ({ currentDate }: Props) => {
           >
             <span
               className={cn({
-                'rounded-full bg-blue-700 p-1 text-white': isSameDay(date, currentDate),
+                'rounded-full bg-blue-700 p-1 text-white': isSameDay(date, new Date()),
               })}
             >
               {format(date, 'd')}

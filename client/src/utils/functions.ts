@@ -65,7 +65,3 @@ export const capitalizeWord = (word: string) =>
 export const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs));
 };
-
-export const isSameDay = (date1: Date, date2: Date): boolean => {
-  return format(date1, 'yyyy-MM-dd') === format(date2, 'yyyy-MM-dd');
-};

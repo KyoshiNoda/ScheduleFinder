@@ -12,7 +12,7 @@ const CalendarViewParent = () => {
     localStorage.getItem('calendarView') || CalendarViewEnum.WEEK
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [initialDisplayDate, setinitialDisplayDate] = useState(new Date());
 
   const handleViewSelection = (calendarView: CalendarViewEnum) => {
     localStorage.setItem('calendarView', calendarView);
@@ -23,16 +23,16 @@ const CalendarViewParent = () => {
   const leftArrowClickHandler = () => {
     switch (selectedView) {
       case CalendarViewEnum.DAY:
-        setCurrentDate(subDays(currentDate, 1));
+        setinitialDisplayDate(subDays(initialDisplayDate, 1));
         break;
       case CalendarViewEnum.WEEK:
-        setCurrentDate(subDays(currentDate, 7));
+        setinitialDisplayDate(subDays(initialDisplayDate, 7));
         break;
       case CalendarViewEnum.MONTH:
-        setCurrentDate(subMonths(currentDate, 1));
+        setinitialDisplayDate(subMonths(initialDisplayDate, 1));
         break;
       case CalendarViewEnum.YEAR:
-        setCurrentDate(subYears(currentDate, 1));
+        setinitialDisplayDate(subYears(initialDisplayDate, 1));
         break;
       default:
         break;
@@ -42,16 +42,16 @@ const CalendarViewParent = () => {
   const rightArrowClickHandler = () => {
     switch (selectedView) {
       case CalendarViewEnum.DAY:
-        setCurrentDate(addDays(currentDate, 1));
+        setinitialDisplayDate(addDays(initialDisplayDate, 1));
         break;
       case CalendarViewEnum.WEEK:
-        setCurrentDate(addDays(currentDate, 7));
+        setinitialDisplayDate(addDays(initialDisplayDate, 7));
         break;
       case CalendarViewEnum.MONTH:
-        setCurrentDate(addMonths(currentDate, 1));
+        setinitialDisplayDate(addMonths(initialDisplayDate, 1));
         break;
       case CalendarViewEnum.YEAR:
-        setCurrentDate(addYears(currentDate, 1));
+        setinitialDisplayDate(addYears(initialDisplayDate, 1));
         break;
       default:
         break;
@@ -75,9 +75,9 @@ const CalendarViewParent = () => {
       case CalendarViewEnum.DAY:
         return 'Daily view';
       case CalendarViewEnum.WEEK:
-        return <WeeklyView currentDate={currentDate} />;
+        return <WeeklyView initialDisplayDate={initialDisplayDate} />;
       case CalendarViewEnum.MONTH:
-        return <MonthlyView currentDate={currentDate} />;
+        return <MonthlyView initialDisplayDate={initialDisplayDate} />;
       case CalendarViewEnum.YEAR:
         return 'Yearly view';
     }
@@ -87,14 +87,14 @@ const CalendarViewParent = () => {
     <>
       <div className="overflow-hidden rounded-md border dark:border-slate-700">
         <header className="flex items-center justify-between border border-t-0 border-l-0 border-r-0 bg-gray-50 px-6 py-4 dark:border-slate-700 dark:bg-gray-800">
-          <h1 className="text-md font-semibold">{format(currentDate, 'MMMM yyyy')}</h1>
+          <h1 className="text-md font-semibold">{format(initialDisplayDate, 'MMMM yyyy')}</h1>
           <div className="flex items-center gap-6">
             <Button.Group>
               <Button color="gray" onClick={leftArrowClickHandler}>
                 <FaAngleLeft className="h-4" />
               </Button>
               <Button color="gray" size="sm" className="hidden md:block">
-                <span className="px-3" onClick={() => setCurrentDate(new Date())}>
+                <span className="px-3" onClick={() => setinitialDisplayDate(new Date())}>
                   Today
                 </span>
               </Button>

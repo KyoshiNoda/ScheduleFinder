@@ -5,7 +5,7 @@ import { cn } from '../../../utils/functions';
 import { isSameDay } from 'date-fns';
 
 type Props = {
-  currentDate: Date;
+  initialDisplayDate: Date;
 };
 
 const getNumberOfTimeBlocks = (): number => {
@@ -16,7 +16,7 @@ const getNumberOfTimeBlocks = (): number => {
   return slotsPerHour + additionalSlotRow;
 };
 
-const WeeklyView = ({ currentDate }: Props) => {
+const WeeklyView = ({ initialDisplayDate }: Props) => {
   const dates = generateWeekDates();
 
   return (
@@ -34,14 +34,12 @@ const WeeklyView = ({ currentDate }: Props) => {
             key={index}
             className="flex h-14 items-center justify-center gap-1 border-[0.5px] text-sm"
           >
-            <span
-              className={cn('text-gray-500', { 'text-blue-700': isSameDay(date, currentDate) })}
-            >
+            <span className={cn('text-gray-500', { 'text-blue-700': isSameDay(date, new Date()) })}>
               {WEEK_DAYS[index]}
             </span>{' '}
             <span
               className={cn('font-semibold', {
-                'rounded-full bg-blue-700 p-1 text-white': isSameDay(date, currentDate),
+                'rounded-full bg-blue-700 p-1 text-white': isSameDay(date, new Date()),
               })}
             >
               {format(date, 'd')}
