@@ -17,7 +17,7 @@ const getNumberOfTimeBlocks = (): number => {
 };
 
 const WeeklyView = ({ initialDisplayDate }: Props) => {
-  const dates = generateWeekDates();
+  const dates = generateWeekDates(initialDisplayDate);
 
   return (
     <div className="relative h-[750px] w-full overflow-y-scroll pl-12 pr-7">
