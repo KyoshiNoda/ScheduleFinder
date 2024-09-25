@@ -1,6 +1,6 @@
 import { generateWeekDates } from '../../../utils/scheduleUtils';
 import { format } from 'date-fns';
-import { WEEK_DAYS, CALENDAR_HOURS } from '../../../utils/constants';
+import { WEEK_DAYS, CALENDAR_HOURS, TODAY } from '../../../utils/constants';
 import { cn } from '../../../utils/functions';
 import { isSameDay } from 'date-fns';
 
@@ -34,12 +34,12 @@ const WeeklyView = ({ initialDisplayDate }: Props) => {
             key={index}
             className="flex h-14 items-center justify-center gap-1 border-[0.5px] text-sm"
           >
-            <span className={cn('text-gray-500', { 'text-blue-700': isSameDay(date, new Date()) })}>
+            <span className={cn('text-gray-500', { 'text-blue-700': isSameDay(date, TODAY) })}>
               {WEEK_DAYS[index]}
             </span>{' '}
             <span
               className={cn('font-semibold', {
-                'rounded-full bg-blue-700 p-1 text-white': isSameDay(date, new Date()),
+                'rounded-full bg-blue-700 p-1 text-white': isSameDay(date, TODAY),
               })}
             >
               {format(date, 'd')}

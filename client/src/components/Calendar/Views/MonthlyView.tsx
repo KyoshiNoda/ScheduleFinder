@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { generateMonthDates } from '../../../utils/scheduleUtils';
-import { WEEK_DAYS } from '../../../utils/constants';
+import { WEEK_DAYS, TODAY } from '../../../utils/constants';
 import { cn } from '../../../utils/functions';
 import { isSameDay } from 'date-fns';
 
@@ -28,7 +28,7 @@ const MonthlyView = ({ initialDisplayDate }: Props) => {
           >
             <span
               className={cn({
-                'rounded-full bg-blue-700 p-1 text-white': isSameDay(date, new Date()),
+                'rounded-full bg-blue-700 p-1 text-white': isSameDay(date, TODAY),
               })}
             >
               {format(date, 'd')}

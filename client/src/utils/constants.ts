@@ -26,3 +26,5 @@ export const CALENDAR_HOURS = [
   '10PM',
   '11PM',
 ];
+
+export const TODAY = new Date();
