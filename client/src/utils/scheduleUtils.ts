@@ -111,7 +111,7 @@ export const calculateDistanceFromTop = (startTime: string) => {
 };
 
 // We are assuming Monday is the first day in the week.
-export const generateWeekDates = () => {
+export const generateWeekDates = (): Date[] => {
   let startWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
   const endWeek = endOfWeek(new Date(), { weekStartsOn: 1 });
 
@@ -124,17 +124,18 @@ export const generateWeekDates = () => {
   return week;
 };
 
-export const generateMonthDates = (monthDate: Date) => {
+export const generateMonthDates = (monthDate: Date): Date[] => {
   const startOfMonthDate = startOfMonth(monthDate);
   const endOfMonthDate = endOfMonth(monthDate);
-  const days = [];
+  const month = [];
 
   let currentDate = startOfWeek(startOfMonthDate, { weekStartsOn: 1 });
   const lastDate = endOfWeek(endOfMonthDate, { weekStartsOn: 1 });
 
   while (currentDate <= lastDate) {
-    days.push(new Date(currentDate));
+    month.push(new Date(currentDate));
     currentDate = addDays(currentDate, 1);
   }
-  return days;
+
+  return month;
 };

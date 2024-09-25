@@ -1,6 +1,8 @@
 import { format } from 'date-fns';
 import { generateMonthDates } from '../../../utils/scheduleUtils';
 import { WEEK_DAYS } from '../../../utils/constants';
+import { cn } from '../../../utils/functions';
+import { isSameDay } from 'date-fns';
 
 type Props = {
   currentDate: Date;
@@ -21,14 +23,16 @@ const MonthlyView = ({ currentDate }: Props) => {
       <div className="grid h-full w-full grid-cols-7">
         {dates.map((date) => (
           <div
-            className={`h-16 border-collapse border-[0.5px] px-4 py-1 text-sm lg:h-36  ${
-              format(date, 'MM') === format(currentDate, 'MM')
-                ? 'text-black dark:text-white'
-                : 'bg-gray-50 text-gray-400 dark:text-gray-600'
-            }`}
+            className="h-16 border-collapse border-[0.5px] px-3 py-2 text-sm lg:h-36"
             key={date.toISOString()}
           >
-            {format(date, 'd')}
+            <span
+              className={cn({
+                'rounded-full bg-blue-700 p-1 text-white': isSameDay(date, currentDate),
+              })}
+            >
+              {format(date, 'd')}
+            </span>
           </div>
         ))}
       </div>
