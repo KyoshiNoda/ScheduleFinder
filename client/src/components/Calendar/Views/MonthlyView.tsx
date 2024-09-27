@@ -11,6 +11,26 @@ type Props = {
 const MonthlyView = ({ initialDisplayDate }: Props) => {
   const dates = generateMonthDates(initialDisplayDate);
 
+  // This function keeps the dates array at a length of 35
+  const trimDates = (dates: Date[]): Date[] => {
+    let start = 0,
+      end = dates.length - 1;
+
+    while (dates.length > 35) {
+      if (!isSameMonth(initialDisplayDate, dates[start])) {
+        dates.shift();
+        start += 1;
+      }
+
+      if (!isSameMonth(initialDisplayDate, dates[end])) {
+        dates.pop();
+        end -= 1;
+      }
+    }
+
+    return dates;
+  };
+
   return (
     <div className="h-full w-full">
       <div className="grid grid-cols-7">
@@ -24,7 +44,7 @@ const MonthlyView = ({ initialDisplayDate }: Props) => {
         ))}
       </div>
       <div className="grid h-full w-full grid-cols-7">
-        {dates.map((date) => (
+        {trimDates(dates).map((date) => (
           <div
             className={cn(
               'h-16 border-collapse border-[0.5px] px-3 py-2 text-sm dark:border-gray-700 lg:h-36',
