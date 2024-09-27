@@ -32,9 +32,13 @@ const WeeklyView = ({ initialDisplayDate }: Props) => {
         {dates.map((date, index) => (
           <div
             key={index}
-            className="flex h-14 items-center justify-center gap-1 border-[0.5px] text-sm"
+            className="flex h-14 items-center justify-center gap-1 border-[0.5px] text-sm dark:border-gray-700 dark:bg-slate-900"
           >
-            <span className={cn('text-gray-500', { 'text-blue-700': isSameDay(date, TODAY) })}>
+            <span
+              className={cn('text-gray-500 dark:text-gray-300', {
+                'text-blue-700': isSameDay(date, TODAY),
+              })}
+            >
               {WEEK_DAYS[index]}
             </span>{' '}
             <span
@@ -49,7 +53,10 @@ const WeeklyView = ({ initialDisplayDate }: Props) => {
       </div>
       <div className="grid grid-cols-7">
         {new Array(getNumberOfTimeBlocks()).fill('_').map((_, index) => (
-          <div key={index} className={cn('h-14 border-[0.5px]', { 'h-7': index < 7 })}></div>
+          <div
+            key={index}
+            className={cn('h-14 border-[0.5px] dark:border-gray-700', { 'h-7': index < 7 })}
+          ></div>
         ))}
       </div>
     </div>
