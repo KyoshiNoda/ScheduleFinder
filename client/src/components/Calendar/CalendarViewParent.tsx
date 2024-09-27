@@ -6,6 +6,7 @@ import { FaAngleDown, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import WeeklyView from './Views/WeeklyView';
 import { addDays, subDays, addMonths, subMonths, addYears, subYears, format } from 'date-fns';
 import MonthlyView from './Views/MonthlyView';
+import { TODAY } from '../../utils/constants';
 
 const CalendarViewParent = () => {
   const [selectedView, setSelectedView] = useState<string>(
@@ -13,7 +14,7 @@ const CalendarViewParent = () => {
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   // TODO: fix this so that the selected date persists across view changes!
-  const [initialDisplayDate, setInitialDisplayDate] = useState(new Date());
+  const [initialDisplayDate, setInitialDisplayDate] = useState(TODAY);
 
   const handleViewSelection = (calendarView: CalendarViewEnum) => {
     localStorage.setItem('calendarView', calendarView);
@@ -95,7 +96,7 @@ const CalendarViewParent = () => {
                 <FaAngleLeft className="h-4" />
               </Button>
               <Button color="gray" size="sm" className="hidden md:block">
-                <span className="px-3" onClick={() => setInitialDisplayDate(new Date())}>
+                <span className="px-3" onClick={() => setInitialDisplayDate(TODAY)}>
                   Today
                 </span>
               </Button>
