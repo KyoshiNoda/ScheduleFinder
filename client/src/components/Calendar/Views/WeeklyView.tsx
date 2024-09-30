@@ -3,31 +3,35 @@ import { format } from 'date-fns';
 import { WEEK_DAYS, CALENDAR_HOURS, TODAY } from '../../../utils/constants';
 import { cn } from '../../../utils/functions';
 import { isSameDay } from 'date-fns';
+import { useMemo } from 'react';
 
 type Props = {
   initialDisplayDate: Date;
 };
 
-const getNumberOfTimeBlocks = (): number => {
-  const hoursAWeek = 168;
-  const slotsPerHour = hoursAWeek * 2;
-  const additionalSlotRow = 7;
+// There are 168 hours in a week.
+// We are displaying 2 slots per hour so that's 168 * 2 = 336
+// We have an additional row at the top so that's 336 + 7 = 343
+const NUMBER_OF_SLOTS = 343;
 
-  return slotsPerHour + additionalSlotRow;
-};
+// We add thicker borders if the slot is in the left or right edge.
+const useThickerBorders = (index: number) => ({
+  'border-l-[1px]': index % 7 === 0,
+  'border-r-[1px]': (index + 1) % 7 === 0,
+});
 
 const WeeklyView = ({ initialDisplayDate }: Props) => {
-  const dates = generateWeekDates(initialDisplayDate);
+  const dates = useMemo(() => generateWeekDates(initialDisplayDate), [initialDisplayDate]);
 
   return (
     <>
       <div className="sticky top-0 z-10 grid grid-cols-7 border-b-[0.5px] bg-white pl-12 pr-7 shadow dark:border-gray-700 dark:bg-slate-900">
         {dates.map((date, index) => (
           <div
-            key={index}
+            key={date.getTime()}
             className={cn(
               'flex h-14 items-center justify-center gap-1 border-x-[0.5px] text-sm dark:border-gray-700 dark:bg-slate-900',
-              { 'border-l-[1px]': index === 0, 'border-r-[1px]': index === 6 }
+              useThickerBorders(index)
             )}
           >
             <span
@@ -57,13 +61,12 @@ const WeeklyView = ({ initialDisplayDate }: Props) => {
           ))}
         </div>
         <div className="grid grid-cols-7">
-          {new Array(getNumberOfTimeBlocks()).fill('_').map((_, index) => (
+          {[...Array(NUMBER_OF_SLOTS)].map((_, index) => (
             <div
               key={index}
               className={cn('h-14 border-[0.5px] dark:border-gray-700', {
                 'h-7 border-t-0': index < 7,
-                'border-l-[1px]': index % 7 === 0,
-                'border-r-[1px]': (index + 1) % 7 === 0,
+                ...useThickerBorders(index),
               })}
             ></div>
           ))}
