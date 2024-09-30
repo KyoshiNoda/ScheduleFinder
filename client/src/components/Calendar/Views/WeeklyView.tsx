@@ -14,6 +14,9 @@ type Props = {
 // We have an additional row at the top so that's 336 + 7 = 343
 const NUMBER_OF_SLOTS = 343;
 
+const LIGHT_MODE_BORDER = 'border-gray-200';
+const DARK_MODE_BORDER = 'dark:border-gray-700';
+
 // We add thicker borders if the slot is in the left or right edge.
 const useThickerBorders = (index: number) => ({
   'border-l-[1px]': index % 7 === 0,
@@ -25,12 +28,20 @@ const WeeklyView = ({ initialDisplayDate }: Props) => {
 
   return (
     <>
-      <div className="sticky top-0 z-10 grid grid-cols-7 border-b-[0.5px] bg-white pl-12 pr-7 shadow dark:border-gray-700 dark:bg-slate-900">
+      <div
+        className={cn(
+          'sticky top-0 z-10 grid grid-cols-7 border-b-[0.5px] bg-white pl-12 pr-7 shadow dark:bg-slate-900',
+          LIGHT_MODE_BORDER,
+          DARK_MODE_BORDER
+        )}
+      >
         {dates.map((date, index) => (
           <div
             key={date.getTime()}
             className={cn(
-              'flex h-14 items-center justify-center gap-1 border-x-[0.5px] text-sm dark:border-gray-700 dark:bg-slate-900',
+              'flex h-14 items-center justify-center gap-1 border-x-[0.5px] text-sm dark:bg-slate-900',
+              LIGHT_MODE_BORDER,
+              DARK_MODE_BORDER,
               useThickerBorders(index)
             )}
           >
@@ -64,7 +75,7 @@ const WeeklyView = ({ initialDisplayDate }: Props) => {
           {[...Array(NUMBER_OF_SLOTS)].map((_, index) => (
             <div
               key={index}
-              className={cn('h-14 border-[0.5px] dark:border-gray-700', {
+              className={cn('h-14 border-[0.5px]', LIGHT_MODE_BORDER, DARK_MODE_BORDER, {
                 'h-7 border-t-0': index < 7,
                 ...useThickerBorders(index),
               })}
