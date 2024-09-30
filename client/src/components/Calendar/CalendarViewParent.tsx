@@ -13,7 +13,6 @@ const CalendarViewParent = () => {
     localStorage.getItem('calendarView') || CalendarViewEnum.WEEK
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  // TODO: fix this so that the selected date persists across view changes!
   const [initialDisplayDate, setInitialDisplayDate] = useState(TODAY);
 
   const handleViewSelection = (calendarView: CalendarViewEnum) => {

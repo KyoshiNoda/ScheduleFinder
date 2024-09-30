@@ -25,7 +25,10 @@ const WeeklyView = ({ initialDisplayDate }: Props) => {
         {dates.map((date, index) => (
           <div
             key={index}
-            className="flex h-14 items-center justify-center gap-1 border-x-[0.5px] text-sm dark:border-gray-700 dark:bg-slate-900"
+            className={cn(
+              'flex h-14 items-center justify-center gap-1 border-x-[0.5px] text-sm dark:border-gray-700 dark:bg-slate-900',
+              { 'border-l-[1px]': index === 0, 'border-r-[1px]': index === 6 }
+            )}
           >
             <span
               className={cn('text-gray-500 dark:text-gray-300', {
@@ -57,7 +60,11 @@ const WeeklyView = ({ initialDisplayDate }: Props) => {
           {new Array(getNumberOfTimeBlocks()).fill('_').map((_, index) => (
             <div
               key={index}
-              className={cn('h-14 border-[0.5px] dark:border-gray-700', { 'h-7': index < 7 })}
+              className={cn('h-14 border-[0.5px] dark:border-gray-700', {
+                'h-7 border-t-0': index < 7,
+                'border-l-[1px]': index % 7 === 0,
+                'border-r-[1px]': (index + 1) % 7 === 0,
+              })}
             ></div>
           ))}
         </div>

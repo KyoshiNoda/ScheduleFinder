@@ -11,7 +11,8 @@ type Props = {
 const MonthlyView = ({ initialDisplayDate }: Props) => {
   const dates = generateMonthDates(initialDisplayDate);
 
-  // This function keeps the dates array at a length of 35
+  // This function keeps the dates array at a length of 35 so that no more than 35 slots 
+  // are displayed per month, making it easier to a handle the height of the calendar.
   const trimDates = (dates: Date[]): Date[] => {
     let start = 0,
       end = dates.length - 1;
