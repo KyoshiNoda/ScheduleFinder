@@ -88,7 +88,7 @@ const CalendarViewParent = () => {
     <>
       <div className="overflow-hidden rounded-md border dark:border-slate-700">
         <header className="flex items-center justify-between border border-t-0 border-l-0 border-r-0 bg-gray-50 px-6 py-4 dark:border-slate-700 dark:bg-gray-800">
-          <h1 className="text-md font-semibol">{format(initialDisplayDate, 'MMMM yyyy')}</h1>
+          <h1 className="text-md font-semibold">{format(initialDisplayDate, 'MMMM yyyy')}</h1>
           <div className="flex items-center gap-6">
             <Button.Group>
               <Button color="gray" onClick={leftArrowClickHandler}>
