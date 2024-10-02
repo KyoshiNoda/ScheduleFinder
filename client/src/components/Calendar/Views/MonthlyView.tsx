@@ -1,32 +1,70 @@
-import { format } from 'date-fns';
-import { generateMonthlyDates } from '../../../utils/scheduleUtils';
-import { useState } from 'react';
-const MonthlyView = ({currentDate}) => {
+import { format, isSameMonth } from 'date-fns';
+import { generateMonthDates } from '../../../utils/scheduleUtils';
+import { WEEK_DAYS, TODAY } from '../../../utils/constants';
+import { cn } from '../../../utils/functions';
+import { isSameDay } from 'date-fns';
 
-  const dates = generateMonthlyDates(currentDate);
+type Props = {
+  initialDisplayDate: Date;
+};
 
-  const prevMonth = () => {};
-  const nextMonth = () => {};
+const MonthlyView = ({ initialDisplayDate }: Props) => {
+  const dates = generateMonthDates(initialDisplayDate);
+
+  // This function keeps the dates array at a length of 35 so that no more than 35 slots
+  // are displayed per month, making it easier to a handle the height of the calendar.
+  const trimDates = (dates: Date[]): Date[] => {
+    let start = 0,
+      end = dates.length - 1;
+
+    while (dates.length > 35) {
+      if (!isSameMonth(initialDisplayDate, dates[start])) {
+        dates.shift();
+        start += 1;
+      }
+
+      if (!isSameMonth(initialDisplayDate, dates[end])) {
+        dates.pop();
+        end -= 1;
+      }
+    }
+
+    return dates;
+  };
 
   return (
-    <div className="grid h-full grid-cols-7 p-2">
-      {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
-        <div className="border-b text-center font-bold" key={day}>
-          {day}
-        </div>
-      ))}
-      {dates.map((date) => (
-        <div
-          className={`border-collapse border px-4 py-1 text-sm ${
-            format(date, 'MM') === format(currentDate, 'MM')
-              ? 'text-black dark:text-white'
-              : 'text-gray-400 dark:text-gray-600'
-          }`}
-          key={date.toISOString()}
-        >
-          {format(date, 'd')}
-        </div>
-      ))}
+    <div className="h-full w-full">
+      <div className="grid grid-cols-7">
+        {WEEK_DAYS.map((day) => (
+          <div
+            className="border-[0.5px] py-2 text-center text-sm font-semibold dark:border-gray-700"
+            key={day}
+          >
+            {day}
+          </div>
+        ))}
+      </div>
+      <div className="grid h-full w-full grid-cols-7">
+        {trimDates(dates).map((date) => (
+          <div
+            className={cn(
+              'h-16 border-collapse border-[0.5px] px-3 py-2 text-sm dark:border-gray-700 lg:h-36',
+              {
+                'dark:bg-darkMuted bg-gray-50': !isSameMonth(date, initialDisplayDate),
+              }
+            )}
+            key={date.toISOString()}
+          >
+            <span
+              className={cn({
+                'rounded-full bg-blue-700 px-[8.5px] py-[3px] text-white': isSameDay(date, TODAY),
+              })}
+            >
+              {format(date, 'd')}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
