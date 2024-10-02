@@ -54,7 +54,7 @@ const WeeklyView = ({ initialDisplayDate }: Props) => {
             </span>{' '}
             <span
               className={cn('font-semibold', {
-                'rounded-full bg-blue-700 p-1 text-white': isSameDay(date, TODAY),
+                'rounded-full bg-blue-700 py-[2px] px-[9px] text-white': isSameDay(date, TODAY),
               })}
             >
               {format(date, 'd')}

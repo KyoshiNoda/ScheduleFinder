@@ -11,7 +11,7 @@ type Props = {
 const MonthlyView = ({ initialDisplayDate }: Props) => {
   const dates = generateMonthDates(initialDisplayDate);
 
-  // This function keeps the dates array at a length of 35 so that no more than 35 slots 
+  // This function keeps the dates array at a length of 35 so that no more than 35 slots
   // are displayed per month, making it easier to a handle the height of the calendar.
   const trimDates = (dates: Date[]): Date[] => {
     let start = 0,
@@ -57,7 +57,7 @@ const MonthlyView = ({ initialDisplayDate }: Props) => {
           >
             <span
               className={cn({
-                'rounded-full bg-blue-700 p-1 text-white': isSameDay(date, TODAY),
+                'rounded-full bg-blue-700 px-[8.5px] py-[3px] text-white': isSameDay(date, TODAY),
               })}
             >
               {format(date, 'd')}
