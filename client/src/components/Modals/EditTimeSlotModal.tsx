@@ -7,8 +7,8 @@ import { Modal, Select, ToggleSwitch } from 'flowbite-react';
 import { useToast } from '../../utils/functions';
 import { DaysChecked as DaysCheckedType, TimeSlot as TimeSlotType } from '../../types';
 import { ToastEnum } from '../../enums';
-import DayPicker from '../Schedule/DayPicker';
-import { colors } from '../Schedule/TimeSlotInput';
+import DayPicker from '../Calendar/DayPicker';
+import { colors } from '../TimeSlot/TimeSlotInput';
 import { useEscapeKey } from '../../utils/functions';
 import { FaTrashAlt } from 'react-icons/fa';
 

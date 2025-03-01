@@ -1,7 +1,11 @@
 import { format } from 'date-fns';
 import { generateMonthlyDates } from '../../../utils/scheduleUtils';
 import { useState } from 'react';
-const MonthlyView = ({currentDate}) => {
+interface MonthlyViewProps {
+  currentDate: Date;
+}
+
+const MonthlyView = ({currentDate} : MonthlyViewProps) => {
 
   const dates = generateMonthlyDates(currentDate);
 
