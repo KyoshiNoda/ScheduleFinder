@@ -4,12 +4,12 @@ import { useCreateTimeSlotMutation } from '../../redux/services/schedule/schedul
 import { DaysChecked, TimeSlot as TimeSlotType } from '../../types';
 import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
 import { ToastEnum } from '../../enums';
-import { Modal, Button, Select } from 'flowbite-react';
-import { AiFillWarning } from 'react-icons/ai';
-import ClearScheduleButton from './ClearScheduleButton';
-import DayPicker from './DayPicker';
+import { Select } from 'flowbite-react';
+import ClearScheduleButton from '../Schedule/ClearScheduleButton';
+import DayPicker from '../Calendar/DayPicker';
 import { TypesOfInput } from '../../enums';
 import { useToast } from '../../utils/functions';
+import ExistingTimeSlotModal from '../Modals/ExisitingTImeSlotModal';
 export const colors: string[] = [
   'slate',
   'red',
@@ -44,7 +44,6 @@ const TimeSlotInput = () => {
   const [daysError, setDaysError] = useState<boolean>(false);
   const [timeError, setTimeError] = useState<boolean>(false);
   const [colorError, setColorError] = useState<boolean>(false);
-  const [timeIntervalError, setTimeIntervalError] = useState<boolean>(false);
   const [timeSlotError, setTimeSlotError] = useState<boolean>(false);
   const [startTimeMeridiem, setStartTimeMeridiem] = useState<string>('AM');
   const [endTimeMeridiem, setEndTimeMeridiem] = useState<string>('AM');
@@ -88,15 +87,6 @@ const TimeSlotInput = () => {
       return;
     }
 
-    // checks for valid range from 7 AM - 9 PM
-    if (
-      (endTimeMeridiem === 'AM' && parseInt(endTimeHourRef.current.value) < 7) ||
-      (endTimeMeridiem === 'PM' && parseInt(endTimeHourRef.current.value) > 9 && parseInt(endTimeHourRef.current.value) !== 12)
-    ) {
-      setTimeIntervalError(true);
-      return;
-    }
-
     const daySelection: DaysChecked = {
       monday: false,
       tuesday: false,
@@ -128,8 +118,12 @@ const TimeSlotInput = () => {
       setDaysError(false);
     }
 
-    const startTime = `${startTimeHourRef.current.value}:${validateMinutes(startTimeMinutesRef.current.value)} ${startTimeMeridiem}`;
-    const endTime = `${endTimeHourRef.current.value}:${validateMinutes(endTimeMinutesRef.current.value)} ${endTimeMeridiem}`;
+    const startTime = `${startTimeHourRef.current.value}:${validateMinutes(
+      startTimeMinutesRef.current.value
+    )} ${startTimeMeridiem}`;
+    const endTime = `${endTimeHourRef.current.value}:${validateMinutes(
+      endTimeMinutesRef.current.value
+    )} ${endTimeMeridiem}`;
 
     if (convertTo24Hour(startTime) > convertTo24Hour(endTime)) {
       setTimeError(true);
@@ -156,14 +150,12 @@ const TimeSlotInput = () => {
     };
 
     try {
-      const result = await createTimeSlotMutation({
+      await createTimeSlotMutation({
         scheduleId: scheduleID,
         timeSlot: currentTimeSlot,
       });
       showToast(ToastEnum.CREATED_TIMESLOT);
-      if ('data' in result) {
-        const { data } = result;
-      }
+
       const resetDays: DaysChecked = {
         monday: false,
         tuesday: false,
@@ -186,19 +178,12 @@ const TimeSlotInput = () => {
     formRef.current.reset();
   };
 
-  const validateMeridiem = (inputRef: React.RefObject<HTMLInputElement>, inputType: TypesOfInput) => {
+  const validateMeridiem = (
+    inputRef: React.RefObject<HTMLInputElement>,
+    inputType: TypesOfInput
+  ) => {
     // @ts-ignore: Object is possibly 'null'.
     const inputValue: number = parseFloat(inputRef.current.value);
-
-    if (
-      (inputRef === startTimeHourRef && inputValue < 7 && startTimeMeridiem === 'AM') ||
-      (inputRef === endTimeHourRef && inputValue !== 12 && inputValue > 9 && endTimeMeridiem === 'PM')
-    ) {
-      setTimeIntervalError(true);
-    } else {
-      setTimeIntervalError(false);
-    }
-
     if (inputType === TypesOfInput.HourInput) {
       if (inputValue < 1 || inputValue > 12) {
         inputRef.current?.classList.add(
@@ -272,10 +257,13 @@ const TimeSlotInput = () => {
       {!isFetching && data && (
         <div className="flex flex-col">
           <ClearScheduleButton scheduleId={scheduleID} currentSchedule={data} />
-          <div className="mt-6 flex flex-col rounded-lg bg-slate-50 p-5 dark:bg-black">
+          <div className="mt-6 flex flex-col rounded-lg border bg-white p-5 shadow dark:border-none dark:bg-black dark:shadow-none">
             <form ref={formRef} onSubmit={addTimeSlot} className="space-y-2">
               <div>
-                <label htmlFor="title" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                <label
+                  htmlFor="title"
+                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                >
                   Title
                 </label>
                 <input
@@ -288,15 +276,27 @@ const TimeSlotInput = () => {
                 />
               </div>
               <div className="mt-2">
-                <label htmlFor="days" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                <label
+                  htmlFor="days"
+                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                >
                   Days
                 </label>
-                <DayPicker selectedDays={selectedDays} setSelectedDays={setSelectedDays} daysError={daysError} />
-                <div className="flex w-full justify-center">{daysError && <p className="text-rose-500">Please pick a day!</p>}</div>
+                <DayPicker
+                  selectedDays={selectedDays}
+                  setSelectedDays={setSelectedDays}
+                  daysError={daysError}
+                />
+                <div className="flex w-full justify-center">
+                  {daysError && <p className="text-rose-500">Please pick a day!</p>}
+                </div>
               </div>
               <div className="flex flex-col">
                 <div className="mb-2">
-                  <label htmlFor="startTime" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                  <label
+                    htmlFor="startTime"
+                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                  >
                     Start Time
                   </label>
                   <div className="flex items-center">
@@ -323,7 +323,9 @@ const TimeSlotInput = () => {
                           !timeError &&
                           'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
                         }`}
-                        onChange={() => validateMeridiem(startTimeMinutesRef, TypesOfInput.MinutesInput)}
+                        onChange={() =>
+                          validateMeridiem(startTimeMinutesRef, TypesOfInput.MinutesInput)
+                        }
                         placeholder="00"
                         maxLength={2}
                         required
@@ -342,7 +344,10 @@ const TimeSlotInput = () => {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="endTime" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                  <label
+                    htmlFor="endTime"
+                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                  >
                     End Time
                   </label>
                   <div className="flex items-center">
@@ -369,13 +374,21 @@ const TimeSlotInput = () => {
                           !timeError &&
                           'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500'
                         }`}
-                        onChange={() => validateMeridiem(endTimeMinutesRef, TypesOfInput.MinutesInput)}
+                        onChange={() =>
+                          validateMeridiem(endTimeMinutesRef, TypesOfInput.MinutesInput)
+                        }
                         placeholder="00"
                         maxLength={2}
                         required
                       />
                     </div>
-                    <Select value={endTimeMeridiem} onChange={(e) => handleEndTimeMeridiemChange(e)} id="endTimeMeridiem" className="w-3/5" required>
+                    <Select
+                      value={endTimeMeridiem}
+                      onChange={(e) => handleEndTimeMeridiemChange(e)}
+                      id="endTimeMeridiem"
+                      className="w-3/5"
+                      required
+                    >
                       <option value="AM" disabled={startTimeMeridiem === 'PM'}>
                         AM
                       </option>
@@ -383,11 +396,13 @@ const TimeSlotInput = () => {
                     </Select>
                   </div>
                 </div>
-                {timeIntervalError && <strong className="mt-3 text-sm text-red-500">Valid interval is between 7:00 AM and 9:00 PM</strong>}
               </div>
               <div className="flex gap-3">
                 <div className="w-full">
-                  <label htmlFor="location" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                  <label
+                    htmlFor="location"
+                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                  >
                     Location
                   </label>
                   <input
@@ -399,7 +414,10 @@ const TimeSlotInput = () => {
                   />
                 </div>
                 <div className="w-full">
-                  <label htmlFor="professor" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                  <label
+                    htmlFor="professor"
+                    className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                  >
                     Professor
                   </label>
                   <input
@@ -431,7 +449,9 @@ const TimeSlotInput = () => {
                     ))}
                   </div>
                 </div>
-                {colorError && <p className="text-center font-bold text-rose-500">Please pick a color!</p>}
+                {colorError && (
+                  <p className="text-center font-bold text-rose-500">Please pick a color!</p>
+                )}
               </div>
               <button
                 type="submit"
@@ -441,38 +461,13 @@ const TimeSlotInput = () => {
               </button>
             </form>
             {timeSlotError && (
-              <Modal
-                show={timeSlotError}
-                size="md"
-                popup={true}
-                onClose={() => {
-                  setTimeSlotColor('border-none');
-                  setColorError(false);
-                  setTimeSlotError(false);
-                  formRef.current.reset();
-                }}
-              >
-                <Modal.Header />
-                <Modal.Body>
-                  <div className="text-center">
-                    <AiFillWarning className="mx-auto mb-4 h-14 w-14 text-red-400 dark:text-gray-200" />
-                    <h3 className="mb-5 text-lg font-normal text-red-500 dark:text-gray-400">There is an existing TimeSlot!</h3>
-                    <div className="flex justify-center gap-4">
-                      <Button
-                        color="gray"
-                        onClick={() => {
-                          setTimeSlotColor('border-none');
-                          setColorError(false);
-                          setTimeSlotError(false);
-                          formRef.current.reset();
-                        }}
-                      >
-                        Ok Thank you!
-                      </Button>
-                    </div>
-                  </div>
-                </Modal.Body>
-              </Modal>
+              <ExistingTimeSlotModal
+                timeSlotError={timeSlotError}
+                setTimeSlotError={setTimeSlotError}
+                setTimeSlotColor={setTimeSlotColor}
+                setColorError={setColorError}
+                formRef={formRef}
+              />
             )}
           </div>
         </div>

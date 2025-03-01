@@ -1,10 +1,10 @@
 import AccountBox from '../components/Account/AccountBox';
-import Toast from '../components/Utils/Toast';
+import Toast from '../components/Globals/Toast';
 import { useAppSelector } from '../redux/store';
-const Account = () => {
+const AccountPage = () => {
   const accountToast = useAppSelector((state: any) => state.globalSlice.toast);
   return (
-    <div className="flex min-h-full flex-col gap-20 bg-slate-400 p-3 dark:bg-slate-900">
+    <div className="flex min-h-full flex-col gap-20 bg-gray-50 p-3 dark:bg-slate-900">
       <div className="flex min-h-full justify-center">
         <AccountBox />
       </div>
@@ -13,4 +13,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default AccountPage;

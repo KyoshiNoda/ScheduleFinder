@@ -1,4 +1,5 @@
 import { TimeSlot, DaysChecked } from '../types';
+import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays } from 'date-fns';
 
 export const convertTo24Hour = (time12: any) => {
   let [hour, minute] = time12.split(':');
@@ -19,19 +20,36 @@ export const isBetween = (startTime: string, endTime: string, targetTime: string
   return start <= target && target <= end;
 };
 
-export const validTimeSlot = (startTime: string, endTime: string, data: any, days: DaysChecked): boolean => {
+export const validTimeSlot = (
+  startTime: string,
+  endTime: string,
+  data: any,
+  days: DaysChecked
+): boolean => {
   let result: boolean = true;
   data.forEach((timeSlot: TimeSlot) => {
     if (days.monday && timeSlot.days.monday && isBetween(startTime, endTime, timeSlot.startTime)) {
       result = false;
     }
-    if (days.tuesday && timeSlot.days.tuesday && isBetween(startTime, endTime, timeSlot.startTime)) {
+    if (
+      days.tuesday &&
+      timeSlot.days.tuesday &&
+      isBetween(startTime, endTime, timeSlot.startTime)
+    ) {
       result = false;
     }
-    if (days.wednesday && timeSlot.days.wednesday && isBetween(startTime, endTime, timeSlot.startTime)) {
+    if (
+      days.wednesday &&
+      timeSlot.days.wednesday &&
+      isBetween(startTime, endTime, timeSlot.startTime)
+    ) {
       return false;
     }
-    if (days.thursday && timeSlot.days.thursday && isBetween(startTime, endTime, timeSlot.startTime)) {
+    if (
+      days.thursday &&
+      timeSlot.days.thursday &&
+      isBetween(startTime, endTime, timeSlot.startTime)
+    ) {
       result = false;
     }
     if (days.friday && timeSlot.days.friday && isBetween(startTime, endTime, timeSlot.startTime)) {
@@ -49,7 +67,10 @@ const convertTimeToMinutes = (time: string) => {
   let hourNumber: number = parseInt(hour);
   const minutesNumber: number = parseInt(minutes);
 
-  if (lastTwoChars === 'PM' && hourNumber < 12) {
+  if (lastTwoChars === 'AM' && hourNumber == 12) {
+    // This is for 12 AM edge case
+    hourNumber = 0;
+  } else if (lastTwoChars === 'PM' && hourNumber < 12) {
     hourNumber += 12;
   }
 
@@ -57,8 +78,8 @@ const convertTimeToMinutes = (time: string) => {
 };
 
 export const calculateHeight = (startTime: string, endTime: string) => {
-  const [startHour, startMinutes] = convertTimeToMinutes(startTime);
-  const [endHour, endMinutes] = convertTimeToMinutes(endTime);
+  let [startHour, startMinutes] = convertTimeToMinutes(startTime);
+  let [endHour, endMinutes] = convertTimeToMinutes(endTime);
 
   let hours: number = endHour - startHour;
   let minutes: number = endMinutes - startMinutes;
@@ -76,12 +97,30 @@ export const calculateHeight = (startTime: string, endTime: string) => {
 
 const calculateMinutesFromTop = (time: string) => {
   const [hour, minutes] = convertTimeToMinutes(time);
-  const minutesFromTop: number = (hour - 7) * 60 + minutes;
+  const minutesFromTop: number = hour * 60 + minutes;
   return minutesFromTop;
 };
 
 export const calculateDistanceFromTop = (startTime: string) => {
   const minutes: number = calculateMinutesFromTop(startTime);
   const distanceFromTop: number = (minutes * 72) / 60;
-  return distanceFromTop.toString();
+  if (distanceFromTop === 0) {
+    return Number(52).toString();
+  }
+  return Number(distanceFromTop + 52).toString();
+};
+
+export const generateMonthlyDates = (monthDate: Date) => {
+  const startOfMonthDate = startOfMonth(monthDate);
+  const endOfMonthDate = endOfMonth(monthDate);
+  const days = [];
+
+  let currentDate = startOfWeek(startOfMonthDate, { weekStartsOn: 1 });
+  const lastDate = endOfWeek(endOfMonthDate, { weekStartsOn: 1 });
+
+  while (currentDate <= lastDate) {
+    days.push(new Date(currentDate));
+    currentDate = addDays(currentDate, 1);
+  }
+  return days;
 };

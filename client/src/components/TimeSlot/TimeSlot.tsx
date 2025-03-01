@@ -5,10 +5,13 @@ import { colors } from './TimeSlotInput';
 import { ToggleSwitch } from 'flowbite-react';
 import { DaysChecked as DaysCheckedType, TimeSlot as TimeSlotType } from '../../types';
 import { ToastEnum } from '../../enums';
-import { useDeleteTimeSlotMutation, useUpdateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
+import {
+  useDeleteTimeSlotMutation,
+  useUpdateTimeSlotMutation,
+} from '../../redux/services/schedule/scheduleService';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { useAppSelector } from '../../redux/store';
-import DayPicker from './DayPicker';
+import DayPicker from '../Calendar/DayPicker';
 import { useToast } from '../../utils/functions';
 
 type Props = {
@@ -110,8 +113,14 @@ const TimeSlot: any = (props: Props) => {
   };
 
   const saveHandler = async () => {
-    const startTime = startTimeHourRef.current.value + ':' + startTimeMinuteRef.current.value + ' ' + startTimeMeridiem;
-    const endTime = endTimeHourRef.current.value + ':' + endTimeMinuteRef.current.value + ' ' + endTimeMeridiem;
+    const startTime =
+      startTimeHourRef.current.value +
+      ':' +
+      startTimeMinuteRef.current.value +
+      ' ' +
+      startTimeMeridiem;
+    const endTime =
+      endTimeHourRef.current.value + ':' + endTimeMinuteRef.current.value + ' ' + endTimeMeridiem;
 
     const updatedTimeSlot: TimeSlotType = {
       _id: props.id!,
@@ -203,7 +212,11 @@ const TimeSlot: any = (props: Props) => {
         <Modal.Header />
         <Modal.Body>
           <div className="flex flex-col gap-4">
-            <ToggleSwitch checked={editMode} label="Edit Mode" onChange={() => setEditMode(!editMode)} />
+            <ToggleSwitch
+              checked={editMode}
+              label="Edit Mode"
+              onChange={() => setEditMode(!editMode)}
+            />
             <div className="flex justify-center">
               {editMode ? (
                 <div className="w-full sm:w-1/2">
@@ -218,7 +231,9 @@ const TimeSlot: any = (props: Props) => {
                   />
                 </div>
               ) : (
-                <h1 className="text-center text-5xl font-medium text-gray-900 dark:text-white">{props.title}</h1>
+                <h1 className="text-center text-5xl font-medium text-gray-900 dark:text-white">
+                  {props.title}
+                </h1>
               )}
             </div>
             <div className="flex flex-col items-center justify-center dark:text-white sm:text-4xl">
@@ -233,7 +248,9 @@ const TimeSlot: any = (props: Props) => {
                         id="startTime"
                         type="number"
                         ref={startTimeHourRef}
-                        defaultValue={startTimeHourRef.current ? startTimeHourRef.current.value : ''}
+                        defaultValue={
+                          startTimeHourRef.current ? startTimeHourRef.current.value : ''
+                        }
                         className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                       />
                     </div>
@@ -243,7 +260,9 @@ const TimeSlot: any = (props: Props) => {
                         id="startTime"
                         type="number"
                         ref={startTimeMinuteRef}
-                        defaultValue={startTimeMinuteRef.current ? startTimeMinuteRef.current.value : ''}
+                        defaultValue={
+                          startTimeMinuteRef.current ? startTimeMinuteRef.current.value : ''
+                        }
                         className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                       />
                     </div>
@@ -284,7 +303,9 @@ const TimeSlot: any = (props: Props) => {
                         id="endTime"
                         type="number"
                         ref={endTimeMinuteRef}
-                        defaultValue={endTimeMinuteRef.current ? endTimeMinuteRef.current.value : ''}
+                        defaultValue={
+                          endTimeMinuteRef.current ? endTimeMinuteRef.current.value : ''
+                        }
                         className="w-full rounded-md focus:ring focus:ring-blue-400 focus:ring-opacity-75 dark:border-gray-700 dark:text-gray-900"
                       />
                     </div>
@@ -376,8 +397,9 @@ const TimeSlot: any = (props: Props) => {
                       tabIndex={0}
                       onKeyDown={(e) => handleColorPickerKeyPress(e, color)}
                       key={color}
-                      className={`bg-${color}-400 h-7 w-7 cursor-pointer rounded-full border-4 p-1 sm:h-10 sm:w-10 ${timeSlotColor === color ? 'border-blue-700' : 'border-none'
-                        }`}
+                      className={`bg-${color}-400 h-7 w-7 cursor-pointer rounded-full border-4 p-1 sm:h-10 sm:w-10 ${
+                        timeSlotColor === color ? 'border-blue-700' : 'border-none'
+                      }`}
                       onClick={() => {
                         setTimeSlotColor((prevColor) => (prevColor === color ? '' : color));
                       }}
@@ -403,8 +425,11 @@ const TimeSlot: any = (props: Props) => {
         </Modal.Body>
       </Modal>
       <div
-        className={`absolute flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${props.color}-400 w-full ${!readOnly && 'overflow-hidden hover:cursor-pointer hover:brightness-50'
-          } dark:text-black`}
+        className={`absolute z-10 flex flex-col items-center justify-start gap-1 rounded-lg p-3 text-xs bg-${
+          props.color
+        }-400 w-full ${
+          !readOnly && 'overflow-hidden hover:cursor-pointer hover:brightness-50'
+        } dark:text-black`}
         style={{ top: `${props.top}px`, height: `${props.height}px` }}
         onClick={() => setIsTimeSlotClicked(readOnly ? false : true)}
         onMouseEnter={() => setIsHovering(readOnly ? false : true)}

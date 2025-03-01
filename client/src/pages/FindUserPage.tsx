@@ -1,16 +1,16 @@
 import { Label, TextInput } from 'flowbite-react';
 import UserContainer from '../components/findUsers/UserContainer';
-import Toast from '../components/Utils/Toast';
+import Toast from '../components/Globals/Toast';
 import { useState } from 'react';
 import { useAppSelector } from '../redux/store';
-const FindUser = () => {
+const FindUserPage = () => {
   const [nameSearch, setNameSearch] = useState<string>('');
   const [schoolSearch, setSchoolSearch] = useState<string>('');
   const [majorSearch, setMajorSearch] = useState<string>('');
   const friendToast = useAppSelector((state: any) => state.globalSlice.toast);
 
   return (
-    <div className="flex min-h-full flex-col items-center space-y-10 bg-slate-400 p-6 dark:bg-slate-900">
+    <div className="flex min-h-full flex-col items-center space-y-10 bg-gray-50 p-6 dark:bg-slate-900">
       <div>
         <form className="flex flex-col gap-8 lg:flex-row">
           <div>
@@ -75,4 +75,4 @@ const FindUser = () => {
   );
 };
 
-export default FindUser;
+export default FindUserPage;

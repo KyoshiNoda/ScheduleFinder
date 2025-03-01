@@ -4,7 +4,7 @@ import SignUpBox from '../components/Signup/SignUpBox';
 import pic1 from '../assets/loggingOn.png';
 import pic2 from '../assets/wavy-man-creating-a-website.png';
 
-const Signup = () => {
+const SignupPage = () => {
   const [width, setWidth] = useState<number>(window.innerWidth);
   useEffect(() => {
     const handleResize = () => {
@@ -16,8 +16,8 @@ const Signup = () => {
     };
   }, []);
   return (
-    <div className="md:gap-30 flex min-h-screen flex-col gap-3 bg-slate-400 py-5 dark:bg-slate-900 lg:px-4">
-      <div className="flex justify-end px-4 md:px-2">
+    <div className="md:gap-30 flex min-h-screen flex-col gap-3 bg-slate-50 py-5 dark:bg-slate-900 lg:px-4">
+      <div className="flex justify-end py-5 px-8">
         <Toggle />
       </div>
       <div className="my-auto flex justify-evenly">
@@ -39,4 +39,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SignupPage;

@@ -1,18 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
-import {
-  changePassword,
-  loginUser,
-  registerUser,
-  resetPasswordRequest,
-} from './authActions';
+import { jwtDecode } from "jwt-decode";
+import { loginUser, registerUser, resetPasswordRequest } from './authActions';
 
 const userInfoFromStorage = localStorage.getItem('userInfo');
 const userTokenFromStorage = localStorage.getItem('userToken');
+const isTokenExpired = (token: any) => {
+  if (!token) return true;
+  const { exp } = jwtDecode(token);
+  return Date.now() >= exp! * 1000;
+};
 
 const initialState = {
   loading: false,
   userInfo: userInfoFromStorage ? JSON.parse(userInfoFromStorage) : {},
-  userToken: userTokenFromStorage || '',
+  userToken: userTokenFromStorage && !isTokenExpired(userTokenFromStorage) ? userTokenFromStorage : '',
   error: null,
   success: false,
   email: localStorage.getItem('tempEmail') || null,
@@ -33,7 +34,7 @@ const authSlice = createSlice({
       state.error = null;
       state.email = null;
     },
-    updateUserInfo: (state,action) => {
+    updateUserInfo: (state, action) => {
       state.userInfo = action.payload;
     }
   },
@@ -84,4 +85,4 @@ const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
-export const { logout,updateUserInfo } = authSlice.actions;
+export const { logout, updateUserInfo } = authSlice.actions;

@@ -10,7 +10,7 @@ import { TimeSlot as TimeSlotType, Schedule as ScheduleType } from '../types';
 
 let BASE_URL = getApiUrl();
 
-const CompareSchedule = () => {
+const CompareSchedulePage = () => {
   const { userId } = useParams();
 
   const dispatch = useAppDispatch();
@@ -265,7 +265,7 @@ const CompareSchedule = () => {
   };
 
   return (
-    <div className="min-h-full bg-slate-400 p-6 dark:bg-slate-900">
+    <div className="min-h-full bg-gray-50 p-6 dark:bg-slate-900">
       <div className="mt-5 flex flex-col items-center gap-16">
         <Button.Group outline={true}>
           <Button
@@ -393,4 +393,4 @@ const CompareSchedule = () => {
   );
 };
 
-export default CompareSchedule;
+export default CompareSchedulePage;
