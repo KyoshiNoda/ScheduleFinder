@@ -16,8 +16,9 @@ const ScheduleBox = ({ timeSlots }: Props) => {
     pollingInterval: 900000,
   });
 
-  const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-  const dayNames = ['m', 't', 'w', 'th', 'f', 'sat', 'sun'];
+  // TODO: Temporary removed SAT/SUN since inactive.
+  const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+  const dayNames = ['m', 't', 'w', 'th', 'f'];
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -32,7 +33,7 @@ const ScheduleBox = ({ timeSlots }: Props) => {
     <div className="flex w-full flex-col border shadow dark:border-none dark:shadow-none">
       <div className="relative mb-6 h-[678px] overflow-scroll rounded bg-white dark:bg-black dark:text-white">
         <div className="sticky z-10 mx-16 w-full dark:bg-black">
-          <div className="grid grid-cols-7">
+          <div className="grid grid-cols-5">
             {days.map((day, index) => (
               <div key={day} className="relative">
                 <h2 className="z-20 py-2 text-center text-lg font-medium capitalize">
@@ -44,7 +45,7 @@ const ScheduleBox = ({ timeSlots }: Props) => {
         </div>
 
         <div ref={scrollRef} className="relative h-full overflow-auto">
-          <div className="mx-16 grid h-full w-full grid-cols-7">
+          <div className="mx-16 grid h-full w-full grid-cols-5">
             {days.map((day) => (
               <div key={day} className="w-1/7 relative h-full">
                 {timeSlots

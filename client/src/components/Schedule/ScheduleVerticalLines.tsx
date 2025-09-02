@@ -1,5 +1,6 @@
 const ScheduleVerticalLines = () => {
-  const leftPositions = [1 / 7, 2 / 7, 3 / 7, 4 / 7, 5 / 7, 6 / 7, 7 / 7];
+  //TODO: removed weekends.
+  const leftPositions = [1/5, 2/5, 3/5, 4/5, 5/5 ];
 
   return (
     <>
