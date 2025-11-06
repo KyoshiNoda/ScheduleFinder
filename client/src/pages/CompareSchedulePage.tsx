@@ -12,31 +12,26 @@ let BASE_URL = getApiUrl();
 
 const CompareSchedulePage = () => {
   const { userId } = useParams();
-
   const dispatch = useAppDispatch();
-  dispatch(toggleReadOnly(true));
+  
+  useEffect(() => {
+    dispatch(toggleReadOnly(true));
+  }, [dispatch]);
 
-  // This states are used to conditionallly render the titles of the schedules and the toggles.
   const [showOtherSchedule, setShowOtherSchedule] = useState<boolean>(true);
   const [showUserSchedule, setShowUserSchedule] = useState<boolean>(false);
-  const [showCompareSchedule, setShowCompareSchedule] =
-    useState<boolean>(false);
+  const [showCompareSchedule, setShowCompareSchedule] = useState<boolean>(false);
 
-  // These are the states of the toggles
   const [displayUserSlots, setDisplayUserSlots] = useState<boolean>(true);
   const [displayOtherSlots, setDisplayOtherSlots] = useState<boolean>(true);
   const [displayFreeSlots, setDisplayFreeSlots] = useState<boolean>(true);
 
-  // This state represents the current time slots that are being displayed in the schedule box.
   const [timeSlots, setTimeSlots] = useState<TimeSlotType[] | undefined>([]);
 
-  // The first index of data represents scheduleA (the schedule of the user that is logged in).
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
 
-  // This schedule is used to initialize the scheduleB state with an initial schedule and avoid
-  // annoying errors about it being undefined.
   const defaultSchedule = {
     _id: '',
     user_id: '',
@@ -44,8 +39,8 @@ const CompareSchedulePage = () => {
     timeSlots: [],
   };
 
-  // Schedule B is the schedule to compare against.
   const [scheduleB, setScheduleB] = useState<ScheduleType>(defaultSchedule);
+  const [userName, setUserName] = useState<string>('');
 
   useEffect(() => {
     fetch(`${BASE_URL}api/schedules/${userId}/user`)
@@ -55,192 +50,154 @@ const CompareSchedulePage = () => {
         setTimeSlots(data.timeSlots);
       })
       .catch((err) => console.log(err));
-  }, []);
 
-  // State used to store the name of the user that will be displayed in the page.
-  const [userName, setUserName] = useState<string>('');
-
-  useEffect(() => {
     fetch(`${BASE_URL}api/users/${userId}`)
       .then((res) => res.json())
       .then((data) => setUserName(data.firstName))
       .catch((err) => console.log(err));
-  }, []);
+  }, [userId]);
+
+  // Convert time string to minutes since midnight for easier comparison
+  const timeToMinutes = (time: string): number => {
+    const date = new Date(`January 1, 1970 ${time}`);
+    return date.getHours() * 60 + date.getMinutes();
+  };
+
+  // Convert minutes back to time string
+  const minutesToTime = (minutes: number): string => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours % 12 || 12;
+    return `${displayHours}:${mins.toString().padStart(2, '0')} ${period}`;
+  };
 
   const mergeTimeSlots = () => {
-    const timeSlotsA = data.timeSlots.map((timeSlot: TimeSlotType) => {
-      return { ...timeSlot, color: 'red', _id: crypto.randomUUID() };
-    });
-    const timeSlotsB = scheduleB.timeSlots.map((timeSlot: TimeSlotType) => {
-      return { ...timeSlot, color: 'blue', _id: crypto.randomUUID() };
-    });
+    if (!data?.timeSlots) return [];
+    
+    const timeSlotsA = data.timeSlots.map((timeSlot: TimeSlotType) => ({
+      ...timeSlot,
+      color: 'red',
+      _id: crypto.randomUUID(),
+    }));
+    
+    const timeSlotsB = scheduleB.timeSlots.map((timeSlot: TimeSlotType) => ({
+      ...timeSlot,
+      color: 'blue',
+      _id: crypto.randomUUID(),
+    }));
 
-    const mergedTimeSlots: TimeSlotType[] = [...timeSlotsA, ...timeSlotsB];
-    return mergedTimeSlots;
+    return [...timeSlotsA, ...timeSlotsB];
   };
 
-  // This function is used to sort the time slots by their startTime.
-  const compareTimeSlots = (a: TimeSlotType, b: TimeSlotType) => {
-    if (
-      new Date(`January 1, 1970 ${a.startTime}`) <
-      new Date(`January 1, 1970 ${b.startTime}`)
-    ) {
-      return -1;
-    }
-    if (
-      new Date(`January 1, 1970 ${a.startTime}`) >
-      new Date(`January 1, 1970 ${b.startTime}`)
-    ) {
-      return 1;
-    }
-    return 0;
-  };
+  // Merge overlapping intervals using the classic algorithm
+  const mergeIntervals = (intervals: Array<{ start: number; end: number }>) => {
+    if (intervals.length === 0) return [];
 
-  const findFreeIntervals = (timeSlots: TimeSlotType[], day: string) => {
-    timeSlots.sort(compareTimeSlots);
+    // Sort by start time
+    intervals.sort((a, b) => a.start - b.start);
 
-    const free: TimeSlotType[] = [];
-    let combined: TimeSlotType[] = [...timeSlots];
-    for (let i = 0; i < timeSlots.length; i++) {
-      const newCombined = [];
-      for (let j = 0; j + 1 < combined.length; j++) {
-        // Check if current time slot is inside the previous one
-        if (
-          j > 0 &&
-          new Date(`January 1, 1970 ${combined[j - 1].startTime}`) <
-            new Date(`January 1, 1970 ${combined[j].startTime}`) &&
-          new Date(`January 1, 1970 ${combined[j - 1].endTime}`) >
-            new Date(`January 1, 1970 ${combined[j].endTime}`)
-        ) {
-          if (j + 1 < combined.length && j + 2 === combined.length) {
-            newCombined.push(combined[j + 1]);
-          }
-          continue;
-        }
-        if (
-          new Date(`January 1, 1970 ${combined[j].startTime}`) <=
-            new Date(`January 1, 1970 ${combined[j + 1].startTime}`) &&
-          new Date(`January 1, 1970 ${combined[j].endTime}`) <=
-            new Date(`January 1, 1970 ${combined[j + 1].startTime}`)
-        ) {
-          newCombined.push(combined[j]);
-          if (j + 2 === combined.length) {
-            newCombined.push(combined[j + 1]);
-          }
-        } else {
-          if (
-            new Date(`January 1, 1970 ${combined[j].endTime}`) >
-            new Date(`January 1, 1970 ${combined[j + 1].endTime}`)
-          ) {
-            newCombined.push({
-              ...combined[j],
-              startTime: combined[j].startTime,
-              endTime: combined[j].endTime,
-            });
-          } else {
-            newCombined.push({
-              ...combined[j],
-              startTime: combined[j].startTime,
-              endTime: combined[j + 1].endTime,
-            });
-          }
-        }
-      }
-      if (i < timeSlots.length - 1) {
-        combined = [...newCombined];
+    const merged = [intervals[0]];
+
+    for (let i = 1; i < intervals.length; i++) {
+      const current = intervals[i];
+      const lastMerged = merged[merged.length - 1];
+
+      if (current.start <= lastMerged.end) {
+        // Overlapping intervals, merge them
+        lastMerged.end = Math.max(lastMerged.end, current.end);
+      } else {
+        // Non-overlapping, add as new interval
+        merged.push(current);
       }
     }
 
-    // Now that the overlaping time slots have been combined,
-    // we can get the free time slots easier
+    return merged;
+  };
 
-    if (
-      new Date(`January 1, 1970 ${`7:00 AM`}`) <
-      new Date(`January 1, 1970 ${combined[0].startTime}`)
-    ) {
-      free.push({
-        ...combined[0],
-        startTime: '7:00 AM',
-        endTime: combined[0].startTime,
+  const findFreeIntervals = (timeSlots: TimeSlotType[]) => {
+    if (timeSlots.length === 0) {
+      // If no busy slots, entire day is free
+      return [{
+        start: timeToMinutes('7:00 AM'),
+        end: timeToMinutes('9:00 PM'),
+      }];
+    }
+
+    // Convert to minutes and merge
+    const busyIntervals = timeSlots.map(slot => ({
+      start: timeToMinutes(slot.startTime),
+      end: timeToMinutes(slot.endTime),
+    }));
+
+    const mergedBusy = mergeIntervals(busyIntervals);
+
+    // Find free time gaps
+    const freeIntervals = [];
+    const dayStart = timeToMinutes('7:00 AM');
+    const dayEnd = timeToMinutes('9:00 PM');
+
+    // Check if there's free time before first busy slot
+    if (mergedBusy[0].start > dayStart) {
+      freeIntervals.push({
+        start: dayStart,
+        end: mergedBusy[0].start,
       });
     }
 
-    for (let i = 0; i + 1 < combined.length; i++) {
-      if (combined[i].endTime < combined[i + 1].startTime) {
-        free.push({
-          ...combined[i],
-          startTime: combined[i].endTime,
-          endTime: combined[i + 1].startTime,
+    // Check gaps between busy slots
+    for (let i = 0; i < mergedBusy.length - 1; i++) {
+      if (mergedBusy[i].end < mergedBusy[i + 1].start) {
+        freeIntervals.push({
+          start: mergedBusy[i].end,
+          end: mergedBusy[i + 1].start,
         });
       }
     }
 
-    if (
-      new Date(`January 1, 1970 ${`8:00 PM`}`) >
-      new Date(`January 1, 1970 ${combined[combined.length - 1].endTime}`)
-    ) {
-      free.push({
-        ...combined[combined.length - 1],
-        startTime: combined[combined.length - 1].endTime,
-        endTime: '9:00 PM',
+    // Check if there's free time after last busy slot
+    const lastBusy = mergedBusy[mergedBusy.length - 1];
+    if (lastBusy.end < dayEnd) {
+      freeIntervals.push({
+        start: lastBusy.end,
+        end: dayEnd,
       });
     }
 
-    const freeTimeSlots: any = free.map((timeSlot) => {
-      return {
-        ...timeSlot,
-        _id: crypto.randomUUID(),
-        color: 'green',
-        location: '',
-        professor: null,
-        title: 'Free Time',
-        days: {
-          monday: day === 'monday' ? true : false,
-          tuesday: day === 'tuesday' ? true : false,
-          wednesday: day === 'wednesday' ? true : false,
-          thursday: day === 'thursday' ? true : false,
-          friday: day === 'friday' ? true : false,
-        },
-      };
-    });
-    return freeTimeSlots;
+    return freeIntervals;
   };
 
   const getFreeTimeSlots = () => {
-    const mergedTimeSlots: TimeSlotType[] = mergeTimeSlots();
+    const mergedTimeSlots = mergeTimeSlots();
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as const;
+    
+    const allFreeSlots: TimeSlotType[] = [];
 
-    const mondayFreeTimes = findFreeIntervals(
-      mergedTimeSlots.filter((timeSlot) => timeSlot.days.monday),
-      'monday'
-    );
+    days.forEach(day => {
+      const daySlots = mergedTimeSlots.filter(slot => slot.days[day]);
+      const freeIntervals = findFreeIntervals(daySlots);
 
-    const tuesdayFreeTimes = findFreeIntervals(
-      mergedTimeSlots.filter((timeSlot) => timeSlot.days.tuesday),
-      'tuesday'
-    );
+      freeIntervals.forEach(interval => {
+        allFreeSlots.push({
+          _id: crypto.randomUUID(),
+          startTime: minutesToTime(interval.start),
+          endTime: minutesToTime(interval.end),
+          color: 'green',
+          location: '',
+          professor: null,
+          title: 'Free Time',
+          days: {
+            monday: day === 'monday',
+            tuesday: day === 'tuesday',
+            wednesday: day === 'wednesday',
+            thursday: day === 'thursday',
+            friday: day === 'friday',
+          },
+        } as TimeSlotType);
+      });
+    });
 
-    const wednesdayFreeTimes = findFreeIntervals(
-      mergedTimeSlots.filter((timeSlot) => timeSlot.days.wednesday),
-      'wednesday'
-    );
-
-    const thursdayFreeTimes = findFreeIntervals(
-      mergedTimeSlots.filter((timeSlot) => timeSlot.days.thursday),
-      'thursday'
-    );
-
-    const fridayFreeTimes = findFreeIntervals(
-      mergedTimeSlots.filter((timeSlot) => timeSlot.days.friday),
-      'friday'
-    );
-
-    return [
-      ...mondayFreeTimes,
-      ...tuesdayFreeTimes,
-      ...wednesdayFreeTimes,
-      ...thursdayFreeTimes,
-      ...fridayFreeTimes,
-    ];
+    return allFreeSlots;
   };
 
   const combineFreeAndMergedTimeSlots = (
@@ -249,12 +206,8 @@ const CompareSchedulePage = () => {
     isChecked3 = true
   ) => {
     const mergedTimeSlots = mergeTimeSlots();
-    const userTimeSlots = mergedTimeSlots.filter(
-      (timeSlot) => timeSlot.color === 'red'
-    );
-    const otherTimeSlots = mergedTimeSlots.filter(
-      (timeSlot) => timeSlot.color === 'blue'
-    );
+    const userTimeSlots = mergedTimeSlots.filter(slot => slot.color === 'red');
+    const otherTimeSlots = mergedTimeSlots.filter(slot => slot.color === 'blue');
 
     const timeSlotsToDisplay = [];
     if (isChecked1) timeSlotsToDisplay.push(...userTimeSlots);
@@ -264,53 +217,52 @@ const CompareSchedulePage = () => {
     return timeSlotsToDisplay;
   };
 
+  const handleViewChange = (view: 'other' | 'user' | 'compare') => {
+    setDisplayUserSlots(true);
+    setDisplayOtherSlots(true);
+    setDisplayFreeSlots(true);
+
+    switch (view) {
+      case 'other':
+        setTimeSlots(scheduleB.timeSlots);
+        setShowOtherSchedule(true);
+        setShowUserSchedule(false);
+        setShowCompareSchedule(false);
+        break;
+      case 'user':
+        setTimeSlots(data?.timeSlots);
+        setShowOtherSchedule(false);
+        setShowUserSchedule(true);
+        setShowCompareSchedule(false);
+        break;
+      case 'compare':
+        setTimeSlots(combineFreeAndMergedTimeSlots());
+        setShowOtherSchedule(false);
+        setShowUserSchedule(false);
+        setShowCompareSchedule(true);
+        break;
+    }
+  };
+
   return (
     <div className="min-h-full bg-gray-50 p-6 dark:bg-slate-900">
       <div className="mt-5 flex flex-col items-center gap-16">
         <Button.Group outline={true}>
-          <Button
-            onClick={() => {
-              setTimeSlots(scheduleB.timeSlots);
-              setShowCompareSchedule(false);
-              setShowOtherSchedule(true);
-              setShowUserSchedule(false);
-              setDisplayUserSlots(true);
-              setDisplayOtherSlots(true);
-              setDisplayFreeSlots(true);
-            }}
-            color="gray"
-          >
+          <Button onClick={() => handleViewChange('other')} color="gray">
             {`${userName}'s`} schedule
           </Button>
-          <Button
-            onClick={() => {
-              setTimeSlots(data.timeSlots);
-              setShowCompareSchedule(false);
-              setShowOtherSchedule(false);
-              setShowUserSchedule(true);
-              setDisplayUserSlots(true);
-              setDisplayOtherSlots(true);
-              setDisplayFreeSlots(true);
-            }}
-            color="gray"
-          >
+          <Button onClick={() => handleViewChange('user')} color="gray">
             My schedule
           </Button>
-          <Button
-            onClick={() => {
-              setTimeSlots(() => combineFreeAndMergedTimeSlots());
-              setShowCompareSchedule(true);
-              setShowOtherSchedule(false);
-              setShowUserSchedule(false);
-            }}
-            color="gray"
-          >
+          <Button onClick={() => handleViewChange('compare')} color="gray">
             Compare schedules
           </Button>
         </Button.Group>
 
         {showOtherSchedule && (
-          <h1 className="text-center text-4xl dark:text-white">{`${userName}'s Schedule`}</h1>
+          <h1 className="text-center text-4xl dark:text-white">
+            {`${userName}'s Schedule`}
+          </h1>
         )}
         {showUserSchedule && (
           <h1 className="text-4xl dark:text-white">My Schedule</h1>
@@ -385,6 +337,7 @@ const CompareSchedulePage = () => {
             </label>
           </div>
         )}
+        
         <div className="w-full px-1 sm:w-5/6 lg:w-4/6">
           <ScheduleBox timeSlots={timeSlots} />
         </div>
