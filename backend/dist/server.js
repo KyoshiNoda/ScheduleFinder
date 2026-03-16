@@ -25,6 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
@@ -41,13 +42,33 @@ const friendRequestRoute_1 = __importDefault(require("./routes/friendRequestRout
 const hobbyRoutes_1 = __importDefault(require("./routes/hobbyRoutes"));
 const port = process.env.PORT || 3001;
 const app = (0, express_1.default)();
+const allowedOrigins = ((_a = process.env.CORS_ALLOWED_ORIGINS) !== null && _a !== void 0 ? _a : [
+    'http://localhost:5173',
+    'https://schedulefinder.netlify.app',
+    'https://www.schedulefinder.netlify.app',
+].join(','))
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error(`Origin ${origin} not allowed by CORS`));
+    },
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    credentials: true,
+    optionsSuccessStatus: 204,
+};
 cloudinary_1.v2.config({
     cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,
     api_key: `${process.env.CLOUDINARY_API_KEY}`,
     api_secret: `${process.env.CLOUDINARY_API_SECRET}`,
     secure: true,
 });
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)(corsOptions));
+app.options('*', (0, cors_1.default)(corsOptions));
 app.use(express_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use('/api/users/friendRequest', friendRequestRoute_1.default);

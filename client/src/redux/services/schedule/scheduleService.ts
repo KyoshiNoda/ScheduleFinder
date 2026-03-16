@@ -1,26 +1,11 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import { Schedule as ScheduleType } from '../../../types';
 import { TimeSlot as TimeSlotType } from '../../../types';
-import { getApiUrl } from '../../../utils/environment';
+import { createAuthorizedBaseQuery } from '../baseQuery';
 
-let BASE_URL = getApiUrl();
 export const scheduleAPI = createApi({
   reducerPath: 'scheduleAPI',
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${BASE_URL}`,
-    prepareHeaders: (headers, { getState }: any) => {
-      headers.set('Accept', 'application/json');
-      headers.set('Cache-Control', 'no-cache');
-      headers.set('Pragma', 'no-cache');
-      headers.set('Expires', '0');
-
-      const token: string | undefined = getState().auth.userToken;
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`);
-        return headers;
-      }
-    },
-  }),
+  baseQuery: createAuthorizedBaseQuery(),
   tagTypes: ['Schedule'],
   endpoints: (builder) => ({
     getSchedule: builder.query({

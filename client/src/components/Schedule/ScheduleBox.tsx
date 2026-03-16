@@ -15,6 +15,7 @@ const ScheduleBox = ({ timeSlots }: Props) => {
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
+  const scheduleTimeSlots = timeSlots ?? data?.timeSlots ?? [];
 
   // TODO: Temporary removed SAT/SUN since inactive.
   const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
@@ -48,42 +49,24 @@ const ScheduleBox = ({ timeSlots }: Props) => {
           <div className="mx-16 grid h-full w-full grid-cols-5">
             {days.map((day) => (
               <div key={day} className="w-1/7 relative h-full">
-                {timeSlots
-                  ? timeSlots
-                      .filter((timeSlot: TimeSlotType) => timeSlot.days[day])
-                      .map((timeSlot: TimeSlotType) => (
-                        <TimeSlot
-                          key={timeSlot._id}
-                          id={timeSlot._id}
-                          top={calculateDistanceFromTop(timeSlot.startTime)}
-                          height={calculateHeight(timeSlot.startTime, timeSlot.endTime)}
-                          title={timeSlot.title}
-                          startTime={timeSlot.startTime}
-                          endTime={timeSlot.endTime}
-                          location={timeSlot.location}
-                          professor={timeSlot.professor}
-                          color={timeSlot.color}
-                          days={timeSlot.days}
-                        />
-                      ))
-                  : !isFetching &&
-                    data.timeSlots
-                      .filter((timeSlot: TimeSlotType) => timeSlot.days[day])
-                      .map((timeSlot: TimeSlotType) => (
-                        <TimeSlot
-                          key={timeSlot._id}
-                          id={timeSlot._id}
-                          top={calculateDistanceFromTop(timeSlot.startTime)}
-                          height={calculateHeight(timeSlot.startTime, timeSlot.endTime)}
-                          title={timeSlot.title}
-                          startTime={timeSlot.startTime}
-                          endTime={timeSlot.endTime}
-                          location={timeSlot.location}
-                          professor={timeSlot.professor}
-                          color={timeSlot.color}
-                          days={timeSlot.days}
-                        />
-                      ))}
+                {!isFetching &&
+                  scheduleTimeSlots
+                    .filter((timeSlot: TimeSlotType) => timeSlot.days[day])
+                    .map((timeSlot: TimeSlotType) => (
+                      <TimeSlot
+                        key={timeSlot._id}
+                        id={timeSlot._id}
+                        top={calculateDistanceFromTop(timeSlot.startTime)}
+                        height={calculateHeight(timeSlot.startTime, timeSlot.endTime)}
+                        title={timeSlot.title}
+                        startTime={timeSlot.startTime}
+                        endTime={timeSlot.endTime}
+                        location={timeSlot.location}
+                        professor={timeSlot.professor}
+                        color={timeSlot.color}
+                        days={timeSlot.days}
+                      />
+                    ))}
               </div>
             ))}
           </div>
