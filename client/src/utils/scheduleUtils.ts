@@ -59,7 +59,7 @@ export const validTimeSlot = (
   return result;
 };
 
-const convertTimeToMinutes = (time: string) => {
+export const convertTimeToMinutes = (time: string) => {
   const lastTwoChars: string = time.slice(time.length - 2, time.length);
   time = time.slice(0, time.indexOf(' '));
   const [hour, minutes] = time.split(':');

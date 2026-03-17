@@ -1,14 +1,20 @@
-const ScheduleVerticalLines = () => {
-  //TODO: removed weekends.
-  const leftPositions = [1/5, 2/5, 3/5, 4/5, 5/5 ];
+type Props = {
+  dayCount: number;
+  scheduleHeight: number;
+  timeColumnWidth: number;
+};
 
+const ScheduleVerticalLines = ({ dayCount, scheduleHeight, timeColumnWidth }: Props) => {
   return (
     <>
-      {leftPositions.map((left, index) => (
+      {Array.from({ length: dayCount }, (_, index) => index + 1).map((lineIndex) => (
         <hr
-          key={index}
-          className="absolute top-0 h-[1750px] border-l border-dotted border-gray-400 dark:border-gray-300"
-          style={{ left: `${left * 100}%`, marginLeft: `${62}px` }}
+          key={lineIndex}
+          className="pointer-events-none absolute top-0 border-l border-dotted border-gray-400 dark:border-gray-300"
+          style={{
+            left: `calc(${timeColumnWidth}px + ${lineIndex} * ((100% - ${timeColumnWidth}px) / ${dayCount}))`,
+            height: `${scheduleHeight}px`,
+          }}
         />
       ))}
     </>
