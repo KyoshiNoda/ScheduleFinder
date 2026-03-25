@@ -11,6 +11,13 @@ const DayPicker = ({ selectedDays, setSelectedDays, daysError }: DayPickerProps)
   const wednesdayRef = useRef(document.createElement('input'));
   const thursdayRef = useRef(document.createElement('input'));
   const fridayRef = useRef(document.createElement('input'));
+  const dayOptions = [
+    { key: 'monday', label: 'Mon', fullLabel: 'Monday', ref: mondayRef },
+    { key: 'tuesday', label: 'Tue', fullLabel: 'Tuesday', ref: tuesdayRef },
+    { key: 'wednesday', label: 'Wed', fullLabel: 'Wednesday', ref: wednesdayRef },
+    { key: 'thursday', label: 'Thu', fullLabel: 'Thursday', ref: thursdayRef },
+    { key: 'friday', label: 'Fri', fullLabel: 'Friday', ref: fridayRef },
+  ] as const;
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, day: string) => {
     const updatedSelectedDays = { ...selectedDays };
@@ -19,94 +26,44 @@ const DayPicker = ({ selectedDays, setSelectedDays, daysError }: DayPickerProps)
   };
 
   return (
-    <>
-      <ul
-        className={`w-full items-center rounded-lg border bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white sm:flex ${
-          daysError ? ' border-rose-400 dark:border-rose-400' : ''
-        }`}
-      >
-        <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-          <div className="flex items-center pl-3">
-            <input
-              ref={mondayRef}
-              id="monday"
-              type="checkbox"
-              value="monday"
-              checked={selectedDays.monday}
-              onChange={(e) => handleCheckboxChange(e, "monday")}
-              className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-            />
-            <label htmlFor="monday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-              Mon
-            </label>
-          </div>
-        </li>
-        <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-          <div className="flex items-center pl-3">
-            <input
-              ref={tuesdayRef}
-              id="tuesday"
-              type="checkbox"
-              value="tuesday"
-              checked={selectedDays.tuesday}
-              onChange={(e) => handleCheckboxChange(e, "tuesday")}
-              className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-            />
-            <label htmlFor="tuesday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-              Tues
-            </label>
-          </div>
-        </li>
-        <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-          <div className="flex items-center pl-3">
-            <input
-              ref={wednesdayRef}
-              id="wednesday"
-              type="checkbox"
-              value="wednesday"
-              checked={selectedDays.wednesday}
-              onChange={(e) => handleCheckboxChange(e, "wednesday")}
-              className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-            />
-            <label htmlFor="wednesday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-              Wed
-            </label>
-          </div>
-        </li>
-        <li className="w-full border-b border-gray-200 dark:border-gray-600 sm:border-b-0 sm:border-r">
-          <div className="flex items-center pl-3">
-            <input
-              ref={thursdayRef}
-              id="thursday"
-              type="checkbox"
-              value="thursday"
-              checked={selectedDays.thursday}
-              onChange={(e) => handleCheckboxChange(e, "thursday")}
-              className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-            />
-            <label htmlFor="thursday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-              Thurs
-            </label>
-          </div>
-        </li>
-        <li className="w-full dark:border-gray-600">
-          <div className="flex items-center pl-3">
-            <input
-              ref={fridayRef}
-              id="friday"
-              type="checkbox"
-              value="friday"
-              checked={selectedDays.friday}
-              onChange={(e) => handleCheckboxChange(e, "friday")}
-              className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
-            />
-            <label htmlFor="friday" className="ml-2 w-full py-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-              Fri
-            </label>
-          </div>
-        </li>
+    <div
+      className={`rounded-xl border p-2 transition-colors ${
+        daysError
+          ? 'border-rose-400 bg-rose-50/70 dark:border-rose-400 dark:bg-rose-950/20'
+          : 'border-gray-200 bg-slate-50/70 dark:border-gray-600 dark:bg-gray-800/40'
+      }`}
+    >
+      <ul className="grid grid-cols-5 gap-1 rounded-lg bg-white/80 p-1 dark:bg-slate-900/50">
+        {dayOptions.map((day) => {
+          const isSelected = selectedDays[day.key];
+
+          return (
+            <li key={day.key}>
+              <label
+                htmlFor={day.key}
+                title={day.fullLabel}
+                className={`flex min-h-[48px] cursor-pointer items-center justify-center rounded-md border px-1.5 text-[13px] font-semibold tracking-[0.01em] transition-all sm:text-sm ${
+                  isSelected
+                    ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-sm dark:border-blue-400 dark:bg-blue-500/10 dark:text-blue-200'
+                    : 'border-transparent bg-transparent text-gray-600 hover:border-gray-200 hover:bg-slate-50 hover:text-gray-800 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-slate-800/70 dark:hover:text-white'
+                }`}
+              >
+                <input
+                  ref={day.ref}
+                  id={day.key}
+                  type="checkbox"
+                  value={day.key}
+                  checked={selectedDays[day.key]}
+                  onChange={(e) => handleCheckboxChange(e, day.key)}
+                  className="sr-only"
+                />
+                <span className="whitespace-nowrap">{day.label}</span>
+              </label>
+            </li>
+          );
+        })}
       </ul>
-    </>
+    </div>
   );
 };
 

@@ -13,7 +13,7 @@ import Toggle from './Toggle';
 const Navbar = ({ user }: any) => {
   const dispatch = useAppDispatch();
   return (
-    <div className="flex justify-between p-4 shadow dark:bg-slate-800">
+    <div className="sticky top-0 z-50 flex justify-between bg-white/95 p-4 shadow backdrop-blur dark:bg-slate-800/95">
       <Link to="/auth/schedule" className="flex items-center">
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
           ScheduleFinder
@@ -28,6 +28,7 @@ const Navbar = ({ user }: any) => {
           <FriendRequest />
         </div>
         <Dropdown
+          className="z-[60]"
           arrowIcon={false}
           inline={true}
           label={

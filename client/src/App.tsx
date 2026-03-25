@@ -12,6 +12,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 import NotificationsListPage from './pages/NotificationsListPage';
 import UserProfilePage from './pages/UserProfilePage';
 import FriendsListPage from './pages/FriendsListPage';
+import MatchGenerationPage from './pages/MatchGenerationPage';
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
         <Route path="/auth" element={<PageLayout />}>
           <Route path="account" element={<AccountPage />} />
           <Route path="schedule" element={<SchedulePage />} />
+          <Route path="match" element = {<MatchGenerationPage/>} />
           <Route path="friends" element={<FriendsListPage />} />
           <Route path="findUsers" element={<FindUserPage />} />
           <Route path="compareSchedule/:userId" element={<CompareSchedulePage />} />

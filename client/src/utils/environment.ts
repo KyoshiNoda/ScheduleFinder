@@ -1,16 +1,9 @@
 export const getApiUrl = (): string => {
-  // TODO: CHANGE PROPER ENVIRONMENT BELOW  
-  let environment = 'dev';
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-  let apiUrl = '';
-
-  if (environment === 'local') {
-    apiUrl = 'http://localhost:3001/';
-  } else if (environment === 'dev') {
-    apiUrl = 'https://schedulefinder-development.up.railway.app/';
-  } else if (environment === 'prod') {
-    apiUrl = 'https://schedulefinder-production.up.railway.app/';
+  if (apiUrl && apiUrl.trim().length > 0) {
+    return apiUrl.endsWith('/') ? apiUrl : `${apiUrl}/`;
   }
 
-  return apiUrl;
+  return 'http://localhost:3001/';
 };
