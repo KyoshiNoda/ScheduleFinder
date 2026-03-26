@@ -82,17 +82,32 @@ const WeeklyView = ({ initialDisplayDate }: Props) => {
             <Fragment key={rowIndex}>
               <div
                 className={cn(
-                  'sticky left-0 z-10 border-r bg-white px-3 text-right text-xs font-semibold text-gray-400 dark:bg-slate-900 dark:text-gray-300',
+                  'sticky left-0 z-10 relative border-r bg-white px-3 text-right text-xs font-semibold text-gray-400 dark:bg-slate-900 dark:text-gray-300',
                   LIGHT_MODE_BORDER,
                   DARK_MODE_BORDER,
                   {
                     'border-t': rowIndex > 0,
                   }
                 )}
-                style={{ height: `${HALF_HOUR_ROW_HEIGHT}px` }}
+                style={{
+                  height: `${HALF_HOUR_ROW_HEIGHT}px`,
+                  borderTopStyle:
+                    rowIndex > 0
+                      ? rowIndex % ROWS_PER_HOUR === 0
+                        ? 'solid'
+                        : 'dashed'
+                      : undefined,
+                }}
               >
                 {rowIndex % ROWS_PER_HOUR === 0 ? (
-                  <span className="relative top-[-10px] block">{CALENDAR_HOURS[rowIndex / ROWS_PER_HOUR]}</span>
+                  <span
+                    className={cn('absolute right-3 text-xs font-semibold', {
+                      'top-2': rowIndex === 0,
+                      'top-0 -translate-y-1/2': rowIndex > 0,
+                    })}
+                  >
+                    {CALENDAR_HOURS[rowIndex / ROWS_PER_HOUR]}
+                  </span>
                 ) : null}
               </div>
 
@@ -109,7 +124,15 @@ const WeeklyView = ({ initialDisplayDate }: Props) => {
                     LIGHT_MODE_BORDER,
                     DARK_MODE_BORDER
                   )}
-                  style={{ height: `${HALF_HOUR_ROW_HEIGHT}px` }}
+                  style={{
+                    height: `${HALF_HOUR_ROW_HEIGHT}px`,
+                    borderTopStyle:
+                      rowIndex > 0
+                        ? rowIndex % ROWS_PER_HOUR === 0
+                          ? 'solid'
+                          : 'dashed'
+                        : undefined,
+                  }}
                 />
               ))}
             </Fragment>
