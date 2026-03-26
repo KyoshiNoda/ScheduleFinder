@@ -27,7 +27,9 @@ export const validTimeSlot = (
   days: DaysChecked
 ): boolean => {
   let result: boolean = true;
-  data.forEach((timeSlot: TimeSlot) => {
+  const existingTimeSlots = data ?? [];
+
+  existingTimeSlots.forEach((timeSlot: TimeSlot) => {
     if (days.monday && timeSlot.days.monday && isBetween(startTime, endTime, timeSlot.startTime)) {
       result = false;
     }
@@ -53,6 +55,16 @@ export const validTimeSlot = (
       result = false;
     }
     if (days.friday && timeSlot.days.friday && isBetween(startTime, endTime, timeSlot.startTime)) {
+      result = false;
+    }
+    if (
+      days.saturday &&
+      timeSlot.days.saturday &&
+      isBetween(startTime, endTime, timeSlot.startTime)
+    ) {
+      result = false;
+    }
+    if (days.sunday && timeSlot.days.sunday && isBetween(startTime, endTime, timeSlot.startTime)) {
       result = false;
     }
   });

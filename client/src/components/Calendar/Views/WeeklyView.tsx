@@ -1,89 +1,122 @@
-import { generateWeekDates } from '../../../utils/scheduleUtils';
-import { format } from 'date-fns';
+import { Fragment, useEffect, useMemo, useRef } from 'react';
 import { WEEK_DAYS, CALENDAR_HOURS, TODAY } from '../../../utils/constants';
 import { cn } from '../../../utils/functions';
-import { isSameDay } from 'date-fns';
-import { useMemo } from 'react';
+import { format, isSameDay } from 'date-fns';
+import { generateWeekDates } from '../../../utils/scheduleUtils';
 
 type Props = {
   initialDisplayDate: Date;
 };
 
-// There are 168 hours in a week.
-// We are displaying 2 slots per hour so that's 168 * 2 = 336
-// We have an additional row at the top so that's 336 + 7 = 343
-const NUMBER_OF_SLOTS = 343;
-
 const LIGHT_MODE_BORDER = 'border-gray-200';
 const DARK_MODE_BORDER = 'dark:border-gray-700';
-
-// We add thicker borders if the slot is in the left or right edge.
-const useThickerBorders = (index: number) => ({
-  'border-l-[1px]': index % 7 === 0,
-  'border-r-[1px]': (index + 1) % 7 === 0,
-});
+const DAY_COLUMN_MIN_WIDTH = 168;
+const TIME_COLUMN_WIDTH = 72;
+const HALF_HOUR_ROW_HEIGHT = 36;
+const ROWS_PER_HOUR = 2;
+const TOTAL_ROWS = CALENDAR_HOURS.length * ROWS_PER_HOUR;
+const DEFAULT_SCROLL_TOP = 6 * ROWS_PER_HOUR * HALF_HOUR_ROW_HEIGHT;
 
 const WeeklyView = ({ initialDisplayDate }: Props) => {
   const dates = useMemo(() => generateWeekDates(initialDisplayDate), [initialDisplayDate]);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const minGridWidth = TIME_COLUMN_WIDTH + DAY_COLUMN_MIN_WIDTH * WEEK_DAYS.length;
+  const weekGridTemplate = `${TIME_COLUMN_WIDTH}px repeat(${WEEK_DAYS.length}, minmax(${DAY_COLUMN_MIN_WIDTH}px, 1fr))`;
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = DEFAULT_SCROLL_TOP;
+    }
+  }, []);
 
   return (
-    <>
+    <div ref={scrollRef} className="h-[750px] overflow-auto">
       <div
-        className={cn(
-          'sticky top-0 z-10 grid grid-cols-7 border-b-[0.5px] bg-white pl-12 pr-7 shadow dark:bg-slate-900',
-          LIGHT_MODE_BORDER,
-          DARK_MODE_BORDER
-        )}
+        className="min-w-max bg-white dark:bg-slate-900"
+        style={{ minWidth: `${minGridWidth}px` }}
       >
-        {dates.map((date, index) => (
-          <div
-            key={date.getTime()}
-            className={cn(
-              'flex h-14 items-center justify-center gap-1 border-x-[0.5px] text-sm dark:bg-slate-900',
-              LIGHT_MODE_BORDER,
-              DARK_MODE_BORDER,
-              useThickerBorders(index)
-            )}
-          >
-            <span
-              className={cn('text-gray-500 dark:text-gray-300', {
-                'text-blue-700': isSameDay(date, TODAY),
-              })}
-            >
-              {WEEK_DAYS[index]}
-            </span>{' '}
-            <span
-              className={cn('font-semibold', {
-                'rounded-full bg-blue-700 py-[2px] px-[9px] text-white': isSameDay(date, TODAY),
-              })}
-            >
-              {format(date, 'd')}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <div className="relative h-[750px] w-full overflow-y-scroll pl-12 pr-7">
-        <div className="absolute left-[10px] top-[74px] flex flex-col gap-y-24">
-          {CALENDAR_HOURS.map((hour) => (
-            <span key={hour} className="text-xs text-gray-400">
-              {hour}
-            </span>
-          ))}
-        </div>
-        <div className="grid grid-cols-7">
-          {[...Array(NUMBER_OF_SLOTS)].map((_, index) => (
+        <div
+          className={cn(
+            'sticky top-0 z-20 grid border-b bg-white shadow-sm dark:bg-slate-900',
+            LIGHT_MODE_BORDER,
+            DARK_MODE_BORDER
+          )}
+          style={{ gridTemplateColumns: weekGridTemplate }}
+        >
+          <div className={cn('border-r bg-white dark:bg-slate-900', LIGHT_MODE_BORDER, DARK_MODE_BORDER)} />
+          {dates.map((date, index) => (
             <div
-              key={index}
-              className={cn('h-14 border-[0.5px]', LIGHT_MODE_BORDER, DARK_MODE_BORDER, {
-                'h-7 border-t-0': index < 7,
-                ...useThickerBorders(index),
-              })}
-            ></div>
+              key={date.getTime()}
+              className={cn(
+                'flex h-16 items-center justify-center gap-2 border-r px-3 text-sm',
+                LIGHT_MODE_BORDER,
+                DARK_MODE_BORDER
+              )}
+            >
+              <span
+                className={cn('text-gray-500 dark:text-gray-300', {
+                  'text-blue-700 dark:text-blue-300': isSameDay(date, TODAY),
+                })}
+              >
+                {WEEK_DAYS[index]}
+              </span>
+              <span
+                className={cn('font-semibold', {
+                  'rounded-full bg-blue-700 px-2.5 py-1 text-white': isSameDay(date, TODAY),
+                })}
+              >
+                {format(date, 'd')}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div
+          className="grid"
+          style={{
+            gridTemplateColumns: weekGridTemplate,
+          }}
+        >
+          {Array.from({ length: TOTAL_ROWS }).map((_, rowIndex) => (
+            <Fragment key={rowIndex}>
+              <div
+                className={cn(
+                  'sticky left-0 z-10 border-r bg-white px-3 text-right text-xs font-semibold text-gray-400 dark:bg-slate-900 dark:text-gray-300',
+                  LIGHT_MODE_BORDER,
+                  DARK_MODE_BORDER,
+                  {
+                    'border-t': rowIndex > 0,
+                  }
+                )}
+                style={{ height: `${HALF_HOUR_ROW_HEIGHT}px` }}
+              >
+                {rowIndex % ROWS_PER_HOUR === 0 ? (
+                  <span className="relative top-[-10px] block">{CALENDAR_HOURS[rowIndex / ROWS_PER_HOUR]}</span>
+                ) : null}
+              </div>
+
+              {dates.map((date, dayIndex) => (
+                <div
+                  key={`${date.toISOString()}-${rowIndex}`}
+                  className={cn(
+                    'bg-white dark:bg-slate-900',
+                    {
+                      'border-t': rowIndex > 0,
+                      'border-r': true,
+                      'border-l border-dashed': dayIndex > 0,
+                    },
+                    LIGHT_MODE_BORDER,
+                    DARK_MODE_BORDER
+                  )}
+                  style={{ height: `${HALF_HOUR_ROW_HEIGHT}px` }}
+                />
+              ))}
+            </Fragment>
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
