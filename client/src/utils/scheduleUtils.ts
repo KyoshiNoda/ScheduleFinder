@@ -27,7 +27,9 @@ export const validTimeSlot = (
   days: DaysChecked
 ): boolean => {
   let result: boolean = true;
-  data.forEach((timeSlot: TimeSlot) => {
+  const existingTimeSlots = data ?? [];
+
+  existingTimeSlots.forEach((timeSlot: TimeSlot) => {
     if (days.monday && timeSlot.days.monday && isBetween(startTime, endTime, timeSlot.startTime)) {
       result = false;
     }
@@ -53,6 +55,16 @@ export const validTimeSlot = (
       result = false;
     }
     if (days.friday && timeSlot.days.friday && isBetween(startTime, endTime, timeSlot.startTime)) {
+      result = false;
+    }
+    if (
+      days.saturday &&
+      timeSlot.days.saturday &&
+      isBetween(startTime, endTime, timeSlot.startTime)
+    ) {
+      result = false;
+    }
+    if (days.sunday && timeSlot.days.sunday && isBetween(startTime, endTime, timeSlot.startTime)) {
       result = false;
     }
   });
@@ -110,17 +122,32 @@ export const calculateDistanceFromTop = (startTime: string) => {
   return Number(distanceFromTop + 52).toString();
 };
 
-export const generateMonthlyDates = (monthDate: Date) => {
-  const startOfMonthDate = startOfMonth(monthDate);
-  const endOfMonthDate = endOfMonth(monthDate);
-  const days = [];
+// We are assuming Monday is the first day in the week.
+export const generateWeekDates = (initialDate: Date): Date[] => {
+  let startWeek = startOfWeek(initialDate, { weekStartsOn: 1 });
+  const endWeek = endOfWeek(initialDate, { weekStartsOn: 1 });
+
+  const week = [];
+  while (startWeek <= endWeek) {
+    week.push(new Date(startWeek));
+    startWeek = addDays(startWeek, 1);
+  }
+
+  return week;
+};
+
+export const generateMonthDates = (initialDate: Date): Date[] => {
+  const startOfMonthDate = startOfMonth(initialDate);
+  const endOfMonthDate = endOfMonth(initialDate);
+  const month = [];
 
   let currentDate = startOfWeek(startOfMonthDate, { weekStartsOn: 1 });
   const lastDate = endOfWeek(endOfMonthDate, { weekStartsOn: 1 });
 
   while (currentDate <= lastDate) {
-    days.push(new Date(currentDate));
+    month.push(new Date(currentDate));
     currentDate = addDays(currentDate, 1);
   }
-  return days;
+
+  return month;
 };
