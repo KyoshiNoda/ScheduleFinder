@@ -16,7 +16,7 @@ const HobbiesTab = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [newHobby, setNewHobby] = useState<string>('');
   const [selectedHobby, setSelectedHobby] = useState<string>('');
-  const [hobbies, setHobbies] = useState([]);
+  const [hobbies, setHobbies] = useState<string[] | null>(null);
 
   const { data, isLoading } = useGetUserHobbiesQuery('Hobbies');
   const { showToast } = useToast();
@@ -49,7 +49,9 @@ const HobbiesTab = () => {
 
   return (
     <>
-      {hobbies ? (
+      {isLoading ? (
+        <Spinner aria-label="Profile loading spinner" size="xl" />
+      ) : hobbies ? (
         <>
           <div className="flex flex-col justify-center gap-4">
             <div className="rounded-xl p-4">
@@ -100,8 +102,6 @@ const HobbiesTab = () => {
             </div>
           </div>
         </>
-      ) : isLoading ? (
-        <Spinner aria-label="Profile loading spinner" size="xl" />
       ) : (
         <div>User information not available.</div>
       )}
