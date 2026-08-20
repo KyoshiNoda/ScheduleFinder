@@ -5,5 +5,11 @@ export const getApiUrl = (): string => {
     return apiUrl.endsWith('/') ? apiUrl : `${apiUrl}/`;
   }
 
-  return 'http://localhost:3001/';
+  if (import.meta.env.DEV) {
+    return 'http://localhost:3001/';
+  }
+
+  throw new Error(
+    'Missing VITE_API_URL. Production builds must set VITE_API_URL to the deployed API origin.'
+  );
 };
