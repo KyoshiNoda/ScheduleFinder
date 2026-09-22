@@ -5,10 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const FriendController_1 = __importDefault(require("../controllers/FriendController"));
-const AuthController_1 = __importDefault(require("../controllers/AuthController"));
+const authenticateToken_1 = require("../auth/authenticateToken");
 const router = express_1.default.Router();
-router.get('/', AuthController_1.default.authenticateToken, FriendController_1.default.getFriends);
-router.delete('/:friendID', AuthController_1.default.authenticateToken, FriendController_1.default.deleteFriend);
-router.post('/accept/:friendID', AuthController_1.default.authenticateToken, FriendController_1.default.acceptFriendRequest);
-router.post('/reject/:friendID', AuthController_1.default.authenticateToken, FriendController_1.default.rejectFriendRequest);
+router.get('/', authenticateToken_1.authenticateToken, FriendController_1.default.getFriends);
+router.delete('/:friendID', authenticateToken_1.authenticateToken, FriendController_1.default.deleteFriend);
+router.post('/accept/:friendID', authenticateToken_1.authenticateToken, FriendController_1.default.acceptFriendRequest);
+router.post('/reject/:friendID', authenticateToken_1.authenticateToken, FriendController_1.default.rejectFriendRequest);
 exports.default = router;

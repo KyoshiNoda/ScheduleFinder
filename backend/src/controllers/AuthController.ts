@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import User from '../models/userModel';
 import bcrypt from 'bcrypt';
 import sgMail from '@sendgrid/mail';
 import { toAuthUser } from '../representations/userRepresentation';
-import { signAccessToken, verifyAccessToken } from '../auth/accessToken';
+import { signAccessToken } from '../auth/accessToken';
 sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class AuthController {
   private static randomCode: string;
@@ -63,23 +63,6 @@ class AuthController {
       res.status(200).send({ token: accessToken, user: toAuthUser(savedUser) });
     } catch (err) {
       return res.status(500).send({ error: 'Unable to register user.' });
-    }
-  }
-
-  public static async authenticateToken(req: any, res: Response, next: NextFunction) {
-    const authHeader = req.headers['authorization']!;
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (!token) {
-      return res.sendStatus(403);
-    }
-
-    try {
-      const claims = verifyAccessToken(token);
-      req.auth = { userId: claims.sub };
-      next();
-    } catch (error) {
-      return res.sendStatus(403);
     }
   }
 

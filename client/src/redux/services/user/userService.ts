@@ -25,6 +25,13 @@ export const userAPI = createApi({
       }),
       providesTags: ['User'],
     }),
+    getAllUsers: builder.query<PublicUser[], string>({
+      query: () => ({
+        url: 'api/users/allUsers',
+        method: 'GET',
+      }),
+      providesTags: ['User'],
+    }),
     updateUserInfo: builder.mutation<PrivateUser, Partial<PrivateUser>>({
       query: (body) => ({
         url: 'api/users',
@@ -123,6 +130,7 @@ export const userAPI = createApi({
 export const {
   useGetUserInfoQuery,
   useGetExternalUserInfoQuery,
+  useGetAllUsersQuery,
   useGetUserFriendsQuery,
   useUpdateUserInfoMutation,
   useChangePasswordMutation,

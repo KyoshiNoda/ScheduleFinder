@@ -1,26 +1,26 @@
 import express from 'express';
 import FriendController from '../controllers/FriendController';
-import AuthController from '../controllers/AuthController';
+import { authenticateToken } from '../auth/authenticateToken';
 const router = express.Router();
 
-router.get('/', 
-  AuthController.authenticateToken, 
+router.get('/',
+  authenticateToken,
   FriendController.getFriends
 );
 
 router.delete(
   '/:friendID',
-  AuthController.authenticateToken,
+  authenticateToken,
   FriendController.deleteFriend
 );
 
 router.post('/accept/:friendID',
-  AuthController.authenticateToken,
+  authenticateToken,
   FriendController.acceptFriendRequest
 )
 
 router.post('/reject/:friendID',
-  AuthController.authenticateToken,
+  authenticateToken,
   FriendController.rejectFriendRequest
 )
 export default router;

@@ -1,10 +1,11 @@
+import { Request, Response } from 'express';
 import User from '../models/userModel';
 import { IUser } from '../models/userModel';
 import sgMail from '@sendgrid/mail';
 import { toPublicUser } from '../representations/userRepresentation';
 sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class FriendController {
-  public static async getFriends(req: any, res: any) {
+  public static async getFriends(req: Request, res: Response) {
     const userID: string = req.auth.userId;
     try {
       const user = await User.findOne({ _id: userID }).exec();
@@ -30,7 +31,7 @@ class FriendController {
     }
   }
 
-  public static async deleteFriend(req: any, res: any) {
+  public static async deleteFriend(req: Request, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
@@ -70,7 +71,7 @@ class FriendController {
       });
     }
   }
-  public static async getFriendRequests(req: any, res: any) {
+  public static async getFriendRequests(req: Request, res: Response) {
     const userID: string = req.auth.userId;
     let userFriendRequests: IUser[] = [];
     try {
@@ -95,7 +96,7 @@ class FriendController {
       });
     }
   }
-  public static async getPendingFriendRequests(req: any, res: any) {
+  public static async getPendingFriendRequests(req: Request, res: Response) {
     const userID: string = req.auth.userId;
     let sentFriendRequests: IUser[] = [];
     try {
@@ -121,7 +122,7 @@ class FriendController {
     }
   }
 
-  public static async sendFriendRequest(req: any, res: any) {
+  public static async sendFriendRequest(req: Request, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
@@ -186,7 +187,7 @@ class FriendController {
     }
   }
 
-  public static async removeFriendRequest(req: any, res: any) {
+  public static async removeFriendRequest(req: Request, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
@@ -224,7 +225,7 @@ class FriendController {
     }
   }
 
-  public static async acceptFriendRequest(req: any, res: any) {
+  public static async acceptFriendRequest(req: Request, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
@@ -271,7 +272,7 @@ class FriendController {
       });
     }
   }
-  public static async rejectFriendRequest(req: any, res: any) {
+  public static async rejectFriendRequest(req: Request, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
@@ -308,7 +309,7 @@ class FriendController {
     }
   }
 
-  public static async cancelPendingFriendRequest(req: any, res: any) {
+  public static async cancelPendingFriendRequest(req: Request, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {

@@ -1,12 +1,15 @@
 import User from './User';
 import LoadingUser from './LoadingUser';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from 'flowbite-react';
 import { PublicUser } from '../../types';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
-import { getApiUrl } from '../../utils/environment';
-import { useGetPendingFriendRequestsQuery, useGetUserFriendRequestsQuery, useGetUserFriendsQuery } from '../../redux/services/user/userService';
-let BASE_URL = getApiUrl();
+import {
+  useGetAllUsersQuery,
+  useGetPendingFriendRequestsQuery,
+  useGetUserFriendRequestsQuery,
+  useGetUserFriendsQuery,
+} from '../../redux/services/user/userService';
 type UserContainerProps = {
   schoolSearch: string;
   nameSearch: string;
@@ -22,6 +25,7 @@ const UserContainer = ({ schoolSearch, nameSearch, majorSearch }: UserContainerP
   const { data: receivedFriendRequests, isFetching: dataFetching1 } = useGetUserFriendRequestsQuery('User');
 
   const { data: friends } = useGetUserFriendsQuery('User');
+  const { data: users = [], isFetching: usersFetching } = useGetAllUsersQuery('User');
 
   // This is used to get the ID of the user that is currently logged in and filter it out
   // of the array of users that are displayed in the FindUser page because it doesn't make
@@ -29,7 +33,6 @@ const UserContainer = ({ schoolSearch, nameSearch, majorSearch }: UserContainerP
   let loggedUserId: string = '';
   if (!isFetching) loggedUserId = data.user_id;
 
-  const [users, setUsers] = useState<PublicUser[]>([]);
   const [paginate, setPaginate] = useState<number>(9);
 
   const filterUsers = (users: PublicUser[]) => {
@@ -61,15 +64,6 @@ const UserContainer = ({ schoolSearch, nameSearch, majorSearch }: UserContainerP
     setPaginate((prevState) => (prevState += 9));
   };
 
-  useEffect(() => {
-    fetch(`${BASE_URL}api/users/allUsers`)
-      .then((res) => res.json())
-      .then((data) => {
-        setUsers(data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
   const loadingUsers = [0, 0, 0, 0, 0, 0];
 
   return (
@@ -78,7 +72,7 @@ const UserContainer = ({ schoolSearch, nameSearch, majorSearch }: UserContainerP
         <span className="block text-center text-3xl dark:text-white">No users found</span>
       )}
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-        {isFetching && loadingUsers.map((user) => <LoadingUser />)}
+        {(isFetching || usersFetching) && loadingUsers.map((user) => <LoadingUser />)}
         {users &&
           filterUsers(users)
             .filter((user) => user._id !== loggedUserId)

@@ -1,10 +1,11 @@
+import { Request, Response } from 'express';
 import Hobby from '../models/hobbyModel';
 import User from '../models/userModel';
 import { toPrivateUser } from '../representations/userRepresentation';
 
 class HobbyController {
   // GET user's hobbies
-  public static async getUserHobbies(req: any, res: any) {
+  public static async getUserHobbies(req: Request, res: Response) {
     const userID: string = req.auth.userId;
 
     try {
@@ -26,7 +27,7 @@ class HobbyController {
   }
 
   // PATCH user's hobbies
-  public static async updateUserHobbies(req: any, res: any) {
+  public static async updateUserHobbies(req: Request, res: Response) {
     try {
       const userID: string = req.auth.userId;
       const { name: newHobbyName } = req.body || { name: null };
@@ -65,7 +66,7 @@ class HobbyController {
   }
 
   // DELETE single user's hobby
-  public static async deleteUserHobby(req: any, res: any) {
+  public static async deleteUserHobby(req: Request, res: Response) {
     const userID: string = req.auth.userId;
     const { name: hobbyName } = req.params;
 
@@ -92,7 +93,7 @@ class HobbyController {
   }
 
   // DELETE all user's hobbies
-  public static async clearUserHobbies(req: any, res: any) {
+  public static async clearUserHobbies(req: Request, res: Response) {
     const userID: string = req.auth.userId;
 
     try {

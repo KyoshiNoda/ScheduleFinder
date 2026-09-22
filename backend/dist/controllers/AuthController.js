@@ -75,23 +75,6 @@ class AuthController {
             }
         });
     }
-    static authenticateToken(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const authHeader = req.headers['authorization'];
-            const token = authHeader && authHeader.split(' ')[1];
-            if (!token) {
-                return res.sendStatus(403);
-            }
-            try {
-                const claims = (0, accessToken_1.verifyAccessToken)(token);
-                req.auth = { userId: claims.sub };
-                next();
-            }
-            catch (error) {
-                return res.sendStatus(403);
-            }
-        });
-    }
     static emailCheck(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let email = req.body.email;

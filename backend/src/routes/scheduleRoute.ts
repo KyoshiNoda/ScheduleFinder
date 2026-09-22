@@ -1,42 +1,41 @@
 import express from 'express';
 import ScheduleController from '../controllers/ScheduleController';
-import AuthController from '../controllers/AuthController';
+import { authenticateToken } from '../auth/authenticateToken';
 
 const router = express.Router();
 
 router.get(
   '/mySchedule',
-  AuthController.authenticateToken,
+  authenticateToken,
   ScheduleController.getMySchedule
 );
 
-router.post('/:id', ScheduleController.insertTimeSlot);
+router.post('/:id', authenticateToken, ScheduleController.insertTimeSlot);
 
 router.patch(
   '/:id',
-  AuthController.authenticateToken,
+  authenticateToken,
   ScheduleController.updateSchedule
 );
 router.patch(
   '/:id/timeSlot',
-  AuthController.authenticateToken,
+  authenticateToken,
   ScheduleController.updateTimeSlot
 );
 
 router.delete(
   '/:id',
-  AuthController.authenticateToken,
+  authenticateToken,
   ScheduleController.clearScheduleById
 );
 router.delete(
   '/:id/timeSlot',
-  AuthController.authenticateToken,
+  authenticateToken,
   ScheduleController.deleteTimeSlot
 );
 
-router.get('/', ScheduleController.getAllSchedules);
-router.get('/:id', ScheduleController.getScheduleById);
-router.get('/:id/user', ScheduleController.getScheduleByUserId);
-router.post('/', ScheduleController.createSchedule);
+router.get('/:id/user', authenticateToken, ScheduleController.getScheduleByUserId);
+router.get('/:id', authenticateToken, ScheduleController.getScheduleById);
+router.post('/', authenticateToken, ScheduleController.createSchedule);
 
 export default router;

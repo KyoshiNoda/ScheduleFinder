@@ -74,17 +74,6 @@ class UserController {
                 .catch((err) => console.log(err));
         });
     }
-    // DELETE user by by token
-    static deleteUser(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.auth.userId;
-            const deletedUser = yield userModel_1.default.findOneAndDelete({ _id: userID });
-            if (!deletedUser) {
-                return res.json({ error: `User with id ${userID} was not found` });
-            }
-            res.status(200).json((0, userRepresentation_1.toPrivateUser)(deletedUser));
-        });
-    }
     // PATCH user by Token
     static updateUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

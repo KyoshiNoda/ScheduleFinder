@@ -1,14 +1,15 @@
 import ScheduleBox from '../components/Schedule/ScheduleBox';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useGetScheduleQuery } from '../redux/services/schedule/scheduleService';
+import {
+  useGetExternalScheduleQuery,
+  useGetScheduleQuery,
+} from '../redux/services/schedule/scheduleService';
 import { Button } from 'flowbite-react';
 import { useAppDispatch } from '../redux/store';
 import { toggleReadOnly } from '../redux/feats/globalSlice/globalSlice';
-import { getApiUrl } from '../utils/environment';
 import { TimeSlot as TimeSlotType, Schedule as ScheduleType } from '../types';
-
-let BASE_URL = getApiUrl();
+import { useGetExternalUserInfoQuery } from '../redux/services/user/userService';
 
 const CompareSchedulePage = () => {
   const { userId } = useParams();
@@ -31,6 +32,12 @@ const CompareSchedulePage = () => {
   const { data, isFetching } = useGetScheduleQuery('schedule', {
     pollingInterval: 900000,
   });
+  const { data: comparedUser } = useGetExternalUserInfoQuery(userId!, {
+    skip: !userId,
+  });
+  const { data: comparedSchedule } = useGetExternalScheduleQuery(userId!, {
+    skip: !userId,
+  });
 
   const defaultSchedule = {
     _id: '',
@@ -40,22 +47,14 @@ const CompareSchedulePage = () => {
   };
 
   const [scheduleB, setScheduleB] = useState<ScheduleType>(defaultSchedule);
-  const [userName, setUserName] = useState<string>('');
+  const userName = comparedUser?.firstName ?? '';
 
   useEffect(() => {
-    fetch(`${BASE_URL}api/schedules/${userId}/user`)
-      .then((res) => res.json())
-      .then((data) => {
-        setScheduleB(data);
-        setTimeSlots(data.timeSlots);
-      })
-      .catch((err) => console.log(err));
-
-    fetch(`${BASE_URL}api/users/${userId}`)
-      .then((res) => res.json())
-      .then((data) => setUserName(data.firstName))
-      .catch((err) => console.log(err));
-  }, [userId]);
+    if (comparedSchedule) {
+      setScheduleB(comparedSchedule);
+      setTimeSlots(comparedSchedule.timeSlots);
+    }
+  }, [comparedSchedule]);
 
   // Convert time string to minutes since midnight for easier comparison
   const timeToMinutes = (time: string): number => {

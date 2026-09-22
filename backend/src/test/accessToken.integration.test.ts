@@ -48,6 +48,16 @@ const expectMinimalClaims = (token: string, userId: string, lifetimeSeconds: num
   expect(claims.exp! - claims.iat!).toBe(lifetimeSeconds);
 };
 
+const expectAuthenticationFailure = (response: request.Response, submittedToken?: string) => {
+  expect(response.status).toBe(401);
+  expect(response.headers['www-authenticate']).toBe('Bearer');
+  expect(response.body).toEqual({ error: 'Authentication required.' });
+
+  if (submittedToken) {
+    expect(response.text).not.toContain(submittedToken);
+  }
+};
+
 beforeEach(() => {
   delete process.env.ACCESS_TOKEN_EXPIRES_IN;
 });
@@ -113,6 +123,33 @@ describe('minimal access tokens', () => {
     expect(response.body._id).toBe(user.id);
   });
 
+  it('accepts a case-insensitive Bearer scheme with separating whitespace', async () => {
+    const user = await createUser();
+    const response = await request(app)
+      .get('/api/users')
+      .set('Authorization', `bEaReR   ${signAccessToken(user.id)}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body._id).toBe(user.id);
+  });
+
+  it.each([
+    ['missing header', undefined],
+    ['empty header', ''],
+    ['wrong scheme', 'Basic credentials'],
+    ['missing Bearer credentials', 'Bearer'],
+    ['extra Bearer fields', 'Bearer not-a-jwt extra'],
+  ])('returns a generic 401 response for a %s', async (_label, authorizationHeader) => {
+    let pendingRequest = request(app).get('/api/users');
+
+    if (authorizationHeader !== undefined) {
+      pendingRequest = pendingRequest.set('Authorization', authorizationHeader);
+    }
+
+    const response = await pendingRequest;
+    expectAuthenticationFailure(response, authorizationHeader);
+  });
+
   it.each([
     ['expired', (user: Awaited<ReturnType<typeof createUser>>) =>
       jwt.sign({}, getAccessTokenSecret(), { subject: user.id, expiresIn: -1 })],
@@ -131,11 +168,12 @@ describe('minimal access tokens', () => {
       jwt.sign({ data: user.toObject() }, getAccessTokenSecret(), { expiresIn: '5m' })],
   ])('rejects a %s token', async (_label, createToken) => {
     const user = await createUser();
+    const token = createToken(user);
     const response = await request(app)
       .get('/api/users')
-      .set('Authorization', `Bearer ${createToken(user)}`);
+      .set('Authorization', `Bearer ${token}`);
 
-    expect(response.status).toBe(403);
+    expectAuthenticationFailure(response, token);
   });
 
   it('checks the current stored password rather than a token snapshot', async () => {

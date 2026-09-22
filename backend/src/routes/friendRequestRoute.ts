@@ -1,34 +1,34 @@
 import express from 'express';
 import FriendController from '../controllers/FriendController';
-import AuthController from '../controllers/AuthController';
+import { authenticateToken } from '../auth/authenticateToken';
 const router = express.Router();
 
 router.get(
   '/',
-  AuthController.authenticateToken,
+  authenticateToken,
   FriendController.getFriendRequests
 );
 router.get(
   '/sent',
-  AuthController.authenticateToken,
+  authenticateToken,
   FriendController.getPendingFriendRequests
 );
 
 router.delete(
   '/sent/:friendID',
-  AuthController.authenticateToken,
+  authenticateToken,
   FriendController.cancelPendingFriendRequest
 );
 
 router.post(
   '/:friendID',
-  AuthController.authenticateToken,
+  authenticateToken,
   FriendController.sendFriendRequest
 );
 
 router.delete(
   '/:friendID',
-  AuthController.authenticateToken,
+  authenticateToken,
   FriendController.removeFriendRequest
 );
 export default router;

@@ -27,7 +27,7 @@ class UserController {
       .catch((err) => console.log(err));
   }
   // GET userInfo with Token
-  public static async getUserInfo(req: any, res: any) {
+  public static async getUserInfo(req: Request, res: Response) {
     const userID: string = req.auth.userId;
     try {
       const user = await User.findOne({ _id: userID }).exec();
@@ -60,21 +60,8 @@ class UserController {
       .catch((err) => console.log(err));
   }
 
-  // DELETE user by by token
-  public static async deleteUser(req: any, res: any) {
-    const userID: string = req.auth.userId;
-
-    const deletedUser = await User.findOneAndDelete({ _id: userID });
-
-    if (!deletedUser) {
-      return res.json({ error: `User with id ${userID} was not found` });
-    }
-
-    res.status(200).json(toPrivateUser(deletedUser));
-  }
-
   // PATCH user by Token
-  public static async updateUser(req: any, res: any) {
+  public static async updateUser(req: Request, res: Response) {
     const userID: string = req.auth.userId;
 
     try {
@@ -85,7 +72,7 @@ class UserController {
     }
   }
   // change password with Token
-  public static async changePasswordWithToken(req: any, res: any) {
+  public static async changePasswordWithToken(req: Request, res: Response) {
     try {
       const userID: string = req.auth.userId;
       const user = await User.findById(userID).select('+password');
@@ -149,10 +136,10 @@ class UserController {
     }
   }
 
-  public static async changeProfilePicture(req: any, res: any) {
+  public static async changeProfilePicture(req: Request, res: Response) {
     const userID: string = req.auth.userId;
     try {
-      const uploadedFile = req.file;
+      const uploadedFile = req.file!;
       const fileBuffer = uploadedFile.buffer;
       const fileData = fileBuffer.toString('base64');
       const user = await User.findOne({ _id: userID }).exec();
@@ -190,7 +177,7 @@ class UserController {
     }
   }
 
-  public static async deleteProfilePicture(req: any, res: any) {
+  public static async deleteProfilePicture(req: Request, res: Response) {
     const userID: string = req.auth.userId;
     try {
       const user = await User.findOneAndUpdate(

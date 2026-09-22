@@ -11,10 +11,15 @@ export const registerUser = createAsyncThunk(
     try {
       const result = await Axios.post(`${BASE_URL}api/auth/register`, userData);
       if (result.status === 200) {
-        let newUserID = result.data.user._id;
-        await Axios.post(`${BASE_URL}api/schedules/`, {
-          user_id: newUserID,
-        });
+        await Axios.post(
+          `${BASE_URL}api/schedules/`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${result.data.token}`,
+            },
+          }
+        );
       }
       return result;
     } catch (error) {

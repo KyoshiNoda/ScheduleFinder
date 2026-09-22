@@ -126,15 +126,53 @@ describe('safe user HTTP responses', () => {
   });
 
   it('returns public representations for discovery and external profiles', async () => {
+    const viewer = await createUser();
     const user = await createUser();
+    const token = createToken(viewer);
+    const listResponse = await request(app)
+      .get('/api/users/allUsers')
+      .set('Authorization', `Bearer ${token}`);
+    const profileResponse = await request(app)
+      .get(`/api/users/${user.id}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(listResponse.status).toBe(200);
+    expect(listResponse.body).toHaveLength(2);
+    listResponse.body.forEach(expectPublicUser);
+    expect(profileResponse.status).toBe(200);
+    expectPublicUser(profileResponse.body);
+  });
+
+  it('requires authentication for discovery and external profiles', async () => {
+    const user = await createUser();
+
     const listResponse = await request(app).get('/api/users/allUsers');
     const profileResponse = await request(app).get(`/api/users/${user.id}`);
 
-    expect(listResponse.status).toBe(200);
-    expect(listResponse.body).toHaveLength(1);
-    expectPublicUser(listResponse.body[0]);
-    expect(profileResponse.status).toBe(200);
-    expectPublicUser(profileResponse.body);
+    for (const response of [listResponse, profileResponse]) {
+      expect(response.status).toBe(401);
+      expect(response.headers['www-authenticate']).toBe('Bearer');
+      expect(response.body).toEqual({ error: 'Authentication required.' });
+    }
+  });
+
+  it('does not expose path-based user mutation or account deletion routes', async () => {
+    const actingUser = await createUser();
+    const targetUser = await createUser();
+    const token = createToken(actingUser);
+
+    const updateResponse = await request(app)
+      .patch(`/api/users/${targetUser.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ firstName: 'Changed' });
+    const deleteResponse = await request(app)
+      .delete(`/api/users/${targetUser.id}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(updateResponse.status).toBe(404);
+    expect(deleteResponse.status).toBe(404);
+    await expect(User.findById(actingUser.id)).resolves.not.toBeNull();
+    await expect(User.findById(targetUser.id)).resolves.toMatchObject({ firstName: 'Test' });
   });
 
   it('returns a private representation from the current password-reset update response', async () => {
