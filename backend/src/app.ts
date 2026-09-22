@@ -1,4 +1,4 @@
-import express, { Express } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import cors, { CorsOptions } from 'cors';
 import userRoute from './routes/userRoute';
@@ -7,6 +7,7 @@ import scheduleRoute from './routes/scheduleRoute';
 import friendRoute from './routes/friendRoute';
 import friendRequestRoute from './routes/friendRequestRoute';
 import hobbyRoute from './routes/hobbyRoutes';
+import { sendValidationError } from './validation/validateRequest';
 
 const defaultAllowedOrigins = [
   'http://localhost:5173',
@@ -41,6 +42,17 @@ export const createApp = (): Express => {
   app.use(cors(corsOptions));
   app.options('*', cors(corsOptions));
   app.use(express.json());
+  app.use((error: unknown, _req: Request, res: Response, next: NextFunction) => {
+    const parseError = error as SyntaxError & { status?: number; body?: unknown };
+
+    if (parseError instanceof SyntaxError && parseError.status === 400 && 'body' in parseError) {
+      return sendValidationError(res, [
+        { path: 'body', message: 'Request body must contain valid JSON.' },
+      ]);
+    }
+
+    return next(error);
+  });
   app.use(bodyParser.urlencoded({ extended: true }));
 
   app.use('/api/users/friendRequest', friendRequestRoute);

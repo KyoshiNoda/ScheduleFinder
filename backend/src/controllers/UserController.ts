@@ -7,6 +7,12 @@ import {
   toPrivateUser,
   toPublicUser,
 } from '../representations/userRepresentation';
+import {
+  ChangePasswordWithoutTokenBody,
+  ChangePasswordWithTokenBody,
+  IdParams,
+  UpdateUserBody,
+} from '../validation/schemas';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -47,7 +53,7 @@ class UserController {
   }
 
   // GET single user by id
-  public static async getUserById(req: Request, res: Response): Promise<any> {
+  public static async getUserById(req: Request<IdParams>, res: Response): Promise<any> {
     const id = req.params.id;
     await User.findOne({ _id: id }, (err: any, found: any) => {
       if (!err) {
@@ -61,18 +67,34 @@ class UserController {
   }
 
   // PATCH user by Token
-  public static async updateUser(req: Request, res: Response) {
+  public static async updateUser(
+    req: Request<Record<string, never>, unknown, UpdateUserBody>,
+    res: Response
+  ) {
     const userID: string = req.auth.userId;
 
     try {
-      const updatedUser = await User.findOneAndUpdate({ _id: userID }, { ...req.body }, { returnOriginal: false });
-      res.status(200).json(updatedUser ? toPrivateUser(updatedUser) : updatedUser);
-    } catch (error) {
-      res.json(`The update attempt to user ${userID} has failed`);
+      const updates: UpdateUserBody = req.body;
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userID },
+        { $set: updates },
+        { new: true }
+      );
+
+      if (!updatedUser) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      return res.status(200).json(toPrivateUser(updatedUser));
+    } catch {
+      return res.status(500).json({ error: 'Unable to update user' });
     }
   }
   // change password with Token
-  public static async changePasswordWithToken(req: Request, res: Response) {
+  public static async changePasswordWithToken(
+    req: Request<Record<string, never>, unknown, ChangePasswordWithTokenBody>,
+    res: Response
+  ) {
     try {
       const userID: string = req.auth.userId;
       const user = await User.findById(userID).select('+password');
@@ -85,9 +107,6 @@ class UserController {
 
       if (!passwordMatch) {
         return res.status(401).send('Incorrect Password!');
-      }
-      if (req.body.newPassword !== req.body.confirmNewPassword) {
-        return res.status(401).send("Passwords don't match!");
       }
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
@@ -104,23 +123,22 @@ class UserController {
       res.status(500).send({ error: error.message });
     }
   }
-  public static async changePasswordWithoutToken(req: Request, res: Response) {
+  public static async changePasswordWithoutToken(
+    req: Request<Record<string, never>, unknown, ChangePasswordWithoutTokenBody>,
+    res: Response
+  ) {
     try {
       const user = await User.findOne({ email: req.body.email }).exec();
       if (!user) {
         return res.status(404).send({ error: 'User not found' });
       }
 
-      if (req.body.newPassword !== req.body.confirmNewPassword) {
-        return res.status(401).send({ message: "Passwords don't match!" });
-      }
-
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
       const updatedUser = await User.findOneAndUpdate(
         { email: req.body.email },
-        { ...req.body, password: hashedPassword },
-        { returnOriginal: false }
+        { $set: { password: hashedPassword } },
+        { new: true }
       );
 
       if (!updatedUser) {

@@ -1,6 +1,8 @@
 import express from 'express';
 import HobbyController from '../controllers/HobbyController';
 import { authenticateToken } from '../auth/authenticateToken';
+import { hobbyBodySchema, hobbyParamsSchema } from '../validation/schemas';
+import { validateRequest } from '../validation/validateRequest';
 
 const router = express.Router();
 
@@ -8,12 +10,18 @@ const router = express.Router();
 router.get('/userHobbies', authenticateToken, HobbyController.getUserHobbies);
 
 // This route is used when a user wants to add an already existing tag to ther collection of tags.
-router.patch('/userHobbies', authenticateToken, HobbyController.updateUserHobbies);
+router.patch(
+  '/userHobbies',
+  authenticateToken,
+  validateRequest({ body: hobbyBodySchema }),
+  HobbyController.updateUserHobbies
+);
 
 // This route is used when a user deletes a single tag from its list of tags.
 router.delete(
   '/userHobbies/:name',
   authenticateToken,
+  validateRequest({ params: hobbyParamsSchema }),
   HobbyController.deleteUserHobby
 );
 

@@ -79,11 +79,15 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.auth.userId;
             try {
-                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, Object.assign({}, req.body), { returnOriginal: false });
-                res.status(200).json(updatedUser ? (0, userRepresentation_1.toPrivateUser)(updatedUser) : updatedUser);
+                const updates = req.body;
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $set: updates }, { new: true });
+                if (!updatedUser) {
+                    return res.status(404).json({ error: 'User not found' });
+                }
+                return res.status(200).json((0, userRepresentation_1.toPrivateUser)(updatedUser));
             }
-            catch (error) {
-                res.json(`The update attempt to user ${userID} has failed`);
+            catch (_a) {
+                return res.status(500).json({ error: 'Unable to update user' });
             }
         });
     }
@@ -99,9 +103,6 @@ class UserController {
                 const passwordMatch = yield bcrypt_1.default.compare(req.body.currentPassword, user.password);
                 if (!passwordMatch) {
                     return res.status(401).send('Incorrect Password!');
-                }
-                if (req.body.newPassword !== req.body.confirmNewPassword) {
-                    return res.status(401).send("Passwords don't match!");
                 }
                 const salt = yield bcrypt_1.default.genSalt();
                 const hashedPassword = yield bcrypt_1.default.hash(req.body.newPassword, salt);
@@ -123,12 +124,9 @@ class UserController {
                 if (!user) {
                     return res.status(404).send({ error: 'User not found' });
                 }
-                if (req.body.newPassword !== req.body.confirmNewPassword) {
-                    return res.status(401).send({ message: "Passwords don't match!" });
-                }
                 const salt = yield bcrypt_1.default.genSalt();
                 const hashedPassword = yield bcrypt_1.default.hash(req.body.newPassword, salt);
-                const updatedUser = yield userModel_1.default.findOneAndUpdate({ email: req.body.email }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }), { returnOriginal: false });
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ email: req.body.email }, { $set: { password: hashedPassword } }, { new: true });
                 if (!updatedUser) {
                     throw new Error('Error updating password');
                 }

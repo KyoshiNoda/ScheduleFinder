@@ -37,7 +37,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = __importStar(require("mongoose"));
 const scheduleModel_1 = __importDefault(require("../models/scheduleModel"));
+const schemas_1 = require("../validation/schemas");
+const validateRequest_1 = require("../validation/validateRequest");
 class ScheduleController {
+    static timeSlotsOverlap(candidate, timeSlots, excludedTimeSlotID) {
+        const candidateStart = (0, schemas_1.parseTimeToMinutes)(candidate.startTime);
+        const candidateEnd = (0, schemas_1.parseTimeToMinutes)(candidate.endTime);
+        return timeSlots.some((timeSlot) => {
+            if (excludedTimeSlotID && timeSlot._id.toString() === excludedTimeSlotID) {
+                return false;
+            }
+            const sharesDay = schemas_1.DAYS_OF_WEEK.some((day) => { var _a; return candidate.days[day] && ((_a = timeSlot.days) === null || _a === void 0 ? void 0 : _a[day]); });
+            if (!sharesDay) {
+                return false;
+            }
+            const existingStart = (0, schemas_1.parseTimeToMinutes)(timeSlot.startTime);
+            const existingEnd = (0, schemas_1.parseTimeToMinutes)(timeSlot.endTime);
+            if ([candidateStart, candidateEnd, existingStart, existingEnd].some(Number.isNaN)) {
+                return false;
+            }
+            return candidateStart < existingEnd && existingStart < candidateEnd;
+        });
+    }
     static getOwnedSchedule(scheduleID, userID, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const schedule = yield scheduleModel_1.default.findById(scheduleID);
@@ -76,9 +97,7 @@ class ScheduleController {
                 if (!schedule) {
                     return;
                 }
-                const scheduleUpdates = Object.assign({}, req.body);
-                delete scheduleUpdates.user_id;
-                schedule.set(scheduleUpdates);
+                schedule.visibility = req.body.visibility;
                 yield schedule.save();
                 return res.status(200).send(schedule);
             }
@@ -114,9 +133,6 @@ class ScheduleController {
                 if (!schedule) {
                     return;
                 }
-                if (!(req.body.title && req.body.startTime && req.body.endTime && req.body.color && req.body.days)) {
-                    return res.status(400).json({ message: 'Missing required properties' });
-                }
                 const newTimeSlot = {
                     _id: new mongoose.Types.ObjectId(),
                     days: req.body.days,
@@ -127,6 +143,14 @@ class ScheduleController {
                     location: req.body.location,
                     professor: req.body.professor,
                 };
+                if (ScheduleController.timeSlotsOverlap(newTimeSlot, schedule.timeSlots)) {
+                    return (0, validateRequest_1.sendValidationError)(res, [
+                        {
+                            path: 'body.startTime',
+                            message: 'Time slot overlaps an existing slot on a selected day.',
+                        },
+                    ]);
+                }
                 schedule.timeSlots.push(newTimeSlot);
                 yield schedule.save();
                 return res.status(200).send(newTimeSlot);
@@ -137,6 +161,7 @@ class ScheduleController {
         });
     }
     static updateTimeSlot(req, res) {
+        var _a, _b, _c, _d, _e;
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.auth.userId;
             const scheduleID = req.params.id;
@@ -149,11 +174,36 @@ class ScheduleController {
                 if (timeSlotIndex < 0) {
                     return res.status(404).json({ error: 'Time slot not found' });
                 }
-                schedule.timeSlots[timeSlotIndex] = Object.assign(Object.assign({}, schedule.timeSlots[timeSlotIndex]), req.body);
+                const existingTimeSlot = schedule.timeSlots[timeSlotIndex];
+                const updatedTimeSlot = {
+                    _id: existingTimeSlot._id,
+                    days: (_a = req.body.days) !== null && _a !== void 0 ? _a : existingTimeSlot.days,
+                    title: (_b = req.body.title) !== null && _b !== void 0 ? _b : existingTimeSlot.title,
+                    startTime: (_c = req.body.startTime) !== null && _c !== void 0 ? _c : existingTimeSlot.startTime,
+                    endTime: (_d = req.body.endTime) !== null && _d !== void 0 ? _d : existingTimeSlot.endTime,
+                    color: (_e = req.body.color) !== null && _e !== void 0 ? _e : existingTimeSlot.color,
+                    location: req.body.location !== undefined ? req.body.location : existingTimeSlot.location,
+                    professor: req.body.professor !== undefined ? req.body.professor : existingTimeSlot.professor,
+                };
+                if ((0, schemas_1.parseTimeToMinutes)(updatedTimeSlot.startTime) >=
+                    (0, schemas_1.parseTimeToMinutes)(updatedTimeSlot.endTime)) {
+                    return (0, validateRequest_1.sendValidationError)(res, [
+                        { path: 'body.startTime', message: 'Start time must be before end time.' },
+                    ]);
+                }
+                if (ScheduleController.timeSlotsOverlap(updatedTimeSlot, schedule.timeSlots, existingTimeSlot._id.toString())) {
+                    return (0, validateRequest_1.sendValidationError)(res, [
+                        {
+                            path: 'body.startTime',
+                            message: 'Time slot overlaps an existing slot on a selected day.',
+                        },
+                    ]);
+                }
+                schedule.timeSlots[timeSlotIndex] = updatedTimeSlot;
                 yield schedule.save();
                 return res.status(200).send(schedule.timeSlots[timeSlotIndex]);
             }
-            catch (_a) {
+            catch (_f) {
                 return res.status(400).json({ error: 'Unable to update time slot' });
             }
         });

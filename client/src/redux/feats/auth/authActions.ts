@@ -5,6 +5,14 @@ import { getApiUrl } from '../../../utils/environment';
 
 let BASE_URL = getApiUrl();
 
+const getApiErrorMessage = (data: any): string => {
+  if (data?.code === 'VALIDATION_ERROR' && Array.isArray(data.issues)) {
+    return data.issues[0]?.message ?? 'Invalid request.';
+  }
+
+  return data?.message ?? data?.error ?? 'Request failed.';
+};
+
 export const registerUser = createAsyncThunk(
   '/api/auth',
   async (userData: RegisterUser, { rejectWithValue }) => {
@@ -53,7 +61,7 @@ export const emailCheck = createAsyncThunk(
     } catch (error: any) {
       if (error.response) {
         const { status, data } = error.response;
-        return rejectWithValue({ status, message: data.message });
+        return rejectWithValue({ status, message: getApiErrorMessage(data) });
       } else {
         return rejectWithValue({
           status: 500,
@@ -91,7 +99,7 @@ export const verifyPasswordRequest = createAsyncThunk(
     } catch (error: any) {
       if (error.response) {
         const { status, data } = error.response;
-        return rejectWithValue({ status, message: data.message });
+        return rejectWithValue({ status, message: getApiErrorMessage(data) });
       } else {
         return rejectWithValue({
           status: 500,
@@ -121,7 +129,7 @@ export const changePassword = createAsyncThunk(
     } catch (error: any) {
       if (error.response) {
         const { status, data } = error.response;
-        return rejectWithValue({ status, message: data.message });
+        return rejectWithValue({ status, message: getApiErrorMessage(data) });
       } else {
         return rejectWithValue({
           status: 500,

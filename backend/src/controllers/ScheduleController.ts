@@ -1,8 +1,50 @@
 import { Request, Response } from 'express';
 import * as mongoose from 'mongoose';
 import Schedule, { ISchedule, TimeSlot } from '../models/scheduleModel';
+import {
+  CreateTimeSlotBody,
+  DAYS_OF_WEEK,
+  DeleteTimeSlotBody,
+  IdParams,
+  parseTimeToMinutes,
+  UpdateScheduleBody,
+  UpdateTimeSlotBody,
+} from '../validation/schemas';
+import { sendValidationError } from '../validation/validateRequest';
 
 class ScheduleController {
+  private static timeSlotsOverlap(
+    candidate: Omit<TimeSlot, '_id'>,
+    timeSlots: TimeSlot[],
+    excludedTimeSlotID?: string
+  ): boolean {
+    const candidateStart = parseTimeToMinutes(candidate.startTime);
+    const candidateEnd = parseTimeToMinutes(candidate.endTime);
+
+    return timeSlots.some((timeSlot) => {
+      if (excludedTimeSlotID && timeSlot._id.toString() === excludedTimeSlotID) {
+        return false;
+      }
+
+      const sharesDay = DAYS_OF_WEEK.some(
+        (day) => candidate.days[day] && timeSlot.days?.[day]
+      );
+
+      if (!sharesDay) {
+        return false;
+      }
+
+      const existingStart = parseTimeToMinutes(timeSlot.startTime);
+      const existingEnd = parseTimeToMinutes(timeSlot.endTime);
+
+      if ([candidateStart, candidateEnd, existingStart, existingEnd].some(Number.isNaN)) {
+        return false;
+      }
+
+      return candidateStart < existingEnd && existingStart < candidateEnd;
+    });
+  }
+
   private static async getOwnedSchedule(
     scheduleID: string,
     userID: string,
@@ -39,7 +81,10 @@ class ScheduleController {
     }
   }
 
-  public static async updateSchedule(req: Request, res: Response) {
+  public static async updateSchedule(
+    req: Request<IdParams, unknown, UpdateScheduleBody>,
+    res: Response
+  ) {
     const userID = req.auth.userId;
     const scheduleID = req.params.id;
 
@@ -50,9 +95,7 @@ class ScheduleController {
         return;
       }
 
-      const scheduleUpdates = { ...req.body };
-      delete scheduleUpdates.user_id;
-      schedule.set(scheduleUpdates);
+      schedule.visibility = req.body.visibility;
       await schedule.save();
 
       return res.status(200).send(schedule);
@@ -61,7 +104,7 @@ class ScheduleController {
     }
   }
 
-  public static async clearScheduleById(req: Request, res: Response) {
+  public static async clearScheduleById(req: Request<IdParams>, res: Response) {
     const userID = req.auth.userId;
     const scheduleID = req.params.id;
 
@@ -81,7 +124,10 @@ class ScheduleController {
     }
   }
 
-  public static async insertTimeSlot(req: Request, res: Response) {
+  public static async insertTimeSlot(
+    req: Request<IdParams, unknown, CreateTimeSlotBody>,
+    res: Response
+  ) {
     const userID = req.auth.userId;
     const scheduleID = req.params.id;
 
@@ -90,12 +136,6 @@ class ScheduleController {
 
       if (!schedule) {
         return;
-      }
-
-      if (
-        !(req.body.title && req.body.startTime && req.body.endTime && req.body.color && req.body.days)
-      ) {
-        return res.status(400).json({ message: 'Missing required properties' });
       }
 
       const newTimeSlot: TimeSlot = {
@@ -109,6 +149,15 @@ class ScheduleController {
         professor: req.body.professor,
       };
 
+      if (ScheduleController.timeSlotsOverlap(newTimeSlot, schedule.timeSlots)) {
+        return sendValidationError(res, [
+          {
+            path: 'body.startTime',
+            message: 'Time slot overlaps an existing slot on a selected day.',
+          },
+        ]);
+      }
+
       schedule.timeSlots.push(newTimeSlot);
       await schedule.save();
 
@@ -118,7 +167,10 @@ class ScheduleController {
     }
   }
 
-  public static async updateTimeSlot(req: Request, res: Response) {
+  public static async updateTimeSlot(
+    req: Request<IdParams, unknown, UpdateTimeSlotBody>,
+    res: Response
+  ) {
     const userID = req.auth.userId;
     const scheduleID = req.params.id;
 
@@ -137,10 +189,45 @@ class ScheduleController {
         return res.status(404).json({ error: 'Time slot not found' });
       }
 
-      schedule.timeSlots[timeSlotIndex] = {
-        ...schedule.timeSlots[timeSlotIndex],
-        ...req.body,
+      const existingTimeSlot = schedule.timeSlots[timeSlotIndex];
+      const updatedTimeSlot: TimeSlot = {
+        _id: existingTimeSlot._id,
+        days: req.body.days ?? existingTimeSlot.days,
+        title: req.body.title ?? existingTimeSlot.title,
+        startTime: req.body.startTime ?? existingTimeSlot.startTime,
+        endTime: req.body.endTime ?? existingTimeSlot.endTime,
+        color: req.body.color ?? existingTimeSlot.color,
+        location:
+          req.body.location !== undefined ? req.body.location : existingTimeSlot.location,
+        professor:
+          req.body.professor !== undefined ? req.body.professor : existingTimeSlot.professor,
       };
+
+      if (
+        parseTimeToMinutes(updatedTimeSlot.startTime) >=
+        parseTimeToMinutes(updatedTimeSlot.endTime)
+      ) {
+        return sendValidationError(res, [
+          { path: 'body.startTime', message: 'Start time must be before end time.' },
+        ]);
+      }
+
+      if (
+        ScheduleController.timeSlotsOverlap(
+          updatedTimeSlot,
+          schedule.timeSlots,
+          existingTimeSlot._id.toString()
+        )
+      ) {
+        return sendValidationError(res, [
+          {
+            path: 'body.startTime',
+            message: 'Time slot overlaps an existing slot on a selected day.',
+          },
+        ]);
+      }
+
+      schedule.timeSlots[timeSlotIndex] = updatedTimeSlot;
       await schedule.save();
 
       return res.status(200).send(schedule.timeSlots[timeSlotIndex]);
@@ -149,7 +236,10 @@ class ScheduleController {
     }
   }
 
-  public static async deleteTimeSlot(req: Request, res: Response) {
+  public static async deleteTimeSlot(
+    req: Request<IdParams, unknown, DeleteTimeSlotBody>,
+    res: Response
+  ) {
     const userID = req.auth.userId;
     const scheduleID = req.params.id;
 
@@ -180,7 +270,7 @@ class ScheduleController {
     }
   }
 
-  public static async getScheduleById(req: Request, res: Response) {
+  public static async getScheduleById(req: Request<IdParams>, res: Response) {
     try {
       const schedule = await ScheduleController.getOwnedSchedule(
         req.params.id,
@@ -198,7 +288,7 @@ class ScheduleController {
     }
   }
 
-  public static async getScheduleByUserId(req: Request, res: Response) {
+  public static async getScheduleByUserId(req: Request<IdParams>, res: Response) {
     const requestingUserID = req.auth.userId;
 
     try {

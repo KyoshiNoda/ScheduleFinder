@@ -4,15 +4,18 @@ import bcrypt from 'bcrypt';
 import sgMail from '@sendgrid/mail';
 import { toAuthUser } from '../representations/userRepresentation';
 import { signAccessToken } from '../auth/accessToken';
+import {
+  EmailBody,
+  LoginBody,
+  RegisterBody,
+  ResetCodeBody,
+} from '../validation/schemas';
 sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class AuthController {
   private static randomCode: string;
 
-  public static async loginUser(req: Request, res: Response) {
+  public static async loginUser(req: Request<Record<string, never>, unknown, LoginBody>, res: Response) {
     const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).send({ error: 'Email and password are required.' });
-    }
     try {
       const user = await User.findOne({ email }).select('+password');
       if (!user) {
@@ -32,19 +35,19 @@ class AuthController {
     }
   }
 
-  public static async registerUser(req: Request, res: Response) {
+  public static async registerUser(
+    req: Request<Record<string, never>, unknown, RegisterBody>,
+    res: Response
+  ) {
     const { firstName, lastName, email, password, school, birthday } = req.body;
 
-    if (!firstName || !lastName || !email || !password || !school || !birthday) {
-      return res.status(400).send({ error: 'All fields are required.' });
-    }
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).send({ error: 'Email already in use.' });
     }
 
     const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
     const user = new User({
       firstName: firstName,
       lastName: lastName,
@@ -66,8 +69,11 @@ class AuthController {
     }
   }
 
-  public static async emailCheck(req: Request, res: Response) {
-    let email: string = req.body.email;
+  public static async emailCheck(
+    req: Request<Record<string, never>, unknown, EmailBody>,
+    res: Response
+  ) {
+    const email = req.body.email;
     try {
       const user = await User.findOne({ email }).exec();
       if (!user) {
@@ -80,9 +86,12 @@ class AuthController {
     }
   }
 
-  public static async resetPasswordRequest(req: Request, res: Response) {
-    let email: string = req.body.email;
-    let randomCode = (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000).toString();
+  public static async resetPasswordRequest(
+    req: Request<Record<string, never>, unknown, EmailBody>,
+    res: Response
+  ) {
+    const email = req.body.email;
+    const randomCode = (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000).toString();
     AuthController.randomCode = randomCode;
     let message: string = `Here is your five digit code: ${AuthController.randomCode}`;
 
@@ -108,7 +117,10 @@ class AuthController {
       });
   }
 
-  public static async verifyResetPasswordCode(req: Request, res: Response) {
+  public static async verifyResetPasswordCode(
+    req: Request<Record<string, never>, unknown, ResetCodeBody>,
+    res: Response
+  ) {
     try {
       const email = req.body.email;
       const code = req.body.code;

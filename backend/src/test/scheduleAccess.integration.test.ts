@@ -147,7 +147,7 @@ describe('schedule access control', () => {
     const createResponse = await request(app)
       .post('/api/schedules')
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ user_id: otherUser.id, visibility: 'private' });
+      .send({});
 
     expect(createResponse.status).toBe(200);
     expect(createResponse.body.user_id).toBe(owner.id);
@@ -160,7 +160,7 @@ describe('schedule access control', () => {
     const updateResponse = await request(app)
       .patch(`/api/schedules/${createResponse.body._id}`)
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ user_id: otherUser.id, visibility: 'private' });
+      .send({ visibility: 'private' });
     const updateTimeSlotResponse = await request(app)
       .patch(`/api/schedules/${createResponse.body._id}/timeSlot`)
       .set('Authorization', `Bearer ${ownerToken}`)
@@ -168,7 +168,12 @@ describe('schedule access control', () => {
     const secondInsertResponse = await request(app)
       .post(`/api/schedules/${createResponse.body._id}`)
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ ...timeSlotInput, title: 'Databases' });
+      .send({
+        ...timeSlotInput,
+        title: 'Databases',
+        startTime: '11:00 AM',
+        endTime: '12:00 PM',
+      });
     const deleteTimeSlotResponse = await request(app)
       .delete(`/api/schedules/${createResponse.body._id}/timeSlot`)
       .set('Authorization', `Bearer ${ownerToken}`)

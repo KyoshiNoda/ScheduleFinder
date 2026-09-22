@@ -20,7 +20,7 @@ const ForgotPasswordPage = () => {
       await dispatch(resetPasswordRequest({ email: email })).unwrap();
       navigate('/resetPassword');
     } catch (error: any) {
-      if (error.status === 404) {
+      if (error.status === 400 || error.status === 404) {
         setIsInvalidEmail(true);
         setResponseMessage(error.message);
       }

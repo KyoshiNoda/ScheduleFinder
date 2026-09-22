@@ -92,7 +92,6 @@ describe('PersonalTab', () => {
         expect.objectContaining({
           firstName: 'Grace',
           major: 'Mathematics',
-          gender: 'Female',
         })
       );
     });
@@ -109,6 +108,23 @@ describe('PersonalTab', () => {
 
     await waitFor(() => {
       expect(mocks.updateUser).toHaveBeenCalledWith(expect.objectContaining({ gender: 'Other' }));
+    });
+  });
+
+  it('does not submit the display-only gender placeholder', async () => {
+    mocks.useGetUserInfoQuery.mockReturnValue({
+      data: { ...mockUser, gender: null },
+      isLoading: false,
+    });
+    render(<PersonalTab />);
+
+    fireEvent.change(await screen.findByDisplayValue('Ada'), {
+      target: { value: 'Grace' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+
+    await waitFor(() => {
+      expect(mocks.updateUser).toHaveBeenCalledWith({ firstName: 'Grace' });
     });
   });
 });

@@ -15,8 +15,8 @@ export interface TimeSlot {
   startTime: string;
   endTime: string;
   color: string;
-  location?: string;
-  professor?: string;
+  location?: string | null;
+  professor?: string | null;
 }
 
 export interface ISchedule extends Document {

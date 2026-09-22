@@ -13,6 +13,7 @@ const scheduleRoute_1 = __importDefault(require("./routes/scheduleRoute"));
 const friendRoute_1 = __importDefault(require("./routes/friendRoute"));
 const friendRequestRoute_1 = __importDefault(require("./routes/friendRequestRoute"));
 const hobbyRoutes_1 = __importDefault(require("./routes/hobbyRoutes"));
+const validateRequest_1 = require("./validation/validateRequest");
 const defaultAllowedOrigins = [
     'http://localhost:5173',
     'https://schedulefinder.netlify.app',
@@ -42,6 +43,15 @@ const createApp = () => {
     app.use((0, cors_1.default)(corsOptions));
     app.options('*', (0, cors_1.default)(corsOptions));
     app.use(express_1.default.json());
+    app.use((error, _req, res, next) => {
+        const parseError = error;
+        if (parseError instanceof SyntaxError && parseError.status === 400 && 'body' in parseError) {
+            return (0, validateRequest_1.sendValidationError)(res, [
+                { path: 'body', message: 'Request body must contain valid JSON.' },
+            ]);
+        }
+        return next(error);
+    });
     app.use(body_parser_1.default.urlencoded({ extended: true }));
     app.use('/api/users/friendRequest', friendRequestRoute_1.default);
     app.use('/api/users/friends', friendRoute_1.default);

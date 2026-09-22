@@ -3,6 +3,7 @@ import User from '../models/userModel';
 import { IUser } from '../models/userModel';
 import sgMail from '@sendgrid/mail';
 import { toPublicUser } from '../representations/userRepresentation';
+import { FriendIdParams } from '../validation/schemas';
 sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class FriendController {
   public static async getFriends(req: Request, res: Response) {
@@ -31,7 +32,7 @@ class FriendController {
     }
   }
 
-  public static async deleteFriend(req: Request, res: Response) {
+  public static async deleteFriend(req: Request<FriendIdParams>, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
@@ -122,7 +123,7 @@ class FriendController {
     }
   }
 
-  public static async sendFriendRequest(req: Request, res: Response) {
+  public static async sendFriendRequest(req: Request<FriendIdParams>, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
@@ -187,7 +188,7 @@ class FriendController {
     }
   }
 
-  public static async removeFriendRequest(req: Request, res: Response) {
+  public static async removeFriendRequest(req: Request<FriendIdParams>, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
@@ -225,7 +226,7 @@ class FriendController {
     }
   }
 
-  public static async acceptFriendRequest(req: Request, res: Response) {
+  public static async acceptFriendRequest(req: Request<FriendIdParams>, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
@@ -272,7 +273,7 @@ class FriendController {
       });
     }
   }
-  public static async rejectFriendRequest(req: Request, res: Response) {
+  public static async rejectFriendRequest(req: Request<FriendIdParams>, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
@@ -309,7 +310,7 @@ class FriendController {
     }
   }
 
-  public static async cancelPendingFriendRequest(req: Request, res: Response) {
+  public static async cancelPendingFriendRequest(req: Request<FriendIdParams>, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {

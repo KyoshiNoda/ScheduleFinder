@@ -6,6 +6,10 @@ import {
 } from '../../../types';
 import { createAuthorizedBaseQuery } from '../baseQuery';
 
+export type UpdateUserInput = Partial<
+  Pick<PrivateUser, 'firstName' | 'lastName' | 'email' | 'birthday' | 'school' | 'major' | 'gender'>
+>;
+
 export const userAPI = createApi({
   reducerPath: 'userAPI',
   baseQuery: createAuthorizedBaseQuery(),
@@ -32,7 +36,7 @@ export const userAPI = createApi({
       }),
       providesTags: ['User'],
     }),
-    updateUserInfo: builder.mutation<PrivateUser, Partial<PrivateUser>>({
+    updateUserInfo: builder.mutation<PrivateUser, UpdateUserInput>({
       query: (body) => ({
         url: 'api/users',
         method: 'PATCH',

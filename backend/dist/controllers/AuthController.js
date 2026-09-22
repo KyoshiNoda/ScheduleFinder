@@ -22,9 +22,6 @@ class AuthController {
     static loginUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { email, password } = req.body;
-            if (!email || !password) {
-                return res.status(400).send({ error: 'Email and password are required.' });
-            }
             try {
                 const user = yield userModel_1.default.findOne({ email }).select('+password');
                 if (!user) {
@@ -45,15 +42,12 @@ class AuthController {
     static registerUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { firstName, lastName, email, password, school, birthday } = req.body;
-            if (!firstName || !lastName || !email || !password || !school || !birthday) {
-                return res.status(400).send({ error: 'All fields are required.' });
-            }
             const userExists = yield userModel_1.default.findOne({ email });
             if (userExists) {
                 return res.status(400).send({ error: 'Email already in use.' });
             }
             const salt = yield bcrypt_1.default.genSalt();
-            const hashedPassword = yield bcrypt_1.default.hash(req.body.password, salt);
+            const hashedPassword = yield bcrypt_1.default.hash(password, salt);
             const user = new userModel_1.default({
                 firstName: firstName,
                 lastName: lastName,
@@ -77,7 +71,7 @@ class AuthController {
     }
     static emailCheck(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let email = req.body.email;
+            const email = req.body.email;
             try {
                 const user = yield userModel_1.default.findOne({ email }).exec();
                 if (!user) {
@@ -93,8 +87,8 @@ class AuthController {
     }
     static resetPasswordRequest(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let email = req.body.email;
-            let randomCode = (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000).toString();
+            const email = req.body.email;
+            const randomCode = (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000).toString();
             AuthController.randomCode = randomCode;
             let message = `Here is your five digit code: ${AuthController.randomCode}`;
             let codeHTML = '';

@@ -50,7 +50,13 @@ const PersonalTab = () => {
       updatedFields.birthday = new Date(birthdayRef.current.value).toISOString();
     }
 
-    updatedFields.gender = gender;
+    if (gender !== undefined && gender !== 'Select Gender' && gender !== userInfo?.gender) {
+      updatedFields.gender = gender;
+    }
+
+    if (Object.keys(updatedFields).length === 0) {
+      return;
+    }
 
     try {
       const result = await updateUser(updatedFields).unwrap();

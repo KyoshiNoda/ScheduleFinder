@@ -40,7 +40,6 @@ const ProfileTab = () => {
   const emailHandler = async () => {
     try {
       const updatedUser = await updateUser({
-        ...userInfo,
         email: emailRef.current?.value,
       }).unwrap();
       dispatch(updateUserInfo(updatedUser));
@@ -60,13 +59,28 @@ const ProfileTab = () => {
       showToast(ToastEnum.UPDATE_PASSWORD);
       setModalState(false);
     } catch (error: any) {
-      if (error.data.includes('Incorrect')) {
+      const responseData = error?.data;
+      const validationIssue =
+        responseData?.code === 'VALIDATION_ERROR' && Array.isArray(responseData.issues)
+          ? responseData.issues[0]
+          : undefined;
+      const message =
+        validationIssue?.message ??
+        (typeof responseData === 'string'
+          ? responseData
+          : responseData?.error ?? 'Unable to change password.');
+
+      if (validationIssue?.path === 'body.currentPassword' || message.includes('Incorrect')) {
         setIsCurrentPasswordError(true);
       }
-      if (error.data.includes('match')) {
+      if (
+        validationIssue?.path === 'body.newPassword' ||
+        validationIssue?.path === 'body.confirmNewPassword' ||
+        message.toLowerCase().includes('match')
+      ) {
         setIsNewPasswordError(true);
       }
-      setErrorMessage(error.data);
+      setErrorMessage(message);
     }
   };
 

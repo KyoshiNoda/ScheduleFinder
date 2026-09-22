@@ -26,7 +26,7 @@ const ChangePassword = () => {
       await dispatch(changePassword(data)).unwrap();
       navigate('/login');
     } catch (error: any) {
-      if (error.status === 401) {
+      if (error.status === 400 || error.status === 401) {
         setisInvalidPassword(true);
         setErrorMessage(error.message);
       }

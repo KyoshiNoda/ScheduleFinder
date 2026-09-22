@@ -116,11 +116,15 @@ const TimeSlot: any = (props: Props) => {
     const startTime =
       startTimeHourRef.current.value +
       ':' +
-      startTimeMinuteRef.current.value +
+      startTimeMinuteRef.current.value.padStart(2, '0') +
       ' ' +
       startTimeMeridiem;
     const endTime =
-      endTimeHourRef.current.value + ':' + endTimeMinuteRef.current.value + ' ' + endTimeMeridiem;
+      endTimeHourRef.current.value +
+      ':' +
+      endTimeMinuteRef.current.value.padStart(2, '0') +
+      ' ' +
+      endTimeMeridiem;
 
     const updatedTimeSlot: TimeSlotType = {
       _id: props.id!,

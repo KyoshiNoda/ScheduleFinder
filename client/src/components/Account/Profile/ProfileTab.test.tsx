@@ -93,12 +93,7 @@ describe('ProfileTab', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
 
     await waitFor(() => {
-      expect(mocks.updateUser).toHaveBeenCalledWith(
-        expect.objectContaining({
-          firstName: mockUser.firstName,
-          email: 'new@example.com',
-        })
-      );
+      expect(mocks.updateUser).toHaveBeenCalledWith({ email: 'new@example.com' });
     });
     expect(mocks.updateUser.mock.calls[0][0]).not.toHaveProperty('password');
     expect(mocks.dispatch).toHaveBeenCalledWith(expect.objectContaining({ type: 'auth/updateUserInfo' }));
@@ -134,13 +129,26 @@ describe('ProfileTab', () => {
   });
 
   it('shows password validation errors returned by the mutation', async () => {
-    mocks.changePasswordUnwrap.mockRejectedValue({ data: 'Passwords must match' });
+    mocks.changePasswordUnwrap.mockRejectedValue({
+      data: {
+        error: 'Validation failed.',
+        code: 'VALIDATION_ERROR',
+        issues: [
+          {
+            path: 'body.confirmNewPassword',
+            message: 'Password confirmation must match the new password.',
+          },
+        ],
+      },
+    });
 
     render(<ProfileTab />);
 
     fireEvent.click(await screen.findByRole('button', { name: 'Change Password' }));
     fireEvent.click(screen.getByRole('button', { name: 'Reset Password' }));
 
-    expect(await screen.findAllByText('Passwords must match')).toHaveLength(2);
+    expect(
+      await screen.findAllByText('Password confirmation must match the new password.')
+    ).toHaveLength(2);
   });
 });

@@ -42,17 +42,10 @@ class HobbyController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const userID = req.auth.userId;
-                const { name: newHobbyName } = req.body || { name: null };
-                if (!newHobbyName) {
-                    return res.status(400).json({
-                        message: 'Error while getting new hobby name',
-                        error: 'Possible malformed request',
-                    });
-                }
-                const lowerCaseHobbyName = newHobbyName.toLowerCase();
-                let existingHobby = yield hobbyModel_1.default.findOne({ name: lowerCaseHobbyName });
+                const { name: newHobbyName } = req.body;
+                let existingHobby = yield hobbyModel_1.default.findOne({ name: newHobbyName });
                 if (!existingHobby) {
-                    existingHobby = yield hobbyModel_1.default.create({ name: lowerCaseHobbyName });
+                    existingHobby = yield hobbyModel_1.default.create({ name: newHobbyName });
                 }
                 const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $addToSet: { hobbies: existingHobby.name } }, { new: true }).exec();
                 if (!updatedUser) {
@@ -74,7 +67,7 @@ class HobbyController {
             const userID = req.auth.userId;
             const { name: hobbyName } = req.params;
             try {
-                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $pull: { hobbies: hobbyName.toLowerCase() } }, { new: true }).exec();
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $pull: { hobbies: hobbyName } }, { new: true }).exec();
                 if (!updatedUser) {
                     return res.status(404).send({
                         message: `User ${userID} not found`,
