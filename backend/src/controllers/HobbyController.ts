@@ -5,7 +5,7 @@ import { toPrivateUser } from '../representations/userRepresentation';
 class HobbyController {
   // GET user's hobbies
   public static async getUserHobbies(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
 
     try {
       const user = await User.findOne({ _id: userID }).exec();
@@ -28,7 +28,7 @@ class HobbyController {
   // PATCH user's hobbies
   public static async updateUserHobbies(req: any, res: any) {
     try {
-      const userID: string = req.user.data._id;
+      const userID: string = req.auth.userId;
       const { name: newHobbyName } = req.body || { name: null };
 
       if (!newHobbyName) {
@@ -66,7 +66,7 @@ class HobbyController {
 
   // DELETE single user's hobby
   public static async deleteUserHobby(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     const { name: hobbyName } = req.params;
 
     try {
@@ -93,7 +93,7 @@ class HobbyController {
 
   // DELETE all user's hobbies
   public static async clearUserHobbies(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
 
     try {
       const updatedUser = await User.findOneAndUpdate(

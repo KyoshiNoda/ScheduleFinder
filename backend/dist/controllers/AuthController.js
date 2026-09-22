@@ -14,9 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const mail_1 = __importDefault(require("@sendgrid/mail"));
 const userRepresentation_1 = require("../representations/userRepresentation");
+const accessToken_1 = require("../auth/accessToken");
 mail_1.default.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class AuthController {
     static loginUser(req, res) {
@@ -34,9 +34,7 @@ class AuthController {
                 if (!match) {
                     return res.status(400).send({ error: 'Incorrect password.' });
                 }
-                const accessToken = jsonwebtoken_1.default.sign({ data: user }, `${process.env.ACCESS_TOKEN_SECRET}`, {
-                    expiresIn: '1d',
-                });
+                const accessToken = (0, accessToken_1.signAccessToken)(user.id);
                 res.send({ token: accessToken, user: (0, userRepresentation_1.toAuthUser)(user) });
             }
             catch (err) {
@@ -69,9 +67,7 @@ class AuthController {
             });
             try {
                 const savedUser = yield user.save();
-                const accessToken = jsonwebtoken_1.default.sign({ data: savedUser }, `${process.env.ACCESS_TOKEN_SECRET}`, {
-                    expiresIn: '1d',
-                });
+                const accessToken = (0, accessToken_1.signAccessToken)(savedUser.id);
                 res.status(200).send({ token: accessToken, user: (0, userRepresentation_1.toAuthUser)(savedUser) });
             }
             catch (err) {
@@ -83,16 +79,17 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             const authHeader = req.headers['authorization'];
             const token = authHeader && authHeader.split(' ')[1];
-            if (token === null) {
-                return res.sendStatus(401);
+            if (!token) {
+                return res.sendStatus(403);
             }
-            jsonwebtoken_1.default.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`, (err, user) => {
-                if (err) {
-                    return res.sendStatus(403);
-                }
-                req.user = user;
+            try {
+                const claims = (0, accessToken_1.verifyAccessToken)(token);
+                req.auth = { userId: claims.sub };
                 next();
-            });
+            }
+            catch (error) {
+                return res.sendStatus(403);
+            }
         });
     }
     static emailCheck(req, res) {

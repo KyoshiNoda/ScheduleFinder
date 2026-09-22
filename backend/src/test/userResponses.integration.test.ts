@@ -47,7 +47,7 @@ const createToken = (user: IUser): string => {
     throw new Error('ACCESS_TOKEN_SECRET is required for integration tests');
   }
 
-  return jwt.sign({ data: user.toObject() }, accessTokenSecret, { expiresIn: '5m' });
+  return jwt.sign({}, accessTokenSecret, { subject: user.id, expiresIn: '5m' });
 };
 
 const expectExactKeys = (value: Record<string, unknown>, keys: string[]) => {

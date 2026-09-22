@@ -23,7 +23,8 @@ describe('GET /api/users', () => {
       throw new Error('ACCESS_TOKEN_SECRET is required for integration tests');
     }
 
-    const token = jwt.sign({ data: user.toObject() }, accessTokenSecret, {
+    const token = jwt.sign({}, accessTokenSecret, {
+      subject: user.id,
       expiresIn: '5m',
     });
 

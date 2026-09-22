@@ -19,7 +19,7 @@ class HobbyController {
     // GET user's hobbies
     static getUserHobbies(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             try {
                 const user = yield userModel_1.default.findOne({ _id: userID }).exec();
                 if (!user) {
@@ -41,7 +41,7 @@ class HobbyController {
     static updateUserHobbies(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const userID = req.user.data._id;
+                const userID = req.auth.userId;
                 const { name: newHobbyName } = req.body || { name: null };
                 if (!newHobbyName) {
                     return res.status(400).json({
@@ -71,7 +71,7 @@ class HobbyController {
     // DELETE single user's hobby
     static deleteUserHobby(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             const { name: hobbyName } = req.params;
             try {
                 const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $pull: { hobbies: hobbyName.toLowerCase() } }, { new: true }).exec();
@@ -93,7 +93,7 @@ class HobbyController {
     // DELETE all user's hobbies
     static clearUserHobbies(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             try {
                 const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $set: { hobbies: [] } }, { new: true }).exec();
                 if (!updatedUser) {

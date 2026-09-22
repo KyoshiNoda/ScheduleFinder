@@ -5,7 +5,7 @@ import { toPublicUser } from '../representations/userRepresentation';
 sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class FriendController {
   public static async getFriends(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     try {
       const user = await User.findOne({ _id: userID }).exec();
 
@@ -31,7 +31,7 @@ class FriendController {
   }
 
   public static async deleteFriend(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
       const user = await User.findOne({ _id: userID }).exec();
@@ -71,7 +71,7 @@ class FriendController {
     }
   }
   public static async getFriendRequests(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     let userFriendRequests: IUser[] = [];
     try {
       const user = await User.findOne({ _id: userID }).exec();
@@ -96,7 +96,7 @@ class FriendController {
     }
   }
   public static async getPendingFriendRequests(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     let sentFriendRequests: IUser[] = [];
     try {
       const user = await User.findOne({ _id: userID }).exec();
@@ -122,7 +122,7 @@ class FriendController {
   }
 
   public static async sendFriendRequest(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
       const user = await User.findOne({ _id: userID }).exec();
@@ -187,7 +187,7 @@ class FriendController {
   }
 
   public static async removeFriendRequest(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
       const user = await User.findOne({ _id: userID }).exec();
@@ -225,7 +225,7 @@ class FriendController {
   }
 
   public static async acceptFriendRequest(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
       const user = await User.findOne({ _id: userID }).exec();
@@ -272,7 +272,7 @@ class FriendController {
     }
   }
   public static async rejectFriendRequest(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
       const user = await User.findOne({ _id: userID }).exec();
@@ -309,7 +309,7 @@ class FriendController {
   }
 
   public static async cancelPendingFriendRequest(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
     try {
       const user = await User.findOne({ _id: userID }).exec();

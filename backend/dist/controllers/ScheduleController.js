@@ -41,7 +41,7 @@ class ScheduleController {
     // GET USER's Schedule by Token
     static getMySchedule(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             try {
                 const userSchedule = yield scheduleModel_1.default.findOne({ user_id: userID }).exec();
                 if (!userSchedule) {
@@ -63,7 +63,7 @@ class ScheduleController {
     // PATCH an existing schedule by Token
     static updateSchedule(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             const scheduleID = req.params.id;
             try {
                 const schedule = yield scheduleModel_1.default.findOneAndUpdate({ _id: scheduleID, user_id: userID }, Object.assign({}, req.body), { new: true });
@@ -82,7 +82,7 @@ class ScheduleController {
     // DELETE all time slots in a schedule using JWT
     static clearScheduleById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             const scheduleID = req.params.id;
             try {
                 const schedule = yield scheduleModel_1.default.findOneAndUpdate({
@@ -104,13 +104,9 @@ class ScheduleController {
     // POST new time slot into existing schedule
     static insertTimeSlot(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            // const userID: string = req.user.data._id;
+            // const userID: string = req.auth.userId;
             const scheduleID = req.params.id;
-            if (!(req.body.title &&
-                req.body.startTime &&
-                req.body.endTime &&
-                req.body.color &&
-                req.body.days)) {
+            if (!(req.body.title && req.body.startTime && req.body.endTime && req.body.color && req.body.days)) {
                 return res.status(400).json({ message: 'Missing required properties' });
             }
             const newTimeSlot = {
@@ -138,7 +134,7 @@ class ScheduleController {
     // PATCH an existing time slot
     static updateTimeSlot(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             const scheduleID = req.params.id;
             try {
                 const schedule = yield scheduleModel_1.default.findOne({ _id: scheduleID, user_id: userID }, (err, found) => {
@@ -147,15 +143,11 @@ class ScheduleController {
                     }
                 }).clone();
                 if (!schedule) {
-                    return res
-                        .status(404)
-                        .json(`Schedule not found for user with ID ${userID}`);
+                    return res.status(404).json(`Schedule not found for user with ID ${userID}`);
                 }
                 const timeSlotIndex = schedule === null || schedule === void 0 ? void 0 : schedule.timeSlots.findIndex((timeSlot) => timeSlot._id == req.body._id);
                 if (timeSlotIndex < 0) {
-                    return res
-                        .status(404)
-                        .json(`Time slot with ID ${req.body._id} not found in schedule`);
+                    return res.status(404).json(`Time slot with ID ${req.body._id} not found in schedule`);
                 }
                 schedule.timeSlots[timeSlotIndex] = Object.assign(Object.assign({}, schedule === null || schedule === void 0 ? void 0 : schedule.timeSlots[timeSlotIndex]), req.body);
                 yield (schedule === null || schedule === void 0 ? void 0 : schedule.save());
@@ -169,7 +161,7 @@ class ScheduleController {
     // DELETE  a time slot
     static deleteTimeSlot(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             const scheduleID = req.params.id;
             try {
                 const schedule = yield scheduleModel_1.default.findOne({

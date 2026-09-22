@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import { Error, Types } from 'mongoose';
+import { Error } from 'mongoose';
 import * as mongoose from 'mongoose';
 import Schedule, { TimeSlot } from '../models/scheduleModel';
 
 class ScheduleController {
   // GET USER's Schedule by Token
   public static async getMySchedule(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     try {
       const userSchedule = await Schedule.findOne({ user_id: userID }).exec();
       if (!userSchedule) {
@@ -26,7 +26,7 @@ class ScheduleController {
 
   // PATCH an existing schedule by Token
   public static async updateSchedule(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     const scheduleID: string = req.params.id;
     try {
       const schedule = await Schedule.findOneAndUpdate(
@@ -47,9 +47,9 @@ class ScheduleController {
 
   // DELETE all time slots in a schedule using JWT
   public static async clearScheduleById(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     const scheduleID: string = req.params.id;
-    
+
     try {
       const schedule = await Schedule.findOneAndUpdate(
         {
@@ -74,16 +74,10 @@ class ScheduleController {
 
   // POST new time slot into existing schedule
   public static async insertTimeSlot(req: any, res: any) {
-    // const userID: string = req.user.data._id;
+    // const userID: string = req.auth.userId;
     const scheduleID: string = req.params.id;
     if (
-      !(
-        req.body.title &&
-        req.body.startTime &&
-        req.body.endTime &&
-        req.body.color &&
-        req.body.days
-      )
+      !(req.body.title && req.body.startTime && req.body.endTime && req.body.color && req.body.days)
     ) {
       return res.status(400).json({ message: 'Missing required properties' });
     }
@@ -114,7 +108,7 @@ class ScheduleController {
 
   // PATCH an existing time slot
   public static async updateTimeSlot(req: any, res: any) {
-    const userID = req.user.data._id;
+    const userID = req.auth.userId;
     const scheduleID = req.params.id;
     try {
       const schedule = await Schedule.findOne(
@@ -126,18 +120,14 @@ class ScheduleController {
         }
       ).clone();
       if (!schedule) {
-        return res
-          .status(404)
-          .json(`Schedule not found for user with ID ${userID}`);
+        return res.status(404).json(`Schedule not found for user with ID ${userID}`);
       }
       const timeSlotIndex: number = schedule?.timeSlots.findIndex(
         (timeSlot) => timeSlot._id == req.body._id
       )!;
 
       if (timeSlotIndex < 0) {
-        return res
-          .status(404)
-          .json(`Time slot with ID ${req.body._id} not found in schedule`);
+        return res.status(404).json(`Time slot with ID ${req.body._id} not found in schedule`);
       }
       schedule!.timeSlots[timeSlotIndex] = {
         ...schedule?.timeSlots[timeSlotIndex],
@@ -152,7 +142,7 @@ class ScheduleController {
 
   // DELETE  a time slot
   public static async deleteTimeSlot(req: any, res: any) {
-    const userID = req.user.data._id;
+    const userID = req.auth.userId;
     const scheduleID = req.params.id;
     try {
       const schedule = await Schedule.findOne({

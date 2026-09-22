@@ -19,7 +19,7 @@ mail_1.default.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class FriendController {
     static getFriends(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             try {
                 const user = yield userModel_1.default.findOne({ _id: userID }).exec();
                 if (!user) {
@@ -44,7 +44,7 @@ class FriendController {
     }
     static deleteFriend(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             const friendID = req.params.friendID;
             try {
                 const user = yield userModel_1.default.findOne({ _id: userID }).exec();
@@ -84,7 +84,7 @@ class FriendController {
     }
     static getFriendRequests(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             let userFriendRequests = [];
             try {
                 const user = yield userModel_1.default.findOne({ _id: userID }).exec();
@@ -112,7 +112,7 @@ class FriendController {
     }
     static getPendingFriendRequests(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             let sentFriendRequests = [];
             try {
                 const user = yield userModel_1.default.findOne({ _id: userID }).exec();
@@ -140,7 +140,7 @@ class FriendController {
     }
     static sendFriendRequest(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             const friendID = req.params.friendID;
             try {
                 const user = yield userModel_1.default.findOne({ _id: userID }).exec();
@@ -206,7 +206,7 @@ class FriendController {
     }
     static removeFriendRequest(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             const friendID = req.params.friendID;
             try {
                 const user = yield userModel_1.default.findOne({ _id: userID }).exec();
@@ -239,7 +239,7 @@ class FriendController {
     }
     static acceptFriendRequest(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             const friendID = req.params.friendID;
             try {
                 const user = yield userModel_1.default.findOne({ _id: userID }).exec();
@@ -281,7 +281,7 @@ class FriendController {
     }
     static rejectFriendRequest(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             const friendID = req.params.friendID;
             try {
                 const user = yield userModel_1.default.findOne({ _id: userID }).exec();
@@ -315,7 +315,7 @@ class FriendController {
     }
     static cancelPendingFriendRequest(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             const friendID = req.params.friendID;
             try {
                 const user = yield userModel_1.default.findOne({ _id: userID }).exec();

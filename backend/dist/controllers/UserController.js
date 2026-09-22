@@ -39,7 +39,7 @@ class UserController {
     // GET userInfo with Token
     static getUserInfo(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             try {
                 const user = yield userModel_1.default.findOne({ _id: userID }).exec();
                 if (!user) {
@@ -77,7 +77,7 @@ class UserController {
     // DELETE user by by token
     static deleteUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             const deletedUser = yield userModel_1.default.findOneAndDelete({ _id: userID });
             if (!deletedUser) {
                 return res.json({ error: `User with id ${userID} was not found` });
@@ -88,7 +88,7 @@ class UserController {
     // PATCH user by Token
     static updateUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             try {
                 const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, Object.assign({}, req.body), { returnOriginal: false });
                 res.status(200).json(updatedUser ? (0, userRepresentation_1.toPrivateUser)(updatedUser) : updatedUser);
@@ -102,9 +102,12 @@ class UserController {
     static changePasswordWithToken(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const userID = req.user.data._id;
-                const userPassword = req.user.data.password;
-                const passwordMatch = yield bcrypt_1.default.compare(req.body.currentPassword, userPassword);
+                const userID = req.auth.userId;
+                const user = yield userModel_1.default.findById(userID).select('+password');
+                if (!user) {
+                    return res.status(404).send({ error: 'User not found' });
+                }
+                const passwordMatch = yield bcrypt_1.default.compare(req.body.currentPassword, user.password);
                 if (!passwordMatch) {
                     return res.status(401).send('Incorrect Password!');
                 }
@@ -113,7 +116,7 @@ class UserController {
                 }
                 const salt = yield bcrypt_1.default.genSalt();
                 const hashedPassword = yield bcrypt_1.default.hash(req.body.newPassword, salt);
-                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, Object.assign(Object.assign({}, req.body), { password: hashedPassword }), { returnOriginal: false });
+                const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { password: hashedPassword }, { returnOriginal: false });
                 if (!updatedUser) {
                     throw new Error('Error updating password');
                 }
@@ -153,7 +156,7 @@ class UserController {
     static changeProfilePicture(req, res) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             try {
                 const uploadedFile = req.file;
                 const fileBuffer = uploadedFile.buffer;
@@ -192,7 +195,7 @@ class UserController {
     }
     static deleteProfilePicture(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.user.data._id;
+            const userID = req.auth.userId;
             try {
                 const user = yield userModel_1.default.findOneAndUpdate({ _id: userID }, {
                     photoURL: defaultProfilePicture,

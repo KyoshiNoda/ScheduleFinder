@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import User from '../models/userModel';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import sgMail from '@sendgrid/mail';
 import { toAuthUser } from '../representations/userRepresentation';
+import { signAccessToken, verifyAccessToken } from '../auth/accessToken';
 sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class AuthController {
   private static randomCode: string;
@@ -24,9 +24,7 @@ class AuthController {
         return res.status(400).send({ error: 'Incorrect password.' });
       }
 
-      const accessToken = jwt.sign({ data: user }, `${process.env.ACCESS_TOKEN_SECRET}`, {
-        expiresIn: '1d',
-      });
+      const accessToken = signAccessToken(user.id);
 
       res.send({ token: accessToken, user: toAuthUser(user) });
     } catch (err) {
@@ -61,9 +59,7 @@ class AuthController {
     });
     try {
       const savedUser = await user.save();
-      const accessToken = jwt.sign({ data: savedUser }, `${process.env.ACCESS_TOKEN_SECRET}`, {
-        expiresIn: '1d',
-      });
+      const accessToken = signAccessToken(savedUser.id);
       res.status(200).send({ token: accessToken, user: toAuthUser(savedUser) });
     } catch (err) {
       return res.status(500).send({ error: 'Unable to register user.' });
@@ -73,16 +69,18 @@ class AuthController {
   public static async authenticateToken(req: any, res: Response, next: NextFunction) {
     const authHeader = req.headers['authorization']!;
     const token = authHeader && authHeader.split(' ')[1];
-    if (token === null) {
-      return res.sendStatus(401);
+
+    if (!token) {
+      return res.sendStatus(403);
     }
-    jwt.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`, (err: any, user: any) => {
-      if (err) {
-        return res.sendStatus(403);
-      }
-      req.user = user;
+
+    try {
+      const claims = verifyAccessToken(token);
+      req.auth = { userId: claims.sub };
       next();
-    });
+    } catch (error) {
+      return res.sendStatus(403);
+    }
   }
 
   public static async emailCheck(req: Request, res: Response) {

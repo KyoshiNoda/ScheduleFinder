@@ -28,7 +28,7 @@ class UserController {
   }
   // GET userInfo with Token
   public static async getUserInfo(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     try {
       const user = await User.findOne({ _id: userID }).exec();
       if (!user) {
@@ -62,7 +62,7 @@ class UserController {
 
   // DELETE user by by token
   public static async deleteUser(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
 
     const deletedUser = await User.findOneAndDelete({ _id: userID });
 
@@ -75,7 +75,7 @@ class UserController {
 
   // PATCH user by Token
   public static async updateUser(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
 
     try {
       const updatedUser = await User.findOneAndUpdate({ _id: userID }, { ...req.body }, { returnOriginal: false });
@@ -87,9 +87,14 @@ class UserController {
   // change password with Token
   public static async changePasswordWithToken(req: any, res: any) {
     try {
-      const userID: string = req.user.data._id;
-      const userPassword: string = req.user.data.password;
-      const passwordMatch = await bcrypt.compare(req.body.currentPassword, userPassword);
+      const userID: string = req.auth.userId;
+      const user = await User.findById(userID).select('+password');
+
+      if (!user) {
+        return res.status(404).send({ error: 'User not found' });
+      }
+
+      const passwordMatch = await bcrypt.compare(req.body.currentPassword, user.password);
 
       if (!passwordMatch) {
         return res.status(401).send('Incorrect Password!');
@@ -99,7 +104,11 @@ class UserController {
       }
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
-      const updatedUser = await User.findOneAndUpdate({ _id: userID }, { ...req.body, password: hashedPassword }, { returnOriginal: false });
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userID },
+        { password: hashedPassword },
+        { returnOriginal: false }
+      );
       if (!updatedUser) {
         throw new Error('Error updating password');
       }
@@ -141,7 +150,7 @@ class UserController {
   }
 
   public static async changeProfilePicture(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     try {
       const uploadedFile = req.file;
       const fileBuffer = uploadedFile.buffer;
@@ -182,7 +191,7 @@ class UserController {
   }
 
   public static async deleteProfilePicture(req: any, res: any) {
-    const userID: string = req.user.data._id;
+    const userID: string = req.auth.userId;
     try {
       const user = await User.findOneAndUpdate(
         { _id: userID },
