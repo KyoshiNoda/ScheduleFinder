@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useGetUserInfoQuery, useUpdateUserInfoMutation } from '../../../redux/services/user/userService';
 import { Dropdown, Spinner } from 'flowbite-react';
-import { User as UserType } from '../../../types';
+import { PrivateUser } from '../../../types';
 import { ToastEnum } from '../../../enums';
 import { useAppDispatch } from '../../../redux/store';
 import { updateUserInfo } from '../../../redux/feats/auth/authSlice';
@@ -9,7 +9,7 @@ import { useToast } from '../../../utils/functions';
 const PersonalTab = () => {
   const { showToast } = useToast();
   const { data, isLoading } = useGetUserInfoQuery('User');
-  const [userInfo, setUserInfo] = useState<UserType | undefined>();
+  const [userInfo, setUserInfo] = useState<PrivateUser | undefined>();
 
   const [updateUser] = useUpdateUserInfoMutation();
 
@@ -29,7 +29,7 @@ const PersonalTab = () => {
   }, [data, isLoading]);
 
   const saveHandler = async () => {
-    const updatedFields: Partial<UserType> = {};
+    const updatedFields: Partial<PrivateUser> = {};
 
     if (firstNameRef.current.value.trim() !== '' && firstNameRef.current.value !== userInfo?.firstName) {
       updatedFields.firstName = firstNameRef.current.value;
@@ -43,8 +43,11 @@ const PersonalTab = () => {
     if (majorRef.current.value.trim() !== '' && majorRef.current.value !== userInfo?.major) {
       updatedFields.major = majorRef.current.value;
     }
-    if (birthdayRef.current.value !== '' && new Date(birthdayRef.current.value) !== userInfo?.birthday) {
-      updatedFields.birthday = new Date(birthdayRef.current.value);
+    if (
+      birthdayRef.current.value !== '' &&
+      birthdayRef.current.value !== userInfo?.birthday.substring(0, 10)
+    ) {
+      updatedFields.birthday = new Date(birthdayRef.current.value).toISOString();
     }
 
     updatedFields.gender = gender;
@@ -100,7 +103,7 @@ const PersonalTab = () => {
                   type="text"
                   id="school"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  defaultValue={userInfo!.school}
+                  defaultValue={userInfo!.school ?? ''}
                   required
                 />
               </div>
@@ -113,7 +116,7 @@ const PersonalTab = () => {
                   type="text"
                   id="Major"
                   className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  defaultValue={userInfo!.major}
+                  defaultValue={userInfo!.major ?? ''}
                   required
                 />
               </div>

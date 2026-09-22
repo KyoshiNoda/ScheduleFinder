@@ -8,12 +8,12 @@ import { useAppSelector } from '../../../redux/store';
 import { useToast } from '../../../utils/functions';
 import { ToastEnum } from '../../../enums';
 type Props = {
-  picture: string | undefined;
+  picture: string | null | undefined;
 };
 
 const ProfilePic = (props: Props) => {
   const { showToast } = useToast();
-  const [imageURL, setImageURL] = useState<string | undefined>(props.picture);
+  const [imageURL, setImageURL] = useState<string | null | undefined>(props.picture);
   const [isHovering, setIsHovering] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -65,7 +65,7 @@ const ProfilePic = (props: Props) => {
           <Spinner aria-label="Profile loading spinner" size="xl" />
         </div>
       ) : (
-        <img alt="" className="h-24 w-24 rounded-full border dark:border-gray-700 dark:bg-gray-500" src={imageURL} />
+        <img alt="" className="h-24 w-24 rounded-full border dark:border-gray-700 dark:bg-gray-500" src={imageURL ?? undefined} />
       )}
       <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFileChange} />
     </div>

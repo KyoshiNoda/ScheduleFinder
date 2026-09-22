@@ -10,6 +10,8 @@ const hobbySchema: Schema = new mongoose.Schema({
   name: { type: String, require: true },
 });
 
-const Hobby = mongoose.model<IHobby>('Hobby', hobbySchema);
+const Hobby =
+  (mongoose.models.Hobby as mongoose.Model<IHobby> | undefined) ??
+  mongoose.model<IHobby>('Hobby', hobbySchema);
 
 export default Hobby;

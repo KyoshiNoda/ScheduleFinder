@@ -42,6 +42,8 @@ const scheduleSchema: Schema = new mongoose.Schema({
   timeSlots: { type: Array, default: [timeSlotSchema] },
 });
 
-const Schedule = mongoose.model<ISchedule>('Schedule', scheduleSchema);
+const Schedule =
+  (mongoose.models.Schedule as mongoose.Model<ISchedule> | undefined) ??
+  mongoose.model<ISchedule>('Schedule', scheduleSchema);
 
 export default Schedule;

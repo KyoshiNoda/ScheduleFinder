@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { FaBell } from "react-icons/fa";
 import { AiOutlineCheck } from 'react-icons/ai';
 import { useGetUserFriendRequestsQuery, useAcceptFriendRequestMutation, useRejectFriendRequestMutation } from '../redux/services/user/userService';
-import { User as UserType } from '../types';
+import { PublicUser } from '../types';
 import { Spinner } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '../utils/functions';
@@ -10,7 +10,7 @@ import { ToastEnum } from '../enums';
 const FriendRequest = () => {
   const { showToast } = useToast();
   const { data, isLoading } = useGetUserFriendRequestsQuery('User');
-  const [receivedFriendRequests, setReceivedFriendRequests] = useState<UserType[]>();
+  const [receivedFriendRequests, setReceivedFriendRequests] = useState<PublicUser[]>();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
   const [rejectFriendRequest] = useRejectFriendRequestMutation();
@@ -68,7 +68,7 @@ const FriendRequest = () => {
                   <div className="mb-3 flex gap-4 " key={user._id}>
                     <img
                       className="h-11 w-11 rounded-full border shadow-lg dark:border-gray-700 dark:bg-gray-500"
-                      src={user.photoURL}
+                      src={user.photoURL ?? undefined}
                       alt="user image"
                     />
                     <div>

@@ -7,22 +7,29 @@ export type RegisterUser = {
   school: string;
 };
 
-export type User = {
+export type PublicUser = {
   _id: string;
   firstName: string;
   lastName: string;
-  birthday: Date;
-  age?: number;
-  photoURL: string;
-  email: string;
-  password: string;
-  gender?: string | undefined;
-  school: string;
-  major?: string | undefined;
-  friends: User[];
-  receivedFriendRequests: User[];
-  sentFriendRequests: User[];
+  photoURL: string | null;
+  age: number;
+  gender: string | null;
+  school: string | null;
+  major: string | null;
   hobbies: string[];
+};
+
+export type PrivateUser = PublicUser & {
+  email: string;
+  birthday: string;
+};
+
+export type AuthUser = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  photoURL: string | null;
 };
 export type DaysChecked = {
   monday: boolean;

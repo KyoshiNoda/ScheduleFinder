@@ -1,5 +1,6 @@
 import Hobby from '../models/hobbyModel';
 import User from '../models/userModel';
+import { toPrivateUser } from '../representations/userRepresentation';
 
 class HobbyController {
   // GET user's hobbies
@@ -81,7 +82,7 @@ class HobbyController {
         });
       }
 
-      res.status(200).json(updatedUser);
+      res.status(200).json(toPrivateUser(updatedUser));
     } catch (error) {
       res.status(500).send({
         message: `Error while deleting hobbie hobby for user with id: ${userID}`,
@@ -107,7 +108,7 @@ class HobbyController {
         });
       }
 
-      res.status(200).json(updatedUser);
+      res.status(200).json(toPrivateUser(updatedUser));
     } catch (error) {
       res.status(500).send({
         message: `Error while clearing hobbies for user with id: ${userID}`,

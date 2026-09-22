@@ -5,7 +5,7 @@ import {
   useGetUserInfoQuery,
   useUpdateUserInfoMutation,
 } from '../../../redux/services/user/userService';
-import { User as UserType } from '../../../types';
+import { PrivateUser } from '../../../types';
 import { ToastEnum } from '../../../enums';
 import ProfilePic from './ProfilePic';
 import { useAppDispatch } from '../../../redux/store';
@@ -16,7 +16,7 @@ import ChangePasswordModal from '../../Modals/ChangePasswordModal';
 const ProfileTab = () => {
   const { showToast } = useToast();
   const { data, isLoading } = useGetUserInfoQuery('User');
-  const [userInfo, setUserInfo] = useState<UserType | undefined>();
+  const [userInfo, setUserInfo] = useState<PrivateUser | undefined>();
   const [modalState, setModalState] = useState<boolean>(false);
   const [updateUser] = useUpdateUserInfoMutation();
   const [changePassword] = useChangePasswordMutation();
@@ -33,9 +33,7 @@ const ProfileTab = () => {
 
   useEffect(() => {
     if (data && !isLoading) {
-      const userInfoWithoutPassword = { ...data };
-      delete userInfoWithoutPassword.password;
-      setUserInfo(userInfoWithoutPassword);
+      setUserInfo(data);
     }
   }, [data, isLoading]);
 

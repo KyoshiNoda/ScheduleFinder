@@ -20,7 +20,7 @@ const userSchema: Schema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  password: { type: String, required: true, select: false },
   birthday: { type: Date, required: true },
   friends: [{ type: String }],
   receivedFriendRequests: [{ type: String }],
@@ -33,6 +33,8 @@ const userSchema: Schema = new mongoose.Schema({
   hobbies: [{ type: String }],
 });
 
-const User = mongoose.model<IUser>('User', userSchema);
+const User =
+  (mongoose.models.User as mongoose.Model<IUser> | undefined) ??
+  mongoose.model<IUser>('User', userSchema);
 
 export default User;

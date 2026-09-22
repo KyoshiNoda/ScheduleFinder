@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { User as UserType } from '../../../types';
+import { Hobby, PrivateUser } from '../../../types';
 import { createAuthorizedBaseQuery } from '../baseQuery';
 
 export const hobbyAPI = createApi({
@@ -21,7 +21,7 @@ export const hobbyAPI = createApi({
       }),
       providesTags: ['Hobbies'],
     }),
-    addUserHobby: builder.mutation<UserType, { name: string }>({
+    addUserHobby: builder.mutation<Hobby, { name: string }>({
       query: ({ name }) => ({
         url: 'api/hobbies/userHobbies',
         method: 'PATCH',
@@ -29,7 +29,7 @@ export const hobbyAPI = createApi({
       }),
       invalidatesTags: ['Hobbies'],
     }),
-    removeUserHobby: builder.mutation<UserType, { name: string }>({
+    removeUserHobby: builder.mutation<PrivateUser, { name: string }>({
       query: ({ name }) => ({
         url: `api/hobbies/userHobbies/${name}`,
         method: 'DELETE',

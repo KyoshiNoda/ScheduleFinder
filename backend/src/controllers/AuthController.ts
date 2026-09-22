@@ -3,6 +3,7 @@ import User from '../models/userModel';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import sgMail from '@sendgrid/mail';
+import { toAuthUser } from '../representations/userRepresentation';
 sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class AuthController {
   private static randomCode: string;
@@ -13,7 +14,7 @@ class AuthController {
       return res.status(400).send({ error: 'Email and password are required.' });
     }
     try {
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ email }).select('+password');
       if (!user) {
         return res.status(400).send({ error: 'Email not found.' });
       }
@@ -27,7 +28,7 @@ class AuthController {
         expiresIn: '1d',
       });
 
-      res.send({ token: accessToken, user: user });
+      res.send({ token: accessToken, user: toAuthUser(user) });
     } catch (err) {
       res.status(500).send({ error: 'Unable to log in.' });
     }
@@ -63,7 +64,7 @@ class AuthController {
       const accessToken = jwt.sign({ data: savedUser }, `${process.env.ACCESS_TOKEN_SECRET}`, {
         expiresIn: '1d',
       });
-      res.status(200).send({ token: accessToken, user: savedUser });
+      res.status(200).send({ token: accessToken, user: toAuthUser(savedUser) });
     } catch (err) {
       return res.status(500).send({ error: 'Unable to register user.' });
     }

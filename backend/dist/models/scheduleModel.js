@@ -2,6 +2,7 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const timeSlotSchema = new mongoose_1.default.Schema({
@@ -19,5 +20,5 @@ const scheduleSchema = new mongoose_1.default.Schema({
     visibility: { type: String, required: true },
     timeSlots: { type: Array, default: [timeSlotSchema] },
 });
-const Schedule = mongoose_1.default.model('Schedule', scheduleSchema);
+const Schedule = (_a = mongoose_1.default.models.Schedule) !== null && _a !== void 0 ? _a : mongoose_1.default.model('Schedule', scheduleSchema);
 exports.default = Schedule;

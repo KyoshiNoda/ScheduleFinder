@@ -16,6 +16,7 @@ const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const mail_1 = __importDefault(require("@sendgrid/mail"));
+const userRepresentation_1 = require("../representations/userRepresentation");
 mail_1.default.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class AuthController {
     static loginUser(req, res) {
@@ -25,7 +26,7 @@ class AuthController {
                 return res.status(400).send({ error: 'Email and password are required.' });
             }
             try {
-                const user = yield userModel_1.default.findOne({ email });
+                const user = yield userModel_1.default.findOne({ email }).select('+password');
                 if (!user) {
                     return res.status(400).send({ error: 'Email not found.' });
                 }
@@ -36,7 +37,7 @@ class AuthController {
                 const accessToken = jsonwebtoken_1.default.sign({ data: user }, `${process.env.ACCESS_TOKEN_SECRET}`, {
                     expiresIn: '1d',
                 });
-                res.send({ token: accessToken, user: user });
+                res.send({ token: accessToken, user: (0, userRepresentation_1.toAuthUser)(user) });
             }
             catch (err) {
                 res.status(500).send({ error: 'Unable to log in.' });
@@ -71,7 +72,7 @@ class AuthController {
                 const accessToken = jsonwebtoken_1.default.sign({ data: savedUser }, `${process.env.ACCESS_TOKEN_SECRET}`, {
                     expiresIn: '1d',
                 });
-                res.status(200).send({ token: accessToken, user: savedUser });
+                res.status(200).send({ token: accessToken, user: (0, userRepresentation_1.toAuthUser)(savedUser) });
             }
             catch (err) {
                 return res.status(500).send({ error: 'Unable to register user.' });

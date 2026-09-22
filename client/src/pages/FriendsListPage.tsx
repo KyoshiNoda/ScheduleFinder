@@ -2,7 +2,7 @@ import {
   useGetUserFriendsQuery,
   useDeleteFriendMutation,
 } from '../redux/services/user/userService';
-import { User as UserType } from '../types';
+import { PublicUser } from '../types';
 import { Link } from 'react-router-dom';
 import { Avatar } from 'flowbite-react';
 import { ToastEnum } from '../enums';
@@ -12,7 +12,7 @@ import { useAppSelector } from '../redux/store';
 import { useState } from 'react';
 import FriendRemovalModal from '../components/Modals/FriendRemovalModal';
 
-const getFormattedFriendName = (friend: UserType) => {
+const getFormattedFriendName = (friend: PublicUser) => {
   return `${friend.firstName} ${friend.lastName}`;
 };
 
@@ -20,7 +20,7 @@ const FriendsListPage = () => {
   const { data: friends } = useGetUserFriendsQuery('User');
   const [deleteFriend] = useDeleteFriendMutation();
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [friendToDelete, setFriendToDelete] = useState<UserType>();
+  const [friendToDelete, setFriendToDelete] = useState<PublicUser>();
   const { showToast } = useToast();
   const deleteFriendToast = useAppSelector((state: any) => state.globalSlice.toast);
 
@@ -43,7 +43,7 @@ const FriendsListPage = () => {
           <table className="w-full rounded-xl border bg-white dark:border-none dark:bg-gray-800 md:w-5/6 lg:w-1/2">
             <tbody className="block max-h-[400px] overflow-y-scroll sm:max-h-[600px]">
               {friends &&
-                friends.map((friend: UserType, index: number) => (
+                friends.map((friend: PublicUser, index: number) => (
                   <tr
                     key={friend._id}
                     className={`flex w-full items-center justify-between ${
@@ -53,7 +53,7 @@ const FriendsListPage = () => {
                   >
                     <Link to={`/auth/user/${friend._id}`} className="mr-1 flex items-center gap-6">
                       <Avatar
-                        img={friend.photoURL}
+                        img={friend.photoURL ?? undefined}
                         alt={`avatar of ${getFormattedFriendName(friend)}`}
                         rounded
                         size={'lg'}

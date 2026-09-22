@@ -1,6 +1,7 @@
 import User from '../models/userModel';
 import { IUser } from '../models/userModel';
 import sgMail from '@sendgrid/mail';
+import { toPublicUser } from '../representations/userRepresentation';
 sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 class FriendController {
   public static async getFriends(req: any, res: any) {
@@ -19,7 +20,7 @@ class FriendController {
         _id: { $in: user.friends },
       }).exec();
 
-      res.json(userFriends); // Return the array of friend objects
+      res.json(userFriends.map(toPublicUser));
     } catch (err) {
       console.error(err);
       res.status(500).send({
@@ -59,7 +60,7 @@ class FriendController {
 
       return res.status(200).send({
         message: 'Friend removed successfully!',
-        friends: updatedUserFriends,
+        friends: updatedUserFriends.map(toPublicUser),
       });
     } catch (err) {
       console.error(err);
@@ -85,7 +86,7 @@ class FriendController {
           userFriendRequests.push(friend);
         }
       }
-      res.send(userFriendRequests);
+      res.send(userFriendRequests.map(toPublicUser));
     } catch (err) {
       console.error(err);
       res.status(500).send({
@@ -110,7 +111,7 @@ class FriendController {
           sentFriendRequests.push(friend);
         }
       }
-      res.send(sentFriendRequests);
+      res.send(sentFriendRequests.map(toPublicUser));
     } catch (err) {
       console.error(err);
       res.status(500).send({
@@ -260,7 +261,7 @@ class FriendController {
 
       res.status(200).send({
         message: 'Added friend successfully!',
-        updatedFriendRequests: updatedUserFriendRequests,
+        updatedFriendRequests: updatedUserFriendRequests.map(toPublicUser),
       });
     } catch (err) {
       console.error(err);
@@ -296,7 +297,7 @@ class FriendController {
 
       res.status(200).send({
         message: 'Friend Request was ignored!',
-        updatedFriendRequests: updatedUserFriendRequests,
+        updatedFriendRequests: updatedUserFriendRequests.map(toPublicUser),
       });
     } catch (err) {
       console.error(err);
@@ -332,7 +333,7 @@ class FriendController {
 
       res.status(200).send({
         message: 'Cancelled Friend Request!',
-        updatedSendFriendRequests: updatedSendFriendRequests,
+        updatedSendFriendRequests: updatedSendFriendRequests.map(toPublicUser),
       });
 
     } catch (err) {

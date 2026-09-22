@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Card } from 'flowbite-react';
-import { User as UserType } from '../../types';
+import { PublicUser } from '../../types';
 import FriendStatusButton from '../Globals/FriendStatusButton';
 
 type UserProps = {
-  user: UserType;
+  user: PublicUser;
   isPending: boolean;
   isFriendRequest: boolean;
   isFriends: boolean;
@@ -16,7 +16,7 @@ const User = ({ user }: UserProps) => {
     <>
       <Card className='bg-rose-400'>
         <div className="flex flex-col items-center">
-          <img className="mb-3 max-h-32 w-32 rounded-full object-cover shadow-lg" src={user.photoURL} alt={`Profile picture of ${fullName}`} />
+          <img className="mb-3 max-h-32 w-32 rounded-full object-cover shadow-lg" src={user.photoURL ?? undefined} alt={`Profile picture of ${fullName}`} />
           <h2 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{fullName}</h2>
           <span className="text-sm text-gray-500 dark:text-gray-400">{user.major}</span>
           <span className="text-sm text-gray-500 dark:text-gray-400">{user.school}</span>

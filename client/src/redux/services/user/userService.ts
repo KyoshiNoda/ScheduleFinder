@@ -1,6 +1,9 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { User as UserType } from '../../../types';
-import { FileUploadResponse } from '../../../types';
+import {
+  FileUploadResponse,
+  PrivateUser,
+  PublicUser,
+} from '../../../types';
 import { createAuthorizedBaseQuery } from '../baseQuery';
 
 export const userAPI = createApi({
@@ -8,21 +11,21 @@ export const userAPI = createApi({
   baseQuery: createAuthorizedBaseQuery(),
   tagTypes: ['User'],
   endpoints: (builder) => ({
-    getUserInfo: builder.query({
+    getUserInfo: builder.query<PrivateUser, string>({
       query: () => ({
         url: 'api/users',
         method: 'GET',
       }),
       providesTags: ['User'],
     }),
-    getExternalUserInfo: builder.query<UserType, string>({
+    getExternalUserInfo: builder.query<PublicUser, string>({
       query: (userId) => ({
         url: `api/users/${userId}`,
         method: 'GET',
       }),
       providesTags: ['User'],
     }),
-    updateUserInfo: builder.mutation<UserType, Partial<UserType>>({
+    updateUserInfo: builder.mutation<PrivateUser, Partial<PrivateUser>>({
       query: (body) => ({
         url: 'api/users',
         method: 'PATCH',
@@ -45,35 +48,35 @@ export const userAPI = createApi({
       }),
       invalidatesTags: ['User'],
     }),
-    getUserFriends: builder.query({
+    getUserFriends: builder.query<PublicUser[], string>({
       query: () => ({
         url: 'api/users/friends',
         method: 'GET',
       }),
       providesTags: ['User'],
     }),
-    deleteFriend: builder.mutation<{ message: string; friends: UserType[] }, { friendID: string }>({
+    deleteFriend: builder.mutation<{ message: string; friends: PublicUser[] }, { friendID: string }>({
       query: ({ friendID }) => ({
         url: `api/users/friends/${friendID}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['User'],
     }),
-    getUserFriendRequests: builder.query({
+    getUserFriendRequests: builder.query<PublicUser[], string>({
       query: () => ({
         url: 'api/users/friendRequest',
         method: 'GET',
       }),
       providesTags: ['User'],
     }),
-    acceptFriendRequest: builder.mutation<{ message: string; updatedFriendRequests: UserType[] }, { friendID: string }>({
+    acceptFriendRequest: builder.mutation<{ message: string; updatedFriendRequests: PublicUser[] }, { friendID: string }>({
       query: ({ friendID }) => ({
         url: `api/users/friends/accept/${friendID}`,
         method: 'POST',
       }),
       invalidatesTags: ['User'],
     }),
-    rejectFriendRequest: builder.mutation<{ message: string; updatedFriendRequests: UserType[] }, { friendID: string }>({
+    rejectFriendRequest: builder.mutation<{ message: string; updatedFriendRequests: PublicUser[] }, { friendID: string }>({
       query: ({ friendID }) => ({
         url: `api/users/friends/reject/${friendID}`,
         method: 'POST',
@@ -87,14 +90,14 @@ export const userAPI = createApi({
       }),
       invalidatesTags: ['User'],
     }),
-    getPendingFriendRequests: builder.query({
+    getPendingFriendRequests: builder.query<PublicUser[], string>({
       query: () => ({
         url: 'api/users/friendRequest/sent',
         method: 'GET',
       }),
       providesTags: ['User'],
     }),
-    removePendingFriendRequest: builder.mutation<{ message: string; updatedSendFriendRequests: UserType[] }, { friendID: string }>({
+    removePendingFriendRequest: builder.mutation<{ message: string; updatedSendFriendRequests: PublicUser[] }, { friendID: string }>({
       query: ({ friendID }) => ({
         url: `api/users/friendRequest/sent/${friendID}`,
         method: 'DELETE',

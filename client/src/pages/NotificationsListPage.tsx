@@ -38,17 +38,17 @@ const NotificationsListPage = () => {
                 <Spinner />
               </tr>
             ) : (
-              data.map((user: any, index: number) => (
+              (data ?? []).map((user, index: number) => (
                 <tr
                   key={user._id}
                   className={`flex w-full items-center justify-between ${
-                    index !== data.length - 1 &&
+                      index !== (data?.length ?? 0) - 1 &&
                     'border-b border-solid border-gray-300 dark:border-gray-700'
                   } p-2 lg:p-4`}
                 >
                   <img
                     className="h-11 w-11 rounded-full border shadow-lg dark:border-gray-700 dark:bg-gray-500"
-                    src={user.photoURL}
+                    src={user.photoURL ?? undefined}
                     alt="user image"
                   />
                   <div>

@@ -2,7 +2,7 @@ import User from './User';
 import LoadingUser from './LoadingUser';
 import { useState, useEffect } from 'react';
 import { Button } from 'flowbite-react';
-import { User as UserType } from '../../types';
+import { PublicUser } from '../../types';
 import { useGetScheduleQuery } from '../../redux/services/auth/authService';
 import { getApiUrl } from '../../utils/environment';
 import { useGetPendingFriendRequestsQuery, useGetUserFriendRequestsQuery, useGetUserFriendsQuery } from '../../redux/services/user/userService';
@@ -29,12 +29,12 @@ const UserContainer = ({ schoolSearch, nameSearch, majorSearch }: UserContainerP
   let loggedUserId: string = '';
   if (!isFetching) loggedUserId = data.user_id;
 
-  const [users, setUsers] = useState<UserType[]>([]);
+  const [users, setUsers] = useState<PublicUser[]>([]);
   const [paginate, setPaginate] = useState<number>(9);
 
-  const filterUsers = (users: UserType[]) => {
+  const filterUsers = (users: PublicUser[]) => {
     const filteredBySchool = users.filter((user) =>
-      user.school
+      (user.school ?? '')
         .toLowerCase()
         .replace(/[^a-zA-Z]+/g, '')
         .includes(schoolSearch.toLowerCase().replace(/[^a-zA-Z]+/g, ''))
@@ -86,9 +86,9 @@ const UserContainer = ({ schoolSearch, nameSearch, majorSearch }: UserContainerP
             .map((user) => (
               <User
                 user={user}
-                isPending={sentFriendRequests && sentFriendRequests.some((request: any) => request._id === user._id)}
-                isFriendRequest={receivedFriendRequests && receivedFriendRequests.some((request: any) => request._id === user._id)}
-                isFriends={friends && friends.some((request: any) => request._id === user._id)}
+                isPending={Boolean(sentFriendRequests?.some((request) => request._id === user._id))}
+                isFriendRequest={Boolean(receivedFriendRequests?.some((request) => request._id === user._id))}
+                isFriends={Boolean(friends?.some((request) => request._id === user._id))}
               />
             ))}
       </div>

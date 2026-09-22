@@ -16,6 +16,7 @@ const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const cloudinary_1 = require("cloudinary");
 const multer_1 = __importDefault(require("multer"));
+const userRepresentation_1 = require("../representations/userRepresentation");
 const storage = multer_1.default.memoryStorage();
 const upload = (0, multer_1.default)({ storage: storage });
 const defaultProfilePicture = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s';
@@ -25,7 +26,7 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             yield userModel_1.default.find({}, (err, found) => {
                 if (!err) {
-                    res.send(found);
+                    res.send(found.map(userRepresentation_1.toPublicUser));
                 }
                 else {
                     throw err;
@@ -46,7 +47,7 @@ class UserController {
                         message: `User ${userID} not found`,
                     });
                 }
-                res.json(user);
+                res.json((0, userRepresentation_1.toPrivateUser)(user));
             }
             catch (err) {
                 console.error(err);
@@ -63,7 +64,7 @@ class UserController {
             const id = req.params.id;
             yield userModel_1.default.findOne({ _id: id }, (err, found) => {
                 if (!err) {
-                    res.send(found);
+                    res.send(found ? (0, userRepresentation_1.toPublicUser)(found) : found);
                 }
                 else {
                     throw err;
@@ -81,7 +82,7 @@ class UserController {
             if (!deletedUser) {
                 return res.json({ error: `User with id ${userID} was not found` });
             }
-            res.status(200).json(deletedUser);
+            res.status(200).json((0, userRepresentation_1.toPrivateUser)(deletedUser));
         });
     }
     // PATCH user by Token
@@ -90,7 +91,7 @@ class UserController {
             const userID = req.user.data._id;
             try {
                 const updatedUser = yield userModel_1.default.findOneAndUpdate({ _id: userID }, Object.assign({}, req.body), { returnOriginal: false });
-                res.status(200).json(updatedUser);
+                res.status(200).json(updatedUser ? (0, userRepresentation_1.toPrivateUser)(updatedUser) : updatedUser);
             }
             catch (error) {
                 res.json(`The update attempt to user ${userID} has failed`);
@@ -139,7 +140,10 @@ class UserController {
                 if (!updatedUser) {
                     throw new Error('Error updating password');
                 }
-                return res.status(200).send({ message: 'Password Changed!', updatedUser });
+                return res.status(200).send({
+                    message: 'Password Changed!',
+                    updatedUser: (0, userRepresentation_1.toPrivateUser)(updatedUser),
+                });
             }
             catch (error) {
                 return res.status(500).send({ error: 'Error occurred' });

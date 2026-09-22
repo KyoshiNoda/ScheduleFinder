@@ -3,6 +3,10 @@ import User from '../models/userModel';
 import bcrypt from 'bcrypt';
 import { v2 as cloudinary } from 'cloudinary';
 import multer from 'multer';
+import {
+  toPrivateUser,
+  toPublicUser,
+} from '../representations/userRepresentation';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -14,7 +18,7 @@ class UserController {
   public static async getAllUsers(req: Request, res: Response): Promise<any> {
     await User.find({}, (err: any, found: any) => {
       if (!err) {
-        res.send(found);
+        res.send(found.map(toPublicUser));
       } else {
         throw err;
       }
@@ -32,7 +36,7 @@ class UserController {
           message: `User ${userID} not found`,
         });
       }
-      res.json(user);
+      res.json(toPrivateUser(user));
     } catch (err) {
       console.error(err);
       res.status(500).json({
@@ -47,7 +51,7 @@ class UserController {
     const id = req.params.id;
     await User.findOne({ _id: id }, (err: any, found: any) => {
       if (!err) {
-        res.send(found);
+        res.send(found ? toPublicUser(found) : found);
       } else {
         throw err;
       }
@@ -66,7 +70,7 @@ class UserController {
       return res.json({ error: `User with id ${userID} was not found` });
     }
 
-    res.status(200).json(deletedUser);
+    res.status(200).json(toPrivateUser(deletedUser));
   }
 
   // PATCH user by Token
@@ -75,7 +79,7 @@ class UserController {
 
     try {
       const updatedUser = await User.findOneAndUpdate({ _id: userID }, { ...req.body }, { returnOriginal: false });
-      res.status(200).json(updatedUser);
+      res.status(200).json(updatedUser ? toPrivateUser(updatedUser) : updatedUser);
     } catch (error) {
       res.json(`The update attempt to user ${userID} has failed`);
     }
@@ -127,7 +131,10 @@ class UserController {
         throw new Error('Error updating password');
       }
 
-      return res.status(200).send({ message: 'Password Changed!', updatedUser });
+      return res.status(200).send({
+        message: 'Password Changed!',
+        updatedUser: toPrivateUser(updatedUser),
+      });
     } catch (error: any) {
       return res.status(500).send({ error: 'Error occurred' });
     }

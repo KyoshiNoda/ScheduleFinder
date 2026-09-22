@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/vitest';
 
 import ProfileTab from './ProfileTab';
 import { ToastEnum } from '../../../enums';
-import { User } from '../../../types';
+import { PrivateUser } from '../../../types';
 
 const mocks = vi.hoisted(() => ({
   useGetUserInfoQuery: vi.fn(),
@@ -32,25 +32,22 @@ vi.mock('../../../utils/functions', () => ({
 }));
 
 vi.mock('./ProfilePic', () => ({
-  default: ({ picture }: { picture: string | undefined }) => (
-    <img alt="profile" src={picture} />
+  default: ({ picture }: { picture: string | null | undefined }) => (
+    <img alt="profile" src={picture ?? undefined} />
   ),
 }));
 
-const mockUser: User = {
+const mockUser: PrivateUser = {
   _id: 'user-1',
   firstName: 'Ada',
   lastName: 'Lovelace',
-  birthday: new Date('1995-04-10'),
+  birthday: '1995-04-10T00:00:00.000Z',
+  age: 31,
   photoURL: 'https://example.com/profile.png',
   email: 'ada@example.com',
-  password: 'secret',
   gender: 'Female',
   school: 'Babbage University',
   major: 'Computer Science',
-  friends: [],
-  receivedFriendRequests: [],
-  sentFriendRequests: [],
   hobbies: ['Math'],
 };
 

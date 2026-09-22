@@ -36,5 +36,8 @@ describe('GET /api/users', () => {
       _id: user.id,
       email: 'test.student@example.invalid',
     });
+    expect(response.body).not.toHaveProperty('password');
+    expect(response.body).not.toHaveProperty('__v');
+    expect(response.body).not.toHaveProperty('friends');
   });
 });

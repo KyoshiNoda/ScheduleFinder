@@ -3,13 +3,12 @@ import {
   useGetUserFriendsQuery,
   useGetUserFriendRequestsQuery,
 } from '../../redux/services/user/userService';
-import { calculateAge } from '../../utils/functions';
 import FriendStatusButton from '../Globals/FriendStatusButton';
 import { Button } from 'flowbite-react';
-import { User as UserType } from '../../types';
+import { PublicUser } from '../../types';
 type UserPageBoxProps = {
   userId: string;
-  userInfo: UserType;
+  userInfo: PublicUser;
 };
 const UserPageBox = ({ userId, userInfo }: UserPageBoxProps) => {
   const { data: sentFriendRequests } = useGetPendingFriendRequestsQuery('User');
@@ -22,14 +21,14 @@ const UserPageBox = ({ userId, userInfo }: UserPageBoxProps) => {
   return (
     <div className="w-full lg:w-2/5 flex h-5/6 flex-col mt-12 lg:mt-20 rounded-lg bg-white border dark:border-none shadow dark:shadow-none p-4 dark:bg-slate-800 dark:text-white lg:mx-0 lg:ml-10">
       <div className="flex flex-col items-center gap-3">
-        <img src={userInfo.photoURL} className="h-44 w-44 rounded-full border-2" />
+        <img src={userInfo.photoURL ?? undefined} className="h-44 w-44 rounded-full border-2" />
         <h1 className="mb-4 text-2xl font-bold">
           {userInfo.firstName} {userInfo.lastName}
         </h1>
       </div>
       <div className="w-7/8 flex h-1/2 flex-col gap-4 rounded-lg bg-slate-200 p-5 text-lg font-medium  dark:bg-slate-900">
         <div>
-          <p>Age: {calculateAge(new Date(userInfo.birthday))}</p>
+          <p>Age: {userInfo.age}</p>
           <p>School: {userInfo.school}</p>
           <p>Major: {userInfo.major}</p>
         </div>
@@ -48,9 +47,9 @@ const UserPageBox = ({ userId, userInfo }: UserPageBoxProps) => {
         </div>
         <div className="flex w-full justify-center">
           <FriendStatusButton
-            isPending={isPending}
-            isFriendRequest={isFriendRequest}
-            isFriends={isFriends}
+            isPending={Boolean(isPending)}
+            isFriendRequest={Boolean(isFriendRequest)}
+            isFriends={Boolean(isFriends)}
             userID={userId!}
           />
         </div>

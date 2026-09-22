@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { User as UserType, Schedule as ScheduleType } from '../types';
+import { PublicUser, Schedule as ScheduleType } from '../types';
 import { useGetExternalUserInfoQuery } from '../redux/services/user/userService';
 import { useGetExternalScheduleQuery } from '../redux/services/schedule/scheduleService';
 import { useAppDispatch, useAppSelector } from '../redux/store';
@@ -15,7 +15,7 @@ const UserProfilePage = () => {
   const friendToast = useAppSelector((state: any) => state.globalSlice.toast);
   const { data: userData, isLoading: userLoading } = useGetExternalUserInfoQuery(userId!);
   const { data: scheduleData, isLoading: scheduleLoading } = useGetExternalScheduleQuery(userId!);
-  const [userInfo, setUserInfo] = useState<UserType | undefined>();
+  const [userInfo, setUserInfo] = useState<PublicUser | undefined>();
   const [scheduleInfo, setScheduleInfo] = useState<ScheduleType | undefined>();
 
   dispatch(toggleReadOnly(true));

@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const hobbyModel_1 = __importDefault(require("../models/hobbyModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
+const userRepresentation_1 = require("../representations/userRepresentation");
 class HobbyController {
     // GET user's hobbies
     static getUserHobbies(req, res) {
@@ -79,7 +80,7 @@ class HobbyController {
                         message: `User ${userID} not found`,
                     });
                 }
-                res.status(200).json(updatedUser);
+                res.status(200).json((0, userRepresentation_1.toPrivateUser)(updatedUser));
             }
             catch (error) {
                 res.status(500).send({
@@ -100,7 +101,7 @@ class HobbyController {
                         message: `User ${userID} not found`,
                     });
                 }
-                res.status(200).json(updatedUser);
+                res.status(200).json((0, userRepresentation_1.toPrivateUser)(updatedUser));
             }
             catch (error) {
                 res.status(500).send({
