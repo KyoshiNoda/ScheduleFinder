@@ -1,3 +1,6 @@
 node_modules/
 .env
 .idea
+.AGENTS.md
+SYSTEM_DESIGN_ROADMAP.md
+docs
