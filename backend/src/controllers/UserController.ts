@@ -8,7 +8,6 @@ import {
   toPublicUser,
 } from '../representations/userRepresentation';
 import {
-  ChangePasswordWithoutTokenBody,
   ChangePasswordWithTokenBody,
   IdParams,
   UpdateUserBody,
@@ -123,37 +122,6 @@ class UserController {
       res.status(500).send({ error: error.message });
     }
   }
-  public static async changePasswordWithoutToken(
-    req: Request<Record<string, never>, unknown, ChangePasswordWithoutTokenBody>,
-    res: Response
-  ) {
-    try {
-      const user = await User.findOne({ email: req.body.email }).exec();
-      if (!user) {
-        return res.status(404).send({ error: 'User not found' });
-      }
-
-      const salt = await bcrypt.genSalt();
-      const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
-      const updatedUser = await User.findOneAndUpdate(
-        { email: req.body.email },
-        { $set: { password: hashedPassword } },
-        { new: true }
-      );
-
-      if (!updatedUser) {
-        throw new Error('Error updating password');
-      }
-
-      return res.status(200).send({
-        message: 'Password Changed!',
-        updatedUser: toPrivateUser(updatedUser),
-      });
-    } catch (error: any) {
-      return res.status(500).send({ error: 'Error occurred' });
-    }
-  }
-
   public static async changeProfilePicture(req: Request, res: Response) {
     const userID: string = req.auth.userId;
     try {

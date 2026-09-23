@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.hobbyParamsSchema = exports.hobbyBodySchema = exports.hobbyNameSchema = exports.deleteTimeSlotBodySchema = exports.updateTimeSlotBodySchema = exports.createTimeSlotBodySchema = exports.parseTimeToMinutes = exports.timeSchema = exports.daysSchema = exports.updateScheduleBodySchema = exports.emptyBodySchema = exports.updateUserBodySchema = exports.GENDER_VALUES = exports.changePasswordWithoutTokenBodySchema = exports.changePasswordWithTokenBodySchema = exports.resetCodeBodySchema = exports.emailBodySchema = exports.loginBodySchema = exports.registerBodySchema = exports.friendIdParamsSchema = exports.idParamsSchema = exports.objectIdSchema = exports.DAYS_OF_WEEK = exports.TIME_SLOT_COLORS = void 0;
+exports.hobbyParamsSchema = exports.hobbyBodySchema = exports.hobbyNameSchema = exports.deleteTimeSlotBodySchema = exports.updateTimeSlotBodySchema = exports.createTimeSlotBodySchema = exports.parseTimeToMinutes = exports.timeSchema = exports.daysSchema = exports.updateScheduleBodySchema = exports.emptyBodySchema = exports.updateUserBodySchema = exports.GENDER_VALUES = exports.completePasswordResetBodySchema = exports.changePasswordWithTokenBodySchema = exports.verifyPasswordResetBodySchema = exports.emailBodySchema = exports.loginBodySchema = exports.registerBodySchema = exports.friendIdParamsSchema = exports.idParamsSchema = exports.objectIdSchema = exports.DAYS_OF_WEEK = exports.TIME_SLOT_COLORS = void 0;
 const zod_1 = require("zod");
 const OBJECT_ID_PATTERN = /^[a-f\d]{24}$/i;
 const TIME_PATTERN = /^(?:0?[1-9]|1[0-2]):[0-5]\d (?:AM|PM)$/;
@@ -108,18 +108,22 @@ exports.loginBodySchema = zod_1.z
 })
     .strict();
 exports.emailBodySchema = zod_1.z.object({ email: emailSchema }).strict();
-exports.resetCodeBodySchema = zod_1.z
+exports.verifyPasswordResetBodySchema = zod_1.z
     .object({
     email: emailSchema,
-    code: zod_1.z.string({ required_error: 'Reset code is required.' }).regex(/^\d{5}$/, 'Reset code must contain exactly five digits.'),
+    code: zod_1.z
+        .string({ required_error: 'Reset code is required.' })
+        .regex(/^\d{6}$/, 'Reset code must contain exactly six digits.'),
 })
     .strict();
 exports.changePasswordWithTokenBodySchema = zod_1.z
     .object(Object.assign({ currentPassword: currentPasswordSchema }, confirmedPasswordFields))
     .strict()
     .superRefine(passwordsMatch);
-exports.changePasswordWithoutTokenBodySchema = zod_1.z
-    .object(Object.assign({ email: emailSchema }, confirmedPasswordFields))
+exports.completePasswordResetBodySchema = zod_1.z
+    .object(Object.assign({ email: emailSchema, resetToken: zod_1.z
+        .string({ required_error: 'Reset token is required.' })
+        .regex(/^[A-Za-z0-9_-]{43}$/, 'Reset token is invalid.') }, confirmedPasswordFields))
     .strict()
     .superRefine(passwordsMatch);
 exports.GENDER_VALUES = [

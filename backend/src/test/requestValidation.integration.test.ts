@@ -108,8 +108,8 @@ describe('request validation', () => {
       birthday: '2000-01-01',
     });
     const invalidCodeResponse = await request(app)
-      .post('/api/auth/verifyResetPasswordCode')
-      .send({ email: user.email, code: '12ab5' });
+      .post('/api/auth/password-reset/verify')
+      .send({ email: user.email, code: '12ab56' });
 
     expect(loginResponse.status).toBe(200);
     expectValidationError(byteLimitResponse, 'body.password');

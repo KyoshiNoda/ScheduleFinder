@@ -117,29 +117,6 @@ class UserController {
             }
         });
     }
-    static changePasswordWithoutToken(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const user = yield userModel_1.default.findOne({ email: req.body.email }).exec();
-                if (!user) {
-                    return res.status(404).send({ error: 'User not found' });
-                }
-                const salt = yield bcrypt_1.default.genSalt();
-                const hashedPassword = yield bcrypt_1.default.hash(req.body.newPassword, salt);
-                const updatedUser = yield userModel_1.default.findOneAndUpdate({ email: req.body.email }, { $set: { password: hashedPassword } }, { new: true });
-                if (!updatedUser) {
-                    throw new Error('Error updating password');
-                }
-                return res.status(200).send({
-                    message: 'Password Changed!',
-                    updatedUser: (0, userRepresentation_1.toPrivateUser)(updatedUser),
-                });
-            }
-            catch (error) {
-                return res.status(500).send({ error: 'Error occurred' });
-            }
-        });
-    }
     static changeProfilePicture(req, res) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {

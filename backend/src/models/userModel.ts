@@ -1,4 +1,14 @@
 import mongoose, { Schema, Document } from 'mongoose';
+
+export interface PasswordResetState {
+  codeDigest?: string;
+  codeExpiresAt?: Date;
+  failedAttempts?: number;
+  requestedAt: Date;
+  resetTokenDigest?: string;
+  resetTokenExpiresAt?: Date;
+}
+
 export interface IUser extends Document {
   firstName: string;
   lastName: string;
@@ -14,7 +24,20 @@ export interface IUser extends Document {
   receivedFriendRequests: string[];
   sentFriendRequests: string[];
   hobbies: string[];
+  passwordReset?: PasswordResetState;
 }
+
+const passwordResetSchema = new mongoose.Schema<PasswordResetState>(
+  {
+    codeDigest: String,
+    codeExpiresAt: Date,
+    failedAttempts: Number,
+    requestedAt: { type: Date, required: true },
+    resetTokenDigest: String,
+    resetTokenExpiresAt: Date,
+  },
+  { _id: false }
+);
 
 const userSchema: Schema = new mongoose.Schema({
   firstName: { type: String, required: true },
@@ -31,6 +54,11 @@ const userSchema: Schema = new mongoose.Schema({
   school: String,
   major: String,
   hobbies: [{ type: String }],
+  passwordReset: {
+    type: passwordResetSchema,
+    select: false,
+    default: undefined,
+  },
 });
 
 const User =

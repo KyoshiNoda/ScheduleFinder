@@ -1,31 +1,41 @@
 import { useState, useRef } from 'react';
-import { changePassword } from '../../redux/feats/auth/authActions';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { completePasswordReset } from '../../services/passwordReset';
 import { Label, Button } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
 
-const ChangePassword = () => {
-  const dispatch = useAppDispatch();
-  const email = useAppSelector((state: any) => state.auth.email);
+interface ChangePasswordProps {
+  email: string;
+  resetToken: string;
+}
+
+const ChangePassword = ({ email, resetToken }: ChangePasswordProps) => {
   const navigate = useNavigate();
 
   const newPassword = useRef(document.createElement('input'));
   const confirmPassword = useRef(document.createElement('input'));
 
   const [isInvalidPassword, setisInvalidPassword] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<boolean | undefined>(undefined);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const formHandler = async () => {
     const data = {
       email: email,
+      resetToken,
       newPassword: newPassword.current.value,
       confirmNewPassword: confirmPassword.current.value,
     };
 
     try {
-      await dispatch(changePassword(data)).unwrap();
+      await completePasswordReset(data);
+      sessionStorage.removeItem('passwordResetEmail');
       navigate('/login');
     } catch (error: any) {
+      if (error.code === 'INVALID_RESET_PROOF') {
+        sessionStorage.removeItem('passwordResetEmail');
+        navigate('/forgotPassword', { replace: true });
+        return;
+      }
+
       if (error.status === 400 || error.status === 401) {
         setisInvalidPassword(true);
         setErrorMessage(error.message);

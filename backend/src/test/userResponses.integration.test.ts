@@ -175,16 +175,18 @@ describe('safe user HTTP responses', () => {
     await expect(User.findById(targetUser.id)).resolves.toMatchObject({ firstName: 'Test' });
   });
 
-  it('returns a private representation from the current password-reset update response', async () => {
-    const user = await createUser();
+  it('does not expose the legacy proofless password-reset route', async () => {
+    const originalPassword = await bcrypt.hash('original-password', 4);
+    const user = await createUser({ password: originalPassword });
     const response = await request(app).post('/api/users/changePassword').send({
       email: user.email,
       newPassword: 'new-test-password',
       confirmNewPassword: 'new-test-password',
     });
 
-    expect(response.status).toBe(200);
-    expectPrivateUser(response.body.updatedUser);
+    expect(response.status).toBe(404);
+    const unchangedUser = await User.findById(user.id).select('+password');
+    expect(unchangedUser?.password).toBe(originalPassword);
   });
 
   it('returns public representations for friends and friend deletion', async () => {

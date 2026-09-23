@@ -17,7 +17,6 @@ router.patch('/', authenticateToken_1.authenticateToken, (0, validateRequest_1.v
 router.patch('/image', authenticateToken_1.authenticateToken, upload.single('photoURL'), UserController_1.default.changeProfilePicture);
 router.delete('/image', authenticateToken_1.authenticateToken, UserController_1.default.deleteProfilePicture);
 router.post('/changePassword/token', authenticateToken_1.authenticateToken, (0, validateRequest_1.validateRequest)({ body: schemas_1.changePasswordWithTokenBodySchema }), UserController_1.default.changePasswordWithToken);
-router.post('/changePassword', (0, validateRequest_1.validateRequest)({ body: schemas_1.changePasswordWithoutTokenBodySchema }), UserController_1.default.changePasswordWithoutToken);
 router.get('/allUsers', authenticateToken_1.authenticateToken, UserController_1.default.getAllUsers);
 router.get('/:id', authenticateToken_1.authenticateToken, (0, validateRequest_1.validateRequest)({ params: schemas_1.idParamsSchema }), UserController_1.default.getUserById);
 exports.default = router;

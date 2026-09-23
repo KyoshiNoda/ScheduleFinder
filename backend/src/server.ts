@@ -3,8 +3,10 @@ dotenv.config();
 import mongoose from 'mongoose';
 import { v2 as cloudinary } from 'cloudinary';
 import { createApp } from './app';
+import { validatePasswordResetConfiguration } from './auth/passwordReset';
 
 const port = process.env.PORT || 3001;
+validatePasswordResetConfiguration();
 const app = createApp();
 
 cloudinary.config({

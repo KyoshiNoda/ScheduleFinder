@@ -1,19 +1,22 @@
 import { Request, Response } from 'express';
 import User from '../models/userModel';
 import bcrypt from 'bcrypt';
-import sgMail from '@sendgrid/mail';
 import { toAuthUser } from '../representations/userRepresentation';
 import { signAccessToken } from '../auth/accessToken';
 import {
+  CompletePasswordResetBody,
   EmailBody,
   LoginBody,
   RegisterBody,
-  ResetCodeBody,
+  VerifyPasswordResetBody,
 } from '../validation/schemas';
-sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
-class AuthController {
-  private static randomCode: string;
+import {
+  completePasswordReset,
+  requestPasswordReset,
+  verifyPasswordResetCode,
+} from '../auth/passwordReset';
 
+class AuthController {
   public static async loginUser(req: Request<Record<string, never>, unknown, LoginBody>, res: Response) {
     const { email, password } = req.body;
     try {
@@ -69,98 +72,62 @@ class AuthController {
     }
   }
 
-  public static async emailCheck(
-    req: Request<Record<string, never>, unknown, EmailBody>,
-    res: Response
-  ) {
-    const email = req.body.email;
-    try {
-      const user = await User.findOne({ email }).exec();
-      if (!user) {
-        return res.status(404).json({ message: 'Invalid Email' });
-      }
-      return res.status(200).json({ message: 'User found!' });
-    } catch (error) {
-      console.error('Error while checking email:', error);
-      return res.status(500).json({ message: 'Internal Server Error' });
-    }
-  }
-
   public static async resetPasswordRequest(
     req: Request<Record<string, never>, unknown, EmailBody>,
     res: Response
   ) {
-    const email = req.body.email;
-    const randomCode = (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000).toString();
-    AuthController.randomCode = randomCode;
-    let message: string = `Here is your five digit code: ${AuthController.randomCode}`;
+    try {
+      await requestPasswordReset(req.body.email);
 
-    let codeHTML = '';
-    for (let digit of AuthController.randomCode) {
-      codeHTML += `<div style="display: inline-block; margin: 5px; padding: 10px; background-color: #fff; color: #3b82f6; border-radius: 5px;">${digit}</div>`;
-    }
-
-    const msg: sgMail.MailDataRequired = {
-      to: email,
-      from: 'schedulefinder@gmail.com',
-      subject: 'ScheduleFinder - Password Reset',
-      text: message,
-      html: `<strong>${message}</strong>`,
-    };
-    sgMail
-      .send(msg)
-      .then(() => {
-        res.status(200).send({ message: 'email sent!', email: email });
-      })
-      .catch((error) => {
-        res.status(400).send({ error: 'error found try again!' });
+      return res.status(202).json({
+        message: 'If an account exists, a reset code will be sent.',
       });
+    } catch {
+      return res.status(500).json({ error: 'Unable to process password reset request.' });
+    }
   }
 
   public static async verifyResetPasswordCode(
-    req: Request<Record<string, never>, unknown, ResetCodeBody>,
+    req: Request<Record<string, never>, unknown, VerifyPasswordResetBody>,
     res: Response
   ) {
     try {
-      const email = req.body.email;
-      const code = req.body.code;
+      const verifiedReset = await verifyPasswordResetCode(req.body.email, req.body.code);
 
-      if (code === AuthController.randomCode) {
-        return res.status(200).send({ message: 'User can reset password' });
+      if (!verifiedReset) {
+        return res.status(400).json({
+          error: 'Invalid or expired reset code.',
+          code: 'INVALID_RESET_CODE',
+        });
       }
 
-      AuthController.randomCode = (
-        Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
-      ).toString();
+      return res.status(200).json(verifiedReset);
+    } catch {
+      return res.status(500).json({ error: 'Unable to verify password reset code.' });
+    }
+  }
 
-      let codeHTML = '';
-      for (let digit of AuthController.randomCode) {
-        codeHTML += `<div style="display: inline-block; margin: 5px; padding: 10px; background-color: #fff; color: #3b82f6; border-radius: 5px;">${digit}</div>`;
+  public static async completePasswordReset(
+    req: Request<Record<string, never>, unknown, CompletePasswordResetBody>,
+    res: Response
+  ) {
+    try {
+      const passwordChanged = await completePasswordReset(
+        req.body.email,
+        req.body.resetToken,
+        req.body.newPassword
+      );
+
+      if (!passwordChanged) {
+        return res.status(400).json({
+          error: 'Invalid or expired reset proof.',
+          code: 'INVALID_RESET_PROOF',
+        });
       }
 
-      let message: string = `Here is your five digit code: ${AuthController.randomCode}`;
-      const msg: sgMail.MailDataRequired = {
-        to: email,
-        from: 'schedulefinder@gmail.com',
-        subject: 'ScheduleFinder - Password Reset',
-        text: message,
-        html: `
-          <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
-            <h2 style="color: #fff;">ScheduleFinder - Password Reset</h2>
-            <p><strong>Here is your five digit code:</strong></p>
-            <div style="font-size: 2em;">${codeHTML}</div>
-            <p>Please enter this code and reset your password.</p>
-          </div>
-        `,
-      };
-
-      await sgMail.send(msg);
-
-      return res.status(400).send({
-        message: 'Incorrect code! Sending another email with a new code',
-      });
-    } catch (error) {
-      return res.status(500).send({ message: 'Error found. Please try again!' });
+      return res.status(200).json({ message: 'Password changed.' });
+    } catch {
+      return res.status(500).json({ error: 'Unable to complete password reset.' });
     }
   }
 }

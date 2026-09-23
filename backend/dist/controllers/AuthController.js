@@ -14,10 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const mail_1 = __importDefault(require("@sendgrid/mail"));
 const userRepresentation_1 = require("../representations/userRepresentation");
 const accessToken_1 = require("../auth/accessToken");
-mail_1.default.setApiKey(`${process.env.SENDGRID_API_KEY}`);
+const passwordReset_1 = require("../auth/passwordReset");
 class AuthController {
     static loginUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -69,84 +68,50 @@ class AuthController {
             }
         });
     }
-    static emailCheck(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const email = req.body.email;
-            try {
-                const user = yield userModel_1.default.findOne({ email }).exec();
-                if (!user) {
-                    return res.status(404).json({ message: 'Invalid Email' });
-                }
-                return res.status(200).json({ message: 'User found!' });
-            }
-            catch (error) {
-                console.error('Error while checking email:', error);
-                return res.status(500).json({ message: 'Internal Server Error' });
-            }
-        });
-    }
     static resetPasswordRequest(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const email = req.body.email;
-            const randomCode = (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000).toString();
-            AuthController.randomCode = randomCode;
-            let message = `Here is your five digit code: ${AuthController.randomCode}`;
-            let codeHTML = '';
-            for (let digit of AuthController.randomCode) {
-                codeHTML += `<div style="display: inline-block; margin: 5px; padding: 10px; background-color: #fff; color: #3b82f6; border-radius: 5px;">${digit}</div>`;
+            try {
+                yield (0, passwordReset_1.requestPasswordReset)(req.body.email);
+                return res.status(202).json({
+                    message: 'If an account exists, a reset code will be sent.',
+                });
             }
-            const msg = {
-                to: email,
-                from: 'schedulefinder@gmail.com',
-                subject: 'ScheduleFinder - Password Reset',
-                text: message,
-                html: `<strong>${message}</strong>`,
-            };
-            mail_1.default
-                .send(msg)
-                .then(() => {
-                res.status(200).send({ message: 'email sent!', email: email });
-            })
-                .catch((error) => {
-                res.status(400).send({ error: 'error found try again!' });
-            });
+            catch (_a) {
+                return res.status(500).json({ error: 'Unable to process password reset request.' });
+            }
         });
     }
     static verifyResetPasswordCode(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const email = req.body.email;
-                const code = req.body.code;
-                if (code === AuthController.randomCode) {
-                    return res.status(200).send({ message: 'User can reset password' });
+                const verifiedReset = yield (0, passwordReset_1.verifyPasswordResetCode)(req.body.email, req.body.code);
+                if (!verifiedReset) {
+                    return res.status(400).json({
+                        error: 'Invalid or expired reset code.',
+                        code: 'INVALID_RESET_CODE',
+                    });
                 }
-                AuthController.randomCode = (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000).toString();
-                let codeHTML = '';
-                for (let digit of AuthController.randomCode) {
-                    codeHTML += `<div style="display: inline-block; margin: 5px; padding: 10px; background-color: #fff; color: #3b82f6; border-radius: 5px;">${digit}</div>`;
-                }
-                let message = `Here is your five digit code: ${AuthController.randomCode}`;
-                const msg = {
-                    to: email,
-                    from: 'schedulefinder@gmail.com',
-                    subject: 'ScheduleFinder - Password Reset',
-                    text: message,
-                    html: `
-          <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
-            <h2 style="color: #fff;">ScheduleFinder - Password Reset</h2>
-            <p><strong>Here is your five digit code:</strong></p>
-            <div style="font-size: 2em;">${codeHTML}</div>
-            <p>Please enter this code and reset your password.</p>
-          </div>
-        `,
-                };
-                yield mail_1.default.send(msg);
-                return res.status(400).send({
-                    message: 'Incorrect code! Sending another email with a new code',
-                });
+                return res.status(200).json(verifiedReset);
             }
-            catch (error) {
-                return res.status(500).send({ message: 'Error found. Please try again!' });
+            catch (_a) {
+                return res.status(500).json({ error: 'Unable to verify password reset code.' });
+            }
+        });
+    }
+    static completePasswordReset(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const passwordChanged = yield (0, passwordReset_1.completePasswordReset)(req.body.email, req.body.resetToken, req.body.newPassword);
+                if (!passwordChanged) {
+                    return res.status(400).json({
+                        error: 'Invalid or expired reset proof.',
+                        code: 'INVALID_RESET_PROOF',
+                    });
+                }
+                return res.status(200).json({ message: 'Password changed.' });
+            }
+            catch (_a) {
+                return res.status(500).json({ error: 'Unable to complete password reset.' });
             }
         });
     }

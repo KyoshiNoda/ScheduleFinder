@@ -3,7 +3,6 @@ import UserController from '../controllers/UserController';
 import { authenticateToken } from '../auth/authenticateToken';
 import multer from 'multer';
 import {
-  changePasswordWithoutTokenBodySchema,
   changePasswordWithTokenBodySchema,
   idParamsSchema,
   updateUserBodySchema,
@@ -28,11 +27,6 @@ router.post(
   authenticateToken,
   validateRequest({ body: changePasswordWithTokenBodySchema }),
   UserController.changePasswordWithToken
-);
-router.post(
-  '/changePassword',
-  validateRequest({ body: changePasswordWithoutTokenBodySchema }),
-  UserController.changePasswordWithoutToken
 );
 router.get('/allUsers', authenticateToken, UserController.getAllUsers);
 router.get(

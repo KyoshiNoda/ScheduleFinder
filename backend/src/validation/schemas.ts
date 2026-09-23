@@ -133,10 +133,12 @@ export const loginBodySchema = z
 
 export const emailBodySchema = z.object({ email: emailSchema }).strict();
 
-export const resetCodeBodySchema = z
+export const verifyPasswordResetBodySchema = z
   .object({
     email: emailSchema,
-    code: z.string({ required_error: 'Reset code is required.' }).regex(/^\d{5}$/, 'Reset code must contain exactly five digits.'),
+    code: z
+      .string({ required_error: 'Reset code is required.' })
+      .regex(/^\d{6}$/, 'Reset code must contain exactly six digits.'),
   })
   .strict();
 
@@ -148,9 +150,12 @@ export const changePasswordWithTokenBodySchema = z
   .strict()
   .superRefine(passwordsMatch);
 
-export const changePasswordWithoutTokenBodySchema = z
+export const completePasswordResetBodySchema = z
   .object({
     email: emailSchema,
+    resetToken: z
+      .string({ required_error: 'Reset token is required.' })
+      .regex(/^[A-Za-z0-9_-]{43}$/, 'Reset token is invalid.'),
     ...confirmedPasswordFields,
   })
   .strict()
@@ -293,9 +298,9 @@ export const hobbyParamsSchema = z.object({ name: hobbyNameSchema }).strict();
 export type RegisterBody = z.infer<typeof registerBodySchema>;
 export type LoginBody = z.infer<typeof loginBodySchema>;
 export type EmailBody = z.infer<typeof emailBodySchema>;
-export type ResetCodeBody = z.infer<typeof resetCodeBodySchema>;
+export type VerifyPasswordResetBody = z.infer<typeof verifyPasswordResetBodySchema>;
 export type ChangePasswordWithTokenBody = z.infer<typeof changePasswordWithTokenBodySchema>;
-export type ChangePasswordWithoutTokenBody = z.infer<typeof changePasswordWithoutTokenBodySchema>;
+export type CompletePasswordResetBody = z.infer<typeof completePasswordResetBodySchema>;
 export type UpdateUserBody = z.infer<typeof updateUserBodySchema>;
 export type IdParams = z.infer<typeof idParamsSchema>;
 export type FriendIdParams = z.infer<typeof friendIdParamsSchema>;

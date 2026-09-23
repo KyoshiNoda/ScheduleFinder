@@ -1,14 +1,9 @@
 import { useState } from 'react';
 import { FaUserLock } from 'react-icons/fa';
 import Toggle from '../components/Toggle';
-import { useAppDispatch } from '../redux/store';
 import { useNavigate } from 'react-router-dom';
-import {
-  emailCheck,
-  resetPasswordRequest,
-} from '../redux/feats/auth/authActions';
+import { requestPasswordReset } from '../services/passwordReset';
 const ForgotPasswordPage = () => {
-  const dispatch = useAppDispatch();
   const [isInvalidEmail, setIsInvalidEmail] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [responseMessage, setResponseMessage] = useState<string>('');
@@ -16,8 +11,8 @@ const ForgotPasswordPage = () => {
 
   const checkEmailHandler = async () => {
     try {
-      await dispatch(emailCheck({ email: email })).unwrap();
-      await dispatch(resetPasswordRequest({ email: email })).unwrap();
+      await requestPasswordReset(email);
+      sessionStorage.setItem('passwordResetEmail', email.trim());
       navigate('/resetPassword');
     } catch (error: any) {
       if (error.status === 400 || error.status === 404) {
@@ -42,7 +37,7 @@ const ForgotPasswordPage = () => {
           </div>
           <div className="flex justify-center space-y-10">
             <p className="md:text-md mb-2 block text-gray-900 dark:text-gray-300">
-              Check your email for a 5 digit code!
+              Check your email for a 6 digit code!
             </p>
           </div>
           <div className="flex flex-col gap-3">

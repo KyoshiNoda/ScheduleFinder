@@ -1,44 +1,56 @@
 import { useRef, useState, useEffect } from 'react';
 import Toggle from '../components/Toggle';
 import { MdOutlineLockReset } from 'react-icons/md';
-import { useAppDispatch } from '../redux/store';
-import { useAppSelector } from '../redux/store';
-import { verifyPasswordRequest } from '../redux/feats/auth/authActions';
+import { useNavigate } from 'react-router-dom';
+import { verifyPasswordReset } from '../services/passwordReset';
 import ChangePassword from '../components/Auth/ChangePassword';
 const ResetPasswordPage = () => {
-  const dispatch = useAppDispatch();
-  const email = useAppSelector((state: any) => state.auth.email);
+  const navigate = useNavigate();
+  const email = sessionStorage.getItem('passwordResetEmail');
 
   const digit1 = useRef<HTMLInputElement | null>(null);
   const digit2 = useRef<HTMLInputElement | null>(null);
   const digit3 = useRef<HTMLInputElement | null>(null);
   const digit4 = useRef<HTMLInputElement | null>(null);
   const digit5 = useRef<HTMLInputElement | null>(null);
+  const digit6 = useRef<HTMLInputElement | null>(null);
 
   const [isInvalidCode, setIsInvalidCode] = useState<boolean>(false);
-  const [canResetPassword, setCanResetPassword] = useState<boolean>(false);
+  const [resetToken, setResetToken] = useState<string | null>(null);
   const [responseMessage, setResponseMessage] = useState<string>('');
   useEffect(() => {
+    if (!email) {
+      navigate('/forgotPassword', { replace: true });
+      return;
+    }
+
     if (digit1.current) {
       digit1.current.focus();
     }
-  }, []);
+  }, [email, navigate]);
 
   const formHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    let code: string =
+    const code =
       digit1.current!.value.toString() +
       digit2.current!.value.toString() +
       digit3.current!.value.toString() +
       digit4.current!.value.toString() +
-      digit5.current!.value.toString();
+      digit5.current!.value.toString() +
+      digit6.current!.value.toString();
+
+    if (!email) {
+      navigate('/forgotPassword', { replace: true });
+      return;
+    }
+
     const data = {
-      email: email,
-      code: code,
+      email,
+      code,
     };
     try {
-      await dispatch(verifyPasswordRequest(data)).unwrap();
-      setCanResetPassword(true);
+      const response = await verifyPasswordReset(data.email, data.code);
+      setResetToken(response.resetToken);
     } catch (error: any) {
       if (error.status === 400) {
         setIsInvalidCode(true);
@@ -48,6 +60,7 @@ const ResetPasswordPage = () => {
         digit3.current!.value = '';
         digit4.current!.value = '';
         digit5.current!.value = '';
+        digit6.current!.value = '';
       }
     }
   };
@@ -66,8 +79,8 @@ const ResetPasswordPage = () => {
         <Toggle />
       </div>
       <div className="flex items-center justify-center">
-        {canResetPassword ? (
-          <ChangePassword />
+        {resetToken && email ? (
+          <ChangePassword email={email} resetToken={resetToken} />
         ) : (
           <div
             className={`flex w-5/6 flex-col justify-center rounded-lg border bg-white p-5 dark:bg-slate-700 lg:w-1/3 ${isInvalidCode ? 'border-rose-500 dark:border-rose-500' : ''
@@ -122,6 +135,14 @@ const ResetPasswordPage = () => {
                   id="fifth"
                   maxLength={1}
                   ref={digit5}
+                  onInput={handleInput}
+                />
+                <input
+                  className="m-2 h-10 w-10 rounded border text-center"
+                  type="text"
+                  id="sixth"
+                  maxLength={1}
+                  ref={digit6}
                   onInput={handleInput}
                 />
               </div>

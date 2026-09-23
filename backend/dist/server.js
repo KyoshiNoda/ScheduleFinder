@@ -31,7 +31,9 @@ dotenv.config();
 const mongoose_1 = __importDefault(require("mongoose"));
 const cloudinary_1 = require("cloudinary");
 const app_1 = require("./app");
+const passwordReset_1 = require("./auth/passwordReset");
 const port = process.env.PORT || 3001;
+(0, passwordReset_1.validatePasswordResetConfiguration)();
 const app = (0, app_1.createApp)();
 cloudinary_1.v2.config({
     cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,

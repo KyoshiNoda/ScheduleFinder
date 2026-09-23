@@ -5,14 +5,6 @@ import { getApiUrl } from '../../../utils/environment';
 
 let BASE_URL = getApiUrl();
 
-const getApiErrorMessage = (data: any): string => {
-  if (data?.code === 'VALIDATION_ERROR' && Array.isArray(data.issues)) {
-    return data.issues[0]?.message ?? 'Invalid request.';
-  }
-
-  return data?.message ?? data?.error ?? 'Request failed.';
-};
-
 export const registerUser = createAsyncThunk(
   '/api/auth',
   async (userData: RegisterUser, { rejectWithValue }) => {
@@ -48,94 +40,6 @@ export const loginUser = createAsyncThunk(
       return data;
     } catch (error) {
       return rejectWithValue(error);
-    }
-  }
-);
-
-export const emailCheck = createAsyncThunk(
-  'auth/emailCheck',
-  async (email: { email: string }, { rejectWithValue }) => {
-    try {
-      const result = await Axios.post(`${BASE_URL}api/auth/emailCheck`, email);
-      return result;
-    } catch (error: any) {
-      if (error.response) {
-        const { status, data } = error.response;
-        return rejectWithValue({ status, message: getApiErrorMessage(data) });
-      } else {
-        return rejectWithValue({
-          status: 500,
-          message: 'Internal Server Error',
-        });
-      }
-    }
-  }
-);
-
-export const resetPasswordRequest = createAsyncThunk(
-  '/auth/resetPasswordRequest',
-  async (email: { email: string }, { rejectWithValue }) => {
-    try {
-      const result = await Axios.post(
-        `${BASE_URL}api/auth/resetPasswordRequest`,
-        email
-      );
-      return result;
-    } catch (error: any) {
-      return rejectWithValue(error);
-    }
-  }
-);
-
-export const verifyPasswordRequest = createAsyncThunk(
-  '/auth/verifyPasswordRequest',
-  async (data: { email: string | null; code: string }, { rejectWithValue }) => {
-    try {
-      const result = await Axios.post(
-        `${BASE_URL}api/auth/verifyResetPasswordCode`,
-        data
-      );
-      return result;
-    } catch (error: any) {
-      if (error.response) {
-        const { status, data } = error.response;
-        return rejectWithValue({ status, message: getApiErrorMessage(data) });
-      } else {
-        return rejectWithValue({
-          status: 500,
-          message: 'Internal Server Error',
-        });
-      }
-    }
-  }
-);
-
-export const changePassword = createAsyncThunk(
-  '/auth/changePassword',
-  async (
-    data: {
-      email: string | null;
-      newPassword: string;
-      confirmNewPassword: string;
-    },
-    { rejectWithValue }
-  ) => {
-    try {
-      const result = await Axios.post(
-        `${BASE_URL}api/users/changePassword`,
-        data
-      );
-      return result;
-    } catch (error: any) {
-      if (error.response) {
-        const { status, data } = error.response;
-        return rejectWithValue({ status, message: getApiErrorMessage(data) });
-      } else {
-        return rejectWithValue({
-          status: 500,
-          message: 'Internal Server Error',
-        });
-      }
     }
   }
 );

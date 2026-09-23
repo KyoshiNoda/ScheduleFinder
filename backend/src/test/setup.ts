@@ -7,6 +7,7 @@ let mongoServer: MongoMemoryServer | undefined;
 
 process.env.NODE_ENV = 'test';
 process.env.ACCESS_TOKEN_SECRET = 'test-only-access-token-secret';
+process.env.PASSWORD_RESET_SECRET = 'test-only-password-reset-secret-at-least-32-bytes';
 process.env.SENDGRID_API_KEY = 'SG.test-only.test-only';
 process.env.CLOUDINARY_CLOUD_NAME = 'test-only';
 process.env.CLOUDINARY_API_KEY = 'test-only';
