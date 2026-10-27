@@ -1,22 +1,29 @@
 import { useRef } from 'react';
 import { DaysChecked } from '../../types';
+
 interface DayPickerProps {
   selectedDays: DaysChecked;
   setSelectedDays: (selectedDays: DaysChecked) => void;
   daysError?: boolean;
 }
+
 const DayPicker = ({ selectedDays, setSelectedDays, daysError }: DayPickerProps): JSX.Element => {
   const mondayRef = useRef(document.createElement('input'));
   const tuesdayRef = useRef(document.createElement('input'));
   const wednesdayRef = useRef(document.createElement('input'));
   const thursdayRef = useRef(document.createElement('input'));
   const fridayRef = useRef(document.createElement('input'));
+  const saturdayRef = useRef(document.createElement('input'));
+  const sundayRef = useRef(document.createElement('input'));
+
   const dayOptions = [
     { key: 'monday', label: 'Mon', fullLabel: 'Monday', ref: mondayRef },
     { key: 'tuesday', label: 'Tue', fullLabel: 'Tuesday', ref: tuesdayRef },
     { key: 'wednesday', label: 'Wed', fullLabel: 'Wednesday', ref: wednesdayRef },
     { key: 'thursday', label: 'Thu', fullLabel: 'Thursday', ref: thursdayRef },
     { key: 'friday', label: 'Fri', fullLabel: 'Friday', ref: fridayRef },
+    { key: 'saturday', label: 'Sat', fullLabel: 'Saturday', ref: saturdayRef },
+    { key: 'sunday', label: 'Sun', fullLabel: 'Sunday', ref: sundayRef },
   ] as const;
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, day: string) => {
@@ -33,7 +40,7 @@ const DayPicker = ({ selectedDays, setSelectedDays, daysError }: DayPickerProps)
           : 'border-gray-200 bg-slate-50/70 dark:border-gray-600 dark:bg-gray-800/40'
       }`}
     >
-      <ul className="grid grid-cols-5 gap-1 rounded-lg bg-white/80 p-1 dark:bg-slate-900/50">
+      <ul className="grid grid-cols-7 gap-1 rounded-lg bg-white/80 p-1 dark:bg-slate-900/50">
         {dayOptions.map((day) => {
           const isSelected = selectedDays[day.key];
 

@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
-import { useGetScheduleQuery } from '../../redux/services/auth/authService';
-import { useCreateTimeSlotMutation } from '../../redux/services/schedule/scheduleService';
+import {
+  useCreateTimeSlotMutation,
+  useGetScheduleQuery,
+} from '../../redux/services/schedule/scheduleService';
 import { DaysChecked, TimeSlot as TimeSlotType } from '../../types';
 import { convertTo24Hour, validTimeSlot } from '../../utils/scheduleUtils';
 import { ToastEnum } from '../../enums';
@@ -8,7 +10,7 @@ import { Select } from 'flowbite-react';
 import ClearScheduleButton from '../Schedule/ClearScheduleButton';
 import DayPicker from '../Calendar/DayPicker';
 import { TypesOfInput } from '../../enums';
-import { useToast } from '../../utils/functions';
+import { cn, useToast } from '../../utils/functions';
 import ExistingTimeSlotModal from '../Modals/ExisitingTImeSlotModal';
 export const colors: string[] = [
   'slate',
@@ -27,7 +29,15 @@ export const colors: string[] = [
   'rose',
 ];
 
-const TimeSlotInput = () => {
+type TimeSlotInputProps = {
+  showClearButton?: boolean;
+  className?: string;
+};
+
+const TimeSlotInput = ({
+  showClearButton = true,
+  className,
+}: TimeSlotInputProps) => {
   // || Refs ||
   const formRef = useRef(document.createElement('form'));
   const titleRef = useRef(document.createElement('input'));
@@ -50,12 +60,14 @@ const TimeSlotInput = () => {
 
   const [createTimeSlotMutation] = useCreateTimeSlotMutation();
 
-  const [selectedDays, setSelectedDays] = useState({
+  const [selectedDays, setSelectedDays] = useState<DaysChecked>({
     monday: false,
     tuesday: false,
     wednesday: false,
     thursday: false,
     friday: false,
+    saturday: false,
+    sunday: false,
   });
 
   const { showToast } = useToast();
@@ -77,12 +89,12 @@ const TimeSlotInput = () => {
 
   const addTimeSlot = async (event: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
-    const { monday, tuesday, wednesday, thursday, friday } = selectedDays;
+    const { monday, tuesday, wednesday, thursday, friday, saturday, sunday } = selectedDays;
 
     if (isMeridiemFailed) return;
 
     // If no checkboxes have been selected, the form shouldn't be submitted.
-    if (!(monday || tuesday || wednesday || thursday || friday)) {
+    if (!(monday || tuesday || wednesday || thursday || friday || saturday || sunday)) {
       setDaysError(true);
       return;
     }
@@ -117,6 +129,14 @@ const TimeSlotInput = () => {
       daySelection.friday = true;
       setDaysError(false);
     }
+    if (saturday) {
+      daySelection.saturday = true;
+      setDaysError(false);
+    }
+    if (sunday) {
+      daySelection.sunday = true;
+      setDaysError(false);
+    }
 
     const startTime = `${startTimeHourRef.current.value}:${validateMinutes(
       startTimeMinutesRef.current.value
@@ -134,8 +154,12 @@ const TimeSlotInput = () => {
       return;
     }
 
-    if (!validTimeSlot(startTime, endTime, data.timeSlots, daySelection)) {
+    if (!validTimeSlot(startTime, endTime, data?.timeSlots ?? [], daySelection)) {
       setTimeSlotError(true);
+      return;
+    }
+
+    if (!scheduleID) {
       return;
     }
 
@@ -254,10 +278,16 @@ const TimeSlotInput = () => {
 
   return (
     <>
-      {!isFetching && data && (
-        <div className="flex flex-col">
-          <ClearScheduleButton scheduleId={scheduleID} currentSchedule={data} />
-          <div className="mt-6 flex flex-col rounded-lg border bg-white p-5 shadow dark:border-none dark:bg-black dark:shadow-none">
+      <div className={cn('flex flex-col', className)}>
+          {showClearButton && (
+            <ClearScheduleButton scheduleId={scheduleID} currentSchedule={data} />
+          )}
+          <div
+            className={cn(
+              'flex flex-col rounded-lg border bg-white p-5 shadow dark:border-none dark:bg-black dark:shadow-none',
+              showClearButton && 'mt-6'
+            )}
+          >
             <form ref={formRef} onSubmit={addTimeSlot} className="space-y-2">
               <div>
                 <label
@@ -455,7 +485,8 @@ const TimeSlotInput = () => {
               </div>
               <button
                 type="submit"
-                className="w-full rounded-full bg-blue-400 px-8 py-3 text-lg font-semibold text-white hover:bg-blue-600 dark:bg-slate-300 dark:text-black hover:dark:bg-slate-400"
+                disabled={!scheduleID}
+                className="w-full rounded-full bg-blue-400 px-8 py-3 text-lg font-semibold text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-blue-200 disabled:text-white/80 dark:bg-slate-300 dark:text-black hover:dark:bg-slate-400 dark:disabled:bg-slate-700 dark:disabled:text-slate-300"
               >
                 Submit
               </button>
@@ -470,8 +501,7 @@ const TimeSlotInput = () => {
               />
             )}
           </div>
-        </div>
-      )}
+      </div>
     </>
   );
 };
