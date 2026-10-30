@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import sgMail from '@sendgrid/mail';
+import { sendEmail } from '../integrations/outbound';
 import User, { IUser } from '../models/userModel';
 import { toPublicUser } from '../representations/userRepresentation';
 import {
@@ -10,7 +10,6 @@ import {
 } from '../relationships/relationshipMutations';
 import { FriendIdParams } from '../validation/schemas';
 
-sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 
 const getPublicUsers = async (ids: string[]) => {
   const users = await User.find({ _id: { $in: ids } }).exec();
@@ -30,7 +29,7 @@ const sendFriendRequestNotification = async (
 ): Promise<void> => {
   const senderName = `${notification.senderFirstName} ${notification.senderLastName}`;
 
-  await sgMail.send({
+  await sendEmail({
     to: notification.recipientEmail,
     from: 'schedulefinder@gmail.com',
     subject: 'ScheduleFinder - Friend Request',

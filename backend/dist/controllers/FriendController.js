@@ -12,11 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mail_1 = __importDefault(require("@sendgrid/mail"));
+const outbound_1 = require("../integrations/outbound");
 const userModel_1 = __importDefault(require("../models/userModel"));
 const userRepresentation_1 = require("../representations/userRepresentation");
 const relationshipMutations_1 = require("../relationships/relationshipMutations");
-mail_1.default.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 const getPublicUsers = (ids) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield userModel_1.default.find({ _id: { $in: ids } }).exec();
     return users.map(userRepresentation_1.toPublicUser);
@@ -29,7 +28,7 @@ const sendRelationshipMutationError = (res, error) => {
 };
 const sendFriendRequestNotification = (notification) => __awaiter(void 0, void 0, void 0, function* () {
     const senderName = `${notification.senderFirstName} ${notification.senderLastName}`;
-    yield mail_1.default.send({
+    yield (0, outbound_1.sendEmail)({
         to: notification.recipientEmail,
         from: 'schedulefinder@gmail.com',
         subject: 'ScheduleFinder - Friend Request',

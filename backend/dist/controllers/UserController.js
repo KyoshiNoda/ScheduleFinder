@@ -14,12 +14,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const cloudinary_1 = require("cloudinary");
-const multer_1 = __importDefault(require("multer"));
+const outbound_1 = require("../integrations/outbound");
 const userRepresentation_1 = require("../representations/userRepresentation");
-const storage = multer_1.default.memoryStorage();
-const upload = (0, multer_1.default)({ storage: storage });
 const defaultProfilePicture = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s';
+const startsWithBytes = (buffer, signature) => buffer.length >= signature.length &&
+    signature.every((byte, index) => buffer[index] === byte);
+const imageMime = (buffer) => {
+    if (startsWithBytes(buffer, [0xff, 0xd8, 0xff]))
+        return 'image/jpeg';
+    if (startsWithBytes(buffer, [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) {
+        return 'image/png';
+    }
+    if (buffer.length >= 12 &&
+        buffer.toString('ascii', 0, 4) === 'RIFF' &&
+        buffer.toString('ascii', 8, 12) === 'WEBP') {
+        return 'image/webp';
+    }
+    return null;
+};
+const cleanupImage = (publicId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield (0, outbound_1.destroyProfileImage)(publicId);
+    }
+    catch (_a) {
+        console.error('Unable to remove a managed profile image.');
+    }
+});
 class UserController {
     // GET all user
     static getAllUsers(req, res) {
@@ -118,67 +138,61 @@ class UserController {
         });
     }
     static changeProfilePicture(req, res) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.auth.userId;
+            const uploadedFile = req.file;
+            if (!uploadedFile)
+                return res.status(400).json({ error: 'Profile image is required.' });
+            const detectedMime = imageMime(uploadedFile.buffer);
+            if (!detectedMime || detectedMime !== uploadedFile.mimetype) {
+                return res.status(415).json({ error: 'Profile image must be a JPEG, PNG, or WebP file.' });
+            }
+            let user;
             try {
-                const uploadedFile = req.file;
-                const fileBuffer = uploadedFile.buffer;
-                const fileData = fileBuffer.toString('base64');
-                const user = yield userModel_1.default.findOne({ _id: userID }).exec();
-                if (!user) {
-                    return res.status(404).json({
-                        message: `User ${userID} not found`,
-                    });
-                }
-                if ((user === null || user === void 0 ? void 0 : user.photoURL) !== defaultProfilePicture) {
-                    const publicID = (_a = user === null || user === void 0 ? void 0 : user.photoURL.split('/').pop()) === null || _a === void 0 ? void 0 : _a.split('.')[0];
-                    yield cloudinary_1.v2.uploader.destroy('uploads/' + publicID);
-                }
-                const result = yield cloudinary_1.v2.uploader.upload(`data:image/jpeg;base64,${fileData}`, {
-                    folder: 'uploads',
-                    transformation: [
-                        { width: 300, height: 300, crop: 'fill' }, // Replace 300 with your desired width and height
-                    ],
-                });
-                user.photoURL = result.secure_url;
-                yield user.save();
-                res.status(200).send({
-                    message: 'Profile picture updated successfully',
-                    imageUrl: result.secure_url,
-                });
+                user = yield userModel_1.default.findById(userID).select('+profileImagePublicId').exec();
             }
-            catch (err) {
-                console.error(err);
-                res.status(500).json({
-                    message: `Error updating User ${userID}'s photoURL`,
-                    error: err,
-                });
+            catch (_a) {
+                return res.status(500).json({ error: 'Unable to update profile image.' });
             }
+            if (!user)
+                return res.status(404).json({ error: 'User not found.' });
+            let replacement;
+            try {
+                replacement = yield (0, outbound_1.uploadProfileImage)(`data:${detectedMime};base64,${uploadedFile.buffer.toString('base64')}`);
+            }
+            catch (_b) {
+                return res.status(502).json({ error: 'Unable to upload profile image.' });
+            }
+            let updated;
+            try {
+                updated = yield userModel_1.default.findOneAndUpdate({ _id: userID, photoURL: user.photoURL }, { $set: { photoURL: replacement.secureUrl, profileImagePublicId: replacement.publicId } }, { new: true }).exec();
+            }
+            catch (_c) {
+                yield cleanupImage(replacement.publicId);
+                return res.status(500).json({ error: 'Unable to update profile image.' });
+            }
+            if (!updated) {
+                yield cleanupImage(replacement.publicId);
+                return res.status(409).json({ error: 'Profile image changed; retry the upload.' });
+            }
+            if (user.profileImagePublicId)
+                yield cleanupImage(user.profileImagePublicId);
+            return res.status(200).json({ message: 'Profile picture updated successfully', imageUrl: replacement.secureUrl });
         });
     }
     static deleteProfilePicture(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const userID = req.auth.userId;
             try {
-                const user = yield userModel_1.default.findOneAndUpdate({ _id: userID }, {
-                    photoURL: defaultProfilePicture,
-                }).exec();
-                res.status(200).send({
-                    message: 'Profile picture removed successfully',
-                });
-                if (!user) {
-                    return res.status(404).json({
-                        message: `User ${userID} not found`,
-                    });
-                }
+                const user = yield userModel_1.default.findOneAndUpdate({ _id: userID }, { $set: { photoURL: defaultProfilePicture }, $unset: { profileImagePublicId: 1 } }, { new: false }).select('+profileImagePublicId').exec();
+                if (!user)
+                    return res.status(404).json({ error: 'User not found.' });
+                if (user.profileImagePublicId)
+                    yield cleanupImage(user.profileImagePublicId);
+                return res.status(200).json({ message: 'Profile picture removed successfully' });
             }
-            catch (err) {
-                console.error(err);
-                res.status(500).json({
-                    message: `Error removing User ${userID}'s photoURL`,
-                    error: err,
-                });
+            catch (_a) {
+                return res.status(500).json({ error: 'Unable to remove profile image.' });
             }
         });
     }

@@ -15,9 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.completePasswordReset = exports.verifyPasswordResetCode = exports.requestPasswordReset = exports.validatePasswordResetConfiguration = exports.PASSWORD_RESET_MAX_ATTEMPTS = exports.PASSWORD_RESET_RESEND_COOLDOWN_MS = exports.PASSWORD_RESET_TOKEN_TTL_MS = exports.PASSWORD_RESET_CODE_TTL_MS = void 0;
 const crypto_1 = require("crypto");
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const mail_1 = __importDefault(require("@sendgrid/mail"));
+const outbound_1 = require("../integrations/outbound");
 const userModel_1 = __importDefault(require("../models/userModel"));
-mail_1.default.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 exports.PASSWORD_RESET_CODE_TTL_MS = 10 * 60 * 1000;
 exports.PASSWORD_RESET_TOKEN_TTL_MS = 10 * 60 * 1000;
 exports.PASSWORD_RESET_RESEND_COOLDOWN_MS = 60 * 1000;
@@ -41,7 +40,7 @@ const createResetCode = () => (0, crypto_1.randomInt)(0, 1000000).toString().pad
 const createResetToken = () => (0, crypto_1.randomBytes)(32).toString('base64url');
 const sendResetCode = (email, code) => __awaiter(void 0, void 0, void 0, function* () {
     const message = `Here is your six digit ScheduleFinder password reset code: ${code}`;
-    yield mail_1.default.send({
+    yield (0, outbound_1.sendEmail)({
         to: email,
         from: 'schedulefinder@gmail.com',
         subject: 'ScheduleFinder - Password Reset',
@@ -50,6 +49,8 @@ const sendResetCode = (email, code) => __awaiter(void 0, void 0, void 0, functio
     });
 });
 const requestPasswordReset = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!(0, outbound_1.outboundEnabled)())
+        return;
     const now = new Date();
     const code = createResetCode();
     const codeDigest = digestCredential('code', email, code);

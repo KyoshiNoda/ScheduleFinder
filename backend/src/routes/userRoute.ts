@@ -1,7 +1,7 @@
 import express from 'express';
 import UserController from '../controllers/UserController';
 import { authenticateToken } from '../auth/authenticateToken';
-import multer from 'multer';
+import { parseProfileImage, requireImageProvider } from '../uploads/profileImageUpload';
 import {
   changePasswordWithTokenBodySchema,
   idParamsSchema,
@@ -10,9 +10,6 @@ import {
 import { validateRequest } from '../validation/validateRequest';
 
 const router = express.Router();
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-
 router.get('/', authenticateToken, UserController.getUserInfo);
 router.patch(
   '/',
@@ -20,7 +17,7 @@ router.patch(
   validateRequest({ body: updateUserBodySchema }),
   UserController.updateUser
 );
-router.patch('/image', authenticateToken, upload.single('photoURL'), UserController.changeProfilePicture);
+router.patch('/image', authenticateToken, requireImageProvider, parseProfileImage, UserController.changeProfilePicture);
 router.delete('/image', authenticateToken, UserController.deleteProfilePicture);
 router.post(
   '/changePassword/token',

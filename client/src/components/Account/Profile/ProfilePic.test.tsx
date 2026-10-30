@@ -66,4 +66,14 @@ describe('ProfilePic', () => {
     expect(mocks.showToast).toHaveBeenCalledWith(ToastEnum.UPDATE_PROFILE_PICTURE);
     expect(container.querySelector('img')).toHaveAttribute('src', 'https://example.com/new.png');
   });
+
+  it('shows a provider error without changing the displayed image', async () => {
+    mocks.changeProfilePictureUnwrap.mockRejectedValueOnce({ data: { error: 'Image uploads are unavailable.' } });
+    const { container } = render(<ProfilePic picture="https://example.com/old.png" />);
+    const file = new File(['avatar'], 'avatar.png', { type: 'image/png' });
+    fireEvent.change(container.querySelector('input[type="file"]') as HTMLInputElement, { target: { files: [file] } });
+    expect(await screen.findByRole('alert')).toHaveTextContent('Image uploads are unavailable.');
+    expect(container.querySelector('img')).toHaveAttribute('src', 'https://example.com/old.png');
+    expect(mocks.dispatch).not.toHaveBeenCalled();
+  });
 });

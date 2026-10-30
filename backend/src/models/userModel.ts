@@ -17,6 +17,7 @@ export interface IUser extends Document {
   birthday: Date;
   gender?: string;
   photoURL: string;
+  profileImagePublicId?: string;
   age?: number;
   school?: string;
   major?: string;
@@ -50,6 +51,7 @@ const userSchema: Schema = new mongoose.Schema({
   sentFriendRequests: [{ type: String }],
   age: Number,
   photoURL: String,
+  profileImagePublicId: { type: String, select: false },
   gender: String,
   school: String,
   major: String,

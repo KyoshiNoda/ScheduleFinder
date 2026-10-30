@@ -1,20 +1,14 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 import mongoose from 'mongoose';
-import { v2 as cloudinary } from 'cloudinary';
+import { validateOutboundConfiguration } from './integrations/outbound';
 import { createApp } from './app';
 import { validatePasswordResetConfiguration } from './auth/passwordReset';
 
 const port = process.env.PORT || 3001;
 validatePasswordResetConfiguration();
+validateOutboundConfiguration();
 const app = createApp();
-
-cloudinary.config({
-  cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,
-  api_key: `${process.env.CLOUDINARY_API_KEY}`,
-  api_secret: `${process.env.CLOUDINARY_API_SECRET}`,
-  secure: true,
-});
 
 mongoose.set('strictQuery', true);
 

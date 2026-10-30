@@ -16,6 +16,7 @@ const ProfilePic = (props: Props) => {
   const [imageURL, setImageURL] = useState<string | null | undefined>(props.picture);
   const [isHovering, setIsHovering] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [changeProfilePicture] = useChangeProfilePictureMutation();
   const dispatch = useAppDispatch();
@@ -31,6 +32,7 @@ const ProfilePic = (props: Props) => {
     const selectedFile = event.target.files?.[0];
 
     if (selectedFile) {
+      setUploadError(null);
       setIsLoading(true);
       try {
         const request = await changeProfilePicture({ file: selectedFile }).unwrap();
@@ -41,8 +43,11 @@ const ProfilePic = (props: Props) => {
         dispatch(updateUserInfo(updatedUser));
         setImageURL(request.imageUrl);
         showToast(ToastEnum.UPDATE_PROFILE_PICTURE);
+      } catch (error: any) {
+        setUploadError(error?.data?.error ?? 'Unable to upload profile image.');
       } finally {
         setIsLoading(false);
+        event.target.value = '';
       }
     }
   };
@@ -67,7 +72,8 @@ const ProfilePic = (props: Props) => {
       ) : (
         <img alt="" className="h-24 w-24 rounded-full border dark:border-gray-700 dark:bg-gray-500" src={imageURL ?? undefined} />
       )}
-      <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFileChange} />
+      <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" style={{ display: 'none' }} onChange={handleFileChange} />
+      {uploadError && <p role="alert" className="mt-2 text-sm text-red-600">{uploadError}</p>}
     </div>
   );
 };

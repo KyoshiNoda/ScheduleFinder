@@ -1,9 +1,8 @@
 import { createHmac, randomBytes, randomInt } from 'crypto';
 import bcrypt from 'bcrypt';
-import sgMail from '@sendgrid/mail';
+import { outboundEnabled, sendEmail } from '../integrations/outbound';
 import User from '../models/userModel';
 
-sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
 
 export const PASSWORD_RESET_CODE_TTL_MS = 10 * 60 * 1000;
 export const PASSWORD_RESET_TOKEN_TTL_MS = 10 * 60 * 1000;
@@ -41,7 +40,7 @@ const createResetToken = (): string => randomBytes(32).toString('base64url');
 const sendResetCode = async (email: string, code: string): Promise<void> => {
   const message = `Here is your six digit ScheduleFinder password reset code: ${code}`;
 
-  await sgMail.send({
+  await sendEmail({
     to: email,
     from: 'schedulefinder@gmail.com',
     subject: 'ScheduleFinder - Password Reset',
@@ -51,6 +50,7 @@ const sendResetCode = async (email: string, code: string): Promise<void> => {
 };
 
 export const requestPasswordReset = async (email: string): Promise<void> => {
+  if (!outboundEnabled()) return;
   const now = new Date();
   const code = createResetCode();
   const codeDigest = digestCredential('code', email, code);

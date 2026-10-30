@@ -24,6 +24,7 @@ const userSchema = new mongoose_1.default.Schema({
     sentFriendRequests: [{ type: String }],
     age: Number,
     photoURL: String,
+    profileImagePublicId: { type: String, select: false },
     gender: String,
     school: String,
     major: String,

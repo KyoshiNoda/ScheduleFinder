@@ -7,11 +7,9 @@ const sendGridMocks = vi.hoisted(() => ({
   setApiKey: vi.fn(),
 }));
 
-vi.mock('@sendgrid/mail', () => ({
-  default: {
-    send: sendGridMocks.send,
-    setApiKey: sendGridMocks.setApiKey,
-  },
+vi.mock('../integrations/outbound', () => ({
+  sendEmail: sendGridMocks.send,
+  outboundEnabled: () => true,
 }));
 
 import { createApp } from '../app';

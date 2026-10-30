@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import User from '../models/userModel';
 import bcrypt from 'bcrypt';
-import { v2 as cloudinary } from 'cloudinary';
-import multer from 'multer';
+import { destroyProfileImage, uploadProfileImage } from '../integrations/outbound';
 import {
   toPrivateUser,
   toPublicUser,
@@ -13,10 +12,31 @@ import {
   UpdateUserBody,
 } from '../validation/schemas';
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
 const defaultProfilePicture = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXGl68Y0oCfYlx18OswvBI5QNYjr7bHdCCUvAf8lHeig&s';
+
+const startsWithBytes = (buffer: Buffer, signature: readonly number[]): boolean =>
+  buffer.length >= signature.length &&
+  signature.every((byte, index) => buffer[index] === byte);
+
+const imageMime = (buffer: Buffer): string | null => {
+  if (startsWithBytes(buffer, [0xff, 0xd8, 0xff])) return 'image/jpeg';
+  if (startsWithBytes(buffer, [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) {
+    return 'image/png';
+  }
+  if (
+    buffer.length >= 12 &&
+    buffer.toString('ascii', 0, 4) === 'RIFF' &&
+    buffer.toString('ascii', 8, 12) === 'WEBP'
+  ) {
+    return 'image/webp';
+  }
+  return null;
+};
+
+const cleanupImage = async (publicId: string): Promise<void> => {
+  try { await destroyProfileImage(publicId); }
+  catch { console.error('Unable to remove a managed profile image.'); }
+};
 
 class UserController {
   // GET all user
@@ -124,43 +144,46 @@ class UserController {
   }
   public static async changeProfilePicture(req: Request, res: Response) {
     const userID: string = req.auth.userId;
-    try {
-      const uploadedFile = req.file!;
-      const fileBuffer = uploadedFile.buffer;
-      const fileData = fileBuffer.toString('base64');
-      const user = await User.findOne({ _id: userID }).exec();
-      if (!user) {
-        return res.status(404).json({
-          message: `User ${userID} not found`,
-        });
-      }
+    const uploadedFile = req.file;
+    if (!uploadedFile) return res.status(400).json({ error: 'Profile image is required.' });
 
-      if (user?.photoURL !== defaultProfilePicture) {
-        const publicID = user?.photoURL.split('/').pop()?.split('.')[0];
-        await cloudinary.uploader.destroy('uploads/' + publicID!);
-      }
-
-      const result = await cloudinary.uploader.upload(`data:image/jpeg;base64,${fileData}`, {
-        folder: 'uploads',
-        transformation: [
-          { width: 300, height: 300, crop: 'fill' }, // Replace 300 with your desired width and height
-        ],
-      });
-
-      user.photoURL = result.secure_url;
-      await user.save();
-
-      res.status(200).send({
-        message: 'Profile picture updated successfully',
-        imageUrl: result.secure_url,
-      });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({
-        message: `Error updating User ${userID}'s photoURL`,
-        error: err,
-      });
+    const detectedMime = imageMime(uploadedFile.buffer);
+    if (!detectedMime || detectedMime !== uploadedFile.mimetype) {
+      return res.status(415).json({ error: 'Profile image must be a JPEG, PNG, or WebP file.' });
     }
+
+    let user;
+    try {
+      user = await User.findById(userID).select('+profileImagePublicId').exec();
+    } catch {
+      return res.status(500).json({ error: 'Unable to update profile image.' });
+    }
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+
+    let replacement: { secureUrl: string; publicId: string };
+    try {
+      replacement = await uploadProfileImage(`data:${detectedMime};base64,${uploadedFile.buffer.toString('base64')}`);
+    } catch {
+      return res.status(502).json({ error: 'Unable to upload profile image.' });
+    }
+
+    let updated;
+    try {
+      updated = await User.findOneAndUpdate(
+        { _id: userID, photoURL: user.photoURL },
+        { $set: { photoURL: replacement.secureUrl, profileImagePublicId: replacement.publicId } },
+        { new: true }
+      ).exec();
+    } catch {
+      await cleanupImage(replacement.publicId);
+      return res.status(500).json({ error: 'Unable to update profile image.' });
+    }
+    if (!updated) {
+      await cleanupImage(replacement.publicId);
+      return res.status(409).json({ error: 'Profile image changed; retry the upload.' });
+    }
+    if (user.profileImagePublicId) await cleanupImage(user.profileImagePublicId);
+    return res.status(200).json({ message: 'Profile picture updated successfully', imageUrl: replacement.secureUrl });
   }
 
   public static async deleteProfilePicture(req: Request, res: Response) {
@@ -168,24 +191,14 @@ class UserController {
     try {
       const user = await User.findOneAndUpdate(
         { _id: userID },
-        {
-          photoURL: defaultProfilePicture,
-        }
-      ).exec();
-      res.status(200).send({
-        message: 'Profile picture removed successfully',
-      });
-      if (!user) {
-        return res.status(404).json({
-          message: `User ${userID} not found`,
-        });
-      }
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({
-        message: `Error removing User ${userID}'s photoURL`,
-        error: err,
-      });
+        { $set: { photoURL: defaultProfilePicture }, $unset: { profileImagePublicId: 1 } },
+        { new: false }
+      ).select('+profileImagePublicId').exec();
+      if (!user) return res.status(404).json({ error: 'User not found.' });
+      if (user.profileImagePublicId) await cleanupImage(user.profileImagePublicId);
+      return res.status(200).json({ message: 'Profile picture removed successfully' });
+    } catch {
+      return res.status(500).json({ error: 'Unable to remove profile image.' });
     }
   }
 }

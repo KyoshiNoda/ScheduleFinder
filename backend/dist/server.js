@@ -29,18 +29,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const mongoose_1 = __importDefault(require("mongoose"));
-const cloudinary_1 = require("cloudinary");
+const outbound_1 = require("./integrations/outbound");
 const app_1 = require("./app");
 const passwordReset_1 = require("./auth/passwordReset");
 const port = process.env.PORT || 3001;
 (0, passwordReset_1.validatePasswordResetConfiguration)();
+(0, outbound_1.validateOutboundConfiguration)();
 const app = (0, app_1.createApp)();
-cloudinary_1.v2.config({
-    cloud_name: `${process.env.CLOUDINARY_CLOUD_NAME}`,
-    api_key: `${process.env.CLOUDINARY_API_KEY}`,
-    api_secret: `${process.env.CLOUDINARY_API_SECRET}`,
-    secure: true,
-});
 mongoose_1.default.set('strictQuery', true);
 mongoose_1.default
     .connect(`${process.env.DB_URI}`, {})
