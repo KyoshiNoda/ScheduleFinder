@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
+import { MongoMemoryReplSet } from 'mongodb-memory-server';
 import { afterAll, afterEach, beforeAll } from 'vitest';
 
 const testDatabaseName = 'schedulefinder_test';
-let mongoServer: MongoMemoryServer | undefined;
+let mongoServer: MongoMemoryReplSet | undefined;
 
 process.env.NODE_ENV = 'test';
 process.env.ACCESS_TOKEN_SECRET = 'test-only-access-token-secret';
@@ -23,9 +23,12 @@ beforeAll(async () => {
     throw new Error('Refusing to start tests with an existing Mongoose connection');
   }
 
-  mongoServer = await MongoMemoryServer.create({
+  mongoServer = await MongoMemoryReplSet.create({
     binary: { version: '6.0.14' },
-    instance: { dbName: testDatabaseName },
+    replSet: {
+      count: 1,
+      storageEngine: 'wiredTiger',
+    },
   });
 
   await mongoose.connect(mongoServer.getUri(testDatabaseName));

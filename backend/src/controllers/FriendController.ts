@@ -1,10 +1,57 @@
 import { Request, Response } from 'express';
-import User from '../models/userModel';
-import { IUser } from '../models/userModel';
 import sgMail from '@sendgrid/mail';
+import User, { IUser } from '../models/userModel';
 import { toPublicUser } from '../representations/userRepresentation';
+import {
+  FriendRequestNotification,
+  mutateRelationship,
+  RelationshipMutationError,
+  RelationshipMutationResult,
+} from '../relationships/relationshipMutations';
 import { FriendIdParams } from '../validation/schemas';
+
 sgMail.setApiKey(`${process.env.SENDGRID_API_KEY}`);
+
+const getPublicUsers = async (ids: string[]) => {
+  const users = await User.find({ _id: { $in: ids } }).exec();
+  return users.map(toPublicUser);
+};
+
+const sendRelationshipMutationError = (res: Response, error: unknown) => {
+  if (error instanceof RelationshipMutationError) {
+    return res.status(error.status).json({ error: error.message, code: error.code });
+  }
+
+  return res.status(500).json({ error: 'Unable to update relationship.' });
+};
+
+const sendFriendRequestNotification = async (
+  notification: FriendRequestNotification
+): Promise<void> => {
+  const senderName = `${notification.senderFirstName} ${notification.senderLastName}`;
+
+  await sgMail.send({
+    to: notification.recipientEmail,
+    from: 'schedulefinder@gmail.com',
+    subject: 'ScheduleFinder - Friend Request',
+    text: `You have a new friend request from ${senderName}. Log in to ScheduleFinder to respond.`,
+  });
+};
+
+const sendNotificationAfterCommit = async (
+  result: RelationshipMutationResult
+): Promise<void> => {
+  if (!result.notification) {
+    return;
+  }
+
+  try {
+    await sendFriendRequestNotification(result.notification);
+  } catch {
+    console.error('Unable to send friend-request notification after the request committed.');
+  }
+};
+
 class FriendController {
   public static async getFriends(req: Request, res: Response) {
     const userID: string = req.auth.userId;
@@ -17,15 +64,14 @@ class FriendController {
         });
       }
 
-      // Populate the 'friends' field with user objects
       const userFriends = await User.find({
         _id: { $in: user.friends },
       }).exec();
 
-      res.json(userFriends.map(toPublicUser));
+      return res.json(userFriends.map(toPublicUser));
     } catch (err) {
       console.error(err);
-      res.status(500).send({
+      return res.status(500).send({
         message: `Error while getting User ${userID}`,
         error: err,
       });
@@ -35,46 +81,23 @@ class FriendController {
   public static async deleteFriend(req: Request<FriendIdParams>, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
-    try {
-      const user = await User.findOne({ _id: userID }).exec();
-      const friend = await User.findOne({ _id: friendID }).exec();
-      if (!user || !friend) {
-        return res.status(404).send({
-          message: 'One of the users is missing!',
-        });
-      }
-      if (!user.friends.includes(friendID)) {
-        return res.status(404).send({
-          message: `User is not friends with ${(friend.firstName, +' ' + friend.lastName)
-            }`,
-        });
-      }
-      user.friends = user.friends.filter((id) => id !== friendID);
-      await user.save();
-      friend.friends = friend.friends.filter((id) => id !== userID);
-      await friend.save();
-      const updatedUser = await User.findOne({ _id: userID }).exec();
 
-      // Query for all the friends in the updated friend list
-      const updatedUserFriends = await User.find({
-        _id: { $in: updatedUser?.friends },
-      }).exec();
+    try {
+      const result = await mutateRelationship(userID, friendID, 'unfriend');
+      const friends = await getPublicUsers(result.actorRelationships.friends);
 
       return res.status(200).send({
         message: 'Friend removed successfully!',
-        friends: updatedUserFriends.map(toPublicUser),
+        friends,
       });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send({
-        message: `Error while getting User ${userID}`,
-        error: err,
-      });
+    } catch (error) {
+      return sendRelationshipMutationError(res, error);
     }
   }
+
   public static async getFriendRequests(req: Request, res: Response) {
     const userID: string = req.auth.userId;
-    let userFriendRequests: IUser[] = [];
+    const userFriendRequests: IUser[] = [];
     try {
       const user = await User.findOne({ _id: userID }).exec();
       if (!user) {
@@ -83,23 +106,24 @@ class FriendController {
         });
       }
       for (const friendID of user.receivedFriendRequests) {
-        let friend = await User.findOne({ _id: friendID }).exec();
+        const friend = await User.findOne({ _id: friendID }).exec();
         if (friend) {
           userFriendRequests.push(friend);
         }
       }
-      res.send(userFriendRequests.map(toPublicUser));
+      return res.send(userFriendRequests.map(toPublicUser));
     } catch (err) {
       console.error(err);
-      res.status(500).send({
+      return res.status(500).send({
         message: `Error while getting User ${userID}`,
         error: err,
       });
     }
   }
+
   public static async getPendingFriendRequests(req: Request, res: Response) {
     const userID: string = req.auth.userId;
-    let sentFriendRequests: IUser[] = [];
+    const sentFriendRequests: IUser[] = [];
     try {
       const user = await User.findOne({ _id: userID }).exec();
       if (!user) {
@@ -108,15 +132,15 @@ class FriendController {
         });
       }
       for (const friendID of user.sentFriendRequests) {
-        let friend = await User.findOne({ _id: friendID }).exec();
+        const friend = await User.findOne({ _id: friendID }).exec();
         if (friend) {
           sentFriendRequests.push(friend);
         }
       }
-      res.send(sentFriendRequests.map(toPublicUser));
+      return res.send(sentFriendRequests.map(toPublicUser));
     } catch (err) {
       console.error(err);
-      res.status(500).send({
+      return res.status(500).send({
         message: `Error while getting User ${userID}`,
         error: err,
       });
@@ -126,228 +150,93 @@ class FriendController {
   public static async sendFriendRequest(req: Request<FriendIdParams>, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
+
     try {
-      const user = await User.findOne({ _id: userID }).exec();
-      const friend = await User.findOne({ _id: friendID }).exec();
-      if (!user || !friend) {
-        return res.status(404).send({
-          message: "One of the users doesn't exist!",
-        });
-      }
-
-      if (!user.sentFriendRequests.includes(friendID)) {
-        user.sentFriendRequests.push(friendID);
-        await user.save();
-      } else {
-        return res.status(404).send({
-          message: 'Friend Request Already Send!',
-        });
-      }
-
-      if (!friend.receivedFriendRequests.includes(userID)) {
-        friend.receivedFriendRequests.push(userID);
-        await friend.save();
-        const msg: sgMail.MailDataRequired = {
-          to: friend.email,
-          from: 'schedulefinder@gmail.com',
-          subject: 'ScheduleFinder - Friend Request',
-          text: `You have a new friend request from ${user.firstName} ${user.lastName}!`,
-          html: `
-            <div style="font-family: Arial, sans-serif; color: #fff; background-color: #3b82f6; padding: 20px;">
-              <h2 style="color: #fff;">ScheduleFinder - Friend Request</h2>
-              <p><strong>You have a new friend request from ${user.firstName} ${user.lastName}!</strong></p>
-              <div style="display: flex; justify-content: space-between;">
-                <ul style="margin-right: 20px;">
-                  <li>First Name: ${user.firstName}</li>
-                  <li>Last Name: ${user.lastName}</li>
-                  <li>School: ${user.school}</li>
-                  <li>Major: ${user.major ? user.major : 'N/A'}</li>
-                </ul>
-                <img src="${user.photoURL}" alt="Friend's Photo" style="border-radius: 50%; width: 100px; height: 100px; align-self: flex-start;">
-              </div>
-              <p>Please <a href="https://schedulefinder.netlify.app/" style="color: #fff; text-decoration: underline;">log in</a> to your account to accept or decline this request.</p>
-            </div>
-          `,
-        };
-        await sgMail.send(msg);
-      } else {
-        return res.status(404).send({
-          message: 'Friend Request Already Send!',
-        });
-      }
+      const result = await mutateRelationship(userID, friendID, 'send');
+      await sendNotificationAfterCommit(result);
 
       return res.status(200).send({
-        message: 'Friend request sent successfully!',
+        message:
+          result.outcome === 'friendship-created'
+            ? 'Friend request accepted successfully!'
+            : 'Friend request sent successfully!',
       });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send({
-        message: `Error while getting User ${userID}`,
-        error: err,
-      });
+    } catch (error) {
+      return sendRelationshipMutationError(res, error);
     }
   }
 
   public static async removeFriendRequest(req: Request<FriendIdParams>, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
+
     try {
-      const user = await User.findOne({ _id: userID }).exec();
-      const friend = await User.findOne({ _id: friendID }).exec();
-      if (!user || !friend) {
-        return res.status(404).send({
-          message: "One of the users doesn't exist!",
-        });
-      }
-
-      if (user.receivedFriendRequests.includes(friendID)) {
-        user.receivedFriendRequests = user.receivedFriendRequests.filter(
-          (id) => id !== friendID
-        );
-        await user.save();
-      }
-
-      if (friend.sentFriendRequests.includes(userID)) {
-        friend.sentFriendRequests = friend.sentFriendRequests.filter(
-          (id) => id !== userID
-        );
-        await friend.save();
-      }
+      await mutateRelationship(userID, friendID, 'reject');
 
       return res.status(200).send({
         message: 'Removed friend request successfully!',
       });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send({
-        message: `Error while getting User ${userID}`,
-        error: err,
-      });
+    } catch (error) {
+      return sendRelationshipMutationError(res, error);
     }
   }
 
   public static async acceptFriendRequest(req: Request<FriendIdParams>, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
+
     try {
-      const user = await User.findOne({ _id: userID }).exec();
-      const friend = await User.findOne({ _id: friendID }).exec();
-      if (!user || !friend) {
-        return res.status(404).send({
-          message: "One of the users doesn't exist!",
-        });
-      }
-      if (
-        !user.receivedFriendRequests.includes(friendID) ||
-        !friend.sentFriendRequests.includes(userID)
-      ) {
-        return res.status(404).send({
-          message: 'Missing Friend Request',
-        });
-      }
-
-      user.friends.push(friendID);
-      user.receivedFriendRequests = user.receivedFriendRequests.filter((id) => id !== friendID);
-      await user.save();
-
-      friend.friends.push(userID);
-      friend.sentFriendRequests = friend.sentFriendRequests.filter(
-        (id) => id !== userID
+      const result = await mutateRelationship(userID, friendID, 'accept');
+      const updatedFriendRequests = await getPublicUsers(
+        result.actorRelationships.receivedFriendRequests
       );
-      await friend.save();
 
-      const updatedUser = await User.findOne({ _id: userID }).exec();
-      const updatedUserFriendRequests = await User.find({
-        _id: { $in: updatedUser?.receivedFriendRequests },
-      }).exec();
-
-      res.status(200).send({
+      return res.status(200).send({
         message: 'Added friend successfully!',
-        updatedFriendRequests: updatedUserFriendRequests.map(toPublicUser),
+        updatedFriendRequests,
       });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send({
-        message: `Error while getting User ${userID}`,
-        error: err,
-      });
+    } catch (error) {
+      return sendRelationshipMutationError(res, error);
     }
   }
+
   public static async rejectFriendRequest(req: Request<FriendIdParams>, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
+
     try {
-      const user = await User.findOne({ _id: userID }).exec();
-      const friend = await User.findOne({ _id: friendID }).exec();
-      if (!user || !friend) {
-        return res.status(404).send({
-          message: "One of the users doesn't exist!",
-        });
-      }
-      user.receivedFriendRequests = user.receivedFriendRequests.filter((id) => id !== friendID);
-      await user.save();
-
-      friend.sentFriendRequests = friend.sentFriendRequests.filter(
-        (id) => id !== userID
+      const result = await mutateRelationship(userID, friendID, 'reject');
+      const updatedFriendRequests = await getPublicUsers(
+        result.actorRelationships.receivedFriendRequests
       );
-      await friend.save();
 
-      const updatedUser = await User.findOne({ _id: userID }).exec();
-      const updatedUserFriendRequests = await User.find({
-        _id: { $in: updatedUser?.receivedFriendRequests },
-      }).exec();
-
-      res.status(200).send({
+      return res.status(200).send({
         message: 'Friend Request was ignored!',
-        updatedFriendRequests: updatedUserFriendRequests.map(toPublicUser),
+        updatedFriendRequests,
       });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send({
-        message: `Error while getting User ${userID}`,
-        error: err,
-      });
+    } catch (error) {
+      return sendRelationshipMutationError(res, error);
     }
   }
 
   public static async cancelPendingFriendRequest(req: Request<FriendIdParams>, res: Response) {
     const userID: string = req.auth.userId;
     const friendID: string = req.params.friendID;
+
     try {
-      const user = await User.findOne({ _id: userID }).exec();
-      const friend = await User.findOne({ _id: friendID }).exec();
+      const result = await mutateRelationship(userID, friendID, 'cancel');
+      const updatedSendFriendRequests = await getPublicUsers(
+        result.actorRelationships.sentFriendRequests
+      );
 
-      if (!user || !friend) {
-        return res.status(404).send({
-          message: "One of the users doesn't exist!",
-        });
-      }
-      user.sentFriendRequests = user.sentFriendRequests.filter((id) => id !== friend.id);
-      await user.save();
-
-      friend.receivedFriendRequests = friend.receivedFriendRequests.filter((id) => id !== user.id);
-      await friend.save();
-
-      const updatedUser = await User.findOne({ _id: userID }).exec();
-      const updatedSendFriendRequests = await User.find({
-        _id: { $in: updatedUser?.sentFriendRequests },
-      }).exec();
-
-      res.status(200).send({
+      return res.status(200).send({
         message: 'Cancelled Friend Request!',
-        updatedSendFriendRequests: updatedSendFriendRequests.map(toPublicUser),
+        updatedSendFriendRequests,
       });
-
-    } catch (err) {
-      console.error(err);
-      res.status(500).send({
-        message: `Error while getting User ${userID}`,
-        error: err,
-      });
+    } catch (error) {
+      return sendRelationshipMutationError(res, error);
     }
-
   }
-
 }
 
 export default FriendController;
